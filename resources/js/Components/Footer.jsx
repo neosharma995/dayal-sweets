@@ -1,164 +1,44 @@
-import React, { useState } from 'react';
-import { Link } from '@inertiajs/react';
-import ApplicationLogo from '@/Components/ApplicationLogo';
-import { CheckCircleIcon, ShieldCheckIcon, TruckIcon, StarIcon, PhoneIcon, MapPinIcon } from '@/Components/Icons';
+import { ArrowRight } from 'lucide-react';
 
 export default function Footer() {
-    const [newsletterEmail, setNewsletterEmail] = useState('');
-    const [subscribed, setSubscribed] = useState(false);
-
-    const handleNewsletterSubmit = (e) => {
-        e.preventDefault();
-        if (newsletterEmail) {
-            setSubscribed(true);
-            setNewsletterEmail('');
-        }
-    };
+    const trustItems = [
+        ['100% SECURE', 'Safe & Secure Payments'],
+        ['LIVE TRACKING', 'Real-time Updates'],
+        ['FAST DELIVERY', 'On Time, Every Time'],
+        ['PREMIUM QUALITY', 'Handcrafted with Love & Purity'],
+    ];
 
     return (
         <footer className="dayal-footer">
-            {/* Trust Badges Strip */}
-            <div className="dayal-footer-trust-strip">
-                <div className="dayal-trust-grid">
-                    <div className="dayal-trust-card">
-                        <div className="dayal-trust-icon">
-                            <StarIcon width="20" height="20" />
-                        </div>
-                        <div className="dayal-trust-text">
-                            <h4>100% Pure Desi Ghee</h4>
-                            <p>Crafted strictly in churned cow ghee</p>
-                        </div>
+            <section className="dayal-footer-cta">
+                <div className="dayal-footer-container dayal-footer-cta-inner">
+                    <div className="dayal-footer-cta-copy">
+                        <p className="dayal-footer-eyebrow">Craving something sweet</p>
+                        <h2>Order your favorites<br />Anytime, Anywhere</h2>
+                        <p>From our kitchen to your doorstep,<br />we make every order special.</p>
                     </div>
-
-                    <div className="dayal-trust-card">
-                        <div className="dayal-trust-icon">
-                            <CheckCircleIcon width="20" height="20" />
-                        </div>
-                        <div className="dayal-trust-text">
-                            <h4>Sanctified & Pure Veg</h4>
-                            <p>No eggs or artificial stabilizers</p>
-                        </div>
-                    </div>
-
-                    <div className="dayal-trust-card">
-                        <div className="dayal-trust-icon">
-                            <ShieldCheckIcon width="20" height="20" />
-                        </div>
-                        <div className="dayal-trust-text">
-                            <h4>Daily Fresh Batches</h4>
-                            <p>FSSAI Certified & 999 Pure Silver Vark</p>
-                        </div>
-                    </div>
-
-                    <div className="dayal-trust-card">
-                        <div className="dayal-trust-icon">
-                            <TruckIcon width="20" height="20" />
-                        </div>
-                        <div className="dayal-trust-text">
-                            <h4>Express City Delivery</h4>
-                            <p>Sealed in aroma-lock insulated boxes</p>
-                        </div>
+                    <div className="dayal-footer-cta-actions">
+                        <a href="/shop">Order Now <ArrowRight size={16} /></a>
+                        <a href="https://wa.me/919876543210">Chat Now</a>
                     </div>
                 </div>
-            </div>
-
-            {/* Main Footer Links & Newsletter */}
+            </section>
+            <section className="dayal-footer-trust" aria-label="Shopping benefits">
+                <div className="dayal-footer-container dayal-footer-trust-grid">
+                    {trustItems.map(([title, description]) => <div className="dayal-footer-trust-item" key={title}><strong>{title}</strong><span>{description}</span></div>)}
+                </div>
+            </section>
             <div className="dayal-footer-main">
-                <div className="dayal-footer-grid">
-                    {/* Brand Info */}
-                    <div className="dayal-footer-brand">
-                        <div className="dayal-footer-brand-header">
-                            <ApplicationLogo showText={false} />
-                            <div>
-                                <h3>DAYAL SWEETS</h3>
-                                <span>Trust. Tradition. Taste. • Since 1962</span>
-                            </div>
-                        </div>
-                        <p>
-                            Crafting Himachal’s most loved sweet moments for over six decades. Every delicacy is a tribute to pure taste, Himalayan heritage, and uncompromising quality.
-                        </p>
-                        <div className="dayal-footer-badges">
-                            <span className="dayal-footer-pill">FSSAI: 10019011000123</span>
-                            <span className="dayal-footer-pill">GSTIN: 07AAAAA0000A1Z5</span>
-                        </div>
-                    </div>
-
-                    {/* Sweet Varieties */}
-                    <div className="dayal-footer-links">
-                        <h4>Signature Sweets</h4>
-                        <ul>
-                            <li><a href="#kaju-katli">Royal Silver Kaju Katli</a></li>
-                            <li><a href="#motichoor">Himachali Desi Ghee Laddu</a></li>
-                            <li><a href="#doda-barfi">Himachal Special Doda Barfi</a></li>
-                            <li><a href="#pista-lauj">Sugar-Free Dry Fruit Lauj</a></li>
-                            <li><a href="#bengali">Kesar Rasmalai & Cham Cham</a></li>
-                            <li><a href="#hampers">Festive Celebration Hampers</a></li>
-                        </ul>
-                    </div>
-
-                    {/* Customer Service & Portals */}
-                    <div className="dayal-footer-links">
-                        <h4>Customer Care</h4>
-                        <ul>
-                            <li><Link href={route('my-account')}>My Account Center</Link></li>
-                            <li><Link href={route('dashboard')}>Track Live Orders</Link></li>
-                            <li><a href="#corporate">Bulk & Corporate Inquiries</a></li>
-                            <li><a href="#franchise">Franchise Opportunities</a></li>
-                            <li><a href="#shipping">Delivery & Shipping Terms</a></li>
-                            <li><Link href={route('admin.login')}>Store Manager Console →</Link></li>
-                        </ul>
-                    </div>
-
-                    {/* Store Timings & Newsletter */}
-                    <div className="dayal-footer-newsletter">
-                        <h4>Store & Hotline</h4>
-                        <div className="dayal-footer-hotline">
-                            <div className="dayal-hotline-item">
-                                <MapPinIcon width="16" height="16" />
-                                <span>Main Market, Mall Road / Flagship Counter</span>
-                            </div>
-                            <div className="dayal-hotline-item">
-                                <PhoneIcon width="16" height="16" />
-                                <a href="tel:+919876543210">+91 98765 43210</a>
-                            </div>
-                            <p>Daily: 08:00 AM – 10:30 PM</p>
-                        </div>
-
-                        <h4>Festive Sweet Offers</h4>
-                        <p>Subscribe for seasonal discount alerts and pre-orders:</p>
-                        {subscribed ? (
-                            <div className="dayal-alert dayal-alert--success">
-                                <span>✓ Subscribed successfully!</span>
-                            </div>
-                        ) : (
-                            <form onSubmit={handleNewsletterSubmit} className="dayal-newsletter-form">
-                                <input
-                                    type="email"
-                                    value={newsletterEmail}
-                                    onChange={(e) => setNewsletterEmail(e.target.value)}
-                                    placeholder="Enter your email"
-                                    required
-                                />
-                                <button type="submit">Join</button>
-                            </form>
-                        )}
-                    </div>
+                <div className="dayal-footer-container dayal-footer-main-inner">
+                    <div className="dayal-footer-brand"><img src="/assets/logos/dayal-sweets-footer.png" alt="Dayal Sweets" /><p>Crafting India’s most loved sweet moments since 1962. Pure ingredients, authentic recipes, and a legacy of taste.</p><strong>Certified &amp; Proud</strong></div>
+                    <div className="dayal-footer-social"><a href="https://www.instagram.com/" aria-label="Instagram"><img src="/assets/social/instagram.svg" alt="" /></a><a href="https://www.facebook.com/" aria-label="Facebook"><img src="/assets/social/facebook.svg" alt="" /></a><a href="https://www.youtube.com/" aria-label="YouTube"><img src="/assets/social/youtube.svg" alt="" /></a></div>
                 </div>
-            </div>
-
-            {/* Bottom Bar */}
-            <div className="dayal-footer-bottom">
-                <div className="dayal-bottom-inner">
-                    <p>© {new Date().getFullYear()} Dayal Sweets Pvt. Ltd. All rights reserved. • Himachal's Most Loved Sweets</p>
-
-                    <div className="dayal-payment-pills">
-                        <span>Secure Payments:</span>
-                        <span className="dayal-pay-pill">UPI</span>
-                        <span className="dayal-pay-pill">RuPay</span>
-                        <span className="dayal-pay-pill">Cards</span>
-                        <span className="dayal-pay-pill">NetBanking</span>
-                    </div>
+                <div className="dayal-footer-container dayal-footer-links">
+                    <div><strong>Quick Link</strong><a href="/">Home</a><a href="/about-us">About us</a><a href="/reviews">Reviews</a><a href="/contact-us">Contact Us</a><a href="/privacy-policy">Privacy Policy</a><a href="/return-policy">Return Policy</a></div>
+                    <div><strong>Shop</strong><a href="/shop">Sweets &amp; Mithai</a><a href="/shop">Namkeen &amp; Snaks</a><a href="/shop">Bakery Items</a><a href="/shop">Beverages</a><a href="/gifting">Gift hampers</a><a href="/shop">Seasonal Specials</a></div>
+                    <div><strong>Corporate</strong><a href="/gifting">Orders</a><a href="/gifting">Corporate Gifting</a><a href="/franchise">Franchise Enquiry</a><a href="/gallery">Gallery</a></div>
                 </div>
+                <div className="dayal-footer-container dayal-footer-bottom">© 2026 Dayal Sweets. All rights reserved.</div>
             </div>
         </footer>
     );

@@ -1,0 +1,24 @@
+@use '../abstracts/storefront-variables' as *;
+
+.dayal-site {
+    min-height: 100vh;
+    overflow: hidden;
+    color: $ds-color-ink;
+    font-family: $ds-font-body;
+}
+
+.dayal-header-container,
+.dayal-footer-container {
+    width: min(calc(100% - 64px), $ds-container-width);
+    margin: 0 auto;
+}
+
+.dayal-header-container { width: calc(100% - 40px); max-width: none; }
+
+@media (max-width: 767px) {
+    .dayal-header-container,
+    .dayal-footer-container {
+        width: calc(100% - 36px);
+    }
+    .dayal-header-container { width: calc(100% - 36px); }
+}

@@ -27,22 +27,20 @@ export default function Register() {
             <Head title="Sign Up - Dayal Sweets" />
 
             {/* Welcome Perk Pill */}
-            <div className="mb-6 p-3.5 rounded-lg bg-[#FAF6F0] border border-[#EADBCA] flex items-center gap-3">
-                <div className="w-8 h-8 rounded-md bg-[#631826] text-white flex items-center justify-center flex-shrink-0">
-                    <StarIcon className="w-4 h-4 fill-white" />
-                </div>
+            <div className="dayal-alert dayal-alert--warning dayal-mb-6">
+                <StarIcon width="16" height="16" />
                 <div>
-                    <p className="text-xs font-bold text-[#631826]">Himachal Sweets Club Member Privilege</p>
-                    <p className="text-[11px] text-stone-600">Receive 100 bonus reward points + Free express shipping on orders above ₹999!</p>
+                    <strong>Himachal Sweets Club Member Privilege</strong>
+                    <p>Receive 100 bonus reward points + Free express delivery on orders above ₹999!</p>
                 </div>
             </div>
 
-            <form onSubmit={submit} className="space-y-4">
+            <form onSubmit={submit}>
                 {/* Full Name */}
                 <div className="dayal-input-group">
                     <label htmlFor="name">Full Name</label>
                     <div className="input-wrapper">
-                        <UserIcon className="field-icon" />
+                        <UserIcon className="field-icon" width="16" height="16" />
                         <input
                             id="name"
                             type="text"
@@ -83,7 +81,7 @@ export default function Register() {
                 <div className="dayal-input-group">
                     <label htmlFor="password">Create Password</label>
                     <div className="input-wrapper">
-                        <KeyIcon className="field-icon" />
+                        <KeyIcon className="field-icon" width="16" height="16" />
                         <input
                             id="password"
                             type="password"
@@ -102,7 +100,7 @@ export default function Register() {
                 <div className="dayal-input-group">
                     <label htmlFor="password_confirmation">Confirm Password</label>
                     <div className="input-wrapper">
-                        <KeyIcon className="field-icon" />
+                        <KeyIcon className="field-icon" width="16" height="16" />
                         <input
                             id="password_confirmation"
                             type="password"
@@ -123,19 +121,16 @@ export default function Register() {
                 <button
                     type="submit"
                     disabled={processing}
-                    className="dayal-submit-btn mt-2"
+                    className="dayal-submit-btn"
                 >
                     {processing ? 'Creating Your Account...' : 'Register as Customer'}
                 </button>
             </form>
 
             {/* Bottom Switcher */}
-            <div className="mt-8 pt-5 border-t border-[#EADBCA] text-center text-xs text-stone-500">
+            <div className="dayal-auth-footer">
                 Already registered with Dayal Sweets?{' '}
-                <Link
-                    href={route('login')}
-                    className="font-bold text-[#631826] hover:text-[#4A0E1A] hover:underline"
-                >
+                <Link href={route('login')}>
                     Sign In to Account →
                 </Link>
             </div>

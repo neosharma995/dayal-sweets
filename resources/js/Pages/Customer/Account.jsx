@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import CustomerLayout from '@/Layouts/CustomerLayout';
-import { UserIcon, MapPinIcon, KeyIcon, BoxIcon, CheckCircleIcon, LogOutIcon } from '@/Components/Icons';
+import { UserIcon, MapPinIcon, KeyIcon, LogOutIcon } from '@/Components/Icons';
 
 export default function CustomerAccount({ customer, savedAddresses, orderHistory }) {
-    const [activeTab, setActiveTab] = useState('profile'); // 'profile', 'addresses', 'orders'
+    const [activeTab, setActiveTab] = useState('profile');
 
     // Profile form
     const profileForm = useForm({
@@ -37,18 +37,18 @@ export default function CustomerAccount({ customer, savedAddresses, orderHistory
     return (
         <CustomerLayout
             header={
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="dayal-flex-between">
                     <div>
-                        <span className="text-xs font-bold uppercase tracking-widest text-amber-700">Account Center</span>
-                        <h1 className="font-serif text-2xl md:text-3xl font-black text-stone-900">My Account & Saved Preferences</h1>
+                        <span className="dayal-badge dayal-badge--gold">Account Center</span>
+                        <h1 className="dayal-font-serif">My Account & Saved Preferences</h1>
                     </div>
                     <Link
                         method="post"
                         href={route('logout')}
                         as="button"
-                        className="self-start sm:self-auto px-4 py-2 rounded-xl bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm"
+                        className="dayal-btn dayal-btn--danger dayal-btn--sm"
                     >
-                        <LogOutIcon className="w-4 h-4" />
+                        <LogOutIcon width="16" height="16" />
                         <span>Sign Out / Logout</span>
                     </Link>
                 </div>
@@ -56,288 +56,268 @@ export default function CustomerAccount({ customer, savedAddresses, orderHistory
         >
             <Head title="My Account - Dayal Sweets" />
 
-            <div className="space-y-8">
-                {/* Customer Identity Banner */}
-                <div className="p-6 md:p-8 rounded-3xl bg-white border border-amber-200 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm">
-                    <div className="flex items-center gap-4">
-                        <div className="w-16 h-16 rounded-2xl bg-amber-600 text-white font-serif font-black text-2xl flex items-center justify-center shadow-md shadow-amber-600/20">
-                            {customer.name.charAt(0)}
-                        </div>
-                        <div>
-                            <div className="flex items-center gap-2">
-                                <h2 className="font-serif text-xl font-bold text-stone-900">{customer.name}</h2>
-                                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
-                                    {customer.tier}
-                                </span>
-                            </div>
-                            <p className="text-xs text-stone-500 mt-0.5">{customer.email}</p>
-                            <p className="text-xs text-amber-700 font-semibold mt-1">Customer Member Since {customer.member_since}</p>
-                        </div>
+            {/* Customer Identity Banner */}
+            <div className="dayal-customer-profile-banner">
+                <div className="dayal-profile-identity">
+                    <div className="dayal-profile-avatar">
+                        {customer.name.charAt(0)}
                     </div>
-
-                    {/* Navigation Tabs */}
-                    <div className="flex flex-wrap items-center gap-2">
-                        <button
-                            onClick={() => setActiveTab('profile')}
-                            className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors ${
-                                activeTab === 'profile'
-                                    ? 'bg-amber-600 text-white shadow-sm'
-                                    : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
-                            }`}
-                        >
-                            Profile & Security
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('addresses')}
-                            className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors ${
-                                activeTab === 'addresses'
-                                    ? 'bg-amber-600 text-white shadow-sm'
-                                    : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
-                            }`}
-                        >
-                            Saved Addresses ({savedAddresses.length})
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('orders')}
-                            className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors ${
-                                activeTab === 'orders'
-                                    ? 'bg-amber-600 text-white shadow-sm'
-                                    : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
-                            }`}
-                        >
-                            All Orders ({orderHistory.length})
-                        </button>
+                    <div className="dayal-profile-details">
+                        <div className="dayal-flex-start">
+                            <h2>{customer.name}</h2>
+                            <span className="dayal-badge dayal-badge--gold-subtle">
+                                {customer.tier}
+                            </span>
+                        </div>
+                        <p>{customer.email}</p>
+                        <p className="dayal-text-gold dayal-mt-1">Member Since {customer.member_since}</p>
                     </div>
                 </div>
 
-                {/* Tab: Profile & Security */}
-                {activeTab === 'profile' && (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        {/* Personal Details Form */}
-                        <div className="bg-white rounded-3xl border border-amber-200 p-6 md:p-8 shadow-sm">
-                            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100">
-                                <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center">
-                                    <UserIcon className="w-5 h-5" />
-                                </div>
-                                <div>
-                                    <h3 className="font-serif font-bold text-stone-900 text-base">Personal Details</h3>
-                                    <p className="text-xs text-stone-500">Update your name and primary contact email</p>
-                                </div>
-                            </div>
-
-                            <form onSubmit={handleProfileSubmit} className="space-y-4">
-                                <div>
-                                    <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
-                                        Full Name
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={profileForm.data.name}
-                                        onChange={(e) => profileForm.setData('name', e.target.value)}
-                                        className="w-full px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200 text-stone-900 text-sm focus:border-amber-600 focus:bg-white focus:ring-1 focus:ring-amber-600 outline-none transition-colors"
-                                    />
-                                    {profileForm.errors.name && (
-                                        <p className="text-xs text-rose-600 mt-1">{profileForm.errors.name}</p>
-                                    )}
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
-                                        Email Address
-                                    </label>
-                                    <input
-                                        type="email"
-                                        value={profileForm.data.email}
-                                        onChange={(e) => profileForm.setData('email', e.target.value)}
-                                        className="w-full px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200 text-stone-900 text-sm focus:border-amber-600 focus:bg-white focus:ring-1 focus:ring-amber-600 outline-none transition-colors"
-                                    />
-                                    {profileForm.errors.email && (
-                                        <p className="text-xs text-rose-600 mt-1">{profileForm.errors.email}</p>
-                                    )}
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    disabled={profileForm.processing}
-                                    className="px-6 py-3 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-amber-600/20 transition-colors disabled:opacity-50"
-                                >
-                                    {profileForm.processing ? 'Saving...' : 'Update Details'}
-                                </button>
-                            </form>
-                        </div>
-
-                        {/* Security Password Form */}
-                        <div className="bg-white rounded-3xl border border-amber-200 p-6 md:p-8 shadow-sm">
-                            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100">
-                                <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center">
-                                    <KeyIcon className="w-5 h-5" />
-                                </div>
-                                <div>
-                                    <h3 className="font-serif font-bold text-stone-900 text-base">Account Security</h3>
-                                    <p className="text-xs text-stone-500">Change your login password anytime</p>
-                                </div>
-                            </div>
-
-                            <form onSubmit={handlePasswordSubmit} className="space-y-4">
-                                <div>
-                                    <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
-                                        Current Password
-                                    </label>
-                                    <input
-                                        type="password"
-                                        value={passwordForm.data.current_password}
-                                        onChange={(e) => passwordForm.setData('current_password', e.target.value)}
-                                        className="w-full px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200 text-stone-900 text-sm focus:border-amber-600 focus:bg-white focus:ring-1 focus:ring-amber-600 outline-none transition-colors"
-                                    />
-                                    {passwordForm.errors.current_password && (
-                                        <p className="text-xs text-rose-600 mt-1">{passwordForm.errors.current_password}</p>
-                                    )}
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
-                                        New Password
-                                    </label>
-                                    <input
-                                        type="password"
-                                        value={passwordForm.data.password}
-                                        onChange={(e) => passwordForm.setData('password', e.target.value)}
-                                        className="w-full px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200 text-stone-900 text-sm focus:border-amber-600 focus:bg-white focus:ring-1 focus:ring-amber-600 outline-none transition-colors"
-                                    />
-                                    {passwordForm.errors.password && (
-                                        <p className="text-xs text-rose-600 mt-1">{passwordForm.errors.password}</p>
-                                    )}
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
-                                        Confirm New Password
-                                    </label>
-                                    <input
-                                        type="password"
-                                        value={passwordForm.data.password_confirmation}
-                                        onChange={(e) => passwordForm.setData('password_confirmation', e.target.value)}
-                                        className="w-full px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200 text-stone-900 text-sm focus:border-amber-600 focus:bg-white focus:ring-1 focus:ring-amber-600 outline-none transition-colors"
-                                    />
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    disabled={passwordForm.processing}
-                                    className="px-6 py-3 rounded-2xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs uppercase tracking-wider transition-colors disabled:opacity-50"
-                                >
-                                    {passwordForm.processing ? 'Updating...' : 'Change Password'}
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                )}
-
-                {/* Tab: Saved Addresses */}
-                {activeTab === 'addresses' && (
-                    <div className="space-y-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <h3 className="font-serif font-bold text-stone-900 text-lg">Your Saved Delivery Addresses</h3>
-                                <p className="text-xs text-stone-500">Manage home, office, and celebration addresses for quick delivery</p>
-                            </div>
-                            <button
-                                onClick={() => alert('New address modal: Ready to add fresh address.')}
-                                className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-colors"
-                            >
-                                + Add New Address
-                            </button>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {savedAddresses.map((addr) => (
-                                <div key={addr.id} className="bg-white rounded-3xl border border-amber-200 p-6 shadow-sm flex flex-col justify-between">
-                                    <div>
-                                        <div className="flex items-center justify-between mb-3">
-                                            <div className="flex items-center gap-2">
-                                                <MapPinIcon className="w-5 h-5 text-amber-600" />
-                                                <span className="font-serif font-bold text-stone-900">{addr.title}</span>
-                                            </div>
-                                            {addr.is_default && (
-                                                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
-                                                    Default Address
-                                                </span>
-                                            )}
-                                        </div>
-
-                                        <p className="text-xs font-bold text-stone-800">{addr.recipient_name} • {addr.phone}</p>
-                                        <p className="text-xs text-stone-600 mt-1 leading-relaxed">
-                                            {addr.address_line}, {addr.landmark}
-                                        </p>
-                                        <p className="text-xs font-semibold text-stone-700 mt-1">
-                                            {addr.city} - {addr.pincode}
-                                        </p>
-                                    </div>
-
-                                    <div className="mt-5 pt-4 border-t border-stone-100 flex items-center justify-between text-xs">
-                                        <button
-                                            onClick={() => alert(`Editing ${addr.title}`)}
-                                            className="text-amber-700 font-bold hover:underline"
-                                        >
-                                            Edit Address
-                                        </button>
-                                        {!addr.is_default && (
-                                            <button
-                                                onClick={() => alert(`Set ${addr.title} as default`)}
-                                                className="text-stone-500 hover:text-stone-800 font-medium"
-                                            >
-                                                Make Default
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {/* Tab: Full Orders History */}
-                {activeTab === 'orders' && (
-                    <div className="bg-white rounded-3xl border border-amber-200 p-6 md:p-8 shadow-sm">
-                        <h3 className="font-serif font-bold text-stone-900 text-lg mb-1">Dayal Sweets Order Records</h3>
-                        <p className="text-xs text-stone-500 mb-6">Complete list of previous purchases and deliveries</p>
-
-                        <div className="divide-y divide-stone-100">
-                            {orderHistory.map((item) => (
-                                <div key={item.order_id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                    <div>
-                                        <div className="flex items-center gap-2">
-                                            <span className="font-mono font-bold text-amber-700 text-xs">#{item.order_id}</span>
-                                            <span className="text-xs text-stone-400">• {item.date}</span>
-                                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                                                item.status === 'Delivered'
-                                                    ? 'bg-emerald-100 text-emerald-800'
-                                                    : 'bg-amber-100 text-amber-800'
-                                            }`}>
-                                                {item.status}
-                                            </span>
-                                        </div>
-                                        <p className="text-xs font-semibold text-stone-800 mt-1">{item.items}</p>
-                                        <p className="text-[11px] text-stone-400 mt-0.5">{item.payment}</p>
-                                    </div>
-
-                                    <div className="flex items-center gap-4">
-                                        <span className="font-serif text-lg font-black text-stone-900">
-                                            ₹{item.total}
-                                        </span>
-                                        <button
-                                            onClick={() => alert(`Downloading invoice for #${item.order_id}`)}
-                                            className="px-3.5 py-1.5 rounded-xl border border-stone-200 text-stone-700 hover:bg-stone-50 text-xs font-bold transition-colors"
-                                        >
-                                            Invoice PDF
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
+                {/* Navigation Tabs */}
+                <div className="dayal-profile-tabs">
+                    <button
+                        onClick={() => setActiveTab('profile')}
+                        className={`dayal-tab-btn ${activeTab === 'profile' ? 'active' : ''}`}
+                    >
+                        Profile & Security
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('addresses')}
+                        className={`dayal-tab-btn ${activeTab === 'addresses' ? 'active' : ''}`}
+                    >
+                        Saved Addresses ({savedAddresses.length})
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('orders')}
+                        className={`dayal-tab-btn ${activeTab === 'orders' ? 'active' : ''}`}
+                    >
+                        All Orders ({orderHistory.length})
+                    </button>
+                </div>
             </div>
+
+            {/* Tab: Profile & Security */}
+            {activeTab === 'profile' && (
+                <div className="dayal-grid-2">
+                    {/* Personal Details Form */}
+                    <div className="dayal-card">
+                        <div className="dayal-flex-start dayal-mb-4">
+                            <UserIcon width="20" height="20" />
+                            <div>
+                                <h3 className="dayal-font-serif">Personal Details</h3>
+                                <p className="dayal-text-muted">Update your name and primary contact email</p>
+                            </div>
+                        </div>
+
+                        <form onSubmit={handleProfileSubmit}>
+                            <div className="dayal-form-group">
+                                <label className="dayal-label">
+                                    Full Name
+                                </label>
+                                <input
+                                    type="text"
+                                    value={profileForm.data.name}
+                                    onChange={(e) => profileForm.setData('name', e.target.value)}
+                                    className="dayal-input"
+                                />
+                                {profileForm.errors.name && (
+                                    <p className="dayal-input-error">{profileForm.errors.name}</p>
+                                )}
+                            </div>
+
+                            <div className="dayal-form-group">
+                                <label className="dayal-label">
+                                    Email Address
+                                </label>
+                                <input
+                                    type="email"
+                                    value={profileForm.data.email}
+                                    onChange={(e) => profileForm.setData('email', e.target.value)}
+                                    className="dayal-input"
+                                />
+                                {profileForm.errors.email && (
+                                    <p className="dayal-input-error">{profileForm.errors.email}</p>
+                                )}
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={profileForm.processing}
+                                className="dayal-btn dayal-btn--primary"
+                            >
+                                {profileForm.processing ? 'Saving...' : 'Update Details'}
+                            </button>
+                        </form>
+                    </div>
+
+                    {/* Security Password Form */}
+                    <div className="dayal-card">
+                        <div className="dayal-flex-start dayal-mb-4">
+                            <KeyIcon width="20" height="20" />
+                            <div>
+                                <h3 className="dayal-font-serif">Account Security</h3>
+                                <p className="dayal-text-muted">Change your login password anytime</p>
+                            </div>
+                        </div>
+
+                        <form onSubmit={handlePasswordSubmit}>
+                            <div className="dayal-form-group">
+                                <label className="dayal-label">
+                                    Current Password
+                                </label>
+                                <input
+                                    type="password"
+                                    value={passwordForm.data.current_password}
+                                    onChange={(e) => passwordForm.setData('current_password', e.target.value)}
+                                    className="dayal-input"
+                                />
+                                {passwordForm.errors.current_password && (
+                                    <p className="dayal-input-error">{passwordForm.errors.current_password}</p>
+                                )}
+                            </div>
+
+                            <div className="dayal-form-group">
+                                <label className="dayal-label">
+                                    New Password
+                                </label>
+                                <input
+                                    type="password"
+                                    value={passwordForm.data.password}
+                                    onChange={(e) => passwordForm.setData('password', e.target.value)}
+                                    className="dayal-input"
+                                />
+                                {passwordForm.errors.password && (
+                                    <p className="dayal-input-error">{passwordForm.errors.password}</p>
+                                )}
+                            </div>
+
+                            <div className="dayal-form-group">
+                                <label className="dayal-label">
+                                    Confirm New Password
+                                </label>
+                                <input
+                                    type="password"
+                                    value={passwordForm.data.password_confirmation}
+                                    onChange={(e) => passwordForm.setData('password_confirmation', e.target.value)}
+                                    className="dayal-input"
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={passwordForm.processing}
+                                className="dayal-btn dayal-btn--secondary"
+                            >
+                                {passwordForm.processing ? 'Updating...' : 'Change Password'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Tab: Saved Addresses */}
+            {activeTab === 'addresses' && (
+                <div>
+                    <div className="dayal-flex-between dayal-mb-3">
+                        <div>
+                            <h3 className="dayal-font-serif">Your Saved Delivery Addresses</h3>
+                            <p className="dayal-text-muted">Manage delivery destinations for express dispatch</p>
+                        </div>
+                        <button
+                            onClick={() => alert('Add Address: Dialog ready.')}
+                            className="dayal-btn dayal-btn--primary dayal-btn--sm"
+                        >
+                            + Add New Address
+                        </button>
+                    </div>
+
+                    <div className="dayal-address-grid">
+                        {savedAddresses.map((addr) => (
+                            <div key={addr.id} className="dayal-card">
+                                <div className="dayal-flex-between dayal-mb-2">
+                                    <div className="dayal-flex-start">
+                                        <MapPinIcon width="18" height="18" />
+                                        <h4 className="dayal-font-serif">{addr.title}</h4>
+                                    </div>
+                                    {addr.is_default && (
+                                        <span className="dayal-badge dayal-badge--gold-subtle">
+                                            Default Address
+                                        </span>
+                                    )}
+                                </div>
+
+                                <p className="dayal-fs-base"><strong>{addr.recipient_name}</strong> • {addr.phone}</p>
+                                <p className="dayal-text-muted dayal-mt-1">
+                                    {addr.address_line}, {addr.landmark}
+                                </p>
+                                <p className="dayal-text-muted">
+                                    {addr.city} - {addr.pincode}
+                                </p>
+
+                                <div className="dayal-flex-between dayal-mt-4">
+                                    <button
+                                        onClick={() => alert(`Editing ${addr.title}`)}
+                                        className="dayal-btn dayal-btn--outline dayal-btn--sm"
+                                    >
+                                        Edit Address
+                                    </button>
+                                    {!addr.is_default && (
+                                        <button
+                                            onClick={() => alert(`Set ${addr.title} as default`)}
+                                            className="dayal-btn dayal-btn--ghost dayal-btn--sm"
+                                        >
+                                            Make Default
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Tab: Full Orders History */}
+            {activeTab === 'orders' && (
+                <div className="dayal-order-history-card">
+                    <h3 className="dayal-font-serif">Dayal Sweets Order Records</h3>
+                    <p className="dayal-text-muted dayal-mb-4">Complete list of previous purchases and deliveries</p>
+
+                    <div>
+                        {orderHistory.map((item) => (
+                            <div key={item.order_id} className="dayal-history-row">
+                                <div>
+                                    <div className="dayal-flex-start">
+                                        <strong className="dayal-text-maroon">#{item.order_id}</strong>
+                                        <span className="dayal-text-muted">• {item.date}</span>
+                                        <span className={`dayal-badge ${
+                                            item.status === 'Delivered'
+                                                ? 'dayal-badge--green'
+                                                : 'dayal-badge--gold'
+                                        }`}>
+                                            {item.status}
+                                        </span>
+                                    </div>
+                                    <p className="dayal-mt-1">{item.items}</p>
+                                    <p className="dayal-text-muted">{item.payment}</p>
+                                </div>
+
+                                <div className="dayal-flex-start">
+                                    <strong className="dayal-font-serif dayal-fs-lg">
+                                        ₹{item.total}
+                                    </strong>
+                                    <button
+                                        onClick={() => alert(`Downloading invoice for #${item.order_id}`)}
+                                        className="dayal-btn dayal-btn--outline dayal-btn--sm"
+                                    >
+                                        Invoice PDF
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
         </CustomerLayout>
     );
 }

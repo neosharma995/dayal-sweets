@@ -31,11 +31,39 @@ class RoleAndDashboardTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_admin_login_screen_can_be_rendered(): void
+    public function test_admin_login_url_redirects_to_single_login(): void
     {
         $response = $this->get('/admin/login');
 
-        $response->assertStatus(200);
+        $response->assertRedirect(route('login'));
+    }
+
+    public function test_admin_can_authenticate_via_single_login_and_redirects_to_admin_dashboard(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(UserRole::Admin->value);
+
+        $response = $this->post('/login', [
+            'email' => $admin->email,
+            'password' => 'password',
+        ]);
+
+        $this->assertAuthenticatedAs($admin);
+        $response->assertRedirect(route('admin.dashboard', absolute: false));
+    }
+
+    public function test_customer_can_authenticate_via_single_login_and_redirects_to_customer_dashboard(): void
+    {
+        $customer = User::factory()->create();
+        $customer->assignRole(UserRole::Customer->value);
+
+        $response = $this->post('/login', [
+            'email' => $customer->email,
+            'password' => 'password',
+        ]);
+
+        $this->assertAuthenticatedAs($customer);
+        $response->assertRedirect(route('customer.dashboard', absolute: false));
     }
 
     public function test_admin_can_authenticate_via_admin_login(): void
@@ -74,7 +102,7 @@ class RoleAndDashboardTest extends TestCase
         $response = $this->actingAs($admin)->post('/admin/logout');
 
         $this->assertGuest();
-        $response->assertRedirect(route('admin.login'));
+        $response->assertRedirect(route('login'));
     }
 
     public function test_admin_can_access_admin_dashboard(): void

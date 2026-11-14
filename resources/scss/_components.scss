@@ -180,7 +180,10 @@
   cursor: pointer;
 }
 
-// --- Alerts ---
+// --- Flash Message Wrapper ---
+.dayal-flash-wrapper {
+  margin-top: 1.25rem;
+}
 .dayal-alert {
   padding: 1rem 1.25rem;
   border-radius: $radius-lg;
@@ -209,7 +212,130 @@
   }
 }
 
-// --- Logo Component ---
+// --- Generic Dropdown ---
+.dayal-dropdown {
+  position: relative;
+  display: inline-block;
+
+  &-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+  }
+
+  &-menu {
+    position: absolute;
+    top: 100%;
+    margin-top: 0.5rem;
+    z-index: 50;
+    min-width: 12rem;
+    background-color: $color-white;
+    border: 1px solid $color-cream-border;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-xl;
+    padding: 0.35rem 0;
+
+    &--right {
+      right: 0;
+    }
+
+    &--left {
+      left: 0;
+    }
+  }
+
+  &-item {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+    color: $color-text;
+    text-align: left;
+    transition: $transition-fast;
+
+    &:hover {
+      background-color: $color-cream;
+      color: $color-maroon;
+    }
+  }
+}
+
+// --- Generic Modal ---
+.dayal-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow-y: auto;
+  padding: 1.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(43, 37, 35, 0.65);
+    backdrop-filter: blur(4px);
+  }
+
+  &-panel {
+    position: relative;
+    width: 100%;
+    max-width: 32rem;
+    background-color: $color-white;
+    border: 1px solid $color-cream-border;
+    border-radius: $radius-xl;
+    box-shadow: $shadow-xl;
+    padding: 2rem;
+    z-index: 10;
+  }
+}
+
+// --- Generic NavLink ---
+.dayal-simple-navlink {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: $color-text-muted;
+  border-bottom: 2px solid transparent;
+  transition: $transition-fast;
+
+  &:hover {
+    color: $color-maroon;
+    border-color: $color-cream-border;
+  }
+
+  &.active {
+    color: $color-maroon;
+    border-color: $color-maroon;
+    font-weight: 700;
+  }
+}
+
+.dayal-simple-responsive-navlink {
+  display: block;
+  width: 100%;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: $color-text;
+  border-left: 4px solid transparent;
+  transition: $transition-fast;
+
+  &:hover {
+    background-color: $color-cream;
+    color: $color-maroon;
+  }
+
+  &.active {
+    background-color: rgba(99, 24, 38, 0.08);
+    border-color: $color-maroon;
+    color: $color-maroon;
+    font-weight: 700;
+  }
+}
 .dayal-logo-container {
   display: inline-flex;
   align-items: center;

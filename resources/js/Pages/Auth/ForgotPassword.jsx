@@ -20,12 +20,12 @@ export default function ForgotPassword({ status }) {
             <Head title="Forgot Password - Dayal Sweets" />
 
             {status && (
-                <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800">
+                <div className="dayal-alert dayal-alert--success dayal-mb-4">
                     {status}
                 </div>
             )}
 
-            <form onSubmit={submit} className="space-y-4">
+            <form onSubmit={submit}>
                 <div className="dayal-input-group">
                     <label htmlFor="email">Registered Email Address</label>
                     <div className="input-wrapper">
@@ -49,18 +49,15 @@ export default function ForgotPassword({ status }) {
                 <button
                     type="submit"
                     disabled={processing}
-                    className="dayal-submit-btn mt-2"
+                    className="dayal-submit-btn"
                 >
                     {processing ? 'Sending Reset Link...' : 'Email Password Reset Link'}
                 </button>
             </form>
 
-            <div className="mt-8 pt-5 border-t border-[#EADBCA] text-center text-xs text-stone-500">
+            <div className="dayal-auth-footer">
                 Remember your password?{' '}
-                <Link
-                    href={route('login')}
-                    className="font-bold text-[#631826] hover:text-[#4A0E1A] hover:underline"
-                >
+                <Link href={route('login')}>
                     Back to Sign In →
                 </Link>
             </div>

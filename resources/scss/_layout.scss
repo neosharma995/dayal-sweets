@@ -94,6 +94,14 @@
   }
 }
 
+.dayal-block { display: block; }
+
+.dayal-col-span-2 {
+  @include respond-to('lg') {
+    grid-column: span 2;
+  }
+}
+
 .dayal-flex-between {
   @include flex-between;
 }
@@ -104,4 +112,10 @@
 
 .dayal-flex-start {
   @include flex-start;
+}
+
+.dayal-flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }

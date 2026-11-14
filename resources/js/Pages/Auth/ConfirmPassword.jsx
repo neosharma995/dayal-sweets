@@ -23,11 +23,11 @@ export default function ConfirmPassword() {
         >
             <Head title="Confirm Password - Dayal Sweets" />
 
-            <form onSubmit={submit} className="space-y-4">
+            <form onSubmit={submit}>
                 <div className="dayal-input-group">
                     <label htmlFor="password">Password</label>
                     <div className="input-wrapper">
-                        <KeyIcon className="field-icon" />
+                        <KeyIcon className="field-icon" width="16" height="16" />
                         <input
                             id="password"
                             type="password"
@@ -45,7 +45,7 @@ export default function ConfirmPassword() {
                 <button
                     type="submit"
                     disabled={processing}
-                    className="dayal-submit-btn mt-2"
+                    className="dayal-submit-btn"
                 >
                     {processing ? 'Confirming...' : 'Confirm Password'}
                 </button>

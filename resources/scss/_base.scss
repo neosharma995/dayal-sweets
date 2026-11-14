@@ -72,6 +72,34 @@ img, svg {
   max-width: 100%;
 }
 
+// Utility Primitives in SCSS
+.dayal-mt-1 { margin-top: 0.25rem; }
+.dayal-mt-2 { margin-top: 0.5rem; }
+.dayal-mt-3 { margin-top: 0.75rem; }
+.dayal-mt-4 { margin-top: 1rem; }
+.dayal-mt-5 { margin-top: 1.25rem; }
+.dayal-mt-6 { margin-top: 1.5rem; }
+.dayal-mt-8 { margin-top: 2rem; }
+
+.dayal-mb-1 { margin-bottom: 0.25rem; }
+.dayal-mb-2 { margin-bottom: 0.5rem; }
+.dayal-mb-3 { margin-bottom: 0.75rem; }
+.dayal-mb-4 { margin-bottom: 1rem; }
+.dayal-mb-6 { margin-bottom: 1.5rem; }
+
+.dayal-text-muted { color: $color-text-muted; }
+.dayal-text-maroon { color: $color-maroon; }
+.dayal-text-gold { color: $color-gold; }
+.dayal-text-center { text-align: center; }
+.dayal-text-right { text-align: right; }
+
+.dayal-fs-sm { font-size: 0.75rem; }
+.dayal-fs-base { font-size: 0.875rem; }
+.dayal-fs-md { font-size: 1.125rem; font-weight: 700; }
+.dayal-fs-lg { font-size: 1.35rem; font-weight: 800; }
+.dayal-fs-xl { font-size: 1.75rem; font-weight: 800; }
+.dayal-fs-2xl { font-size: 2.25rem; font-weight: 800; }
+
 // Scrollbar
 ::-webkit-scrollbar {
   width: 8px;

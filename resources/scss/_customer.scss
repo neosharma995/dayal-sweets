@@ -224,13 +224,36 @@
   }
 
   .dayal-tracker-timeline {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    padding-top: 1.25rem;
+    position: relative;
+    padding: 1.5rem 0;
 
-    @include respond-to('md') {
+    .dayal-progress-track {
+      position: absolute;
+      top: 2.25rem;
+      left: 10%;
+      right: 10%;
+      height: 4px;
+      background-color: $color-cream-border;
+      z-index: 1;
+
+      .dayal-progress-bar {
+        height: 100%;
+        background-color: $color-maroon;
+        transition: width $transition-smooth;
+
+        &--1 { width: 0%; }
+        &--2 { width: 33.333%; }
+        &--3 { width: 66.666%; }
+        &--4 { width: 100%; }
+      }
+    }
+
+    .dayal-timeline-steps-grid {
+      display: grid;
       grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      position: relative;
+      z-index: 2;
     }
 
     .dayal-timeline-step {
@@ -281,6 +304,71 @@
   }
 }
 
+.dayal-order-items-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+  background-color: $color-cream;
+  border-radius: $radius-lg;
+
+  @include respond-to('md') {
+    grid-template-columns: 1.2fr 1fr;
+  }
+}
+
+.dayal-order-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.85rem;
+  background-color: $color-white;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-md;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.dayal-order-history-card {
+  @include card-surface;
+  padding: 1.5rem;
+
+  .dayal-history-row {
+    padding: 1rem 0;
+    border-bottom: 1px solid $color-cream-border;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    @include respond-to('sm') {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+  }
+}
+
+.dayal-address-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+
+  @include respond-to('md') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 // Customer Profile Card & Tabs
 .dayal-customer-profile-banner {
   @include card-surface;
@@ -312,6 +400,10 @@
       font-weight: 800;
       @include flex-center;
       box-shadow: $shadow-md;
+
+      &--gold {
+        background: linear-gradient(135deg, $color-gold 0%, #8A6425 100%);
+      }
     }
 
     .dayal-profile-details {

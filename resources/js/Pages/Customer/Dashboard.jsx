@@ -1,21 +1,21 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import CustomerLayout from '@/Layouts/CustomerLayout';
-import { StarIcon, TruckIcon, CheckCircleIcon, ClockIcon, MapPinIcon, BoxIcon, PhoneIcon, LogOutIcon } from '@/Components/Icons';
+import { StarIcon, MapPinIcon, PhoneIcon, LogOutIcon } from '@/Components/Icons';
 
 export default function CustomerDashboard({ overview, activeOrder, recentPastOrders, recommendedSweets }) {
     return (
         <CustomerLayout
             header={
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="dayal-flex-between">
                     <div>
-                        <span className="text-xs font-bold uppercase tracking-widest text-amber-700">Namaste & Welcome Back</span>
-                        <h1 className="font-serif text-2xl md:text-3xl font-black text-stone-900">Your Sweets Dashboard</h1>
+                        <span className="dayal-badge dayal-badge--gold">Namaste & Welcome Back</span>
+                        <h1 className="dayal-font-serif">Your Sweets Dashboard</h1>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="dayal-header-actions">
                         <Link
                             href={route('customer.account')}
-                            className="px-4 py-2 rounded-xl bg-white border border-amber-200 text-stone-800 text-xs font-bold hover:bg-amber-50 shadow-sm transition-colors"
+                            className="dayal-btn dayal-btn--outline dayal-btn--sm"
                         >
                             Manage Saved Addresses & Profile
                         </Link>
@@ -23,9 +23,9 @@ export default function CustomerDashboard({ overview, activeOrder, recentPastOrd
                             method="post"
                             href={route('logout')}
                             as="button"
-                            className="px-4 py-2 rounded-xl bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 text-xs font-bold shadow-sm transition-colors flex items-center gap-1.5"
+                            className="dayal-btn dayal-btn--danger dayal-btn--sm"
                         >
-                            <LogOutIcon className="w-3.5 h-3.5" />
+                            <LogOutIcon width="14" height="14" />
                             <span>Logout</span>
                         </Link>
                     </div>
@@ -34,253 +34,250 @@ export default function CustomerDashboard({ overview, activeOrder, recentPastOrd
         >
             <Head title="Customer Dashboard - Dayal Sweets" />
 
-            <div className="space-y-8">
-                {/* Sweet Rewards & Overview Banner */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Rewards Card */}
-                    <div className="p-6 rounded-3xl bg-gradient-to-br from-amber-600 via-amber-500 to-amber-700 text-white shadow-lg shadow-amber-600/20 relative overflow-hidden flex flex-col justify-between">
-                        <div>
-                            <div className="flex items-center justify-between">
-                                <span className="text-xs font-bold uppercase tracking-wider text-amber-100">Sweet Rewards Balance</span>
-                                <span className="p-1.5 rounded-full bg-white/20">
-                                    <StarIcon className="w-4 h-4 text-white fill-white" />
-                                </span>
-                            </div>
-                            <p className="font-serif text-3xl font-black mt-2">{overview.sweet_rewards_points} Points</p>
-                            <p className="text-xs text-amber-100 font-medium mt-1">Worth {overview.points_cash_value}</p>
-                        </div>
-                        <div className="mt-4 pt-3 border-t border-white/20 flex items-center justify-between text-xs">
-                            <span className="font-bold">{overview.tier}</span>
-                            <span className="bg-white/20 px-2 py-0.5 rounded-full text-[11px] font-semibold">Earn 10 pts per ₹100</span>
+            {/* Sweet Rewards & Overview Banner */}
+            <div className="dayal-overview-grid">
+                {/* Rewards Card */}
+                <div className="dayal-rewards-card">
+                    <div className="dayal-rewards-top">
+                        <span className="dayal-rewards-label">Sweet Rewards Balance</span>
+                        <div className="dayal-rewards-star">
+                            <StarIcon width="16" height="16" />
                         </div>
                     </div>
-
-                    {/* Total Orders Card */}
-                    <div className="p-6 rounded-3xl bg-white border border-amber-100 shadow-sm flex flex-col justify-between">
-                        <div>
-                            <span className="text-xs font-bold uppercase tracking-wider text-stone-400">Past Orders Placed</span>
-                            <p className="font-serif text-3xl font-black text-stone-900 mt-2">{overview.total_orders_placed}</p>
-                            <p className="text-xs text-stone-500 mt-1">All orders crafted fresh in 100% pure desi ghee</p>
-                        </div>
-                        <div className="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between text-xs">
-                            <span className="text-stone-500 font-medium">Saved Addresses: {overview.saved_addresses_count}</span>
-                            <Link href={route('customer.account')} className="text-amber-700 font-bold hover:underline">
-                                View Details →
-                            </Link>
-                        </div>
+                    <div>
+                        <p className="dayal-rewards-points">{overview.sweet_rewards_points} Points</p>
+                        <p className="dayal-rewards-value">Worth {overview.points_cash_value}</p>
                     </div>
-
-                    {/* Freshness & Support Guarantee */}
-                    <div className="p-6 rounded-3xl bg-amber-900 text-amber-50 shadow-sm flex flex-col justify-between">
-                        <div>
-                            <span className="text-xs font-bold uppercase tracking-wider text-amber-300">Dayal Sweets Quality Pledge</span>
-                            <h3 className="font-serif text-lg font-bold mt-1 text-white">Daily Kitchen Fresh Guarantee</h3>
-                            <p className="text-xs text-amber-200/80 mt-1">Every sweet box is prepared in morning batches without artificial preservatives.</p>
-                        </div>
-                        <div className="mt-4 pt-3 border-t border-amber-800 flex items-center justify-between text-xs">
-                            <span>Same-Day City Dispatch</span>
-                            <span className="text-amber-300 font-bold">100% Vegetarian</span>
-                        </div>
+                    <div className="dayal-rewards-footer">
+                        <span className="dayal-tier-pill">{overview.tier}</span>
+                        <span>Earn 10 pts per ₹100</span>
                     </div>
                 </div>
 
-                {/* Active Live Order Tracker */}
-                {activeOrder && (
-                    <div className="bg-white rounded-3xl border border-amber-200 p-6 md:p-8 shadow-sm">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-amber-100 gap-3">
-                            <div>
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">
-                                    <span className="w-2 h-2 rounded-full bg-amber-600 animate-ping"></span>
-                                    Active Order Live Progress
-                                </span>
-                                <h2 className="font-serif text-xl font-black text-stone-900 mt-2">
-                                    Order #{activeOrder.order_id}
-                                </h2>
-                                <p className="text-xs text-stone-500">
-                                    Placed on {activeOrder.order_date} • Estimated: <strong className="text-stone-800">{activeOrder.estimated_delivery}</strong>
-                                </p>
-                            </div>
-
-                            <div className="text-left sm:text-right">
-                                <span className="text-xs text-stone-500 block">Total Order Value</span>
-                                <span className="font-serif text-2xl font-black text-amber-700">₹{activeOrder.total_amount}</span>
-                                <span className="text-[11px] text-stone-500 block font-medium">{activeOrder.payment_mode}</span>
-                            </div>
-                        </div>
-
-                        {/* Visual Progress Steps */}
-                        <div className="py-8">
-                            <div className="grid grid-cols-4 gap-2 relative">
-                                <div className="absolute top-5 left-10 right-10 h-1 bg-amber-100 -z-0">
-                                    <div
-                                        className="h-full bg-amber-600 transition-all duration-500"
-                                        style={{ width: `${((activeOrder.current_step - 1) / 3) * 100}%` }}
-                                    ></div>
-                                </div>
-
-                                {/* Step 1 */}
-                                <div className="text-center relative z-10">
-                                    <div className="w-10 h-10 mx-auto rounded-full bg-amber-600 text-white flex items-center justify-center font-bold text-xs shadow-md shadow-amber-600/30">
-                                        ✓
-                                    </div>
-                                    <p className="text-xs font-bold text-stone-900 mt-2">Order Confirmed</p>
-                                    <span className="text-[10px] text-stone-500 hidden sm:block">Payment received</span>
-                                </div>
-
-                                {/* Step 2 */}
-                                <div className="text-center relative z-10">
-                                    <div className="w-10 h-10 mx-auto rounded-full bg-amber-600 text-white flex items-center justify-center font-bold text-xs shadow-md shadow-amber-600/30 animate-pulse">
-                                        2
-                                    </div>
-                                    <p className="text-xs font-bold text-amber-700 mt-2">Kitchen Preparation</p>
-                                    <span className="text-[10px] text-stone-500 hidden sm:block">Freshly crafted & packed</span>
-                                </div>
-
-                                {/* Step 3 */}
-                                <div className="text-center relative z-10">
-                                    <div className="w-10 h-10 mx-auto rounded-full bg-amber-100 text-amber-700 border border-amber-300 flex items-center justify-center font-bold text-xs">
-                                        3
-                                    </div>
-                                    <p className="text-xs font-medium text-stone-500 mt-2">Out for Delivery</p>
-                                    <span className="text-[10px] text-stone-400 hidden sm:block">Express dispatch van</span>
-                                </div>
-
-                                {/* Step 4 */}
-                                <div className="text-center relative z-10">
-                                    <div className="w-10 h-10 mx-auto rounded-full bg-amber-100 text-amber-700 border border-amber-300 flex items-center justify-center font-bold text-xs">
-                                        4
-                                    </div>
-                                    <p className="text-xs font-medium text-stone-500 mt-2">Delivered</p>
-                                    <span className="text-[10px] text-stone-400 hidden sm:block">Enjoy sweet moments</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Order Items & Destination Address */}
-                        <div className="bg-amber-50/50 rounded-2xl p-4 md:p-5 border border-amber-100 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                            <div>
-                                <h4 className="font-bold text-stone-900 mb-2 uppercase tracking-wider text-[11px]">Items in this sweet box:</h4>
-                                <ul className="space-y-1.5 text-stone-700">
-                                    {activeOrder.items.map((item, idx) => (
-                                        <li key={idx} className="flex justify-between items-center bg-white p-2.5 rounded-xl border border-amber-100">
-                                            <span className="font-medium">{item.name} ({item.weight}) × {item.qty}</span>
-                                            <span className="font-bold text-stone-900">₹{item.price}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-
-                            <div className="flex flex-col justify-between bg-white p-4 rounded-xl border border-amber-100">
-                                <div>
-                                    <h4 className="font-bold text-stone-900 mb-1 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-                                        <MapPinIcon className="w-4 h-4 text-amber-600" />
-                                        Delivery Destination:
-                                    </h4>
-                                    <p className="text-stone-700 mt-1 leading-relaxed">{activeOrder.delivery_address}</p>
-                                </div>
-
-                                <div className="mt-3 pt-3 border-t border-stone-100 flex items-center justify-between">
-                                    <span className="text-stone-500 text-[11px]">Questions about this delivery?</span>
-                                    <a
-                                        href="tel:+911145678900"
-                                        className="text-amber-700 font-bold hover:underline flex items-center gap-1"
-                                    >
-                                        <PhoneIcon className="w-3.5 h-3.5" />
-                                        Call Store Hotline
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                {/* Total Orders Card */}
+                <div className="dayal-metric-card">
+                    <div>
+                        <span className="dayal-metric-label">Past Orders Placed</span>
+                        <p className="dayal-metric-value">{overview.total_orders_placed}</p>
+                        <p className="dayal-metric-subtext">All orders crafted fresh in 100% pure desi ghee</p>
                     </div>
-                )}
-
-                {/* Handcrafted Bestsellers & Recommendations */}
-                <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h2 className="font-serif text-xl font-bold text-stone-900">Recommended For You</h2>
-                            <p className="text-xs text-stone-500">Popular traditional sweets prepared fresh today in our Chandni Chowk kitchen</p>
-                        </div>
-                        <Link href="/" className="text-xs font-bold text-amber-700 hover:underline">
-                            View All Sweets →
+                    <div className="dayal-metric-footer">
+                        <span>Saved Addresses: {overview.saved_addresses_count}</span>
+                        <Link href={route('customer.account')}>
+                            View Details →
                         </Link>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {recommendedSweets.map((sweet) => (
-                            <div key={sweet.id} className="bg-white rounded-3xl border border-amber-100 p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
-                                <div>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
-                                            {sweet.tag}
-                                        </span>
-                                        <div className="flex items-center gap-1 text-amber-500 text-xs font-bold">
-                                            <StarIcon className="w-3.5 h-3.5 fill-current" />
-                                            <span>{sweet.rating}</span>
-                                        </div>
-                                    </div>
-
-                                    <h3 className="font-serif font-bold text-stone-900 text-base">{sweet.name}</h3>
-                                    <p className="text-xs text-stone-500 mt-1">{sweet.description}</p>
-                                </div>
-
-                                <div className="mt-5 pt-4 border-t border-stone-100 flex items-center justify-between">
-                                    <div>
-                                        <span className="text-[10px] text-stone-400 block">{sweet.weight}</span>
-                                        <span className="font-serif text-lg font-black text-amber-700">₹{sweet.price}</span>
-                                    </div>
-                                    <button
-                                        onClick={() => alert(`Added ${sweet.name} to your cart!`)}
-                                        className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-colors shadow-sm"
-                                    >
-                                        Add to Cart
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
                     </div>
                 </div>
 
-                {/* Past Orders History Summary */}
-                <div className="bg-white rounded-3xl border border-amber-100 p-6 shadow-sm">
-                    <div className="flex items-center justify-between pb-4 border-b border-stone-100">
+                {/* Freshness & Support Guarantee */}
+                <div className="dayal-metric-card">
+                    <div>
+                        <span className="dayal-metric-label">Dayal Sweets Quality Pledge</span>
+                        <p className="dayal-font-serif dayal-fs-md dayal-mt-2">
+                            Daily Kitchen Fresh Guarantee
+                        </p>
+                        <p className="dayal-metric-subtext">Every sweet box is prepared in morning batches without artificial preservatives.</p>
+                    </div>
+                    <div className="dayal-metric-footer">
+                        <span>Same-Day City Dispatch</span>
+                        <span className="dayal-badge dayal-badge--gold-subtle">100% Vegetarian</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* Active Live Order Tracker */}
+            {activeOrder && (
+                <div className="dayal-tracker-card">
+                    <div className="dayal-tracker-header">
                         <div>
-                            <h2 className="font-serif text-lg font-bold text-stone-900">Recent Sweet Orders</h2>
-                            <p className="text-xs text-stone-500">Fast 1-click reorder for your favorite celebrations</p>
+                            <span className="dayal-badge dayal-badge--gold">
+                                Active Order Live Progress
+                            </span>
+                            <h2 className="dayal-font-serif dayal-mt-1">
+                                Order #{activeOrder.order_id}
+                            </h2>
+                            <p className="dayal-text-muted">
+                                Placed on {activeOrder.order_date} • Estimated: <strong>{activeOrder.estimated_delivery}</strong>
+                            </p>
                         </div>
-                        <Link href={route('customer.account')} className="text-xs font-bold text-amber-700 hover:underline">
-                            View Full Order History →
-                        </Link>
+
+                        <div>
+                            <span className="dayal-text-muted">Total Order Value</span>
+                            <p className="dayal-font-serif dayal-text-maroon dayal-fs-xl">
+                                ₹{activeOrder.total_amount}
+                            </p>
+                            <span className="dayal-badge dayal-badge--gold-subtle">{activeOrder.payment_mode}</span>
+                        </div>
                     </div>
 
-                    <div className="divide-y divide-stone-100 mt-2">
-                        {recentPastOrders.map((order) => (
-                            <div key={order.order_id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="font-mono font-bold text-amber-700 text-xs">#{order.order_id}</span>
-                                        <span className="text-xs text-stone-400">• {order.order_date}</span>
-                                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                                            {order.status}
-                                        </span>
-                                    </div>
-                                    <p className="text-xs font-medium text-stone-700 mt-1">{order.items_summary}</p>
-                                </div>
+                    {/* Visual Progress Steps */}
+                    <div className="dayal-tracker-timeline">
+                        <div className="dayal-progress-track">
+                            <div className={`dayal-progress-bar dayal-progress-bar--${activeOrder.current_step}`} />
+                        </div>
 
-                                <div className="flex items-center gap-4">
-                                    <span className="font-serif font-black text-stone-900 text-sm">
-                                        ₹{order.total_amount}
+                        <div className="dayal-timeline-steps-grid">
+                            <div className="dayal-timeline-step">
+                                <div className={`dayal-step-circle ${activeOrder.current_step >= 1 ? 'dayal-step-circle--done' : 'dayal-step-circle--pending'}`}>
+                                    ✓
+                                </div>
+                                <div className="dayal-step-info">
+                                    <h5>Order Confirmed</h5>
+                                    <span>Payment received</span>
+                                </div>
+                            </div>
+
+                            <div className="dayal-timeline-step">
+                                <div className={`dayal-step-circle ${activeOrder.current_step === 2 ? 'dayal-step-circle--active' : activeOrder.current_step > 2 ? 'dayal-step-circle--done' : 'dayal-step-circle--pending'}`}>
+                                    2
+                                </div>
+                                <div className="dayal-step-info">
+                                    <h5>Kitchen Prep</h5>
+                                    <span>Freshly crafted</span>
+                                </div>
+                            </div>
+
+                            <div className="dayal-timeline-step">
+                                <div className={`dayal-step-circle ${activeOrder.current_step === 3 ? 'dayal-step-circle--active' : activeOrder.current_step > 3 ? 'dayal-step-circle--done' : 'dayal-step-circle--pending'}`}>
+                                    3
+                                </div>
+                                <div className="dayal-step-info">
+                                    <h5>Out for Delivery</h5>
+                                    <span>Express dispatch</span>
+                                </div>
+                            </div>
+
+                            <div className="dayal-timeline-step">
+                                <div className={`dayal-step-circle ${activeOrder.current_step === 4 ? 'dayal-step-circle--done' : 'dayal-step-circle--pending'}`}>
+                                    4
+                                </div>
+                                <div className="dayal-step-info">
+                                    <h5>Delivered</h5>
+                                    <span>Enjoy sweets</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Order Items & Destination Address */}
+                    <div className="dayal-order-items-grid">
+                        <div>
+                            <h4 className="dayal-mb-2">Items in this sweet box:</h4>
+                            <div>
+                                {activeOrder.items.map((item, idx) => (
+                                    <div key={idx} className="dayal-order-item-row">
+                                        <span>{item.name} ({item.weight}) × {item.qty}</span>
+                                        <strong>₹{item.price}</strong>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="dayal-card dayal-card--subtle">
+                            <div>
+                                <h4 className="dayal-flex-start dayal-mb-1">
+                                    <MapPinIcon width="16" height="16" />
+                                    <span>Delivery Destination:</span>
+                                </h4>
+                                <p className="dayal-text-muted">{activeOrder.delivery_address}</p>
+                            </div>
+
+                            <div className="dayal-flex-between dayal-mt-4">
+                                <span className="dayal-text-muted">Questions?</span>
+                                <a href="tel:+919876543210" className="dayal-flex-start dayal-text-maroon">
+                                    <PhoneIcon width="14" height="14" />
+                                    <span>Call Hotline</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Handcrafted Bestsellers & Recommendations */}
+            <div>
+                <div className="dayal-flex-between dayal-mb-4">
+                    <div>
+                        <h2 className="dayal-font-serif">Recommended For You</h2>
+                        <p className="dayal-text-muted">Popular traditional sweets prepared fresh today in our kitchen</p>
+                    </div>
+                    <Link href="/" className="dayal-btn dayal-btn--outline dayal-btn--sm">
+                        View All Sweets →
+                    </Link>
+                </div>
+
+                <div className="dayal-grid-3">
+                    {recommendedSweets.map((sweet) => (
+                        <div key={sweet.id} className="dayal-card dayal-card--interactive">
+                            <div className="dayal-flex-between dayal-mb-2">
+                                <span className="dayal-badge dayal-badge--gold-subtle">
+                                    {sweet.tag}
+                                </span>
+                                <div className="dayal-flex-start dayal-text-gold">
+                                    <StarIcon width="14" height="14" />
+                                    <span>{sweet.rating}</span>
+                                </div>
+                            </div>
+
+                            <h3 className="dayal-font-serif">{sweet.name}</h3>
+                            <p className="dayal-text-muted dayal-mt-1">{sweet.description}</p>
+
+                            <div className="dayal-flex-between dayal-mt-5">
+                                <div>
+                                    <span className="dayal-text-muted">{sweet.weight}</span>
+                                    <p className="dayal-font-serif dayal-text-maroon dayal-fs-lg">
+                                        ₹{sweet.price}
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={() => alert(`Added ${sweet.name} to your cart!`)}
+                                    className="dayal-btn dayal-btn--primary dayal-btn--sm"
+                                >
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Past Orders History Summary */}
+            <div className="dayal-order-history-card">
+                <div className="dayal-flex-between dayal-mb-3">
+                    <div>
+                        <h2 className="dayal-font-serif">Recent Sweet Orders</h2>
+                        <p className="dayal-text-muted">Fast 1-click reorder for your celebrations</p>
+                    </div>
+                    <Link href={route('customer.account')} className="dayal-btn dayal-btn--outline dayal-btn--sm">
+                        View Full History →
+                    </Link>
+                </div>
+
+                <div>
+                    {recentPastOrders.map((order) => (
+                        <div key={order.order_id} className="dayal-history-row">
+                            <div>
+                                <div className="dayal-flex-start">
+                                    <strong className="dayal-text-maroon">#{order.order_id}</strong>
+                                    <span className="dayal-text-muted">• {order.order_date}</span>
+                                    <span className="dayal-badge dayal-badge--green">
+                                        {order.status}
                                     </span>
-                                    <button
-                                        onClick={() => alert(`Reordering items from #${order.order_id}`)}
-                                        className="px-3.5 py-1.5 rounded-xl border border-amber-300 text-amber-800 hover:bg-amber-50 text-xs font-bold transition-colors"
-                                    >
-                                        Reorder
-                                    </button>
                                 </div>
+                                <p className="dayal-text-muted dayal-mt-1">{order.items_summary}</p>
                             </div>
-                        ))}
-                    </div>
+
+                            <div className="dayal-flex-start">
+                                <strong className="dayal-font-serif dayal-fs-md">₹{order.total_amount}</strong>
+                                <button
+                                    onClick={() => alert(`Reordering items from #${order.order_id}`)}
+                                    className="dayal-btn dayal-btn--outline dayal-btn--sm"
+                                >
+                                    Reorder
+                                </button>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </CustomerLayout>

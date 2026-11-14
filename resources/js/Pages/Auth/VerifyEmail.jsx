@@ -17,17 +17,17 @@ export default function VerifyEmail({ status }) {
         >
             <Head title="Email Verification - Dayal Sweets" />
 
-            <div className="mb-5 text-xs text-stone-600 leading-relaxed">
+            <div className="dayal-mb-4 dayal-text-muted">
                 Thank you for registering! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we'll gladly send another.
             </div>
 
             {status === 'verification-link-sent' && (
-                <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800">
+                <div className="dayal-alert dayal-alert--success dayal-mb-4">
                     A fresh verification link has been sent to your registered email address.
                 </div>
             )}
 
-            <form onSubmit={submit} className="space-y-4">
+            <form onSubmit={submit}>
                 <button
                     type="submit"
                     disabled={processing}
@@ -36,12 +36,12 @@ export default function VerifyEmail({ status }) {
                     {processing ? 'Sending Link...' : 'Resend Verification Email'}
                 </button>
 
-                <div className="pt-2 text-center">
+                <div className="dayal-text-center dayal-mt-4">
                     <Link
                         href={route('logout')}
                         method="post"
                         as="button"
-                        className="text-xs font-semibold text-stone-500 hover:text-stone-800 underline"
+                        className="dayal-text-muted"
                     >
                         Sign Out
                     </Link>

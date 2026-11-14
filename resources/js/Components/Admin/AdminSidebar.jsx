@@ -11,25 +11,21 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar }) {
             {sidebarOpen && (
                 <div
                     onClick={onCloseSidebar}
-                    className="fixed inset-0 bg-black/60 z-40 md:hidden"
+                    className="dayal-admin-backdrop"
                 />
             )}
 
-            <aside
-                className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-950 border-r border-slate-800 flex flex-col justify-between transition-transform duration-300 md:static md:translate-x-0 ${
-                    sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                }`}
-            >
+            <aside className={`dayal-admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
                 <div>
                     {/* Brand header */}
-                    <div className="h-16 flex items-center px-6 border-b border-slate-800 bg-amber-500/10">
-                        <Link href={route('admin.dashboard')} className="flex items-center gap-3">
-                            <span className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-amber-500/20">
+                    <div className="dayal-sidebar-brand">
+                        <Link href={route('admin.dashboard')} className="dayal-sidebar-brand-inner">
+                            <span className="dayal-admin-emblem">
                                 DS
                             </span>
                             <div>
-                                <span className="font-bold text-lg tracking-tight text-white block">Dayal Sweets</span>
-                                <span className="text-[10px] tracking-widest uppercase font-semibold text-amber-400 block -mt-1">
+                                <span className="dayal-admin-title">Dayal Sweets</span>
+                                <span className="dayal-admin-badge">
                                     Admin Portal
                                 </span>
                             </div>
@@ -37,66 +33,58 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar }) {
                     </div>
 
                     {/* Navigation Menu */}
-                    <nav className="p-4 space-y-1.5 text-sm font-medium">
-                        <div className="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <nav className="dayal-sidebar-nav">
+                        <div className="dayal-nav-group-title">
                             Management
                         </div>
 
                         <Link
                             href={route('admin.dashboard')}
-                            className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-colors ${
-                                route().current('admin.dashboard')
-                                    ? 'bg-amber-500 text-slate-950 font-semibold shadow-md shadow-amber-500/20'
-                                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                            }`}
+                            className={`dayal-sidebar-link ${route().current('admin.dashboard') ? 'active' : ''}`}
                         >
-                            <StoreIcon className="w-5 h-5" />
+                            <StoreIcon width="18" height="18" />
                             <span>Store Dashboard</span>
                         </Link>
 
                         <Link
                             href={route('admin.account')}
-                            className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-colors ${
-                                route().current('admin.account')
-                                    ? 'bg-amber-500 text-slate-950 font-semibold shadow-md shadow-amber-500/20'
-                                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                            }`}
+                            className={`dayal-sidebar-link ${route().current('admin.account') ? 'active' : ''}`}
                         >
-                            <ShieldCheckIcon className="w-5 h-5" />
+                            <ShieldCheckIcon width="18" height="18" />
                             <span>Admin & Store Settings</span>
                         </Link>
 
-                        <div className="pt-4 px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                        <div className="dayal-nav-group-title">
                             Storefront Views
                         </div>
 
                         <Link
                             href="/"
-                            className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-400 hover:text-amber-300 hover:bg-slate-900 transition-colors"
+                            className="dayal-sidebar-link"
                         >
-                            <BoxIcon className="w-5 h-5" />
+                            <BoxIcon width="18" height="18" />
                             <span>View Public Storefront</span>
                         </Link>
 
                         <Link
                             href={route('customer.dashboard')}
-                            className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-400 hover:text-emerald-300 hover:bg-slate-900 transition-colors"
+                            className="dayal-sidebar-link"
                         >
-                            <UserIcon className="w-5 h-5" />
+                            <UserIcon width="18" height="18" />
                             <span>Customer Portal View</span>
                         </Link>
                     </nav>
                 </div>
 
                 {/* Footer User Info & Logout */}
-                <div className="p-4 border-t border-slate-800 bg-slate-950/60">
-                    <div className="flex items-center gap-3 mb-3 px-1">
-                        <div className="w-9 h-9 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold text-sm">
+                <div className="dayal-sidebar-footer">
+                    <div className="dayal-admin-user-card">
+                        <div className="dayal-admin-user-avatar">
                             {auth?.user?.name?.charAt(0) || 'A'}
                         </div>
-                        <div className="overflow-hidden">
-                            <p className="text-sm font-semibold text-white truncate">{auth?.user?.name}</p>
-                            <span className="inline-flex items-center text-[10px] bg-amber-400/10 text-amber-300 px-2 py-0.5 rounded-full font-medium border border-amber-400/20">
+                        <div>
+                            <p className="dayal-admin-user-name">{auth?.user?.name}</p>
+                            <span className="dayal-admin-role-pill">
                                 Administrator
                             </span>
                         </div>
@@ -106,9 +94,9 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar }) {
                         method="post"
                         href={route('admin.logout')}
                         as="button"
-                        className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-medium text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 rounded-lg transition-colors border border-rose-500/20"
+                        className="dayal-admin-logout-btn"
                     >
-                        <LogOutIcon className="w-4 h-4" />
+                        <LogOutIcon width="16" height="16" />
                         <span>Sign Out</span>
                     </Link>
                 </div>

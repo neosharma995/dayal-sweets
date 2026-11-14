@@ -26,7 +26,7 @@ export default function ResetPassword({ token, email }) {
         >
             <Head title="Reset Password - Dayal Sweets" />
 
-            <form onSubmit={submit} className="space-y-4">
+            <form onSubmit={submit}>
                 <div className="dayal-input-group">
                     <label htmlFor="email">Email Address</label>
                     <div className="input-wrapper">
@@ -49,7 +49,7 @@ export default function ResetPassword({ token, email }) {
                 <div className="dayal-input-group">
                     <label htmlFor="password">New Password</label>
                     <div className="input-wrapper">
-                        <KeyIcon className="field-icon" />
+                        <KeyIcon className="field-icon" width="16" height="16" />
                         <input
                             id="password"
                             type="password"
@@ -68,7 +68,7 @@ export default function ResetPassword({ token, email }) {
                 <div className="dayal-input-group">
                     <label htmlFor="password_confirmation">Confirm New Password</label>
                     <div className="input-wrapper">
-                        <KeyIcon className="field-icon" />
+                        <KeyIcon className="field-icon" width="16" height="16" />
                         <input
                             id="password_confirmation"
                             type="password"
@@ -88,7 +88,7 @@ export default function ResetPassword({ token, email }) {
                 <button
                     type="submit"
                     disabled={processing}
-                    className="dayal-submit-btn mt-2"
+                    className="dayal-submit-btn"
                 >
                     {processing ? 'Resetting Password...' : 'Reset Password'}
                 </button>

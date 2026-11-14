@@ -1,0 +1,19 @@
+// Main Application Stylesheet with Custom SCSS
+@use './variables' as *;
+@use './mixins' as *;
+@use './auth' as *;
+@use './header' as *;
+@use './footer' as *;
+
+// Custom utility classes
+.font-serif-mithai {
+  font-family: $font-serif;
+}
+
+.text-gold-gradient {
+  @include gold-gradient-text;
+}
+
+.mithai-card-shadow {
+  box-shadow: $shadow-mithai;
+}

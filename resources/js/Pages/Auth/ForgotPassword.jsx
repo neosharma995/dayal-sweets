@@ -1,8 +1,6 @@
-import InputError from '@/Components/InputError';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
+import React from 'react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, useForm } from '@inertiajs/react';
 
 export default function ForgotPassword({ status }) {
     const { data, setData, post, processing, errors } = useForm({
@@ -11,45 +9,61 @@ export default function ForgotPassword({ status }) {
 
     const submit = (e) => {
         e.preventDefault();
-
         post(route('password.email'));
     };
 
     return (
-        <GuestLayout>
-            <Head title="Forgot Password" />
-
-            <div className="mb-4 text-sm text-gray-600">
-                Forgot your password? No problem. Just let us know your email
-                address and we will email you a password reset link that will
-                allow you to choose a new one.
-            </div>
+        <GuestLayout
+            title="Reset Your Password"
+            subtitle="Enter your registered email and we'll send you an instant reset link"
+        >
+            <Head title="Forgot Password - Dayal Sweets" />
 
             {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
+                <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800">
                     {status}
                 </div>
             )}
 
-            <form onSubmit={submit}>
-                <TextInput
-                    id="email"
-                    type="email"
-                    name="email"
-                    value={data.email}
-                    className="mt-1 block w-full"
-                    isFocused={true}
-                    onChange={(e) => setData('email', e.target.value)}
-                />
-
-                <InputError message={errors.email} className="mt-2" />
-
-                <div className="mt-4 flex items-center justify-end">
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Email Password Reset Link
-                    </PrimaryButton>
+            <form onSubmit={submit} className="space-y-4">
+                <div className="dayal-input-group">
+                    <label htmlFor="email">Registered Email Address</label>
+                    <div className="input-wrapper">
+                        <svg className="field-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206" />
+                        </svg>
+                        <input
+                            id="email"
+                            type="email"
+                            name="email"
+                            value={data.email}
+                            placeholder="Enter your email"
+                            autoFocus
+                            onChange={(e) => setData('email', e.target.value)}
+                            required
+                        />
+                    </div>
+                    {errors.email && <p className="error-message">{errors.email}</p>}
                 </div>
+
+                <button
+                    type="submit"
+                    disabled={processing}
+                    className="dayal-submit-btn mt-2"
+                >
+                    {processing ? 'Sending Reset Link...' : 'Email Password Reset Link'}
+                </button>
             </form>
+
+            <div className="mt-8 pt-5 border-t border-[#EADBCA] text-center text-xs text-stone-500">
+                Remember your password?{' '}
+                <Link
+                    href={route('login')}
+                    className="font-bold text-[#631826] hover:text-[#4A0E1A] hover:underline"
+                >
+                    Back to Sign In →
+                </Link>
+            </div>
         </GuestLayout>
     );
 }

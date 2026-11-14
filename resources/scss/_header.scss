@@ -1,0 +1,100 @@
+// Header SCSS styling for Dayal Sweets - Royal Himachal Palette
+@use './variables' as *;
+@use './mixins' as *;
+
+.dayal-header-topbar {
+  background-color: #631826;
+  color: #FAF6F0;
+  font-size: 0.6875rem;
+  padding: 0.45rem 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  a {
+    transition: $transition-smooth;
+    &:hover {
+      color: #E6C88A;
+    }
+  }
+}
+
+.dayal-navbar {
+  background: #FCF8F2;
+  border-bottom: 1px solid #EADBCA;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  box-shadow: 0 4px 20px -2px rgba(67, 11, 21, 0.04);
+  transition: $transition-smooth;
+}
+
+.dayal-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #2B2523;
+  position: relative;
+  transition: $transition-smooth;
+
+  &:hover {
+    color: #631826;
+  }
+
+  &.active {
+    color: #631826;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0.75rem;
+      right: 0.75rem;
+      height: 2px;
+      background-color: #631826;
+      border-radius: 1px;
+    }
+  }
+}
+
+.dayal-order-now-btn {
+  background-color: #631826;
+  color: #FFFFFF;
+  padding: 0.55rem 1.35rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover {
+    background-color: #4A0E1A;
+    box-shadow: 0 4px 14px rgba(99, 24, 38, 0.35);
+  }
+}
+
+.dayal-cart-badge-maroon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 9999px;
+  background-color: #631826;
+  color: #FFFFFF;
+  font-size: 0.625rem;
+  font-weight: 800;
+  border: 1.5px solid #FCF8F2;
+}

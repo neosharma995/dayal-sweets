@@ -1,0 +1,45 @@
+@use './variables' as *;
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin glass-panel($bg-opacity: 0.9, $blur: 16px) {
+  background: rgba(255, 255, 255, $bg-opacity);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+}
+
+@mixin gold-gradient-text {
+  background: linear-gradient(135deg, #d4af37 0%, #b88e4b 60%, #916827 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@mixin maroon-btn {
+  background-color: $color-brand-maroon;
+  color: #ffffff;
+  transition: $transition-smooth;
+
+  &:hover {
+    background-color: $color-brand-maroon-hover;
+    box-shadow: 0 8px 20px -4px rgba(99, 24, 38, 0.35);
+  }
+}
+
+@mixin auth-input-focus {
+  transition: $transition-smooth;
+  &:focus {
+    outline: none;
+    border-color: $color-brand-maroon;
+    box-shadow: 0 0 0 3px rgba(99, 24, 38, 0.12);
+  }
+}

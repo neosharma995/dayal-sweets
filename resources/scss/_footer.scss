@@ -1,0 +1,132 @@
+// Footer SCSS styling for Dayal Sweets
+@use './variables' as *;
+@use './mixins' as *;
+
+.dayal-footer {
+  background: #1c1917;
+  color: #d6d3d1;
+  border-top: 1px solid #292524;
+  margin-top: auto;
+
+  .footer-trust-strip {
+    background: #0c0a09;
+    border-bottom: 1px solid #292524;
+    padding: 1.5rem 1rem;
+
+    .trust-card {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+
+      .trust-icon-box {
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 0.875rem;
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.2);
+        color: #fbbf24;
+        @include flex-center;
+        flex-shrink: 0;
+      }
+
+      .trust-title {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        color: #ffffff;
+      }
+
+      .trust-desc {
+        font-size: 0.71875rem;
+        color: #a8a29e;
+      }
+    }
+  }
+
+  .footer-main {
+    padding: 3.5rem 1rem 2.5rem;
+
+    .footer-col-title {
+      font-family: $font-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 1.25rem;
+      position: relative;
+      display: inline-block;
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -0.375rem;
+        width: 1.5rem;
+        height: 2px;
+        background: #f59e0b;
+        border-radius: 1px;
+      }
+    }
+
+    .footer-link {
+      display: block;
+      color: #a8a29e;
+      font-size: 0.8125rem;
+      margin-bottom: 0.625rem;
+      transition: $transition-smooth;
+
+      &:hover {
+        color: #fbbf24;
+        transform: translateX(3px);
+      }
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+
+      input {
+        flex: 1;
+        padding: 0.625rem 0.875rem;
+        background: #292524;
+        border: 1px solid #44403c;
+        border-radius: 0.75rem;
+        font-size: 0.8125rem;
+        color: #ffffff;
+        outline: none;
+
+        &:focus {
+          border-color: #f59e0b;
+        }
+
+        &::placeholder {
+          color: #78716c;
+        }
+      }
+
+      button {
+        padding: 0.625rem 1rem;
+        background: #d97706;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        border-radius: 0.75rem;
+        border: none;
+        cursor: pointer;
+        transition: $transition-smooth;
+
+        &:hover {
+          background: #b45309;
+        }
+      }
+    }
+  }
+
+  .footer-bottom {
+    background: #0c0a09;
+    padding: 1.25rem 1rem;
+    border-top: 1px solid #292524;
+    font-size: 0.75rem;
+    color: #78716c;
+  }
+}

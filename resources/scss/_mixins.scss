@@ -1,5 +1,40 @@
+// ==========================================================================
+// Dayal Sweets - SCSS Mixins
+// ==========================================================================
 @use './variables' as *;
 
+// --- Responsive Breakpoints ---
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'sm' {
+    @media (min-width: #{$bp-sm}) { @content; }
+  } @else if $breakpoint == 'md' {
+    @media (min-width: #{$bp-md}) { @content; }
+  } @else if $breakpoint == 'lg' {
+    @media (min-width: #{$bp-lg}) { @content; }
+  } @else if $breakpoint == 'xl' {
+    @media (min-width: #{$bp-xl}) { @content; }
+  } @else if $breakpoint == '2xl' {
+    @media (min-width: #{$bp-2xl}) { @content; }
+  } @else {
+    @media (min-width: #{$breakpoint}) { @content; }
+  }
+}
+
+@mixin respond-below($breakpoint) {
+  @if $breakpoint == 'sm' {
+    @media (max-width: #{$bp-sm - 1px}) { @content; }
+  } @else if $breakpoint == 'md' {
+    @media (max-width: #{$bp-md - 1px}) { @content; }
+  } @else if $breakpoint == 'lg' {
+    @media (max-width: #{$bp-lg - 1px}) { @content; }
+  } @else if $breakpoint == 'xl' {
+    @media (max-width: #{$bp-xl - 1px}) { @content; }
+  } @else {
+    @media (max-width: #{$breakpoint}) { @content; }
+  }
+}
+
+// --- Flexbox Helpers ---
 @mixin flex-center {
   display: flex;
   align-items: center;
@@ -12,34 +47,161 @@
   justify-content: space-between;
 }
 
-@mixin glass-panel($bg-opacity: 0.9, $blur: 16px) {
+@mixin flex-start {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// --- Container helper ---
+@mixin container-center {
+  width: 100%;
+  max-width: 1320px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+
+  @include respond-to('sm') {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  @include respond-to('lg') {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+// --- Visual & Luxury Effects ---
+@mixin gold-gradient-text {
+  background: linear-gradient(135deg, #E6C88A 0%, #B88E4B 50%, #8A6425 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@mixin maroon-gradient-bg {
+  background: linear-gradient(135deg, $color-maroon 0%, $color-maroon-dark 100%);
+}
+
+@mixin glass-panel($bg-opacity: 0.85, $blur: 16px) {
   background: rgba(255, 255, 255, $bg-opacity);
   backdrop-filter: blur($blur);
   -webkit-backdrop-filter: blur($blur);
 }
 
-@mixin gold-gradient-text {
-  background: linear-gradient(135deg, #d4af37 0%, #b88e4b 60%, #916827 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+// --- Button Base & Variants ---
+@mixin btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: $font-sans;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: $transition-smooth;
+  line-height: 1.25;
+  white-space: nowrap;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
 }
 
-@mixin maroon-btn {
-  background-color: $color-brand-maroon;
-  color: #ffffff;
-  transition: $transition-smooth;
+@mixin btn-maroon {
+  @include btn-base;
+  background-color: $color-maroon;
+  color: $color-white;
+  border-color: $color-maroon;
 
   &:hover {
-    background-color: $color-brand-maroon-hover;
-    box-shadow: 0 8px 20px -4px rgba(99, 24, 38, 0.35);
+    background-color: $color-maroon-hover;
+    border-color: $color-maroon-hover;
+    box-shadow: 0 6px 18px rgba(99, 24, 38, 0.35);
   }
 }
 
-@mixin auth-input-focus {
+@mixin btn-gold {
+  @include btn-base;
+  background-color: $color-gold;
+  color: $color-white;
+  border-color: $color-gold;
+
+  &:hover {
+    background-color: $color-gold-hover;
+    border-color: $color-gold-hover;
+    box-shadow: 0 6px 18px rgba(184, 142, 75, 0.35);
+  }
+}
+
+@mixin btn-outline {
+  @include btn-base;
+  background-color: transparent;
+  color: $color-maroon;
+  border-color: $color-maroon;
+
+  &:hover {
+    background-color: $color-maroon;
+    color: $color-white;
+  }
+}
+
+@mixin btn-danger {
+  @include btn-base;
+  background-color: $color-danger-bg;
+  color: $color-danger;
+  border-color: $color-danger-border;
+
+  &:hover {
+    background-color: $color-danger;
+    color: $color-white;
+    border-color: $color-danger;
+  }
+}
+
+// --- Input Controls ---
+@mixin input-field {
+  width: 100%;
+  font-family: $font-sans;
+  font-size: 0.875rem;
+  color: $color-text;
+  background-color: $color-white;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-md;
+  padding: 0.625rem 0.875rem;
   transition: $transition-smooth;
+
+  &::placeholder {
+    color: $color-text-subtle;
+  }
+
   &:focus {
     outline: none;
-    border-color: $color-brand-maroon;
+    border-color: $color-maroon;
     box-shadow: 0 0 0 3px rgba(99, 24, 38, 0.12);
   }
+
+  &.has-error {
+    border-color: $color-danger;
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.15);
+    }
+  }
+}
+
+// --- Card styling ---
+@mixin card-surface {
+  background-color: $color-white;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-card;
 }

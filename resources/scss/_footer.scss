@@ -1,132 +1,304 @@
-// Footer SCSS styling for Dayal Sweets
+// ==========================================================================
+// Dayal Sweets - Footer SCSS
+// ==========================================================================
 @use './variables' as *;
 @use './mixins' as *;
 
 .dayal-footer {
-  background: #1c1917;
-  color: #d6d3d1;
-  border-top: 1px solid #292524;
-  margin-top: auto;
+  background-color: $color-maroon-dark;
+  color: $color-cream;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 
-  .footer-trust-strip {
-    background: #0c0a09;
-    border-bottom: 1px solid #292524;
-    padding: 1.5rem 1rem;
+  // Trust Strip Banner
+  .dayal-footer-trust-strip {
+    background-color: $color-maroon;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2.25rem 0;
 
-    .trust-card {
+    .dayal-trust-grid {
+      @include container-center;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+
+      @include respond-to('sm') {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @include respond-to('lg') {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .dayal-trust-card {
       display: flex;
       align-items: center;
-      gap: 0.875rem;
+      gap: 1rem;
 
-      .trust-icon-box {
-        width: 2.75rem;
-        height: 2.75rem;
-        border-radius: 0.875rem;
-        background: rgba(245, 158, 11, 0.1);
-        border: 1px solid rgba(245, 158, 11, 0.2);
-        color: #fbbf24;
+      .dayal-trust-icon {
+        width: 3rem;
+        height: 3rem;
+        border-radius: $radius-lg;
+        background-color: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(184, 142, 75, 0.4);
+        color: $color-gold-light;
         @include flex-center;
         flex-shrink: 0;
       }
 
-      .trust-title {
-        font-size: 0.8125rem;
-        font-weight: 700;
-        color: #ffffff;
-      }
+      .dayal-trust-text {
+        h4 {
+          font-family: $font-serif;
+          font-size: 1.05rem;
+          font-weight: 700;
+          color: $color-white;
+          margin-bottom: 0.15rem;
+        }
 
-      .trust-desc {
-        font-size: 0.71875rem;
-        color: #a8a29e;
+        p {
+          font-size: 0.75rem;
+          color: #E2D4C3;
+          line-height: 1.35;
+        }
       }
     }
   }
 
-  .footer-main {
-    padding: 3.5rem 1rem 2.5rem;
+  // Main Footer Content
+  .dayal-footer-main {
+    padding: 4rem 0 3rem;
 
-    .footer-col-title {
-      font-family: $font-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 1.25rem;
-      position: relative;
-      display: inline-block;
+    .dayal-footer-grid {
+      @include container-center;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
 
-      &::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: -0.375rem;
-        width: 1.5rem;
-        height: 2px;
-        background: #f59e0b;
-        border-radius: 1px;
+      @include respond-to('md') {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @include respond-to('lg') {
+        grid-template-columns: 2fr 1fr 1fr 1.5fr;
       }
     }
 
-    .footer-link {
-      display: block;
-      color: #a8a29e;
-      font-size: 0.8125rem;
-      margin-bottom: 0.625rem;
-      transition: $transition-smooth;
+    // Col 1: Brand Info
+    .dayal-footer-brand {
+      .dayal-footer-brand-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
 
-      &:hover {
-        color: #fbbf24;
-        transform: translateX(3px);
+        .dayal-footer-crest {
+          width: 3rem;
+          height: 3rem;
+          border-radius: $radius-lg;
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid $color-gold;
+          color: $color-gold-light;
+          @include flex-center;
+        }
+
+        h3 {
+          font-family: $font-serif;
+          font-size: 1.45rem;
+          font-weight: 800;
+          color: $color-white;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+
+        span {
+          display: block;
+          font-size: 0.5625rem;
+          letter-spacing: 0.2em;
+          color: $color-gold;
+          font-weight: 700;
+          text-transform: uppercase;
+        }
+      }
+
+      p {
+        font-size: 0.8125rem;
+        color: #D3C4B3;
+        line-height: 1.6;
+        margin-bottom: 1.25rem;
+      }
+
+      .dayal-footer-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        .dayal-footer-pill {
+          padding: 0.35rem 0.65rem;
+          border-radius: $radius-sm;
+          background-color: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          font-size: 0.6875rem;
+          color: #E2D4C3;
+          font-weight: 600;
+        }
       }
     }
 
-    .newsletter-form {
+    // Col 2 & 3: Navigation Links
+    .dayal-footer-links {
+      h4 {
+        font-family: $font-serif;
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: $color-gold-light;
+        margin-bottom: 1.25rem;
+        position: relative;
+        padding-bottom: 0.5rem;
+
+        &::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          width: 2rem;
+          height: 2px;
+          background-color: $color-gold;
+        }
+      }
+
+      ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.625rem;
+
+        li a {
+          font-size: 0.8125rem;
+          color: #D3C4B3;
+          transition: $transition-fast;
+
+          &:hover {
+            color: $color-gold-light;
+            padding-left: 0.25rem;
+          }
+        }
+      }
+    }
+
+    // Col 4: Newsletter
+    .dayal-footer-newsletter {
+      h4 {
+        font-family: $font-serif;
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: $color-gold-light;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        font-size: 0.8125rem;
+        color: #D3C4B3;
+        margin-bottom: 1rem;
+        line-height: 1.5;
+      }
+
+      .dayal-newsletter-form {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+
+        input {
+          flex: 1;
+          padding: 0.625rem 0.875rem;
+          font-size: 0.8125rem;
+          border-radius: $radius-sm;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          background-color: rgba(255, 255, 255, 0.08);
+          color: $color-white;
+
+          &::placeholder {
+            color: #9E8E7E;
+          }
+
+          &:focus {
+            outline: none;
+            border-color: $color-gold;
+            background-color: rgba(255, 255, 255, 0.12);
+          }
+        }
+
+        button {
+          @include btn-gold;
+          padding: 0.625rem 1rem;
+          font-size: 0.75rem;
+          border-radius: $radius-sm;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+      }
+
+      .dayal-footer-hotline {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        font-size: 0.8125rem;
+        color: #D3C4B3;
+        margin-bottom: 1.25rem;
+
+        .dayal-hotline-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.5rem;
+        }
+
+        a {
+          color: $color-white;
+          font-weight: 700;
+          &:hover {
+            color: $color-gold-light;
+          }
+        }
+      }
+    }
+  }
+
+  // Bottom bar
+  .dayal-footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background-color: #27050B;
+    padding: 1.25rem 0;
+
+    .dayal-bottom-inner {
+      @include container-center;
       display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      font-size: 0.75rem;
+      color: #B5A493;
 
-      input {
-        flex: 1;
-        padding: 0.625rem 0.875rem;
-        background: #292524;
-        border: 1px solid #44403c;
-        border-radius: 0.75rem;
-        font-size: 0.8125rem;
-        color: #ffffff;
-        outline: none;
-
-        &:focus {
-          border-color: #f59e0b;
-        }
-
-        &::placeholder {
-          color: #78716c;
-        }
-      }
-
-      button {
-        padding: 0.625rem 1rem;
-        background: #d97706;
-        color: #ffffff;
-        font-weight: 700;
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        border-radius: 0.75rem;
-        border: none;
-        cursor: pointer;
-        transition: $transition-smooth;
-
-        &:hover {
-          background: #b45309;
-        }
+      @include respond-to('md') {
+        flex-direction: row;
       }
     }
-  }
 
-  .footer-bottom {
-    background: #0c0a09;
-    padding: 1.25rem 1rem;
-    border-top: 1px solid #292524;
-    font-size: 0.75rem;
-    color: #78716c;
+    .dayal-payment-pills {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      .dayal-pay-pill {
+        padding: 0.2rem 0.5rem;
+        border-radius: $radius-sm;
+        background-color: #2D0C13;
+        border: 1px solid #430B15;
+        font-family: monospace;
+        font-size: 0.6875rem;
+        color: #E2D4C3;
+      }
+    }
   }
 }

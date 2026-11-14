@@ -1,0 +1,360 @@
+// ==========================================================================
+// Dayal Sweets - Customer Portal SCSS
+// ==========================================================================
+@use './variables' as *;
+@use './mixins' as *;
+
+.dayal-customer-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: $color-cream;
+}
+
+.dayal-customer-header {
+  background-color: $color-white;
+  border-bottom: 1px solid $color-cream-border;
+  padding: 1.75rem 0;
+
+  .dayal-customer-header-inner {
+    @include container-center;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    @include respond-to('md') {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .dayal-header-titles {
+      .dayal-header-pretitle {
+        font-size: 0.6875rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: $color-gold-hover;
+      }
+
+      h1 {
+        font-family: $font-serif;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: $color-maroon;
+        margin-top: 0.15rem;
+
+        @include respond-to('md') {
+          font-size: 2.125rem;
+        }
+      }
+    }
+
+    .dayal-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+  }
+}
+
+.dayal-customer-main {
+  flex: 1 0 auto;
+  padding: 2.5rem 0 4rem;
+
+  .dayal-customer-container {
+    @include container-center;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+}
+
+// Rewards Banner & Overview Cards
+.dayal-overview-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  @include respond-to('md') {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.dayal-rewards-card {
+  border-radius: $radius-2xl;
+  background: linear-gradient(135deg, #B88E4B 0%, #9E7432 50%, #631826 100%);
+  color: $color-white;
+  padding: 1.75rem;
+  box-shadow: $shadow-lg;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 180px;
+
+  .dayal-rewards-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .dayal-rewards-label {
+      font-size: 0.6875rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #FBF4E8;
+    }
+
+    .dayal-rewards-star {
+      width: 2rem;
+      height: 2rem;
+      border-radius: $radius-full;
+      background: rgba(255, 255, 255, 0.2);
+      @include flex-center;
+    }
+  }
+
+  .dayal-rewards-points {
+    font-family: $font-serif;
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-top: 0.5rem;
+  }
+
+  .dayal-rewards-value {
+    font-size: 0.8125rem;
+    color: #F5EBD7;
+    margin-top: 0.25rem;
+  }
+
+  .dayal-rewards-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 0.75rem;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.75rem;
+
+    .dayal-tier-pill {
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+}
+
+.dayal-metric-card {
+  @include card-surface;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 180px;
+
+  .dayal-metric-label {
+    font-size: 0.6875rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: $color-text-muted;
+  }
+
+  .dayal-metric-value {
+    font-family: $font-serif;
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: $color-maroon;
+    line-height: 1.1;
+    margin-top: 0.5rem;
+  }
+
+  .dayal-metric-subtext {
+    font-size: 0.75rem;
+    color: $color-text-muted;
+    margin-top: 0.25rem;
+  }
+
+  .dayal-metric-footer {
+    border-top: 1px solid $color-cream-border;
+    padding-top: 0.75rem;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.75rem;
+
+    a {
+      color: $color-maroon;
+      font-weight: 700;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// Active Order Tracker
+.dayal-tracker-card {
+  @include card-surface;
+  border-left: 4px solid $color-gold;
+  padding: 1.5rem;
+
+  .dayal-tracker-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid $color-cream-border;
+
+    @include respond-to('md') {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .dayal-tracker-id {
+      font-family: monospace;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: $color-maroon;
+    }
+  }
+
+  .dayal-tracker-timeline {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding-top: 1.25rem;
+
+    @include respond-to('md') {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .dayal-timeline-step {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      .dayal-step-circle {
+        width: 2rem;
+        height: 2rem;
+        border-radius: $radius-full;
+        @include flex-center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        flex-shrink: 0;
+
+        &--done {
+          background-color: $color-success-bg;
+          color: $color-success;
+          border: 1px solid $color-success-border;
+        }
+
+        &--active {
+          background-color: $color-maroon;
+          color: $color-white;
+          box-shadow: 0 0 0 4px rgba(99, 24, 38, 0.15);
+        }
+
+        &--pending {
+          background-color: $color-cream-surface;
+          color: $color-text-subtle;
+          border: 1px solid $color-cream-border;
+        }
+      }
+
+      .dayal-step-info {
+        font-size: 0.75rem;
+        h5 {
+          font-weight: 700;
+          color: $color-text-heading;
+        }
+        span {
+          color: $color-text-muted;
+          font-size: 0.6875rem;
+        }
+      }
+    }
+  }
+}
+
+// Customer Profile Card & Tabs
+.dayal-customer-profile-banner {
+  @include card-surface;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  @include respond-to('lg') {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem;
+  }
+
+  .dayal-profile-identity {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+
+    .dayal-profile-avatar {
+      width: 4rem;
+      height: 4rem;
+      border-radius: $radius-xl;
+      background: linear-gradient(135deg, $color-maroon 0%, $color-maroon-dark 100%);
+      color: $color-white;
+      font-family: $font-serif;
+      font-size: 1.75rem;
+      font-weight: 800;
+      @include flex-center;
+      box-shadow: $shadow-md;
+    }
+
+    .dayal-profile-details {
+      h2 {
+        font-family: $font-serif;
+        font-size: 1.5rem;
+        color: $color-text-heading;
+      }
+      p {
+        font-size: 0.8125rem;
+        color: $color-text-muted;
+      }
+    }
+  }
+
+  .dayal-profile-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    .dayal-tab-btn {
+      padding: 0.625rem 1.25rem;
+      border-radius: $radius-md;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 1px solid $color-cream-border;
+      background-color: $color-white;
+      color: $color-text;
+      transition: $transition-smooth;
+
+      &.active {
+        background-color: $color-maroon;
+        color: $color-white;
+        border-color: $color-maroon;
+        box-shadow: $shadow-sm;
+      }
+
+      &:hover:not(.active) {
+        background-color: $color-cream;
+        border-color: #D5C7B5;
+      }
+    }
+  }
+}

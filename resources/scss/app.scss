@@ -1,19 +1,16 @@
-// Main Application Stylesheet with Custom SCSS
+// ==========================================================================
+// Dayal Sweets - Main SCSS Application Entry Point
+// Pure SCSS Architecture - Zero Tailwind, Zero Inline Styles
+// ==========================================================================
+
 @use './variables' as *;
 @use './mixins' as *;
-@use './auth' as *;
+@use './base' as *;
+@use './layout' as *;
+@use './components' as *;
 @use './header' as *;
 @use './footer' as *;
-
-// Custom utility classes
-.font-serif-mithai {
-  font-family: $font-serif;
-}
-
-.text-gold-gradient {
-  @include gold-gradient-text;
-}
-
-.mithai-card-shadow {
-  box-shadow: $shadow-mithai;
-}
+@use './home' as *;
+@use './auth' as *;
+@use './customer' as *;
+@use './admin' as *;

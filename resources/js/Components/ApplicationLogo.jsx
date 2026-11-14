@@ -1,13 +1,12 @@
 import React from 'react';
 
-export default function ApplicationLogo({ className = 'w-11 h-11', showText = true }) {
+export default function ApplicationLogo({ showText = true, className = '' }) {
     return (
-        <div className="flex items-center gap-3 select-none">
+        <div className={`dayal-logo-container ${className}`}>
             {/* Traditional Himachali Crest Emblem */}
-            <div className="relative flex-shrink-0">
-                <div className={`${className} rounded-full bg-gradient-to-b from-amber-100 via-amber-50 to-amber-200 border-2 border-amber-600/40 shadow-sm flex items-center justify-center p-1 relative overflow-hidden`}>
-                    {/* Himachali Cap & Feather Crest SVG */}
-                    <svg viewBox="0 0 100 100" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div className="dayal-logo-emblem-wrap">
+                <div className="dayal-logo-circle">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         {/* Golden Radiance Aura */}
                         <circle cx="50" cy="50" r="46" fill="#FDF8ED" stroke="#C5A059" strokeWidth="2" strokeDasharray="3 2" />
                         
@@ -36,11 +35,11 @@ export default function ApplicationLogo({ className = 'w-11 h-11', showText = tr
 
             {/* Typography */}
             {showText && (
-                <div className="text-left">
-                    <span className="font-serif font-extrabold text-xl sm:text-2xl tracking-wider text-[#631826] block leading-none">
+                <div className="dayal-logo-text">
+                    <span className="dayal-logo-name">
                         DAYAL SWEETS
                     </span>
-                    <span className="text-[9px] sm:text-[10px] tracking-[0.25em] uppercase font-semibold text-[#B88E4B] block mt-1">
+                    <span className="dayal-logo-sub">
                         Trust. Tradition. Taste.
                     </span>
                 </div>

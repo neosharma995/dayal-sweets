@@ -1,10 +1,20 @@
-// Header SCSS styling for Dayal Sweets - Royal Himachal Palette
+// ==========================================================================
+// Dayal Sweets - Header SCSS
+// ==========================================================================
 @use './variables' as *;
 @use './mixins' as *;
 
+.dayal-header-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+}
+
+// Top announcement bar
 .dayal-header-topbar {
-  background-color: #631826;
-  color: #FAF6F0;
+  background-color: $color-maroon;
+  color: $color-cream;
   font-size: 0.6875rem;
   padding: 0.45rem 1rem;
   font-weight: 700;
@@ -12,89 +22,469 @@
   text-transform: uppercase;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 
-  a {
-    transition: $transition-smooth;
-    &:hover {
-      color: #E6C88A;
+  .dayal-topbar-inner {
+    @include container-center;
+    @include flex-between;
+  }
+
+  .dayal-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .dayal-topbar-links {
+    display: none;
+    align-items: center;
+    gap: 1.5rem;
+
+    @include respond-to('md') {
+      display: flex;
+    }
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: $transition-fast;
+
+      &:hover {
+        color: $color-gold-light;
+      }
     }
   }
 }
 
+// Main Navbar
 .dayal-navbar {
-  background: #FCF8F2;
-  border-bottom: 1px solid #EADBCA;
-  position: sticky;
-  top: 0;
-  z-index: 40;
+  background-color: $color-cream-surface;
+  border-bottom: 1px solid $color-cream-border;
   box-shadow: 0 4px 20px -2px rgba(67, 11, 21, 0.04);
-  transition: $transition-smooth;
-}
 
-.dayal-nav-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #2B2523;
-  position: relative;
-  transition: $transition-smooth;
-
-  &:hover {
-    color: #631826;
+  .dayal-navbar-inner {
+    @include container-center;
+    @include flex-between;
+    height: 4.75rem;
   }
 
-  &.active {
-    color: #631826;
+  // Brand Lockup
+  .dayal-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 0.75rem;
-      right: 0.75rem;
-      height: 2px;
-      background-color: #631826;
-      border-radius: 1px;
+    .dayal-brand-crest {
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: $radius-lg;
+      background: linear-gradient(135deg, $color-maroon 0%, $color-maroon-dark 100%);
+      color: $color-gold-light;
+      border: 1.5px solid $color-gold;
+      @include flex-center;
+      box-shadow: $shadow-sm;
+    }
+
+    .dayal-brand-text {
+      display: flex;
+      flex-direction: column;
+
+      .dayal-brand-title {
+        font-family: $font-serif;
+        font-size: 1.35rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        color: $color-maroon;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      .dayal-brand-tagline {
+        font-size: 0.5625rem;
+        font-weight: 700;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: $color-gold;
+        margin-top: 0.2rem;
+      }
+    }
+  }
+
+  // Navigation Links
+  .dayal-nav-menu {
+    display: none;
+    align-items: center;
+    gap: 0.75rem;
+
+    @include respond-to('lg') {
+      display: flex;
+    }
+  }
+
+  .dayal-nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 0.65rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $color-text;
+    position: relative;
+    transition: $transition-smooth;
+
+    &:hover {
+      color: $color-maroon;
+    }
+
+    &.active {
+      color: $color-maroon;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0.65rem;
+        right: 0.65rem;
+        height: 2px;
+        background-color: $color-maroon;
+        border-radius: 1px;
+      }
+    }
+  }
+
+  // Shop Dropdown
+  .dayal-shop-dropdown-wrapper {
+    position: relative;
+  }
+
+  .dayal-shop-dropdown-card {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 15rem;
+    background-color: $color-white;
+    border: 1px solid $color-cream-border;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-xl;
+    padding: 0.5rem 0;
+    z-index: 50;
+
+    a {
+      display: block;
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: $color-text;
+      transition: $transition-fast;
+
+      &:hover {
+        background-color: $color-cream;
+        color: $color-maroon;
+      }
+    }
+  }
+
+  // Header Actions
+  .dayal-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    @include respond-to('sm') {
+      gap: 0.75rem;
+    }
+
+    .dayal-action-btn {
+      padding: 0.5rem;
+      border-radius: $radius-md;
+      color: $color-text;
+      transition: $transition-fast;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        color: $color-maroon;
+        background-color: rgba(99, 24, 38, 0.05);
+      }
+    }
+
+    // Direct 1-Click Logout Button on Header
+    .dayal-header-logout-btn {
+      display: none;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: $radius-md;
+      background-color: $color-danger-bg;
+      color: $color-danger;
+      border: 1px solid $color-danger-border;
+      font-size: 0.75rem;
+      font-weight: 700;
+      transition: $transition-smooth;
+
+      @include respond-to('sm') {
+        display: inline-flex;
+      }
+
+      &:hover {
+        background-color: $color-danger;
+        color: $color-white;
+        border-color: $color-danger;
+      }
+    }
+
+    // Cart Button & Maroon Badge
+    .dayal-cart-btn {
+      position: relative;
+      padding: 0.5rem;
+      color: $color-text;
+      transition: $transition-fast;
+
+      &:hover {
+        color: $color-maroon;
+      }
+
+      .dayal-cart-badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 1.125rem;
+        height: 1.125rem;
+        border-radius: $radius-full;
+        background-color: $color-maroon;
+        color: $color-white;
+        font-size: 0.625rem;
+        font-weight: 800;
+        @include flex-center;
+        border: 2px solid $color-cream-surface;
+      }
+    }
+
+    // Order Now Button
+    .dayal-order-btn {
+      display: none;
+      @include btn-maroon;
+      padding: 0.625rem 1.35rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 800;
+      border-radius: $radius-sm;
+
+      @include respond-to('sm') {
+        display: inline-flex;
+      }
+    }
+
+    // Hamburger button
+    .dayal-hamburger-btn {
+      display: flex;
+      padding: 0.5rem;
+      border-radius: $radius-md;
+      color: $color-text;
+
+      @include respond-to('lg') {
+        display: none;
+      }
+
+      &:hover {
+        background-color: rgba(99, 24, 38, 0.05);
+      }
     }
   }
 }
 
-.dayal-order-now-btn {
-  background-color: #631826;
-  color: #FFFFFF;
-  padding: 0.55rem 1.35rem;
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  border-radius: 0.25rem;
-  border: none;
-  cursor: pointer;
-  transition: $transition-smooth;
+// User Menu Dropdown
+.dayal-user-dropdown-wrapper {
+  position: relative;
 
-  &:hover {
-    background-color: #4A0E1A;
-    box-shadow: 0 4px 14px rgba(99, 24, 38, 0.35);
+  .dayal-user-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: $radius-md;
+    border: 1px solid transparent;
+    transition: $transition-fast;
+
+    &:hover {
+      background-color: rgba(99, 24, 38, 0.05);
+      border-color: $color-cream-border;
+    }
+
+    .dayal-avatar {
+      width: 2rem;
+      height: 2rem;
+      border-radius: $radius-full;
+      background-color: $color-maroon;
+      color: $color-white;
+      font-size: 0.8125rem;
+      font-weight: 800;
+      @include flex-center;
+    }
+
+    .dayal-user-name {
+      display: none;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: $color-text;
+      max-width: 90px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      @include respond-to('xl') {
+        display: inline-block;
+      }
+    }
+  }
+
+  .dayal-user-dropdown-card {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.5rem);
+    width: 15rem;
+    background-color: $color-white;
+    border: 1px solid $color-cream-border;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-xl;
+    padding: 0.5rem 0;
+    z-index: 60;
+
+    .dayal-dropdown-header {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid $color-cream-border;
+      background-color: $color-cream;
+
+      .dayal-user-title {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        color: $color-text-heading;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .dayal-user-email {
+        font-size: 0.6875rem;
+        color: $color-text-muted;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-top: 0.15rem;
+      }
+    }
+
+    .dayal-dropdown-link {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.625rem 1rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: $color-text;
+      transition: $transition-fast;
+
+      &:hover {
+        background-color: $color-cream;
+        color: $color-maroon;
+      }
+    }
+
+    .dayal-dropdown-divider {
+      height: 1px;
+      background-color: $color-cream-border;
+      margin: 0.35rem 0;
+    }
+
+    .dayal-dropdown-logout {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.625rem 1rem;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: $color-danger;
+      transition: $transition-fast;
+      text-align: left;
+
+      &:hover {
+        background-color: $color-danger-bg;
+      }
+    }
   }
 }
 
-.dayal-cart-badge-maroon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: -4px;
-  right: -6px;
-  width: 1.05rem;
-  height: 1.05rem;
-  border-radius: 9999px;
-  background-color: #631826;
-  color: #FFFFFF;
-  font-size: 0.625rem;
-  font-weight: 800;
-  border: 1.5px solid #FCF8F2;
+// Search Flyout
+.dayal-search-flyout {
+  background-color: $color-cream;
+  border-bottom: 1px solid $color-cream-border;
+  padding: 0.875rem 1rem;
+
+  .dayal-search-inner {
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .dayal-search-input {
+    flex: 1;
+    @include input-field;
+    border-radius: $radius-sm;
+  }
+
+  .dayal-search-submit {
+    @include btn-maroon;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-radius: $radius-sm;
+  }
+}
+
+// Mobile Menu Drawer
+.dayal-mobile-drawer {
+  background-color: $color-cream-surface;
+  border-bottom: 1px solid $color-cream-border;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: $shadow-lg;
+
+  @include respond-to('lg') {
+    display: none;
+  }
+
+  .dayal-mobile-link {
+    padding: 0.5rem 0;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: $color-text;
+    border-bottom: 1px dashed $color-cream-border;
+
+    &:hover, &.active {
+      color: $color-maroon;
+    }
+  }
+
+  .dayal-mobile-auth {
+    padding-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .dayal-mobile-auth-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
 }

@@ -1,0 +1,559 @@
+// ==========================================================================
+// Dayal Sweets - Homepage / Hero SCSS (Faithful to Reference Image)
+// ==========================================================================
+@use './variables' as *;
+@use './mixins' as *;
+
+.dayal-hero-section {
+  position: relative;
+  overflow: hidden;
+  background-color: $color-cream;
+  border-bottom: 1px solid $color-cream-border;
+  padding: 3rem 0;
+
+  @include respond-to('lg') {
+    padding: 5rem 0 6rem;
+  }
+
+  .dayal-hero-container {
+    @include container-center;
+    position: relative;
+  }
+
+  .dayal-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items: center;
+
+    @include respond-to('lg') {
+      grid-template-columns: 60px 1.1fr 1fr 40px;
+      gap: 1.5rem;
+    }
+  }
+
+  // Vertical Slider 01-03 (Left)
+  .dayal-hero-slider-nav {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    font-family: monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: $color-text-subtle;
+
+    @include respond-to('lg') {
+      display: flex;
+    }
+
+    button {
+      transition: $transition-smooth;
+      padding: 0.25rem;
+
+      &.active {
+        color: $color-maroon;
+        transform: scale(1.25);
+      }
+
+      &:hover:not(.active) {
+        color: $color-text;
+      }
+    }
+
+    .dayal-slider-track {
+      width: 1px;
+      height: 4.5rem;
+      background-color: $color-cream-border;
+      position: relative;
+
+      .dayal-slider-thumb {
+        position: absolute;
+        width: 100%;
+        height: 33.333%;
+        background-color: $color-maroon;
+        transition: $transition-smooth;
+
+        &--1 {
+          top: 0;
+        }
+
+        &--2 {
+          top: 33.333%;
+        }
+
+        &--3 {
+          top: 66.666%;
+        }
+      }
+    }
+  }
+
+  // Hero Copy Content
+  .dayal-hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    .dayal-hero-specialty {
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: $color-gold;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      &::after {
+        content: '';
+        width: 2.5rem;
+        height: 1px;
+        background-color: $color-gold;
+      }
+    }
+
+    .dayal-hero-title {
+      font-family: $font-serif;
+      font-size: 2.5rem;
+      line-height: 1.08;
+      font-weight: 700;
+      color: $color-maroon;
+
+      @include respond-to('md') {
+        font-size: 3.5rem;
+      }
+
+      @include respond-to('xl') {
+        font-size: 4.25rem;
+      }
+
+      .dayal-title-line {
+        display: block;
+      }
+
+      .dayal-gold-accent {
+        color: $color-gold;
+        font-style: normal;
+      }
+    }
+
+    .dayal-hero-description {
+      font-size: 0.9375rem;
+      line-height: 1.65;
+      color: $color-text-muted;
+      max-width: 520px;
+    }
+
+    .dayal-hero-cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-top: 0.5rem;
+
+      .dayal-cta-shop {
+        @include btn-maroon;
+        padding: 0.85rem 2rem;
+        font-size: 0.8125rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border-radius: $radius-sm;
+      }
+
+      .dayal-cta-gifting {
+        @include btn-outline;
+        padding: 0.85rem 2rem;
+        font-size: 0.8125rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border-radius: $radius-sm;
+      }
+    }
+  }
+
+  // Hero Image Presentation (Right)
+  .dayal-hero-art {
+    position: relative;
+    @include flex-center;
+
+    .dayal-katli-illustration {
+      width: 100%;
+      max-width: 440px;
+      filter: drop-shadow(0 25px 35px rgba(99, 24, 38, 0.14));
+      transition: $transition-slow;
+
+      &:hover {
+        transform: scale(1.02) rotate(-0.5deg);
+      }
+    }
+
+    // Circular 60+ Years Badge
+    .dayal-heritage-badge {
+      position: absolute;
+      bottom: 0;
+      right: 1rem;
+      width: 6.5rem;
+      height: 6.5rem;
+      border-radius: $radius-full;
+      background-color: $color-cream-surface;
+      border: 1.5px solid $color-gold;
+      @include flex-center;
+      flex-direction: column;
+      text-align: center;
+      box-shadow: $shadow-md;
+      padding: 0.5rem;
+
+      .dayal-badge-years {
+        font-family: $font-serif;
+        font-size: 1.65rem;
+        font-weight: 800;
+        color: $color-gold-hover;
+        line-height: 1;
+      }
+
+      .dayal-badge-label {
+        font-size: 0.48rem;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: $color-text-muted;
+        margin-top: 0.25rem;
+      }
+    }
+  }
+
+  // Vertical Social Bar (Far Right)
+  .dayal-hero-social {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: $color-text-muted;
+
+    @include respond-to('lg') {
+      display: flex;
+    }
+
+    .dayal-social-label {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      margin-bottom: 0.5rem;
+    }
+
+    a {
+      transition: $transition-fast;
+      color: $color-text-muted;
+
+      &:hover {
+        color: $color-maroon;
+        transform: scale(1.2);
+      }
+    }
+  }
+}
+
+// Bestsellers Section
+.dayal-bestsellers-section {
+  padding: 4.5rem 0;
+  background-color: $color-cream;
+
+  .dayal-bestsellers-header {
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto 3rem;
+
+    .dayal-sub-tag {
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: $color-gold;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-family: $font-serif;
+      font-size: 2.25rem;
+      color: $color-maroon;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+
+      @include respond-to('md') {
+        font-size: 2.75rem;
+      }
+    }
+
+    p {
+      font-size: 0.875rem;
+      color: $color-text-muted;
+      line-height: 1.6;
+    }
+  }
+
+  // Filter Pills
+  .dayal-filter-bar {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2.5rem;
+
+    .dayal-filter-btn {
+      padding: 0.5rem 1.25rem;
+      border-radius: $radius-full;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border: 1px solid $color-cream-border;
+      background-color: $color-white;
+      color: $color-text;
+      transition: $transition-smooth;
+
+      &:hover {
+        border-color: $color-maroon;
+        color: $color-maroon;
+      }
+
+      &.active {
+        background-color: $color-maroon;
+        color: $color-white;
+        border-color: $color-maroon;
+        box-shadow: $shadow-sm;
+      }
+    }
+  }
+
+  // Sweet Card
+  .dayal-sweet-card {
+    background-color: $color-white;
+    border: 1px solid $color-cream-border;
+    border-radius: $radius-xl;
+    overflow: hidden;
+    transition: $transition-smooth;
+    display: flex;
+    flex-direction: column;
+    box-shadow: $shadow-card;
+
+    &:hover {
+      transform: translateY(-6px);
+      box-shadow: $shadow-xl;
+      border-color: #D5C7B5;
+    }
+
+    .dayal-sweet-card-top {
+      position: relative;
+      height: 12.5rem;
+      background: linear-gradient(135deg, #FAF4EB 0%, #F5E8D4 100%);
+      @include flex-center;
+      overflow: hidden;
+      padding: 1.5rem;
+
+      .dayal-card-badge {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        padding: 0.25rem 0.65rem;
+        border-radius: $radius-full;
+        font-size: 0.625rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        background-color: $color-maroon;
+        color: $color-white;
+      }
+
+      .dayal-card-svg {
+        width: 100%;
+        height: 100%;
+        max-width: 160px;
+        transition: $transition-smooth;
+      }
+    }
+
+    &:hover .dayal-card-svg {
+      transform: scale(1.08);
+    }
+
+    .dayal-sweet-card-body {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+
+      .dayal-sweet-rating {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: $color-gold-hover;
+        margin-bottom: 0.35rem;
+      }
+
+      .dayal-sweet-name {
+        font-family: $font-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: $color-text-heading;
+        line-height: 1.25;
+        margin-bottom: 0.35rem;
+      }
+
+      .dayal-sweet-desc {
+        font-size: 0.75rem;
+        color: $color-text-muted;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+        flex: 1;
+      }
+
+      .dayal-sweet-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 0.85rem;
+        border-top: 1px solid #F3EDE3;
+
+        .dayal-price-box {
+          .dayal-current-price {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: $color-maroon;
+          }
+
+          .dayal-original-price {
+            font-size: 0.75rem;
+            color: $color-text-subtle;
+            text-decoration: line-through;
+            margin-left: 0.35rem;
+          }
+
+          .dayal-weight-label {
+            display: block;
+            font-size: 0.65rem;
+            color: $color-text-muted;
+            text-transform: uppercase;
+            font-weight: 600;
+          }
+        }
+
+        .dayal-add-btn {
+          @include btn-maroon;
+          padding: 0.45rem 0.85rem;
+          font-size: 0.6875rem;
+          font-weight: 800;
+          border-radius: $radius-sm;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+}
+
+// Portal Navigation Gateway
+.dayal-portals-section {
+  padding: 4rem 0;
+  background-color: $color-cream-surface;
+  border-top: 1px solid $color-cream-border;
+  border-bottom: 1px solid $color-cream-border;
+
+  .dayal-portal-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+
+    @include respond-to('md') {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .dayal-portal-card {
+    background-color: $color-white;
+    border: 1px solid $color-cream-border;
+    border-radius: $radius-xl;
+    padding: 2rem;
+    transition: $transition-smooth;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: $shadow-card;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: $shadow-xl;
+      border-color: #D5C7B5;
+    }
+
+    &--admin {
+      background: linear-gradient(135deg, #101726 0%, #1A2234 100%);
+      border-color: #243048;
+      color: $color-white;
+
+      h3 {
+        color: $color-white;
+      }
+
+      p {
+        color: #A0AEC0;
+      }
+    }
+
+    .dayal-portal-icon {
+      width: 3.25rem;
+      height: 3.25rem;
+      border-radius: $radius-lg;
+      @include flex-center;
+      margin-bottom: 1.25rem;
+
+      &--admin {
+        background-color: rgba(99, 24, 38, 0.1);
+        color: $color-maroon;
+        border: 1px solid rgba(99, 24, 38, 0.2);
+      }
+
+      &--customer {
+        background-color: $color-success-bg;
+        color: $color-success;
+        border: 1px solid $color-success-border;
+      }
+    }
+
+    .dayal-portal-credentials {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: $radius-md;
+      background-color: $color-cream;
+      border: 1px solid $color-cream-border;
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: $color-text;
+
+      p {
+        margin-bottom: 0.25rem;
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    h3 {
+      font-family: $font-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 0.8125rem;
+      color: $color-text-muted;
+      line-height: 1.55;
+      margin-bottom: 1.5rem;
+    }
+  }
+}

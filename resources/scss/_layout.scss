@@ -1,0 +1,107 @@
+// ==========================================================================
+// Dayal Sweets - Layout System & Grid
+// ==========================================================================
+@use './variables' as *;
+@use './mixins' as *;
+
+.dayal-container {
+  @include container-center;
+}
+
+.dayal-page-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: $color-cream;
+}
+
+.dayal-main-content {
+  flex: 1 0 auto;
+}
+
+// Section Paddings
+.dayal-section {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+
+  @include respond-to('lg') {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+
+  &--cream {
+    background-color: $color-cream;
+  }
+
+  &--white {
+    background-color: $color-white;
+  }
+
+  &--surface {
+    background-color: $color-cream-surface;
+    border-top: 1px solid $color-cream-border;
+    border-bottom: 1px solid $color-cream-border;
+  }
+
+  &--maroon {
+    background-color: $color-maroon;
+    color: $color-white;
+  }
+}
+
+// Grid Systems
+.dayal-grid-1 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.dayal-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  @include respond-to('md') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.dayal-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  @include respond-to('md') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to('lg') {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.dayal-grid-4 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  @include respond-to('sm') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to('lg') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.dayal-flex-between {
+  @include flex-between;
+}
+
+.dayal-flex-center {
+  @include flex-center;
+}
+
+.dayal-flex-start {
+  @include flex-start;
+}

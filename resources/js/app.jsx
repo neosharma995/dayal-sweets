@@ -1,4 +1,3 @@
-import '../css/app.css';
 import '../scss/app.scss';
 import './bootstrap';
 
@@ -20,6 +19,7 @@ createInertiaApp({
 
         root.render(<App {...props} />);
     },
+
     progress: {
         color: '#d97706',
     },

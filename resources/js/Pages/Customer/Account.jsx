@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import CustomerLayout from '@/Layouts/CustomerLayout';
-import { UserIcon, MapPinIcon, KeyIcon, BoxIcon, CheckCircleIcon } from '@/Components/Icons';
+import { UserIcon, MapPinIcon, KeyIcon, BoxIcon, CheckCircleIcon, LogOutIcon } from '@/Components/Icons';
 
 export default function CustomerAccount({ customer, savedAddresses, orderHistory }) {
     const [activeTab, setActiveTab] = useState('profile'); // 'profile', 'addresses', 'orders'
@@ -37,9 +37,20 @@ export default function CustomerAccount({ customer, savedAddresses, orderHistory
     return (
         <CustomerLayout
             header={
-                <div>
-                    <span className="text-xs font-bold uppercase tracking-widest text-amber-700">Account Center</span>
-                    <h1 className="font-serif text-2xl md:text-3xl font-black text-stone-900">My Account & Saved Preferences</h1>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <span className="text-xs font-bold uppercase tracking-widest text-amber-700">Account Center</span>
+                        <h1 className="font-serif text-2xl md:text-3xl font-black text-stone-900">My Account & Saved Preferences</h1>
+                    </div>
+                    <Link
+                        method="post"
+                        href={route('logout')}
+                        as="button"
+                        className="self-start sm:self-auto px-4 py-2 rounded-xl bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm"
+                    >
+                        <LogOutIcon className="w-4 h-4" />
+                        <span>Sign Out / Logout</span>
+                    </Link>
                 </div>
             }
         >

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import CustomerLayout from '@/Layouts/CustomerLayout';
-import { StarIcon, TruckIcon, CheckCircleIcon, ClockIcon, MapPinIcon, BoxIcon, PhoneIcon } from '@/Components/Icons';
+import { StarIcon, TruckIcon, CheckCircleIcon, ClockIcon, MapPinIcon, BoxIcon, PhoneIcon, LogOutIcon } from '@/Components/Icons';
 
 export default function CustomerDashboard({ overview, activeOrder, recentPastOrders, recommendedSweets }) {
     return (
@@ -18,6 +18,15 @@ export default function CustomerDashboard({ overview, activeOrder, recentPastOrd
                             className="px-4 py-2 rounded-xl bg-white border border-amber-200 text-stone-800 text-xs font-bold hover:bg-amber-50 shadow-sm transition-colors"
                         >
                             Manage Saved Addresses & Profile
+                        </Link>
+                        <Link
+                            method="post"
+                            href={route('logout')}
+                            as="button"
+                            className="px-4 py-2 rounded-xl bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 text-xs font-bold shadow-sm transition-colors flex items-center gap-1.5"
+                        >
+                            <LogOutIcon className="w-3.5 h-3.5" />
+                            <span>Logout</span>
                         </Link>
                     </div>
                 </div>

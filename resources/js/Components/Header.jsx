@@ -8,6 +8,7 @@ export default function Header({ auth: propAuth }) {
     const auth = propAuth || pageProps.auth;
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [shopDropdownOpen, setShopDropdownOpen] = useState(false);
+    const [userDropdownOpen, setUserDropdownOpen] = useState(false);
     const [searchModalOpen, setSearchModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -158,25 +159,99 @@ export default function Header({ auth: propAuth }) {
                                 </svg>
                             </button>
 
-                            {/* User Profile Icon */}
+                            {/* User Profile & Account Menu */}
                             {auth?.user ? (
-                                <Link
-                                    href={route('my-account')}
-                                    className="p-2 text-stone-700 hover:text-[#631826] transition-colors flex items-center gap-1.5"
-                                    title={`Account (${auth.user.name})`}
-                                >
-                                    <UserIcon className="w-5 h-5" />
-                                    <span className="hidden xl:inline text-xs font-bold text-stone-800 truncate max-w-[80px]">
-                                        {auth.user.name.split(' ')[0]}
-                                    </span>
-                                </Link>
+                                <div className="flex items-center gap-1">
+                                    <div className="relative" onMouseLeave={() => setUserDropdownOpen(false)}>
+                                        <button
+                                            onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                                            onMouseEnter={() => setUserDropdownOpen(true)}
+                                            className="p-1.5 rounded-lg hover:bg-[#FAF6F0] flex items-center gap-1.5 transition-colors border border-transparent hover:border-[#EADBCA]"
+                                            aria-label="User Account Menu"
+                                        >
+                                            <div className="w-8 h-8 rounded-full bg-[#631826] text-[#FAF6F0] flex items-center justify-center font-bold text-xs shadow-sm">
+                                                {auth.user.name.charAt(0)}
+                                            </div>
+                                            <span className="hidden xl:inline text-xs font-bold text-stone-800 truncate max-w-[85px]">
+                                                {auth.user.name.split(' ')[0]}
+                                            </span>
+                                            <svg className="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </button>
+
+                                        {/* Dropdown Menu */}
+                                        {userDropdownOpen && (
+                                            <div className="absolute right-0 top-full mt-1 w-60 bg-white border border-[#EADBCA] rounded-xl shadow-xl py-2 z-50">
+                                                <div className="px-4 py-2 border-b border-stone-100 bg-[#FAF6F0]/60">
+                                                    <p className="text-xs font-bold text-stone-900 truncate">{auth.user.name}</p>
+                                                    <p className="text-[11px] text-stone-500 truncate">{auth.user.email}</p>
+                                                    <span className="inline-block mt-1 text-[9px] font-bold px-2 py-0.5 rounded bg-amber-100 text-[#631826] uppercase">
+                                                        {auth.user.roles?.[0] || 'Customer'}
+                                                    </span>
+                                                </div>
+
+                                                <Link
+                                                    href={route('dashboard')}
+                                                    className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-stone-700 hover:bg-[#FAF6F0] hover:text-[#631826] transition-colors"
+                                                >
+                                                    <span>My Dashboard</span>
+                                                </Link>
+
+                                                <Link
+                                                    href={route('my-account')}
+                                                    className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-stone-700 hover:bg-[#FAF6F0] hover:text-[#631826] transition-colors"
+                                                >
+                                                    <span>My Account & Orders</span>
+                                                </Link>
+
+                                                {auth.user.roles?.includes('admin') && (
+                                                    <Link
+                                                        href={route('admin.dashboard')}
+                                                        className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-[#631826] hover:bg-[#FAF6F0] transition-colors"
+                                                    >
+                                                        <span>Admin Console</span>
+                                                    </Link>
+                                                )}
+
+                                                <div className="border-t border-stone-100 mt-1 pt-1">
+                                                    <Link
+                                                        method="post"
+                                                        href={route('logout')}
+                                                        as="button"
+                                                        className="w-full text-left flex items-center gap-2 px-4 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors"
+                                                    >
+                                                        <LogOutIcon className="w-4 h-4" />
+                                                        <span>Logout (Sign Out)</span>
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Direct 1-Click Logout Button on Header Bar */}
+                                    <Link
+                                        method="post"
+                                        href={route('logout')}
+                                        as="button"
+                                        title="Logout (Sign Out)"
+                                        className="p-2 text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors hidden sm:flex items-center gap-1 text-xs font-bold"
+                                        aria-label="Logout"
+                                    >
+                                        <LogOutIcon className="w-4 h-4" />
+                                        <span className="hidden 2xl:inline">Logout</span>
+                                    </Link>
+                                </div>
                             ) : (
                                 <Link
                                     href={route('login')}
-                                    className="p-2 text-stone-700 hover:text-[#631826] transition-colors"
+                                    className="p-2 text-stone-700 hover:text-[#631826] transition-colors flex items-center gap-1"
                                     title="Sign In / Register"
                                 >
                                     <UserIcon className="w-5 h-5" />
+                                    <span className="hidden xl:inline text-xs font-bold uppercase tracking-wider text-stone-800">
+                                        Sign In
+                                    </span>
                                 </Link>
                             )}
 
@@ -281,8 +356,14 @@ export default function Header({ auth: propAuth }) {
                                     <Link href={route('my-account')} className="block py-1 text-xs font-bold text-stone-800">
                                         My Account
                                     </Link>
-                                    <Link method="post" href={route('logout')} as="button" className="text-xs font-bold text-rose-700">
-                                        Sign Out
+                                    <Link
+                                        method="post"
+                                        href={route('logout')}
+                                        as="button"
+                                        className="w-full text-left flex items-center gap-2 py-2 px-3 rounded-lg bg-rose-50 text-xs font-bold text-rose-700 hover:bg-rose-100 transition-colors"
+                                    >
+                                        <LogOutIcon className="w-4 h-4" />
+                                        <span>Logout (Sign Out)</span>
                                     </Link>
                                 </>
                             ) : (

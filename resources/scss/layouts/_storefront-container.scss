@@ -1,24 +1,26 @@
 @use '../abstracts/storefront-variables' as *;
 
+html,
+body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
 .dayal-site {
     min-height: 100vh;
-    overflow: hidden;
+    overflow: clip;
     color: $ds-color-ink;
     font-family: $ds-font-body;
 }
 
 .dayal-header-container,
 .dayal-footer-container {
-    width: min(calc(100% - 64px), $ds-container-width);
-    margin: 0 auto;
-}
-
-.dayal-header-container { width: calc(100% - 40px); max-width: none; }
-
-@media (max-width: 767px) {
-    .dayal-header-container,
-    .dayal-footer-container {
-        width: calc(100% - 36px);
-    }
-    .dayal-header-container { width: calc(100% - 36px); }
+    @include dayal-container;
 }

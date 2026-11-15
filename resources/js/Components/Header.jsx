@@ -1,47 +1,160 @@
-import { useState } from 'react';
-import { ChevronDown, Menu, Phone, Search, ShoppingBag, Store, Truck, UserRound, X, Headset } from 'lucide-react';
-import { Link } from '@inertiajs/react';
+import { useEffect, useRef, useState } from 'react';
+import { ChevronDown, Menu, Search, ShoppingBag, UserRound, X } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
 
 const navItems = [
-    ['Dinning', '/dinning'], ['Gifting', '/gifting'], ['About Us', '/about-us'],
+    ['Dining', '/dinning'], ['Gifting', '/gifting'], ['About Us', '/about-us'],
     ['Gallery', '/gallery'], ['Contact Us', '/contact-us'],
 ];
 
-export default function Header() {
-    const [shopOpen, setShopOpen] = useState(false);
+const utilityLinks = [
+    ['Delivery', '/', 'delivered-sent.svg'],
+    ['Franchise', '/franchise', 'store-verified-01.svg'],
+    ['Bulk/Corporate Inquiry', 'tel:98765 43210', 'customer-support.svg'],
+    ['+91 98765 43210', 'tel:98765 43210', 'phone-calling.svg'],
+];
+
+const shopCategories = [
+    { title: 'Sweets', icon: 'cinnamon-roll.png', products: [['Barfi', 'barfi'], ['Dry Fruit Laddu', 'dry-fruit-laddu'], ['Gulab Jamun', 'gulab-jamun'], ['Imarti', 'imarti'], ['Kaju Katli', 'kaju-katli'], ['Malai Ghewar', 'malai-ghewar'], ['Milk Cake', 'milk-cake'], ['Motichoor Laddu', 'motichoor-laddu'], ['Peda', 'peda'], ['Rasgulla', 'rasgulla'], ['Rasmalai', 'rasmalai']], all: '/shop/?cats=sweets', allLabel: 'View All Sweets' },
+    { title: 'NAMKEEN', icon: 'Icon.png', products: [['Bhujia', 'bhujia'], ['Chana Dal', 'chana-dal'], ['Mathii', 'mathii'], ['Mattri', 'mattri'], ['Moong Dal', 'moong-dal'], ['Namkeen Mix', 'namkeen-mix'], ['Punjabi Tadka Mix', 'punjabi-tadka-mix'], ['Khatta Meetha Mix', 'khatta-meetha-mix']], all: '/shop/?cats=namkeen', allLabel: 'View All Namkeen' },
+    { title: 'BAKERY', icon: 'Icon-1.png', products: [['Brownies', 'brownies'], ['Cakes', 'cakes'], ['Cookies', 'cookies'], ['Donuts', 'donuts'], ['Dry Cakes', 'dry-cakes'], ['Garlic Bread', 'garlic-bread'], ['Muffins', 'muffins'], ['Pastries', 'pastries'], ['Puff Patties', 'puff-patties'], ['Rusks', 'rusks'], ['Tea Cakes', 'tea-cakes']], all: '/shop/?cats=bakery', allLabel: 'View All Bakery' },
+    { title: 'Beverages', icon: 'bubble-tea-01.png', products: [['Badam Milk', 'badam-milk'], ['Fresh Juices', 'fresh-juices'], ['Fresh Lime Soda', 'fresh-lime-soda'], ['Kesar Milk', 'kesar-milk'], ['Masala Chaas', 'masala-chaas'], ['Masala Chai', 'masala-chai']], all: '/shop/?cats=beverages', allLabel: 'View All Beverages' },
+    { title: 'Snacks', icon: 'doughnut.png', products: [['Chole Bhature', 'chole-bhature'], ['Bhalla Papri', 'bhalla-papri'], ['Dhokla', 'dhokla'], ['Kachori', 'kachori'], ['Paneer Puff', 'paneer-puff'], ['Pizza Slice', 'pizza-slice'], ['Samosa', 'samosa'], ['Spring Roll', 'spring-roll'], ['Veg Patty', 'veg-patty'], ['Aloo Tikki', 'aloo-tikki']], all: '/shop/?cats=snacks', allLabel: 'View All Snacks' },
+];
+
+const shopShortcuts = [
+    ['Best Sellers', 'package-03.png'],
+    ['New Arrivals', 'new-releases.png'],
+    ['Festivals Special', 'gift.png'],
+    ['Offers & Combos', 'discount-tag-02.png'],
+];
+
+export default function Header({ auth }) {
+    const { url, props } = usePage();
+    const cartCountValue = Number(props?.cartCount ?? props?.cart_count ?? props?.cart?.count ?? props?.cart?.item_count ?? props?.woocommerce?.cart_count ?? 0);
+    const cartCount = Number.isFinite(cartCountValue) ? Math.max(0, cartCountValue) : 0;
+    const currentPath = url.split(/[?#]/, 1)[0].replace(/\/+$/, '') || '/';
+    const shopActive = currentPath === '/shop' || currentPath.startsWith('/shop/') || currentPath.startsWith('/product/');
     const [mobileOpen, setMobileOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
+    const [shopOpen, setShopOpen] = useState(false);
+    const [openShopCategory, setOpenShopCategory] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const shopNavigationRef = useRef(null);
+
+    const closeMobileMenu = () => setMobileOpen(false);
+    const openShopMenu = () => {
+        setShopOpen(true);
+    };
+    const toggleShopMenu = () => {
+        setShopOpen((open) => !open);
+    };
+
+    useEffect(() => {
+        if (!searchOpen) return undefined;
+        const closeOnEscape = (event) => { if (event.key === 'Escape') setSearchOpen(false); };
+        window.addEventListener('keydown', closeOnEscape);
+        return () => window.removeEventListener('keydown', closeOnEscape);
+    }, [searchOpen]);
+
+    useEffect(() => {
+        if (!shopOpen) return undefined;
+        const closeOnEscape = (event) => {
+            if (event.key === 'Escape') {
+                setShopOpen(false);
+            }
+        };
+        const closeOnOutsideClick = (event) => {
+            if (!shopNavigationRef.current?.contains(event.target)) {
+                setShopOpen(false);
+            }
+        };
+        window.addEventListener('keydown', closeOnEscape);
+        document.addEventListener('pointerdown', closeOnOutsideClick);
+        return () => {
+            window.removeEventListener('keydown', closeOnEscape);
+            document.removeEventListener('pointerdown', closeOnOutsideClick);
+        };
+    }, [shopOpen]);
 
     return (
         <header className="dayal-header">
             <div className="dayal-header-top">
                 <div className="dayal-header-container dayal-header-top-inner">
-                    <p>Free delivery on orders above <strong>₹999</strong></p>
+                    <p>FREE DELIVERY ON ORDERS ABOVE <strong>&#8377;999</strong></p>
                     <div className="dayal-header-quicklinks">
-                        <a href="/"><Truck size={15} />Delivery</a><a href="/franchise"><Store size={15} />Franchise</a><a href="/corporate-gifting"><Headset size={15} />Bulk/Corporate Inquiry</a><a href="tel:+919876543210"><Phone size={15} />+91 98765 43210</a>
+                        {utilityLinks.map(([label, href, icon]) => <a href={href} key={label}><img src={`/uploads/2026/07/${icon}`} alt="" />{label}</a>)}
                     </div>
                 </div>
             </div>
-            <div className="dayal-header-main">
+            <div className="dayal-header-main" onMouseLeave={() => setShopOpen(false)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setShopOpen(false); }}>
                 <div className="dayal-header-container dayal-header-main-inner">
-                    <Link href="/" className="dayal-header-logo" aria-label="Dayal Sweets home"><img src="/assets/logos/dayal-sweets-header.png" alt="Dayal Sweets" /></Link>
+                    <Link href="/" className="dayal-header-logo" aria-label="Dayal Sweets home"><img src="/uploads/2026/07/Frame-51-2.png" alt="Dayal Sweets" /></Link>
                     <nav className={`dayal-header-nav ${mobileOpen ? 'is-open' : ''}`} aria-label="Main navigation">
-                        <Link href="/" className="dayal-header-link is-active">Home</Link>
-                        <div className="dayal-header-shop">
-                            <button type="button" className="dayal-header-link" aria-expanded={shopOpen} onClick={() => setShopOpen(!shopOpen)}>Shop <ChevronDown size={13} /></button>
-                            {shopOpen && <div className="dayal-header-dropdown">{['Kaju Katli', 'Milk Cake', 'Rasgulla', 'Gulab Jamun', 'Rasmalai', 'Peda', 'Dry Fruit Laddu', 'Barfi', 'Motichoor Laddu', 'Imarti', 'Malai Ghewar'].map((name) => <a key={name} href="/shop">{name}</a>)}</div>}
+                        <Link href="/" className={`dayal-header-link${currentPath === '/' ? ' is-active' : ''}`} aria-current={currentPath === '/' ? 'page' : undefined} onClick={closeMobileMenu}><span>Home</span></Link>
+                        <div ref={shopNavigationRef} className="dayal-header-shop" onMouseEnter={openShopMenu}>
+                            <div className="dayal-header-shop-controls">
+                                <Link href="/shop/" className={`dayal-header-link${shopActive ? ' is-active' : ''}`} aria-current={currentPath === '/shop' ? 'page' : undefined} onClick={closeMobileMenu}><span>Shop</span></Link>
+                                <button className="dayal-header-shop-trigger" type="button" aria-label="Toggle Shop categories" aria-expanded={shopOpen} aria-controls="dayal-shop-menu" onClick={toggleShopMenu} onFocus={openShopMenu}><svg className="elementskit-submenu-indicator ekit-svg-icon icon-down-arrow1" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" width="14" height="14" aria-hidden="true"><path d="M31.582 8.495c-0.578-0.613-1.544-0.635-2.153-0.059l-13.43 12.723-13.428-12.723c-0.61-0.578-1.574-0.553-2.153 0.059-0.579 0.611-0.553 1.576 0.058 2.155l14.477 13.715c0.293 0.277 0.67 0.418 1.047 0.418s0.756-0.14 1.048-0.418l14.477-13.715c0.611-0.579 0.637-1.544 0.058-2.155z" fill="currentColor" /></svg></button>
+                            </div>
+                            {shopOpen && <div className="dayal-header-mega-menu" id="dayal-shop-menu">
+                                <div className="dayal-header-mega-menu-inner">
+                                    <div className="dayal-header-mega-category-area">
+                                    <div className="dayal-header-mega-columns">
+                                        {shopCategories.map((category) => <section className={`dayal-header-mega-category${openShopCategory === category.title ? ' is-expanded' : ''}`} key={category.title}>
+                                            <h3><button type="button" aria-expanded={openShopCategory === category.title} onClick={() => setOpenShopCategory((open) => open === category.title ? null : category.title)}><img src={`/uploads/2026/07/${category.icon}`} alt="" loading="lazy" />{category.title}<ChevronDown size={14} aria-hidden="true" /></button></h3>
+                                            <ul>
+                                                {category.products.map(([label, slug]) => <li key={slug}><a href={`/product/${slug}/`} onClick={() => { setShopOpen(false); closeMobileMenu(); }}>{label}</a></li>)}
+                                                <li className="dayal-header-mega-view-all"><a href={category.all} onClick={() => { setShopOpen(false); closeMobileMenu(); }}>{category.allLabel}</a></li>
+                                            </ul>
+                                        </section>)}
+                                    </div>
+                                    <div className="dayal-header-mega-shortcuts"><div className="dayal-header-mega-shortcuts-inner">{shopShortcuts.map(([label, image]) => <div className="dayal-header-mega-shortcut" key={label}><img src={`/uploads/2026/07/${image}`} alt="" loading="lazy" /><span>{label}</span></div>)}</div></div>
+                                    </div>
+                                    <aside className="dayal-header-mega-promo">
+                                        <h3>Crafted <span>For Every Celebration</span></h3>
+                                        <p>Premium gift boxes crafted with love, packed with the finest ingredients.</p>
+                                        <a href="/gifting/" onClick={() => { setShopOpen(false); closeMobileMenu(); }}>Explore Gifting <img src="/uploads/2026/07/Icon.svg" alt="" /></a>
+                                        <img className="dayal-header-mega-promo-image" src="/uploads/2026/07/image-220.png" alt="Dayal Sweets celebration gift box" loading="lazy" />
+                                    </aside>
+                                </div>
+                            </div>}
                         </div>
-                        {navItems.map(([label, href]) => <a key={label} className="dayal-header-link" href={href}>{label}</a>)}
+                        {navItems.map(([label, href]) => {
+                            const active = currentPath === href.replace(/\/+$/, '');
+                            return <a key={label} className={`dayal-header-link${active ? ' is-active' : ''}`} href={href} aria-current={active ? 'page' : undefined} onClick={closeMobileMenu}><span>{label}</span></a>;
+                        })}
                     </nav>
                     <div className="dayal-header-actions">
-                        <button type="button" aria-label="Search" onClick={() => setSearchOpen(!searchOpen)}><Search size={19} strokeWidth={1.6} /></button>
-                        <a href="/my-account" aria-label="My account"><UserRound size={19} strokeWidth={1.6} /></a>
-                        <a href="/cart" className="dayal-header-cart" aria-label="Shopping bag"><ShoppingBag size={19} strokeWidth={1.6} /><span>0</span></a>
+                        <button className="dayal-header-search-trigger" type="button" aria-label="Search Products" onClick={() => setSearchOpen(true)}><Search size={20} strokeWidth={1.8} aria-hidden="true" /></button>
+                        <a href="/my-account" className="dayal-header-account" aria-label={auth?.user ? 'My account' : 'Login'}><UserRound size={20} strokeWidth={1.8} aria-hidden="true" /></a>
+                        <a href="/cart" className="dayal-header-cart" aria-label={`View cart, ${cartCount} items`}><ShoppingBag size={20} strokeWidth={1.8} aria-hidden="true" /><span className="dayal-header-cart-count" aria-live="polite">{cartCount}</span></a>
                         <a className="dayal-header-order" href="/shop">Order Now</a>
-                        <button className="dayal-header-toggle" type="button" aria-label={mobileOpen ? 'Close menu' : 'Open menu'} onClick={() => setMobileOpen(!mobileOpen)}>{mobileOpen ? <X size={22} /> : <Menu size={22} />}</button>
+                        <button className="dayal-header-toggle" type="button" aria-label={mobileOpen ? 'Close menu' : 'Open menu'} aria-expanded={mobileOpen} onClick={() => setMobileOpen(!mobileOpen)}>{mobileOpen ? <X size={22} /> : <Menu size={22} />}</button>
                     </div>
                 </div>
-                {searchOpen && <form className="dayal-header-search" action="/" method="get"><input type="search" name="s" placeholder="Search Our Collection" aria-label="Search Our Collection" /><button type="submit" aria-label="Submit search"><Search size={18} /></button></form>}
+                {searchOpen && <div className="dayal-search-modal-overlay" role="presentation" onClick={() => setSearchOpen(false)}>
+                    <section className="dayal-search-modal" role="dialog" aria-modal="true" aria-labelledby="dayal-search-title" onClick={(event) => event.stopPropagation()}>
+                        <button className="dayal-search-modal-close" type="button" aria-label="Close search" onClick={() => setSearchOpen(false)}>×</button>
+                        <header className="dayal-search-modal-header">
+                            <strong id="dayal-search-title">Search Our Collection</strong>
+                            <p>Find your favorite sweets, savouries &amp; festive gifts</p>
+                        </header>
+                        <form action="/products/" method="get" className="dayal-search-modal-form">
+                            <input type="hidden" name="post_type" value="product" />
+                            <div className="dayal-search-modal-input-wrapper">
+                                <Search size={20} aria-hidden="true" />
+                                <input type="search" name="s" placeholder="Search sweets, snacks, gifts..." aria-label="Search Our Collection" autoFocus value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} />
+                                {searchTerm && <button className="dayal-search-modal-clear" type="button" aria-label="Clear search" onClick={() => setSearchTerm('')}>×</button>}
+                                <button type="submit">Search</button>
+                            </div>
+                        </form>
+                        <footer className="dayal-search-modal-footer">
+                            <span>Press ESC to close</span>
+                            <a href="/shop/">View All Products in Shop <span aria-hidden="true">→</span></a>
+                        </footer>
+                    </section>
+                </div>}
             </div>
         </header>
     );

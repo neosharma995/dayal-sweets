@@ -21,11 +21,6 @@ export default function AdminHeader({ onToggleSidebar, header }) {
             </div>
 
             <div className="dayal-admin-header-right">
-                <div className="dayal-live-badge">
-                    <span className="dayal-pulsing-dot" />
-                    <span>Dayal Sweets Live Store Online</span>
-                </div>
-
                 <Link
                     href={route('admin.account')}
                     className="dayal-admin-head-btn"

@@ -9,10 +9,12 @@ use App\Http\Requests\Admin\Product\StoreProductRequest;
 use App\Http\Requests\Admin\Product\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductAttribute;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -24,7 +26,7 @@ class ProductController extends Controller
      */
     public function index(Request $request): Response|JsonResponse
     {
-        $query = Product::query()->with('category')->latest('id');
+        $query = Product::query()->with(['category', 'variations'])->latest('id');
 
         // Optional search filter by product name or description
         if ($request->filled('search')) {
@@ -59,6 +61,7 @@ class ProductController extends Controller
     {
         return Inertia::render('Admin/Products/Create', [
             'categories' => Category::orderBy('category_name')->get(['id', 'category_name']),
+            'attributes' => ProductAttribute::with('values')->orderBy('name')->get(),
         ]);
     }
 
@@ -68,11 +71,12 @@ class ProductController extends Controller
     public function edit(Product|int|string $product): Response
     {
         $productModel = $product instanceof Product ? $product : Product::findOrFail($product);
-        $productModel->load('category');
+        $productModel->load(['category', 'variations.attributeValue.attribute']);
 
         return Inertia::render('Admin/Products/Edit', [
             'product' => $productModel,
             'categories' => Category::orderBy('category_name')->get(['id', 'category_name']),
+            'attributes' => ProductAttribute::with('values')->orderBy('name')->get(),
         ]);
     }
 
@@ -82,7 +86,7 @@ class ProductController extends Controller
     public function show(Request $request, Product|int|string $product): Response|JsonResponse
     {
         $productModel = $product instanceof Product ? $product : Product::findOrFail($product);
-        $productModel->load('category');
+        $productModel->load(['category', 'variations.attributeValue.attribute']);
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -146,13 +150,24 @@ class ProductController extends Controller
             $data['product_details'] = [];
         }
 
-        $createdProduct = Product::create($data);
+        $variationsData = $data['variations'] ?? null;
+        unset($data['variations']);
+
+        $createdProduct = DB::transaction(function () use ($data, $variationsData) {
+            $product = Product::create($data);
+
+            if (is_array($variationsData) && ! empty($variationsData)) {
+                $this->syncProductVariations($product, $variationsData);
+            }
+
+            return $product;
+        });
 
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Product created successfully.',
-                'data' => $createdProduct->fresh(),
+                'data' => $createdProduct->load(['category', 'variations'])->fresh(),
             ], 201);
         }
 
@@ -210,17 +225,81 @@ class ProductController extends Controller
             $data['product_details'] = [];
         }
 
-        $productModel->update($data);
+        $variationsData = $data['variations'] ?? null;
+        unset($data['variations']);
+
+        DB::transaction(function () use ($productModel, $data, $variationsData) {
+            $productModel->update($data);
+
+            if (is_array($variationsData)) {
+                $this->syncProductVariations($productModel, $variationsData);
+            }
+        });
 
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Product updated successfully.',
-                'data' => $productModel->fresh(),
+                'data' => $productModel->load(['category', 'variations'])->fresh(),
             ]);
         }
 
-        return back()->with('success', 'Product updated successfully.');
+        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
+    }
+
+    /**
+     * Synchronize product variations for this product.
+     */
+    protected function syncProductVariations(Product $product, array $variations): void
+    {
+        $existingVariations = $product->variations()->get()->keyBy('id');
+        $keptIds = [];
+        $hasDefault = false;
+
+        foreach ($variations as $item) {
+            if (empty($item['variation_name']) || ! isset($item['price']) || ! isset($item['selling_price'])) {
+                continue;
+            }
+
+            $isDefault = ! empty($item['is_default']);
+            if ($isDefault) {
+                if ($hasDefault) {
+                    $isDefault = false;
+                } else {
+                    $hasDefault = true;
+                }
+            }
+
+            $vPayload = [
+                'attribute_value_id' => ! empty($item['attribute_value_id']) ? (int) $item['attribute_value_id'] : null,
+                'variation_name' => (string) $item['variation_name'],
+                'price' => (float) $item['price'],
+                'selling_price' => (float) $item['selling_price'],
+                'product_qty' => isset($item['product_qty']) ? (int) $item['product_qty'] : 1,
+                'weight_value' => ! empty($item['weight_value']) ? (float) $item['weight_value'] : null,
+                'weight_unit' => ! empty($item['weight_unit']) ? (string) $item['weight_unit'] : 'g',
+                'sku' => ! empty($item['sku']) ? (string) $item['sku'] : null,
+                'is_default' => $isDefault,
+            ];
+
+            $id = $item['id'] ?? null;
+            if ($id && $existingVariations->has($id)) {
+                $existing = $existingVariations->get($id);
+                $existing->update($vPayload);
+                $keptIds[] = $existing->id;
+            } else {
+                $created = $product->variations()->create($vPayload);
+                $keptIds[] = $created->id;
+            }
+        }
+
+        // If at least one variation was saved and none marked default, mark the first one as default
+        if ($hasDefault === false && ! empty($keptIds)) {
+            $product->variations()->where('id', $keptIds[0])->update(['is_default' => true]);
+        }
+
+        // Delete variations not kept in this submission
+        $product->variations()->whereNotIn('id', $keptIds)->delete();
     }
 
     /**

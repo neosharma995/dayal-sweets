@@ -49,6 +49,13 @@ class StoreProductRequest extends FormRequest
             }
         }
 
+        if (is_string($this->input('variations'))) {
+            $decoded = json_decode($this->input('variations'), true);
+            if (is_array($decoded)) {
+                $mergeData['variations'] = $decoded;
+            }
+        }
+
         if (! empty($mergeData)) {
             $this->merge($mergeData);
         }
@@ -71,6 +78,16 @@ class StoreProductRequest extends FormRequest
             'product_image' => ['nullable'],
             'product_gallaries' => ['nullable', 'array'],
             'product_details' => ['nullable', 'array'],
+            'variations' => ['nullable', 'array'],
+            'variations.*.attribute_value_id' => ['nullable', 'integer', 'exists:product_attribute_values,id'],
+            'variations.*.variation_name' => ['required_with:variations', 'string', 'max:255'],
+            'variations.*.price' => ['required_with:variations', 'numeric', 'min:0'],
+            'variations.*.selling_price' => ['required_with:variations', 'numeric', 'min:0'],
+            'variations.*.product_qty' => ['nullable', 'integer', 'min:0'],
+            'variations.*.weight_value' => ['nullable', 'numeric'],
+            'variations.*.weight_unit' => ['nullable', 'string', 'max:20'],
+            'variations.*.sku' => ['nullable', 'string', 'max:100'],
+            'variations.*.is_default' => ['nullable', 'boolean'],
         ];
     }
 }

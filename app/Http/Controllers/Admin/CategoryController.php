@@ -96,7 +96,7 @@ class CategoryController extends Controller
     public function show(Request $request, Category|int|string $category): Response|JsonResponse
     {
         $categoryModel = $category instanceof Category ? $category : Category::findOrFail($category);
-        $categoryModel->load(['products' => fn ($q) => $q->latest('id')])->loadCount('products');
+        $categoryModel->load(['products' => fn ($q) => $q->with('variations')->latest('id')])->loadCount('products');
 
         if ($request->wantsJson()) {
             return response()->json([

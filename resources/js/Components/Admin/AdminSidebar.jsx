@@ -51,7 +51,7 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar }) {
                             className={`dayal-sidebar-link ${route().current('admin.products.*') ? 'active' : ''}`}
                         >
                             <BoxIcon width="18" height="18" />
-                            <span>Products Catalog</span>
+                            <span>Products</span>
                         </Link>
 
                         <Link
@@ -65,31 +65,21 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar }) {
                         </Link>
 
                         <Link
+                            href={route('admin.attributes.index')}
+                            className={`dayal-sidebar-link ${route().current('admin.attributes.*') ? 'active' : ''}`}
+                        >
+                            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                            </svg>
+                            <span>Product Attributes</span>
+                        </Link>
+
+                        <Link
                             href={route('admin.account')}
                             className={`dayal-sidebar-link ${route().current('admin.account') ? 'active' : ''}`}
                         >
                             <ShieldCheckIcon width="18" height="18" />
                             <span>Admin & Store Settings</span>
-                        </Link>
-
-                        <div className="dayal-nav-group-title">
-                            Storefront Views
-                        </div>
-
-                        <Link
-                            href="/"
-                            className="dayal-sidebar-link"
-                        >
-                            <BoxIcon width="18" height="18" />
-                            <span>View Public Storefront</span>
-                        </Link>
-
-                        <Link
-                            href={route('customer.dashboard')}
-                            className="dayal-sidebar-link"
-                        >
-                            <UserIcon width="18" height="18" />
-                            <span>Customer Portal View</span>
                         </Link>
                     </nav>
                 </div>

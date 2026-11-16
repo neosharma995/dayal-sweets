@@ -104,9 +104,9 @@ export default function Index({ categories = [], filters = {} }) {
                                     width: '100%',
                                     padding: '0.5rem 1rem 0.5rem 2.25rem',
                                     borderRadius: '0.5rem',
-                                    background: '#0F172A',
-                                    border: '1px solid #334155',
-                                    color: '#F8FAFC',
+                                    background: '#FFFFFF',
+                                    border: '1px solid #CBD5E1',
+                                    color: '#0F172A',
                                     fontSize: '0.8125rem',
                                     outline: 'none',
                                 }}
@@ -178,8 +178,8 @@ export default function Index({ categories = [], filters = {} }) {
                                                             width: '44px',
                                                             height: '44px',
                                                             borderRadius: '0.5rem',
-                                                            background: '#1E293B',
-                                                            border: '1px solid #334155',
+                                                            background: '#F8FAFC',
+                                                            border: '1px solid #E2E8F0',
                                                             overflow: 'hidden',
                                                             flexShrink: 0,
                                                             display: 'flex',
@@ -203,18 +203,18 @@ export default function Index({ categories = [], filters = {} }) {
                                                     <div>
                                                         <Link
                                                             href={route('admin.categories.show', category.id)}
-                                                            style={{ color: '#F8FAFC', fontWeight: 600, textDecoration: 'none' }}
+                                                            style={{ color: '#0F172A', fontWeight: 600, textDecoration: 'none' }}
                                                         >
                                                             {category.category_name}
                                                         </Link>
-                                                        <div style={{ fontSize: '0.75rem', color: '#94a3b8', maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                        <div style={{ fontSize: '0.75rem', color: '#64748B', maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                                             {category.category_description || 'No description provided'}
                                                         </div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
-                                                <code style={{ padding: '0.2rem 0.4rem', borderRadius: '0.25rem', background: '#0F172A', color: '#F1D7B4', fontSize: '0.75rem' }}>
+                                                <code style={{ padding: '0.2rem 0.4rem', borderRadius: '0.25rem', background: '#F1F5F9', color: '#B88E4B', fontSize: '0.75rem' }}>
                                                     /{category.category_slug}
                                                 </code>
                                             </td>
@@ -269,11 +269,23 @@ export default function Index({ categories = [], filters = {} }) {
                                                         onClick={() => handleDeleteClick(category)}
                                                         className="dayal-admin-head-logout"
                                                         title="Delete Category"
-                                                        style={{ padding: '0.35rem 0.6rem', border: 'none', cursor: 'pointer' }}
+                                                        style={{
+                                                            padding: '0.35rem 0.65rem',
+                                                            border: '1px solid rgba(225, 29, 72, 0.3)',
+                                                            background: 'rgba(225, 29, 72, 0.12)',
+                                                            color: '#FB7185',
+                                                            cursor: 'pointer',
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '0.35rem',
+                                                            fontSize: '0.75rem',
+                                                            fontWeight: 600,
+                                                        }}
                                                     >
-                                                        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                         </svg>
+                                                        <span>Delete</span>
                                                     </button>
                                                 </div>
                                             </td>
@@ -291,7 +303,7 @@ export default function Index({ categories = [], filters = {} }) {
                         style={{
                             position: 'fixed',
                             inset: 0,
-                            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                            backgroundColor: 'rgba(15, 23, 42, 0.5)',
                             backdropFilter: 'blur(4px)',
                             zIndex: 100,
                             display: 'flex',
@@ -302,7 +314,7 @@ export default function Index({ categories = [], filters = {} }) {
                     >
                         <div
                             className="dayal-admin-card"
-                            style={{ maxWidth: '440px', width: '100%', background: '#0F172A', border: '1px solid #334155' }}
+                            style={{ maxWidth: '440px', width: '100%', background: '#FFFFFF', border: '1px solid #CBD5E1', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
                         >
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
                                 <div
@@ -310,23 +322,24 @@ export default function Index({ categories = [], filters = {} }) {
                                         width: '40px',
                                         height: '40px',
                                         borderRadius: '50%',
-                                        background: 'rgba(239, 68, 68, 0.15)',
+                                        background: '#FFF1F2',
+                                        border: '1px solid #FECDD3',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        color: '#F87171',
+                                        color: '#E11D48',
                                         flexShrink: 0,
                                     }}
                                 >
                                     <AlertIcon width="20" height="20" />
                                 </div>
                                 <div>
-                                    <h4 style={{ color: '#F8FAFC', margin: 0, fontSize: '1.1rem' }}>Delete Category</h4>
-                                    <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Confirm Action</span>
+                                    <h4 style={{ color: '#0F172A', margin: 0, fontSize: '1.1rem' }}>Delete Category</h4>
+                                    <span style={{ fontSize: '0.75rem', color: '#64748B' }}>Confirm Action</span>
                                 </div>
                             </div>
 
-                            <p style={{ color: '#CBD5E1', fontSize: '0.875rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>
+                            <p style={{ color: '#475569', fontSize: '0.875rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>
                                 Are you sure you want to delete category <strong>{categoryToDelete.category_name}</strong>?
                                 Associated products will have their category unlinked.
                             </p>

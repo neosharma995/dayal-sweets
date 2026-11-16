@@ -1,5 +1,5 @@
 // ==========================================================================
-// Dayal Sweets - Admin Console SCSS (Dark Luxury Slate & Gold Theme)
+// Dayal Sweets - Admin Console SCSS (Light Luxury Gold & Slate Theme)
 // ==========================================================================
 @use './variables' as *;
 @use './mixins' as *;
@@ -10,6 +10,16 @@
   background-color: $color-admin-bg;
   color: $color-admin-text;
   font-family: $font-sans;
+  width: 100%;
+
+  // Admin views should always span 100% full width without restrictive max-width
+  .dayal-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
 }
 
 // Admin Sidebar
@@ -46,7 +56,7 @@
     display: flex;
     align-items: center;
     border-bottom: 1px solid $color-admin-border;
-    background: rgba(184, 142, 75, 0.05);
+    background: rgba(184, 142, 75, 0.04);
 
     .dayal-sidebar-brand-inner {
       display: flex;
@@ -63,13 +73,13 @@
         font-weight: 800;
         font-size: 1.15rem;
         @include flex-center;
-        box-shadow: 0 4px 12px rgba(184, 142, 75, 0.3);
+        box-shadow: 0 4px 12px rgba(184, 142, 75, 0.25);
       }
 
       .dayal-admin-title {
         font-weight: 700;
         font-size: 1.05rem;
-        color: $color-white;
+        color: #0F172A;
         letter-spacing: -0.01em;
       }
 
@@ -97,7 +107,7 @@
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      color: $color-admin-text-muted;
+      color: #94A3B8;
       padding: 0.5rem 0.75rem;
     }
 
@@ -109,19 +119,19 @@
       border-radius: $radius-md;
       font-size: 0.8125rem;
       font-weight: 600;
-      color: $color-admin-text-muted;
+      color: #475569;
       transition: $transition-fast;
 
       &:hover {
-        background-color: rgba(255, 255, 255, 0.05);
-        color: $color-white;
+        background-color: #F1F5F9;
+        color: #0F172A;
       }
 
       &.active {
         background-color: $color-gold;
-        color: $color-admin-surface;
+        color: $color-white;
         font-weight: 700;
-        box-shadow: 0 4px 14px rgba(184, 142, 75, 0.3);
+        box-shadow: 0 4px 14px rgba(184, 142, 75, 0.25);
       }
     }
   }
@@ -130,7 +140,7 @@
   .dayal-sidebar-footer {
     padding: 1.25rem;
     border-top: 1px solid $color-admin-border;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: #F8FAFC;
 
     .dayal-admin-user-card {
       display: flex;
@@ -142,9 +152,9 @@
         width: 2.25rem;
         height: 2.25rem;
         border-radius: $radius-full;
-        background-color: rgba(184, 142, 75, 0.2);
-        color: $color-gold-light;
-        border: 1px solid rgba(184, 142, 75, 0.4);
+        background-color: rgba(184, 142, 75, 0.15);
+        color: $color-gold-hover;
+        border: 1px solid rgba(184, 142, 75, 0.35);
         @include flex-center;
         font-weight: 700;
         font-size: 0.8125rem;
@@ -153,7 +163,7 @@
       .dayal-admin-user-name {
         font-size: 0.8125rem;
         font-weight: 700;
-        color: $color-white;
+        color: #0F172A;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -175,9 +185,9 @@
       gap: 0.5rem;
       padding: 0.625rem 1rem;
       border-radius: $radius-md;
-      background-color: rgba(225, 29, 72, 0.12);
-      border: 1px solid rgba(225, 29, 72, 0.3);
-      color: #FB7185;
+      background-color: #FFF1F2;
+      border: 1px solid #FECDD3;
+      color: #E11D48;
       font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
@@ -197,7 +207,7 @@
 .dayal-admin-backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.65);
+  background-color: rgba(15, 23, 42, 0.4);
   backdrop-filter: blur(4px);
   z-index: 45;
 
@@ -217,7 +227,7 @@
 // Admin Header
 .dayal-admin-header {
   height: 4.5rem;
-  background-color: rgba(15, 23, 42, 0.9);
+  background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid $color-admin-border;
   position: sticky;
@@ -227,10 +237,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  @include respond-to('lg') {
-    padding: 0 2.5rem;
-  }
 
   .dayal-admin-header-left {
     display: flex;
@@ -247,8 +253,8 @@
       }
 
       &:hover {
-        color: $color-white;
-        background-color: rgba(255, 255, 255, 0.05);
+        color: #0F172A;
+        background-color: #F1F5F9;
       }
     }
   }
@@ -258,53 +264,29 @@
     align-items: center;
     gap: 0.75rem;
 
-    .dayal-live-badge {
-      display: none;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.35rem 0.75rem;
-      border-radius: $radius-full;
-      background-color: rgba(5, 150, 105, 0.12);
-      border: 1px solid rgba(5, 150, 105, 0.3);
-      color: #34D399;
-      font-size: 0.6875rem;
-      font-weight: 700;
-
-      @include respond-to('sm') {
-        display: inline-flex;
-      }
-
-      .dayal-pulsing-dot {
-        width: 0.5rem;
-        height: 0.5rem;
-        border-radius: $radius-full;
-        background-color: #34D399;
-        animation: pulse 2s infinite;
-      }
-    }
-
     .dayal-admin-head-btn {
       padding: 0.45rem 0.85rem;
       border-radius: $radius-md;
-      background-color: $color-admin-card;
-      color: $color-admin-text;
-      border: 1px solid $color-admin-border;
+      background-color: #FFFFFF;
+      color: #334155;
+      border: 1px solid #CBD5E1;
       font-size: 0.75rem;
       font-weight: 600;
       transition: $transition-fast;
 
       &:hover {
-        background-color: #1F2E4D;
-        color: $color-white;
+        background-color: #F8FAFC;
+        color: #0F172A;
+        border-color: #94A3B8;
       }
     }
 
     .dayal-admin-head-logout {
       padding: 0.45rem;
       border-radius: $radius-md;
-      color: #FB7185;
-      background-color: rgba(225, 29, 72, 0.1);
-      border: 1px solid rgba(225, 29, 72, 0.2);
+      color: #E11D48;
+      background-color: #FFF1F2;
+      border: 1px solid #FECDD3;
       transition: $transition-fast;
       @include flex-center;
 
@@ -319,20 +301,18 @@
 // Admin Body & Views
 .dayal-admin-body {
   flex: 1;
-  padding: 2rem 1.5rem 3rem;
-
-  @include respond-to('lg') {
-    padding: 2.5rem 2.5rem 4rem;
-  }
+  width: 100%;
+  padding: 1.5rem;
 
   .dayal-admin-view-header {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
 
     h1 {
       font-family: $font-serif;
       font-size: 2rem;
       font-weight: 700;
-      color: $color-white;
+      color: #0F172A;
     }
 
     p {
@@ -345,13 +325,14 @@
 
 // Admin Cards & Metrics
 .dayal-admin-stat-card {
-  background-color: $color-admin-card;
+  background-color: #FFFFFF;
   border: 1px solid $color-admin-border;
   border-radius: $radius-xl;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 
   .dayal-stat-top {
     display: flex;
@@ -369,8 +350,9 @@
     .dayal-stat-badge {
       font-size: 0.6875rem;
       font-weight: 800;
-      color: #34D399;
-      background: rgba(5, 150, 105, 0.15);
+      color: #059669;
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
       padding: 0.2rem 0.5rem;
       border-radius: $radius-full;
     }
@@ -380,7 +362,7 @@
     font-family: $font-serif;
     font-size: 2rem;
     font-weight: 800;
-    color: $color-white;
+    color: #0F172A;
     margin-top: 0.5rem;
   }
 
@@ -393,11 +375,11 @@
 
 // Admin Tables
 .dayal-admin-table-card {
-  background-color: $color-admin-card;
+  background-color: #FFFFFF;
   border: 1px solid $color-admin-border;
   border-radius: $radius-xl;
   overflow: hidden;
-  box-shadow: $shadow-md;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
   .dayal-admin-table-head {
     padding: 1.25rem 1.5rem;
@@ -409,7 +391,7 @@
     h3 {
       font-size: 1rem;
       font-weight: 700;
-      color: $color-white;
+      color: #0F172A;
     }
   }
 
@@ -426,8 +408,8 @@
 
     th {
       padding: 0.875rem 1.5rem;
-      background-color: rgba(0, 0, 0, 0.2);
-      color: $color-admin-text-muted;
+      background-color: #F8FAFC;
+      color: #475569;
       font-weight: 700;
       text-transform: uppercase;
       font-size: 0.6875rem;
@@ -437,8 +419,8 @@
 
     td {
       padding: 1rem 1.5rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      color: $color-admin-text;
+      border-bottom: 1px solid #F1F5F9;
+      color: #334155;
     }
 
     tr:last-child td {
@@ -446,7 +428,7 @@
     }
 
     tr:hover td {
-      background-color: rgba(255, 255, 255, 0.02);
+      background-color: #F8FAFC;
     }
   }
 }
@@ -457,7 +439,7 @@
   justify-content: space-between;
   padding: 0.85rem 1rem;
   border-radius: $radius-md;
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: #FFFFFF;
   border: 1px solid $color-admin-border;
   margin-bottom: 0.75rem;
 
@@ -467,14 +449,14 @@
 }
 
 .dayal-admin-profile-banner {
-  background: linear-gradient(135deg, $color-admin-card 0%, #162035 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
   border: 1px solid $color-admin-border;
   border-radius: $radius-xl;
   padding: 1.75rem 2rem;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  box-shadow: $shadow-md;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
   @include respond-to('md') {
     flex-direction: row;
@@ -484,11 +466,11 @@
 }
 
 .dayal-admin-card {
-  background-color: $color-admin-card;
+  background-color: #FFFFFF;
   border: 1px solid $color-admin-border;
   border-radius: $radius-xl;
   padding: 1.75rem;
-  box-shadow: $shadow-sm;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
   .dayal-admin-card-header {
     display: flex;
@@ -497,6 +479,11 @@
     margin-bottom: 1.25rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid $color-admin-border;
+
+    h2, h3, h4 {
+      color: #0F172A;
+      font-weight: 700;
+    }
   }
 }
 
@@ -505,8 +492,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.625rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid #F1F5F9;
   font-size: 0.8125rem;
+  color: #334155;
 
   &:last-child {
     border-bottom: none;
@@ -517,7 +505,7 @@
 .dayal-admin-footer {
   padding: 1rem 1.5rem;
   border-top: 1px solid $color-admin-border;
-  background-color: rgba(15, 23, 42, 0.7);
+  background-color: #FFFFFF;
   font-size: 0.75rem;
   color: $color-admin-text-muted;
   display: flex;
@@ -534,6 +522,153 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
+  }
+}
+
+// Admin form inputs light styling
+.dayal-admin-shell {
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  select,
+  textarea {
+    background-color: #FFFFFF;
+    color: #0F172A;
+    border: 1px solid #CBD5E1;
+    border-radius: $radius-md;
+    font-size: 0.875rem;
+    transition: $transition-fast;
+
+    &:focus {
+      border-color: $color-gold;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(184, 142, 75, 0.15);
+    }
+
+    &::placeholder {
+      color: #94A3B8;
+    }
+  }
+}
+
+// WooCommerce Admin Box & Tabs Styling
+.dayal-wc-meta-box {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: $radius-lg;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+
+  .dayal-wc-meta-header {
+    background: #F8FAFC;
+    border-bottom: 1px solid #E2E8F0;
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #0F172A;
+  }
+
+  .dayal-wc-meta-body {
+    padding: 1.25rem;
+  }
+}
+
+.dayal-wc-product-data-box {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: $radius-lg;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+
+  .dayal-wc-data-header {
+    background: #F8FAFC;
+    border-bottom: 1px solid #E2E8F0;
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #0F172A;
+
+    .dayal-wc-data-type-select {
+      font-size: 0.8125rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: $radius-sm;
+      border: 1px solid #CBD5E1;
+      background: #FFFFFF;
+      color: #0F172A;
+      font-weight: 600;
+    }
+  }
+
+  .dayal-wc-data-layout {
+    display: flex;
+    min-height: 400px;
+
+    @include respond-below('md') {
+      flex-direction: column;
+    }
+  }
+
+  .dayal-wc-data-tabs {
+    width: 200px;
+    background: #F8FAFC;
+    border-right: 1px solid #E2E8F0;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+
+    @include respond-below('md') {
+      width: 100%;
+      flex-direction: row;
+      flex-wrap: wrap;
+      border-right: none;
+      border-bottom: 1px solid #E2E8F0;
+    }
+
+    .dayal-wc-tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.85rem 1.15rem;
+      text-align: left;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #475569;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #EDF2F7;
+      border-left: 3px solid transparent;
+      cursor: pointer;
+      transition: $transition-fast;
+
+      &:hover {
+        background: #F1F5F9;
+        color: #0F172A;
+      }
+
+      &.active {
+        background: #FFFFFF;
+        color: #B88E4B;
+        font-weight: 700;
+        border-left-color: #B88E4B;
+        margin-right: -1px;
+      }
+    }
+  }
+
+  .dayal-wc-data-panel {
+    flex: 1;
+    padding: 1.5rem;
+    background: #FFFFFF;
   }
 }
 

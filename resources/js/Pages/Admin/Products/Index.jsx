@@ -22,9 +22,12 @@ export default function Index({ products = [], filters = {} }) {
 
     // Compute basic statistics
     const totalCount = products.length;
-    const inStockCount = products.filter((p) => Number(p.product_qty) > 0).length;
-    const lowStockCount = products.filter((p) => Number(p.product_qty) > 0 && Number(p.product_qty) <= 5).length;
-    const outOfStockCount = products.filter((p) => Number(p.product_qty) === 0).length;
+    const inStockCount = products.filter((p) => Number(p.total_stock ?? p.product_qty ?? 0) > 0).length;
+    const lowStockCount = products.filter((p) => {
+        const stock = Number(p.total_stock ?? p.product_qty ?? 0);
+        return stock > 0 && stock <= 10;
+    }).length;
+    const outOfStockCount = products.filter((p) => Number(p.total_stock ?? p.product_qty ?? 0) === 0).length;
 
     const handleDeleteClick = (product) => {
         setProductToDelete(product);
@@ -42,15 +45,15 @@ export default function Index({ products = [], filters = {} }) {
     };
 
     return (
-        <AdminLayout header="Products Catalog">
-            <Head title="Products Catalog - Dayal Sweets Admin" />
+        <AdminLayout header="Products">
+            <Head title="Products - Dayal Sweets Admin" />
 
-            <div className="dayal-container">
+            <div className="dayal-container" style={{ width: '100%', maxWidth: '100%', margin: 0 }}>
                 {/* Header Title & Action */}
-                <div className="dayal-admin-view-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+                <div className="dayal-admin-view-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', width: '100%' }}>
                     <div>
-                        <h1>Products Catalog</h1>
-                        <p>Manage authentic mithai inventory, pricing, galleries, and specifications.</p>
+                        <h1>Products</h1>
+                        <p>Manage authentic mithai inventory, pricing, pack variations, and specifications.</p>
                     </div>
 
                     <Link
@@ -66,56 +69,56 @@ export default function Index({ products = [], filters = {} }) {
                 </div>
 
                 {/* Metrics Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '2rem', width: '100%' }}>
                     <div className="dayal-admin-stat-card">
                         <div className="dayal-stat-top">
-                            <span className="dayal-stat-label">Total Catalog Items</span>
+                            <span className="dayal-stat-label">Total Products</span>
                             <span className="dayal-stat-badge">Active</span>
                         </div>
                         <div className="dayal-stat-value">{totalCount}</div>
-                        <div className="dayal-stat-subtext">Registered in store</div>
+                        <div className="dayal-stat-subtext">Registered catalog items</div>
                     </div>
 
                     <div className="dayal-admin-stat-card">
                         <div className="dayal-stat-top">
                             <span className="dayal-stat-label">In Stock</span>
-                            <span className="dayal-stat-badge" style={{ color: '#34D399', background: 'rgba(5, 150, 105, 0.15)' }}>Available</span>
+                            <span className="dayal-stat-badge" style={{ color: '#059669', background: '#ECFDF5', border: '1px solid #A7F3D0' }}>Available</span>
                         </div>
                         <div className="dayal-stat-value">{inStockCount}</div>
-                        <div className="dayal-stat-subtext">Ready for immediate order</div>
+                        <div className="dayal-stat-subtext">Ready for immediate dispatch</div>
                     </div>
 
                     <div className="dayal-admin-stat-card">
                         <div className="dayal-stat-top">
                             <span className="dayal-stat-label">Low Stock Alert</span>
-                            <span className="dayal-stat-badge" style={{ color: '#FBBF24', background: 'rgba(217, 119, 6, 0.15)' }}>Needs Reorder</span>
+                            <span className="dayal-stat-badge" style={{ color: '#D97706', background: '#FFFBEB', border: '1px solid #FDE68A' }}>Needs Reorder</span>
                         </div>
                         <div className="dayal-stat-value">{lowStockCount}</div>
-                        <div className="dayal-stat-subtext">5 units or fewer remaining</div>
+                        <div className="dayal-stat-subtext">10 units or fewer remaining</div>
                     </div>
 
                     <div className="dayal-admin-stat-card">
                         <div className="dayal-stat-top">
                             <span className="dayal-stat-label">Out of Stock</span>
-                            <span className="dayal-stat-badge" style={{ color: '#F87171', background: 'rgba(239, 68, 68, 0.15)' }}>Sold Out</span>
+                            <span className="dayal-stat-badge" style={{ color: '#E11D48', background: '#FFF1F2', border: '1px solid #FECDD3' }}>Sold Out</span>
                         </div>
                         <div className="dayal-stat-value">{outOfStockCount}</div>
-                        <div className="dayal-stat-subtext">Requires replenishment</div>
+                        <div className="dayal-stat-subtext">Requires kitchen replenishment</div>
                     </div>
                 </div>
 
                 {/* Search Bar & Table Card */}
-                <div className="dayal-admin-table-card">
+                <div className="dayal-admin-table-card" style={{ width: '100%' }}>
                     <div className="dayal-admin-table-head" style={{ flexWrap: 'wrap', gap: '1rem' }}>
                         <div>
                             <h3>All Sweet &amp; Savory Products</h3>
-                            <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+                            <span style={{ fontSize: '0.75rem', color: '#64748B' }}>
                                 Showing {filteredProducts.length} of {totalCount} total items
                             </span>
                         </div>
 
                         {/* Search Input */}
-                        <div style={{ position: 'relative', minWidth: '260px' }}>
+                        <div style={{ position: 'relative', minWidth: '280px' }}>
                             <input
                                 type="text"
                                 placeholder="Search by name, desc, or ID..."
@@ -123,11 +126,11 @@ export default function Index({ products = [], filters = {} }) {
                                 onChange={(e) => setSearch(e.target.value)}
                                 style={{
                                     width: '100%',
-                                    padding: '0.5rem 1rem 0.5rem 2.25rem',
+                                    padding: '0.55rem 1rem 0.55rem 2.25rem',
                                     borderRadius: '0.5rem',
-                                    background: '#0F172A',
-                                    border: '1px solid #334155',
-                                    color: '#F8FAFC',
+                                    background: '#FFFFFF',
+                                    border: '1px solid #CBD5E1',
+                                    color: '#0F172A',
                                     fontSize: '0.8125rem',
                                     outline: 'none',
                                 }}
@@ -136,7 +139,7 @@ export default function Index({ products = [], filters = {} }) {
                                 width="16"
                                 height="16"
                                 fill="none"
-                                stroke="#94a3b8"
+                                stroke="#64748B"
                                 viewBox="0 0 24 24"
                                 style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)' }}
                             >
@@ -152,8 +155,9 @@ export default function Index({ products = [], filters = {} }) {
                                         transform: 'translateY(-50%)',
                                         background: 'transparent',
                                         border: 'none',
-                                        color: '#94a3b8',
+                                        color: '#64748B',
                                         cursor: 'pointer',
+                                        fontSize: '1rem',
                                     }}
                                 >
                                     &times;
@@ -164,9 +168,9 @@ export default function Index({ products = [], filters = {} }) {
 
                     <div className="dayal-admin-table-wrap">
                         {filteredProducts.length === 0 ? (
-                            <div style={{ padding: '3.5rem 1.5rem', textAlign: 'center', color: '#94a3b8' }}>
+                            <div style={{ padding: '3.5rem 1.5rem', textAlign: 'center', color: '#64748B' }}>
                                 <BoxIcon width="48" height="48" style={{ margin: '0 auto 1rem', opacity: 0.3 }} />
-                                <h4 style={{ color: '#F8FAFC', fontSize: '1.1rem', marginBottom: '0.5rem' }}>No products found</h4>
+                                <h4 style={{ color: '#0F172A', fontSize: '1.1rem', marginBottom: '0.5rem' }}>No products found</h4>
                                 <p style={{ fontSize: '0.85rem', marginBottom: '1.5rem' }}>
                                     {search ? `No products matching "${search}".` : 'Get started by creating your first product in Dayal Sweets.'}
                                 </p>
@@ -187,6 +191,7 @@ export default function Index({ products = [], filters = {} }) {
                                         <th>Regular Price</th>
                                         <th>Selling Price</th>
                                         <th>Stock Qty</th>
+                                        <th>Variations</th>
                                         <th>Galleries</th>
                                         <th>Details</th>
                                         <th style={{ textAlign: 'right' }}>Actions</th>
@@ -209,8 +214,8 @@ export default function Index({ products = [], filters = {} }) {
                                                                 width: '44px',
                                                                 height: '44px',
                                                                 borderRadius: '0.5rem',
-                                                                background: '#1E293B',
-                                                                border: '1px solid #334155',
+                                                                background: '#F8FAFC',
+                                                                border: '1px solid #E2E8F0',
                                                                 overflow: 'hidden',
                                                                 flexShrink: 0,
                                                                 display: 'flex',
@@ -232,11 +237,11 @@ export default function Index({ products = [], filters = {} }) {
                                                         <div>
                                                             <Link
                                                                 href={route('admin.products.show', product.id)}
-                                                                style={{ color: '#F8FAFC', fontWeight: 600, textDecoration: 'none' }}
+                                                                style={{ color: '#0F172A', fontWeight: 600, textDecoration: 'none' }}
                                                             >
                                                                 {product.product_name}
                                                             </Link>
-                                                            <div style={{ fontSize: '0.75rem', color: '#94a3b8', maxWidth: '280px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                            <div style={{ fontSize: '0.75rem', color: '#64748B', maxWidth: '280px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                                                 {product.product_description || 'No description provided'}
                                                             </div>
                                                         </div>
@@ -252,9 +257,9 @@ export default function Index({ products = [], filters = {} }) {
                                                                 gap: '0.35rem',
                                                                 padding: '0.2rem 0.65rem',
                                                                 borderRadius: '9999px',
-                                                                background: 'rgba(184, 142, 75, 0.12)',
+                                                                background: '#F5EBD7',
                                                                 border: '1px solid rgba(184, 142, 75, 0.3)',
-                                                                color: '#F1D7B4',
+                                                                color: '#8C6226',
                                                                 fontSize: '0.75rem',
                                                                 fontWeight: 600,
                                                                 textDecoration: 'none',
@@ -263,17 +268,17 @@ export default function Index({ products = [], filters = {} }) {
                                                             {product.category.category_name}
                                                         </Link>
                                                     ) : (
-                                                        <span style={{ color: '#64748B', fontSize: '0.75rem', fontStyle: 'italic' }}>Unassigned</span>
+                                                        <span style={{ color: '#94A3B8', fontSize: '0.75rem', fontStyle: 'italic' }}>Unassigned</span>
                                                     )}
                                                 </td>
                                                 <td>
-                                                    <span style={{ color: '#94a3b8', textDecoration: discount > 0 ? 'line-through' : 'none' }}>
+                                                    <span style={{ color: '#64748B', textDecoration: discount > 0 ? 'line-through' : 'none' }}>
                                                         ₹{regularPrice.toFixed(2)}
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                                                        <span style={{ color: '#F1D7B4', fontWeight: 700 }}>
+                                                        <span style={{ color: '#0F172A', fontWeight: 700 }}>
                                                             ₹{sellingPrice.toFixed(2)}
                                                         </span>
                                                         {discount > 0 && (
@@ -282,8 +287,9 @@ export default function Index({ products = [], filters = {} }) {
                                                                     fontSize: '0.65rem',
                                                                     padding: '0.1rem 0.35rem',
                                                                     borderRadius: '0.25rem',
-                                                                    background: 'rgba(239, 68, 68, 0.15)',
-                                                                    color: '#F87171',
+                                                                    background: '#FFF1F2',
+                                                                    border: '1px solid #FECDD3',
+                                                                    color: '#E11D48',
                                                                     fontWeight: 700,
                                                                 }}
                                                             >
@@ -300,27 +306,53 @@ export default function Index({ products = [], filters = {} }) {
                                                             padding: '0.25rem 0.65rem',
                                                             borderRadius: '999px',
                                                             background: Number(product.product_qty) > 5
-                                                                ? 'rgba(5, 150, 105, 0.12)'
+                                                                ? '#ECFDF5'
                                                                 : Number(product.product_qty) > 0
-                                                                ? 'rgba(217, 119, 6, 0.15)'
-                                                                : 'rgba(239, 68, 68, 0.15)',
+                                                                ? '#FFFBEB'
+                                                                : '#FFF1F2',
+                                                            border: Number(product.product_qty) > 5
+                                                                ? '1px solid #A7F3D0'
+                                                                : Number(product.product_qty) > 0
+                                                                ? '1px solid #FDE68A'
+                                                                : '1px solid #FECDD3',
                                                             color: Number(product.product_qty) > 5
-                                                                ? '#34D399'
+                                                                ? '#059669'
                                                                 : Number(product.product_qty) > 0
-                                                                ? '#FBBF24'
-                                                                : '#F87171',
+                                                                ? '#D97706'
+                                                                : '#E11D48',
                                                         }}
                                                     >
                                                         {product.product_qty} in stock
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+                                                    <Link
+                                                        href={route('admin.products.edit', product.id)}
+                                                        title="Configure Variations in Edit Form"
+                                                        style={{
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '0.35rem',
+                                                            padding: '0.2rem 0.55rem',
+                                                            borderRadius: '0.375rem',
+                                                            background: '#F8FAFC',
+                                                            border: '1px solid #CBD5E1',
+                                                            color: '#334155',
+                                                            fontSize: '0.75rem',
+                                                            fontWeight: 600,
+                                                            textDecoration: 'none',
+                                                        }}
+                                                    >
+                                                        {Array.isArray(product.variations) ? product.variations.length : 0} pack size{Array.isArray(product.variations) && product.variations.length === 1 ? '' : 's'}
+                                                    </Link>
+                                                </td>
+                                                <td>
+                                                    <span style={{ fontSize: '0.75rem', color: '#64748B' }}>
                                                         {Array.isArray(product.product_gallaries) ? product.product_gallaries.length : 0} photos
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+                                                    <span style={{ fontSize: '0.75rem', color: '#64748B' }}>
                                                         {Array.isArray(product.product_details) ? product.product_details.length : 0} items
                                                     </span>
                                                 </td>
@@ -330,28 +362,40 @@ export default function Index({ products = [], filters = {} }) {
                                                             href={route('admin.products.show', product.id)}
                                                             className="dayal-admin-head-btn"
                                                             title="View Product"
-                                                            style={{ textDecoration: 'none', padding: '0.35rem 0.6rem' }}
+                                                            style={{ textDecoration: 'none', padding: '0.35rem 0.65rem' }}
                                                         >
                                                             View
                                                         </Link>
                                                         <Link
                                                             href={route('admin.products.edit', product.id)}
                                                             className="dayal-admin-head-btn"
-                                                            title="Edit Product"
-                                                            style={{ textDecoration: 'none', padding: '0.35rem 0.6rem', color: '#F1D7B4', borderColor: 'rgba(184, 142, 75, 0.3)' }}
+                                                            title="Edit Product & Variations"
+                                                            style={{ textDecoration: 'none', padding: '0.35rem 0.65rem' }}
                                                         >
                                                             Edit
                                                         </Link>
                                                         <button
                                                             type="button"
                                                             onClick={() => handleDeleteClick(product)}
-                                                            className="dayal-admin-head-logout"
                                                             title="Delete Product"
-                                                            style={{ padding: '0.35rem 0.6rem', border: 'none', cursor: 'pointer' }}
+                                                            style={{
+                                                                padding: '0.35rem 0.65rem',
+                                                                borderRadius: '0.375rem',
+                                                                background: '#FFF1F2',
+                                                                border: '1px solid #FECDD3',
+                                                                color: '#E11D48',
+                                                                fontSize: '0.75rem',
+                                                                fontWeight: 600,
+                                                                cursor: 'pointer',
+                                                                display: 'inline-flex',
+                                                                alignItems: 'center',
+                                                                gap: '0.25rem',
+                                                            }}
                                                         >
-                                                            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                             </svg>
+                                                            <span>Delete</span>
                                                         </button>
                                                     </div>
                                                 </td>
@@ -370,7 +414,7 @@ export default function Index({ products = [], filters = {} }) {
                         style={{
                             position: 'fixed',
                             inset: 0,
-                            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                            backgroundColor: 'rgba(15, 23, 42, 0.5)',
                             backdropFilter: 'blur(4px)',
                             zIndex: 100,
                             display: 'flex',
@@ -381,7 +425,7 @@ export default function Index({ products = [], filters = {} }) {
                     >
                         <div
                             className="dayal-admin-card"
-                            style={{ maxWidth: '440px', width: '100%', background: '#0F172A', border: '1px solid #334155' }}
+                            style={{ maxWidth: '440px', width: '100%', background: '#FFFFFF', border: '1px solid #CBD5E1', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
                         >
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
                                 <div
@@ -389,25 +433,26 @@ export default function Index({ products = [], filters = {} }) {
                                         width: '40px',
                                         height: '40px',
                                         borderRadius: '50%',
-                                        background: 'rgba(239, 68, 68, 0.15)',
+                                        background: '#FFF1F2',
+                                        border: '1px solid #FECDD3',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        color: '#F87171',
+                                        color: '#E11D48',
                                         flexShrink: 0,
                                     }}
                                 >
                                     <AlertIcon width="20" height="20" />
                                 </div>
                                 <div>
-                                    <h4 style={{ color: '#F8FAFC', margin: 0, fontSize: '1.1rem' }}>Confirm Deletion</h4>
-                                    <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Permanent action</span>
+                                    <h4 style={{ color: '#0F172A', margin: 0, fontSize: '1.1rem' }}>Confirm Deletion</h4>
+                                    <span style={{ fontSize: '0.75rem', color: '#64748B' }}>Permanent action</span>
                                 </div>
                             </div>
 
-                            <p style={{ color: '#CBD5E1', fontSize: '0.875rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>
+                            <p style={{ color: '#475569', fontSize: '0.875rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>
                                 Are you sure you want to delete <strong>{productToDelete.product_name}</strong>?
-                                All product pricing, gallery photos, and details will be permanently removed.
+                                All product pricing, pack variations, gallery photos, and details will be permanently removed.
                             </p>
 
                             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>

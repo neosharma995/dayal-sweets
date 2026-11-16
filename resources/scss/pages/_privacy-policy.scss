@@ -1,0 +1,144 @@
+/**
+ * Privacy Policy Page Scoped Styles - Dayal Sweets
+ * 100% Faithful to Dayal Sweets Design System & Source of Truth (Post 3)
+ *
+ * STRICT RULES:
+ * - Units: STRICTLY px (no rem, no em).
+ * - Container: width: 90%; max-width: 100%; margin-left: auto; margin-right: auto;
+ * - No fixed pixel max-width on page containers.
+ * - Scoped under .privacy-policy-page-root
+ */
+
+.privacy-policy-page-root {
+    width: 100%;
+    background-color: #FFFDFA;
+    color: #1C1008;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    /* Page Main Container */
+    .privacy-policy-page-main {
+        flex: 1;
+        width: 100%;
+        background-color: #FFFDFA;
+        padding-top: 60px;
+
+        @media (max-width: 1024px) {
+            padding-top: 45px;
+            padding-bottom: 60px;
+        }
+
+        @media (max-width: 768px) {
+            padding-top: 30px;
+            padding-bottom: 45px;
+        }
+    }
+
+    /* 90% Strict Width Container */
+    .privacy-policy-page-container {
+        width: 90%;
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 50px 20px;
+    }
+
+    /* Content Card Box */
+    .privacy-policy-content-card {
+        background: #FFFFFF;
+        border: 1px solid #E9DCCB;
+        border-radius: 16px;
+        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.03);
+        padding: 50px 60px;
+
+        @media (max-width: 1024px) {
+            padding: 35px 35px;
+            border-radius: 14px;
+        }
+
+        @media (max-width: 768px) {
+            padding: 25px 18px;
+            border-radius: 10px;
+        }
+    }
+
+    /* Section Block */
+    .privacy-policy-section-block {
+        margin-bottom: 35px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid #F5E8D8;
+
+        &:last-child {
+            margin-bottom: 0px;
+            padding-bottom: 0px;
+            border-bottom: none;
+        }
+
+        @media (max-width: 768px) {
+            margin-bottom: 25px;
+            padding-bottom: 22px;
+        }
+    }
+
+    /* Section Headings */
+    .privacy-policy-section-title {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 32px;
+        color: #5C1520;
+        margin-top: 0px;
+        margin-bottom: 16px;
+
+        @media (max-width: 1024px) {
+            font-size: 22px;
+            line-height: 30px;
+        }
+
+        @media (max-width: 768px) {
+            font-size: 19px;
+            line-height: 26px;
+            margin-bottom: 12px;
+        }
+    }
+
+    /* Section Paragraph Text */
+    .privacy-policy-content-text {
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 26px;
+        color: #4A3E3D;
+        margin-top: 0px;
+        margin-bottom: 14px;
+
+        &:last-child {
+            margin-bottom: 0px;
+        }
+
+        @media (max-width: 768px) {
+            font-size: 14px;
+            line-height: 23px;
+            margin-bottom: 12px;
+        }
+    }
+
+    /* Highlighted Prefix / Label */
+    .privacy-policy-content-highlight {
+        font-weight: 600;
+        color: #1C1008;
+    }
+
+    /* In-text Links */
+    .privacy-policy-content-link {
+        color: #8B1028;
+        text-decoration: underline;
+        word-break: break-all;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: #5C1520;
+        }
+    }
+}

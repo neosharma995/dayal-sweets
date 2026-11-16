@@ -1,0 +1,37 @@
+$ds-color-ink: #1C1008;
+$ds-color-hero-ink: #1c1008;
+$ds-color-burgundy: #5C1520;
+$ds-color-burgundy-button: #6B1020;
+$ds-color-gold: #C9A96E;
+$ds-color-copy: #7A6B55;
+$ds-color-cream: #FAF7F2;
+$ds-color-white: #FFFFFF;
+$ds-color-border: #dcd2c4;
+$ds-font-body: 'Inter', sans-serif;
+$ds-font-heading: 'Plus Jakarta Sans', sans-serif;
+$ds-container-width: 1720px;
+$ds-template-width: $ds-container-width;
+$ds-container-padding-desktop: 20px;
+$ds-container-padding-tablet: 20px;
+$ds-container-padding-mobile: 12px;
+$ds-motion: 350ms cubic-bezier(0.25, 1, 0.5, 1);
+
+@mixin dayal-container($max-width: $ds-container-width) {
+    width: 100%;
+    max-width: $max-width;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: $ds-container-padding-desktop;
+    padding-left: $ds-container-padding-desktop;
+    box-sizing: border-box;
+
+    @media (max-width: 1024px) {
+        padding-right: $ds-container-padding-tablet;
+        padding-left: $ds-container-padding-tablet;
+    }
+
+    @media (max-width: 767px) {
+        padding-right: $ds-container-padding-mobile;
+        padding-left: $ds-container-padding-mobile;
+    }
+}

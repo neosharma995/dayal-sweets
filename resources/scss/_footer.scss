@@ -1,304 +1,287 @@
-// ==========================================================================
-// Dayal Sweets - Footer SCSS
-// ==========================================================================
-@use './variables' as *;
-@use './mixins' as *;
+// ===========================================================================
+// Dayal Sweets — Footer
+// ===========================================================================
+@use './abstracts/storefront-variables' as *;
 
 .dayal-footer {
-  background-color: $color-maroon-dark;
-  color: $color-cream;
-  position: relative;
-  overflow: hidden;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: #5C1520;
+    color: #FAF7F2;
 
-  // Trust Strip Banner
-  .dayal-footer-trust-strip {
-    background-color: $color-maroon;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 2.25rem 0;
-
-    .dayal-trust-grid {
-      @include container-center;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-
-      @include respond-to('sm') {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      @include respond-to('lg') {
-        grid-template-columns: repeat(4, 1fr);
-      }
+    &-main {
+        background-color: #5C1520;
+        background-image: url('/uploads/2026/07/decorative-golden-mandala-white-background-1.png');
+        background-repeat: no-repeat;
     }
 
-    .dayal-trust-card {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-
-      .dayal-trust-icon {
-        width: 3rem;
-        height: 3rem;
-        border-radius: $radius-lg;
-        background-color: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(184, 142, 75, 0.4);
-        color: $color-gold-light;
-        @include flex-center;
-        flex-shrink: 0;
-      }
-
-      .dayal-trust-text {
-        h4 {
-          font-family: $font-serif;
-          font-size: 1.05rem;
-          font-weight: 700;
-          color: $color-white;
-          margin-bottom: 0.15rem;
-        }
-
-        p {
-          font-size: 0.75rem;
-          color: #E2D4C3;
-          line-height: 1.35;
-        }
-      }
-    }
-  }
-
-  // Main Footer Content
-  .dayal-footer-main {
-    padding: 4rem 0 3rem;
-
-    .dayal-footer-grid {
-      @include container-center;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2.5rem;
-
-      @include respond-to('md') {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      @include respond-to('lg') {
-        grid-template-columns: 2fr 1fr 1fr 1.5fr;
-      }
+    &-main-inner {
+        display: flex;
+        max-width: calc(#{$ds-container-width} + 40px);
+        align-items: flex-start;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        padding: 64px 20px 20px;
     }
 
-    // Col 1: Brand Info
-    .dayal-footer-brand {
-      .dayal-footer-brand-header {
+    &-brand {
+        display: flex;
+        width: 27%;
+        min-width: 0;
+        flex: 0 1 27%;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 22px;
+    }
+
+    &-brand>img {
+        display: block;
+        width: 100%;
+        max-width: 280px;
+        height: 63.5px;
+        object-fit: contain;
+        object-position: left center;
+    }
+
+    &-brand p {
+        width: 100%;
+        max-width: 320px;
+        margin: 0;
+        color: #FAF7F2;
+        font: 300 16px/22.5px $ds-font-body;
+    }
+
+    &-social {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 1rem;
-
-        .dayal-footer-crest {
-          width: 3rem;
-          height: 3rem;
-          border-radius: $radius-lg;
-          background: rgba(255, 255, 255, 0.08);
-          border: 1px solid $color-gold;
-          color: $color-gold-light;
-          @include flex-center;
-        }
-
-        h3 {
-          font-family: $font-serif;
-          font-size: 1.45rem;
-          font-weight: 800;
-          color: $color-white;
-          letter-spacing: 0.06em;
-          text-transform: uppercase;
-        }
-
-        span {
-          display: block;
-          font-size: 0.5625rem;
-          letter-spacing: 0.2em;
-          color: $color-gold;
-          font-weight: 700;
-          text-transform: uppercase;
-        }
-      }
-
-      p {
-        font-size: 0.8125rem;
-        color: #D3C4B3;
-        line-height: 1.6;
-        margin-bottom: 1.25rem;
-      }
-
-      .dayal-footer-badges {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-
-        .dayal-footer-pill {
-          padding: 0.35rem 0.65rem;
-          border-radius: $radius-sm;
-          background-color: rgba(255, 255, 255, 0.06);
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          font-size: 0.6875rem;
-          color: #E2D4C3;
-          font-weight: 600;
-        }
-      }
+        gap: 12px;
+        margin-bottom: 16px;
     }
 
-    // Col 2 & 3: Navigation Links
-    .dayal-footer-links {
-      h4 {
-        font-family: $font-serif;
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: $color-gold-light;
-        margin-bottom: 1.25rem;
-        position: relative;
-        padding-bottom: 0.5rem;
+    &-social a,
+    &-social img {
+        display: block;
+        width: 32px;
+        height: 32px;
+        flex: 0 0 32px;
+    }
 
-        &::after {
-          content: '';
-          position: absolute;
-          left: 0;
-          bottom: 0;
-          width: 2rem;
-          height: 2px;
-          background-color: $color-gold;
-        }
-      }
+    &-certification {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
 
-      ul {
+    &-certification h4 {
+        margin: 0;
+        color: #DFC08A;
+        font: 500 16px/15px $ds-font-body;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    &-certificates {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+    }
+
+    &-certificates img {
+        display: block;
+        width: auto;
+        height: 29px;
+        object-fit: contain;
+    }
+
+    &-links-column {
+        display: flex;
+        width: 15%;
+        min-width: 0;
+        flex: 0 1 15%;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    &-links-column h3 {
+        margin: 0;
+        color: #DFC08A;
+        font: 500 16px/15px $ds-font-body;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    &-gallery h3 {
+        margin: 0;
+        color: #DFC08A;
+        font: 700 14px/15px $ds-font-body;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    &-links-column ul {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin: 0;
+        padding: 0;
         list-style: none;
+    }
+
+    &-links-column a {
+        color: #FAF7F2;
+        font: 400 16px/16px $ds-font-body;
+        text-decoration: none;
+    }
+
+    &-links-column a:hover,
+    &-links-column a:focus-visible {
+        color: #7A6B55;
+    }
+
+    &-gallery {
+        width: 20%;
+        min-width: 0;
+        flex: 0 1 20%;
         display: flex;
         flex-direction: column;
-        gap: 0.625rem;
-
-        li a {
-          font-size: 0.8125rem;
-          color: #D3C4B3;
-          transition: $transition-fast;
-
-          &:hover {
-            color: $color-gold-light;
-            padding-left: 0.25rem;
-          }
-        }
-      }
+        gap: 20px;
     }
 
-    // Col 4: Newsletter
-    .dayal-footer-newsletter {
-      h4 {
-        font-family: $font-serif;
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: $color-gold-light;
-        margin-bottom: 0.5rem;
-      }
-
-      p {
-        font-size: 0.8125rem;
-        color: #D3C4B3;
-        margin-bottom: 1rem;
-        line-height: 1.5;
-      }
-
-      .dayal-newsletter-form {
-        display: flex;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
-
-        input {
-          flex: 1;
-          padding: 0.625rem 0.875rem;
-          font-size: 0.8125rem;
-          border-radius: $radius-sm;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          background-color: rgba(255, 255, 255, 0.08);
-          color: $color-white;
-
-          &::placeholder {
-            color: #9E8E7E;
-          }
-
-          &:focus {
-            outline: none;
-            border-color: $color-gold;
-            background-color: rgba(255, 255, 255, 0.12);
-          }
-        }
-
-        button {
-          @include btn-gold;
-          padding: 0.625rem 1rem;
-          font-size: 0.75rem;
-          border-radius: $radius-sm;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-        }
-      }
-
-      .dayal-footer-hotline {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        font-size: 0.8125rem;
-        color: #D3C4B3;
-        margin-bottom: 1.25rem;
-
-        .dayal-hotline-item {
-          display: flex;
-          align-items: flex-start;
-          gap: 0.5rem;
-        }
-
-        a {
-          color: $color-white;
-          font-weight: 700;
-          &:hover {
-            color: $color-gold-light;
-          }
-        }
-      }
-    }
-  }
-
-  // Bottom bar
-  .dayal-footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    background-color: #27050B;
-    padding: 1.25rem 0;
-
-    .dayal-bottom-inner {
-      @include container-center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
-      font-size: 0.75rem;
-      color: #B5A493;
-
-      @include respond-to('md') {
-        flex-direction: row;
-      }
+    &-gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 15px;
     }
 
-    .dayal-payment-pills {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-
-      .dayal-pay-pill {
-        padding: 0.2rem 0.5rem;
-        border-radius: $radius-sm;
-        background-color: #2D0C13;
-        border: 1px solid #430B15;
-        font-family: monospace;
-        font-size: 0.6875rem;
-        color: #E2D4C3;
-      }
+    &-gallery-grid a {
+        display: block;
+        overflow: hidden;
+        border-radius: 10px;
     }
-  }
+
+    &-gallery-grid img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 104 / 103;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+
+    &-bottom {
+        width: 100%;
+        border-top: 1px solid #B8975A1A;
+        padding: 24px 20px;
+        color: #FFFFFF;
+        font: 400 16px/16px $ds-font-body;
+        text-align: center;
+    }
+
+    &-bottom p {
+        margin: 0;
+    }
+
+    @media (min-width: 768px) {
+        &-main-inner {
+            width: min(100%, calc(#{$ds-container-width} + 40px));
+            margin-right: auto;
+            margin-left: auto;
+            box-sizing: border-box;
+        }
+    }
+
+    @media (max-width: 1439px) {
+        &-main-inner {
+            gap: 50px 20px;
+            padding: 60px 12px 20px;
+        }
+
+        &-brand {
+            width: 30%;
+            flex-basis: 30%;
+        }
+
+        &-links-column:nth-of-type(1) {
+            width: 15%;
+            flex-basis: 15%;
+        }
+
+        &-links-column:nth-of-type(2) {
+            width: 20%;
+            flex-basis: 20%;
+        }
+
+        &-links-column:nth-of-type(3) {
+            width: 15%;
+            flex-basis: 15%;
+        }
+
+        &-brand p,
+        &-links-column a {
+            font-size: 14px;
+        }
+    }
+
+    @media (max-width: 1024px) and (min-width: 768px) {
+        &-main-inner {
+            width: 100%;
+        }
+
+        &-brand {
+            width: 35%;
+            flex-basis: 35%;
+        }
+
+        &-links-column:nth-of-type(1) {
+            width: 18%;
+            flex-basis: 18%;
+        }
+
+        &-links-column:nth-of-type(2) {
+            width: 20%;
+            flex-basis: 20%;
+        }
+
+        &-links-column:nth-of-type(3) {
+            width: 18%;
+            flex-basis: 18%;
+        }
+
+        &-gallery {
+            width: 100%;
+            flex-basis: 100%;
+        }
+
+        &-gallery-grid {
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 767px) {
+        &-main-inner {
+            gap: 35px 20px;
+            padding: 30px 12px 20px;
+        }
+
+        &-brand {
+            width: 100%;
+            flex-basis: 100%;
+        }
+
+        &-brand p,
+        &-links-column a {
+            font-size: 14px;
+        }
+
+        &-links-column {
+            width: calc(50% - 10px);
+            flex-basis: calc(50% - 10px);
+        }
+
+        &-gallery {
+            width: 100%;
+            flex-basis: 100%;
+        }
+
+        &-gallery-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
 }

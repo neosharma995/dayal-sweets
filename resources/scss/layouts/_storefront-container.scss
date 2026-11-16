@@ -1,0 +1,26 @@
+@use '../abstracts/storefront-variables' as *;
+
+html,
+body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+.dayal-site {
+    min-height: 100vh;
+    overflow: clip;
+    color: $ds-color-ink;
+    font-family: $ds-font-body;
+}
+
+.dayal-header-container,
+.dayal-footer-container {
+    @include dayal-container;
+}

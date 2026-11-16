@@ -15,24 +15,7 @@ export default function AdminDashboard({ metrics, recentOrders, topProducts, inv
         >
             <Head title="Admin Dashboard - Dayal Sweets" />
 
-            {/* Inventory Alert Banner */}
-            {inventoryAlerts && inventoryAlerts.length > 0 && (
-                <div className="dayal-alert dayal-alert--warning dayal-mb-6">
-                    <AlertIcon width="20" height="20" />
-                    <div className="dayal-flex-between dayal-btn--full">
-                        <div>
-                            <strong>Inventory Alert: Fresh Sweet Stock Running Low</strong>
-                            <p>{inventoryAlerts.map(alert => `${alert.item} (${alert.stock})`).join(' • ')}</p>
-                        </div>
-                        <Link
-                            href={route('admin.account')}
-                            className="dayal-btn dayal-btn--secondary dayal-btn--sm"
-                        >
-                            Review Kitchen Stock
-                        </Link>
-                    </div>
-                </div>
-            )}
+           
 
             {/* Key Metrics Cards */}
             <div className="dayal-grid-4 dayal-mb-6">

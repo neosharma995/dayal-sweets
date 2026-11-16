@@ -7,7 +7,7 @@ namespace Tests\Feature;
 use App\Enums\UserRole;
 use App\Models\Product;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
@@ -15,9 +15,10 @@ use Tests\TestCase;
 
 class AdminProductTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
     protected User $adminUser;
+
     protected User $customerUser;
 
     protected function setUp(): void

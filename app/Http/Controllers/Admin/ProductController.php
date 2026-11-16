@@ -30,7 +30,7 @@ class ProductController extends Controller
             $search = (string) $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('product_name', 'like', "%{$search}%")
-                  ->orWhere('product_description', 'like', "%{$search}%");
+                    ->orWhere('product_description', 'like', "%{$search}%");
             });
         }
 

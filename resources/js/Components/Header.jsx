@@ -83,7 +83,22 @@ export default function Header({ auth }) {
                 <div className="dayal-header-container dayal-header-top-inner">
                     <p>FREE DELIVERY ON ORDERS ABOVE <strong>&#8377;999</strong></p>
                     <div className="dayal-header-quicklinks">
-                        {utilityLinks.map(([label, href, icon]) => <a href={href} key={label}><img src={`/uploads/2026/07/${icon}`} alt="" />{label}</a>)}
+                        {utilityLinks.map(([label, href, icon]) => {
+                            if (href.startsWith('tel:') || href.startsWith('mailto:') || href.startsWith('http')) {
+                                return (
+                                    <a href={href} key={label}>
+                                        <img src={`/uploads/2026/07/${icon}`} alt="" />
+                                        {label}
+                                    </a>
+                                );
+                            }
+                            return (
+                                <Link href={href} key={label}>
+                                    <img src={`/uploads/2026/07/${icon}`} alt="" />
+                                    {label}
+                                </Link>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
@@ -112,8 +127,8 @@ export default function Header({ auth }) {
                                         {shopCategories.map((category) => <section className={`dayal-header-mega-category${openShopCategory === category.title ? ' is-expanded' : ''}`} key={category.title}>
                                             <h3><button type="button" aria-expanded={openShopCategory === category.title} onClick={() => setOpenShopCategory((open) => open === category.title ? null : category.title)}><img src={`/uploads/2026/07/${category.icon}`} alt="" loading="lazy" />{category.title}<ChevronDown size={14} aria-hidden="true" /></button></h3>
                                             <ul>
-                                                {category.products.map(([label, slug]) => <li key={slug}><a href={`/product/${slug}/`} onClick={() => { setShopOpen(false); closeMobileMenu(); }}>{label}</a></li>)}
-                                                <li className="dayal-header-mega-view-all"><a href={category.all} onClick={() => { setShopOpen(false); closeMobileMenu(); }}>{category.allLabel}</a></li>
+                                                {category.products.map(([label, slug]) => <li key={slug}><Link href={`/product/${slug}/`} onClick={() => { setShopOpen(false); closeMobileMenu(); }}>{label}</Link></li>)}
+                                                <li className="dayal-header-mega-view-all"><Link href={category.all} onClick={() => { setShopOpen(false); closeMobileMenu(); }}>{category.allLabel}</Link></li>
                                             </ul>
                                         </section>)}
                                     </div>
@@ -122,7 +137,7 @@ export default function Header({ auth }) {
                                     <aside className="dayal-header-mega-promo">
                                         <h3>Crafted <span>For Every Celebration</span></h3>
                                         <p>Premium gift boxes crafted with love, packed with the finest ingredients.</p>
-                                        <a href="/gifting/" onClick={() => { setShopOpen(false); closeMobileMenu(); }}>Explore Gifting <img src="/uploads/2026/07/Icon.svg" alt="" /></a>
+                                        <Link href="/gifting" onClick={() => { setShopOpen(false); closeMobileMenu(); }}>Explore Gifting <img src="/uploads/2026/07/Icon.svg" alt="" /></Link>
                                         <img className="dayal-header-mega-promo-image" src="/uploads/2026/07/image-220.png" alt="Dayal Sweets celebration gift box" loading="lazy" />
                                     </aside>
                                 </div>
@@ -130,7 +145,7 @@ export default function Header({ auth }) {
                         </div>
                         {navItems.map(([label, href]) => {
                             const active = currentPath === href.replace(/\/+$/, '');
-                            return <a key={label} className={`dayal-header-link${active ? ' is-active' : ''}`} href={href} aria-current={active ? 'page' : undefined} onClick={closeMobileMenu}><span>{label}</span></a>;
+                            return <Link key={label} className={`dayal-header-link${active ? ' is-active' : ''}`} href={href} aria-current={active ? 'page' : undefined} onClick={closeMobileMenu}><span>{label}</span></Link>;
                         })}
                     </nav>
                     <button
@@ -159,10 +174,10 @@ export default function Header({ auth }) {
                     <div className="dayal-header-actions">
                         <div className="dayal-header-icons">
                             <button className="dayal-header-search-trigger" type="button" aria-label="Search Products" onClick={() => setSearchOpen(true)}><Search size={20} strokeWidth={1.8} aria-hidden="true" /></button>
-                            <a href="/my-account" className="dayal-header-account" aria-label={auth?.user ? 'My account' : 'Login'}><UserRound size={20} strokeWidth={1.8} aria-hidden="true" /></a>
-                            <a href="/cart" className="dayal-header-cart" aria-label={`View cart, ${cartCount} items`}><ShoppingBag size={20} strokeWidth={1.8} aria-hidden="true" /><span className="dayal-header-cart-count" aria-live="polite">{cartCount}</span></a>
+                            <Link href="/my-account" className="dayal-header-account" aria-label={auth?.user ? 'My account' : 'Login'}><UserRound size={20} strokeWidth={1.8} aria-hidden="true" /></Link>
+                            <Link href="/cart" className="dayal-header-cart" aria-label={`View cart, ${cartCount} items`}><ShoppingBag size={20} strokeWidth={1.8} aria-hidden="true" /><span className="dayal-header-cart-count" aria-live="polite">{cartCount}</span></Link>
                         </div>
-                        <a className="dayal-header-order" href="/shop">Order Now</a>
+                        <Link className="dayal-header-order" href="/shop">Order Now</Link>
                     </div>
                 </div>
                 {searchOpen && <div className="dayal-search-modal-overlay" role="presentation" onClick={() => setSearchOpen(false)}>
@@ -183,7 +198,7 @@ export default function Header({ auth }) {
                         </form>
                         <footer className="dayal-search-modal-footer">
                             <span>Press ESC to close</span>
-                            <a href="/shop/">View All Products in Shop <span aria-hidden="true">→</span></a>
+                            <Link href="/shop" onClick={() => setSearchOpen(false)}>View All Products in Shop <span aria-hidden="true">→</span></Link>
                         </footer>
                     </section>
                 </div>}

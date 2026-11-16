@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from '@inertiajs/react';
 import { heroSlides } from '@/data/heroSlides';
 import { HeroCommitments } from '@/Components/home/HomeSections';
 
@@ -51,8 +52,8 @@ export default function Hero() {
                                 <div className="dayal-hero-mobile-image"><img src={slide.image} alt={slide.imageAlt} /></div>
                                 <p className="dayal-hero-description">{slide.description}</p>
                                 <div className="dayal-hero-actions">
-                                    <a className="dayal-hero-button dayal-hero-button-primary" href={slide.primaryButton.url}>{slide.primaryButton.label}<svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M8.5 1L12.5 5M12.5 5L8.5 9M12.5 5H1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg></a>
-                                    <a className="dayal-hero-button dayal-hero-button-secondary" href={slide.secondaryButton.url}>{slide.secondaryButton.label}</a>
+                                    <Link className="dayal-hero-button dayal-hero-button-primary" href={slide.primaryButton.url}>{slide.primaryButton.label}<svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M8.5 1L12.5 5M12.5 5L8.5 9M12.5 5H1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg></Link>
+                                    <Link className="dayal-hero-button dayal-hero-button-secondary" href={slide.secondaryButton.url}>{slide.secondaryButton.label}</Link>
                                 </div>
                             </div>
                             <div className="dayal-hero-product"><img src={slide.image} alt={slide.imageAlt} /></div>

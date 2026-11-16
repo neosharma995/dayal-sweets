@@ -14,9 +14,10 @@ export default function ContactHero({
     subtitle = "We'd Love to Hear From You!",
     description = "Have a query, feedback, or a special request? We're here to help and make your experience with Dayal Sweets even better.",
     rightVisual = null,
+    className = '',
 }) {
     return (
-        <section className="contact-hero-section">
+        <section className={`contact-hero-section ${className}`.trim()}>
             {/* Dark burgundy textured background overlay */}
             <div className="contact-hero-overlay" aria-hidden="true" />
 

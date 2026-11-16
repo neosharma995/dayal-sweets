@@ -1,3 +1,5 @@
+import { Link } from '@inertiajs/react';
+
 const quickLinks = [
     ['Home', '/'],
     ['About us', '/about-us'],
@@ -44,7 +46,7 @@ function FooterLinkList({ title, links }) {
     return (
         <section className="dayal-footer-links-column">
             <h3>{title}</h3>
-            <ul>{links.map(([label, url]) => <li key={label}><a href={url}>{label}</a></li>)}</ul>
+            <ul>{links.map(([label, url]) => <li key={label}><Link href={url}>{label}</Link></li>)}</ul>
         </section>
     );
 }
@@ -69,7 +71,7 @@ export default function Footer() {
                         <div className="dayal-footer-cta-copy">
                             <p className="dayal-footer-cta-description">From our kitchen to your doorstep,<br />we make every order special.</p>
                             <div className="dayal-footer-cta-actions">
-                                <a href="/shop"><span className="dayal-footer-cta-action-icon dayal-footer-cta-order-icon" aria-hidden="true" />ORDER NOW</a>
+                                <Link href="/shop"><span className="dayal-footer-cta-action-icon dayal-footer-cta-order-icon" aria-hidden="true" />ORDER NOW</Link>
                                 <a href="https://wa.me/919876543210"><span className="dayal-footer-cta-action-icon dayal-footer-cta-chat-icon" aria-hidden="true" />CHAT NOW</a>
                             </div>
                         </div>
@@ -112,7 +114,7 @@ export default function Footer() {
                     <section className="dayal-footer-gallery">
                         <h3>Gallery</h3>
                         <div className="dayal-footer-gallery-grid">
-                            {galleryImages.map((image) => <a href="/gallery/" key={image}><img src={`/uploads/2026/07/${image}`} alt="" /></a>)}
+                            {galleryImages.map((image) => <Link href="/gallery" key={image}><img src={`/uploads/2026/07/${image}`} alt="" /></Link>)}
                         </div>
                     </section>
                 </div>

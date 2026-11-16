@@ -1,14 +1,16 @@
 // ==========================================================================
 // Dayal Sweets - Shop Page Styles
-// Pure SCSS Architecture - Nested, clean, no unnecessary !important
-// Matches original WordPress wc-outlet-table-ordering shop design
+// Pure SCSS Architecture - Clean, nested, using project SCSS variables
+// Reusable Hero Banner matches Gifting, About Us, Contact Us pages
 // ==========================================================================
 
+@import '../variables';
+@import '../abstracts/storefront-variables';
+
 .dayal-sweets-shop {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    color: #2b2b2b;
-    background-color: #FAF7F2;
-    padding: 0 0 70px;
+    font-family: $ds-font-body;
+    color: $color-text;
+    background-color: $ds-color-cream;
     margin: 0 auto;
     box-sizing: border-box;
     min-height: 85vh;
@@ -17,92 +19,12 @@
         box-sizing: border-box;
     }
 
-    // 01. Hero Banner
+    // 01. Hero Banner (Uses common ContactHero component with spacing)
     .dayal-shop-hero {
-        width: 100%;
-        background: linear-gradient(135deg, rgba(81, 21, 39, 0.96) 0%, rgba(61, 13, 26, 0.96) 100%), url('/uploads/2026/08/Hero-Banner.png');
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center bottom;
-        padding: 56px 20px 48px;
         margin-bottom: 36px;
-        text-align: center;
-        color: #f4e9d8;
-        position: relative;
-        min-height: 290px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        &-inner {
-            max-width: 800px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .dayal-shop-breadcrumb {
-            color: #a08a74;
-            font-size: 13px;
-            margin-bottom: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-
-            span {
-                color: #e6c991;
-            }
-
-            a {
-                color: #a08a74;
-                text-decoration: none;
-                transition: color 0.2s ease;
-
-                &:hover {
-                    color: #e6c991;
-                }
-            }
-        }
-
-        h1 {
-            font-size: 40px;
-            font-weight: 700;
-            color: #e6c991;
-            margin: 0 0 8px 0;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-family: 'DM Sans', sans-serif;
-            line-height: 1.2;
-        }
-
-        .dayal-shop-hero-arrow {
-            display: block;
-            max-width: 130px;
-            height: auto;
-            margin: 6px auto;
-        }
-
-        p {
-            font-size: 16px;
-            color: #dccab4;
-            margin: 6px auto 0;
-            font-family: 'Inter', sans-serif;
-            letter-spacing: 0.3px;
-        }
 
         @media (max-width: 768px) {
-            padding: 40px 16px 36px;
-            min-height: 220px;
             margin-bottom: 24px;
-
-            h1 {
-                font-size: 26px;
-                letter-spacing: 1.2px;
-            }
-
-            p {
-                font-size: 14px;
-            }
         }
     }
 
@@ -112,11 +34,17 @@
         align-items: flex-start;
         gap: 36px;
         max-width: 90%;
+        width: 100%;
         margin: 0 auto;
+
+        @media (max-width: 1200px) {
+            max-width: 95%;
+            gap: 24px;
+        }
 
         @media (max-width: 1024px) {
             flex-direction: column;
-            max-width: 100%;
+            width: 100%;
             padding: 0 16px;
             gap: 20px;
         }
@@ -358,16 +286,40 @@
         }
     }
 
-    // Category List
+    // Category List with Custom Scrollbar
     .dayal-shop-cat-list {
         list-style: none;
         margin: 0;
-        padding: 0;
+        padding: 0 8px 0 0;
         display: flex;
         flex-direction: column;
         gap: 8px;
-        max-height: 220px;
+        max-height: 245px;
         overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: #8b2638 #f3eee8;
+
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: #f3eee8;
+            border-radius: 20px;
+            margin: 4px 0;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: #8b2638;
+            border: 2px solid #f3eee8;
+            border-radius: 20px;
+            min-height: 45px;
+
+            &:hover {
+                background: #651b2a;
+            }
+        }
 
         li label {
             display: flex;
@@ -405,6 +357,11 @@
         font-weight: 600;
         color: #2C1810;
         margin-bottom: 10px;
+
+        strong {
+            color: #7A1C28;
+            font-size: 14px;
+        }
     }
 
     .dayal-shop-slider-track {
@@ -443,14 +400,6 @@
                 pointer-events: auto;
             }
         }
-    }
-
-    .dayal-shop-price-range-labels {
-        display: flex;
-        justify-content: space-between;
-        font-size: 11px;
-        color: #9B8D82;
-        margin-top: 6px;
     }
 
     // Tag Pills (Seasonal Mithai)
@@ -521,28 +470,6 @@
         }
     }
 
-    // Apply Filters Button
-    .dayal-shop-apply-btn {
-        width: 100%;
-        margin-top: 18px;
-        padding: 12px 0;
-        background: #7A1C28;
-        border: 1px solid #7A1C28;
-        color: #ffffff;
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        cursor: pointer;
-        transition: background 0.2s ease;
-
-        &:hover {
-            background: #5c1620;
-            border-color: #5c1620;
-        }
-    }
-
     // 05. Main Shop Content
     .dayal-shop-main {
         flex: 1;
@@ -558,6 +485,7 @@
             .dayal-shop-results-count {
                 font-size: 13.5px;
                 color: #7A6355;
+                font-weight: 500;
             }
 
             .dayal-shop-filter-trigger {
@@ -584,13 +512,14 @@
             }
         }
 
-        // Product Grid Layout
+        // Product Grid Layout (4 columns on desktop)
         .dayal-shop-products-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 24px;
+            width: 100%;
 
-            @media (max-width: 1320px) {
+            @media (max-width: 1400px) {
                 grid-template-columns: repeat(3, minmax(0, 1fr));
                 gap: 20px;
             }
@@ -627,13 +556,13 @@
             }
         }
 
-        // 06. Pagination
+        // Pagination
         .dayal-shop-pagination {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 6px;
-            margin-top: 56px;
+            margin-top: 50px;
             flex-wrap: wrap;
 
             .dayal-shop-page-btn {
@@ -668,16 +597,677 @@
                     cursor: not-allowed;
                     pointer-events: none;
                 }
+            }
+        }
+    }
 
-                &.is-dots {
-                    background: transparent;
-                    cursor: default;
-                    min-width: 24px;
+    // 06. Sections Header (Curated Combos & Sweetest Deals)
+    .dayal-shop-section-container {
+        max-width: 90%;
+        width: 100%;
+        margin: 0 auto;
+
+        @media (max-width: 1200px) {
+            max-width: 95%;
+        }
+
+        @media (max-width: 1024px) {
+            max-width: 100%;
+            padding: 0 16px;
+        }
+    }
+
+    .dayal-shop-section-header {
+        text-align: center;
+        margin-bottom: 34px;
+
+        .dayal-shop-section-eyebrow {
+            display: block;
+            font-size: 13.5px;
+            font-weight: 500;
+            letter-spacing: 4px;
+            color: #1C1008;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .dayal-shop-section-title {
+            font-size: clamp(26px, 3.2vw, 36px);
+            font-weight: 400;
+            color: #1C1008;
+            line-height: 1.25;
+            margin: 6px 0 10px;
+
+            span.rt-span-color {
+                color: #7A1C28;
+                font-weight: 600;
+            }
+        }
+
+        .dayal-shop-section-subtitle {
+            font-size: 15px;
+            color: #5D5149;
+            margin: 0 auto;
+            max-width: 600px;
+            line-height: 1.55;
+        }
+    }
+
+    // Curated Combos Section
+    .dayal-shop-combos-section {
+        margin: 80px 0 60px;
+
+        .oto-latest-combo-products {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 24px;
+            width: 100%;
+
+            @media (max-width: 1400px) {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 20px;
+            }
+
+            @media (max-width: 900px) {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 16px;
+            }
+
+            @media (max-width: 480px) {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+            }
+        }
+    }
+
+    // Today's Sweetest Deals Section
+    .dayal-shop-deals-section {
+        margin: 70px 0 80px;
+
+        .dayal-shop-deals-grid {
+            display: grid;
+            grid-template-columns: 1.35fr repeat(4, 1fr);
+            gap: 20px;
+            align-items: stretch;
+
+            @media (max-width: 1300px) {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            @media (max-width: 900px) {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            @media (max-width: 600px) {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .dayal-shop-deal-card {
+            min-height: 315px;
+            border-radius: 16px;
+            padding: 22px 18px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+
+            // Flash Deal (Card 1)
+            &.is-flash-deal {
+                background: linear-gradient(135deg, #7A1C28 0%, #4D121B 100%);
+                border: 2px solid #85492A;
+                color: #ffffff;
+                flex-direction: row;
+                align-items: center;
+                gap: 12px;
+
+                .dayal-deal-card-content {
+                    flex: 1;
+                    min-width: 0;
+                    z-index: 2;
                 }
 
-                &.is-arrow {
-                    font-size: 16px;
+                .dayal-deal-flash-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-size: 10px;
+                    letter-spacing: 1px;
+                    color: #FEDD7D;
+                    margin-bottom: 12px;
+
+                    svg {
+                        flex-shrink: 0;
+                    }
                 }
+
+                .dayal-deal-big-heading {
+                    font-size: 28px;
+                    font-weight: 700;
+                    color: #ffffff;
+                    margin: 0 0 4px;
+                    line-height: 1.1;
+
+                    .big-num {
+                        font-size: 46px;
+                    }
+                }
+
+                .dayal-deal-category-label {
+                    color: #DFC08A;
+                    font-size: 12.5px;
+                    font-weight: 400;
+                    letter-spacing: 0.5px;
+                    margin: 4px 0 10px;
+                }
+
+                .dayal-deal-divider {
+                    display: block;
+                    width: 120px;
+                    height: auto;
+                    margin-bottom: 14px;
+                }
+
+                .dayal-deal-btn-link {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    background: #FFF4E0;
+                    color: #7A1C28;
+                    font-size: 12px;
+                    font-weight: 700;
+                    padding: 8px 16px;
+                    border-radius: 4px;
+                    text-decoration: none;
+                    transition: background 0.2s ease;
+
+                    &:hover {
+                        background: #ffffff;
+                    }
+                }
+
+                .dayal-deal-card-image {
+                    flex: 0 0 130px;
+                    max-width: 130px;
+
+                    img {
+                        width: 100%;
+                        height: auto;
+                        display: block;
+                        object-fit: contain;
+                    }
+
+                    @media (max-width: 600px) {
+                        display: none;
+                    }
+                }
+            }
+
+            // Standard Coupon Cards (Cards 2, 3, 4)
+            &.is-coupon-card,
+            &.is-coming-soon {
+                background: #FAF6F0;
+                border: 1.5px solid rgba(196, 146, 58, 0.28);
+                text-align: center;
+                align-items: center;
+
+                .dayal-deal-icon {
+                    width: 42px;
+                    height: 42px;
+                    margin-bottom: 8px;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        display: block;
+                    }
+                }
+
+                .dayal-deal-eyebrow {
+                    font-size: 11px;
+                    font-weight: 600;
+                    letter-spacing: 1.2px;
+                    color: #C9A96E;
+                    text-transform: uppercase;
+                    margin: 0 0 4px;
+                }
+
+                .dayal-deal-title {
+                    font-size: 24px;
+                    font-weight: 700;
+                    color: #1C1008;
+                    line-height: 1.2;
+                    margin: 4px 0 6px;
+
+                    .deal-strong {
+                        font-size: 32px;
+                        color: #7A1C28;
+                    }
+                }
+
+                .dayal-deal-sub {
+                    font-size: 12px;
+                    color: #7A6355;
+                    margin: 0 0 12px;
+                }
+
+                .dayal-deal-coupon-box {
+                    background: #ffffff;
+                    border: 1px dashed rgba(196, 146, 58, 0.5);
+                    border-radius: 6px;
+                    padding: 6px 16px;
+                    margin-bottom: 14px;
+                    display: inline-flex;
+                    flex-direction: column;
+                    align-items: center;
+
+                    .dayal-deal-coupon-label {
+                        font-size: 9px;
+                        font-weight: 600;
+                        color: #9B8D82;
+                        letter-spacing: 1px;
+                    }
+
+                    .dayal-deal-coupon-code {
+                        font-size: 15px;
+                        font-weight: 800;
+                        color: #7A1C28;
+                        letter-spacing: 1.5px;
+                    }
+                }
+
+                .dayal-deal-highlight-val {
+                    font-size: 30px;
+                    font-weight: 800;
+                    color: #7A1C28;
+                    margin: 4px 0 14px;
+                }
+
+                .dayal-deal-action-btn {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 6px;
+                    background: #7A1C28;
+                    color: #ffffff;
+                    border: 1px solid #7A1C28;
+                    font-size: 12px;
+                    font-weight: 600;
+                    padding: 8px 18px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    text-decoration: none;
+                    transition: background 0.2s ease;
+                    width: 85%;
+
+                    &:hover {
+                        background: #5c1620;
+                    }
+
+                    &.is-outlined {
+                        background: transparent;
+                        border-color: #7A1C28;
+                        color: #7A1C28;
+
+                        &:hover {
+                            background: #7A1C28;
+                            color: #ffffff;
+                        }
+                    }
+                }
+            }
+
+            // Coming Soon Card
+            &.is-coming-soon {
+                background: #FAF6F0 url('/uploads/2026/09/decorative-golden-mandala-white-background-2.png') no-repeat right bottom;
+                background-size: cover;
+            }
+        }
+    }
+
+    // 07. QR Table Ordering Section
+    .dayal-shop-qr-section {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        max-width: 90%;
+        margin: 50px auto;
+        padding: 30px 90px 30px 30px;
+        gap: 45px;
+        border: 1px solid #eadfce;
+        border-radius: 18px;
+        background: linear-gradient(135deg, rgba(255, 250, 242, 0.98), rgba(250, 245, 238, 0.96));
+        box-sizing: border-box;
+        overflow: hidden;
+
+        .decorative-img {
+            position: absolute;
+            right: 0;
+            top: 0;
+            max-width: 100%;
+            height: auto;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        // QR Code Card
+        .dayal-shop-qr-card {
+            position: relative;
+            z-index: 1;
+            flex: 0 0 300px;
+            width: 300px;
+            min-height: 300px;
+            padding: 14px;
+            border: 1px solid #8b2638;
+            border-radius: 10px;
+            background: #ffffff;
+            text-align: center;
+            box-sizing: border-box;
+
+            .oto-qr-badge {
+                display: inline-block;
+                margin-bottom: 10px;
+                padding: 6px 15px;
+                border-radius: 20px;
+                background: #7c1f2e;
+                color: #ffffff;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.7px;
+                line-height: 1.2;
+            }
+
+            .dayal-shop-qr-img {
+                display: block;
+                width: 220px;
+                max-width: 100%;
+                margin: 0 auto 10px;
+                object-fit: contain;
+            }
+
+            p {
+                margin: 0;
+                color: #554b45;
+                font-size: 13px;
+                line-height: 1.5;
+
+                strong {
+                    color: #7c1f2e;
+                    font-weight: 700;
+                }
+            }
+        }
+
+        // Content Area
+        .dayal-shop-qr-content {
+            position: relative;
+            z-index: 1;
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .dayal-shop-qr-row {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            gap: 24px;
+            padding-right: 250px;
+        }
+
+        .oto-qr-eyebrow {
+            display: block;
+            margin-bottom: 8px;
+            color: #5d5149;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            line-height: 1.4;
+        }
+
+        .oto-qr-heading-content h2 {
+            margin: 0 0 14px;
+            color: #241b18;
+            font-size: clamp(26px, 3vw, 36px);
+            font-weight: 400;
+            line-height: 1.2;
+
+            span {
+                color: #7c1f2e;
+                font-weight: 600;
+            }
+        }
+
+        .oto-qr-description {
+            max-width: 600px;
+            margin: 0 0 16px;
+            color: #1c1008;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .oto-qr-subheading {
+            margin: 6px 0 0;
+            color: #8a2436;
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        // WhatsApp Box
+        .dayal-shop-qr-whatsapp {
+            position: absolute;
+            top: 10px;
+            right: 0;
+            flex: 0 0 190px;
+            width: 190px;
+            padding-left: 24px;
+            border-left: 1px solid #eadfce;
+            text-align: center;
+            box-sizing: border-box;
+
+            &>span {
+                display: block;
+                margin-bottom: 8px;
+                color: #7c1f2e;
+                font-size: 15px;
+                font-weight: 600;
+                letter-spacing: 1.5px;
+                line-height: 1.4;
+            }
+
+            .oto-qr-whatsapp-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                width: 100%;
+                min-height: 42px;
+                padding: 9px 10px;
+                background: #7c1f2e;
+                color: #ffffff;
+                font-size: 13px;
+                font-weight: 600;
+                line-height: 1.4;
+                text-decoration: none;
+                border-radius: 4px;
+                box-sizing: border-box;
+                transition: background 0.25s ease;
+
+                &:hover {
+                    background: #5f1724;
+                }
+
+                .oto-whatsapp-icon img {
+                    width: 18px;
+                    height: 18px;
+                    display: block;
+                }
+            }
+
+            small {
+                display: block;
+                margin-top: 8px;
+                color: #5b514b;
+                font-size: 14px;
+                font-weight: 400;
+            }
+
+            strong {
+                display: block;
+                color: #7c1f2e;
+                font-size: 13.5px;
+                font-weight: 600;
+                margin: 2px 0;
+            }
+        }
+
+        // Ordering Steps
+        .dayal-shop-qr-steps {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 22px;
+            padding: 14px;
+            border-radius: 8px;
+            background: #ffffff;
+            box-sizing: border-box;
+
+            .oto-qr-step {
+                display: flex;
+                align-items: center;
+                flex: 1 1 0;
+                min-width: 0;
+                gap: 10px;
+
+                .oto-qr-step-icon {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex: 0 0 52px;
+                    width: 52px;
+                    height: 52px;
+                    border: 1px solid #e8c7cc;
+                    border-radius: 50%;
+                    background: #fffaf7;
+                    box-sizing: border-box;
+
+                    img {
+                        width: 52px;
+                        height: 52px;
+                        object-fit: cover;
+                        border-radius: 50%;
+                    }
+                }
+
+                .oto-qr-step-text {
+                    min-width: 0;
+
+                    h4 {
+                        margin: 0 0 3px;
+                        color: #7c1f2e;
+                        font-size: 14px;
+                        font-weight: 700;
+                        line-height: 1.35;
+                        letter-spacing: 1px;
+                    }
+
+                    p {
+                        margin: 0;
+                        color: #1c1008;
+                        font-size: 13px;
+                        font-weight: 400;
+                        line-height: 1.5;
+                        white-space: pre-line;
+                    }
+                }
+            }
+
+            .oto-qr-arrow {
+                flex: 0 0 auto;
+                color: #9b3043;
+                font-size: 26px;
+                font-weight: 300;
+                line-height: 1;
+            }
+        }
+
+        // Responsive Breakpoints for QR Section
+        @media (max-width: 1400px) {
+            padding: 28px 45px 28px 25px;
+            gap: 30px;
+
+            .dayal-shop-qr-card {
+                flex-basis: 260px;
+                width: 260px;
+            }
+
+            .dayal-shop-qr-row {
+                padding-right: 220px;
+            }
+
+            .dayal-shop-qr-steps .oto-qr-step {
+                gap: 8px;
+
+                .oto-qr-step-icon {
+                    flex-basis: 46px;
+                    width: 46px;
+                    height: 46px;
+
+                    img {
+                        width: 46px;
+                        height: 46px;
+                    }
+                }
+            }
+        }
+
+        @media (max-width: 1024px) {
+            flex-direction: column;
+            align-items: center;
+            padding: 24px;
+            gap: 25px;
+
+            .dayal-shop-qr-card {
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .dayal-shop-qr-row {
+                padding-right: 0;
+                flex-direction: column;
+            }
+
+            .dayal-shop-qr-whatsapp {
+                position: static;
+                width: 100%;
+                max-width: 260px;
+                border-left: none;
+                border-top: 1px solid #eadfce;
+                padding-left: 0;
+                padding-top: 16px;
+                margin-top: 16px;
+            }
+
+            .dayal-shop-qr-steps {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 16px;
+
+                .oto-qr-arrow {
+                    display: none;
+                }
+            }
+        }
+
+        @media (max-width: 600px) {
+            .dayal-shop-qr-steps {
+                grid-template-columns: 1fr;
             }
         }
     }

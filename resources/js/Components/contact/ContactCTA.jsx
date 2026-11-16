@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from '@inertiajs/react';
 
 const trustItems = [
     {
@@ -46,10 +47,10 @@ export default function ContactCTA() {
                             we make every order special.
                         </p>
                         <div className="contact-cta-actions">
-                            <a href="/shop" className="contact-cta-btn-order">
+                            <Link href="/shop" className="contact-cta-btn-order">
                                 <span className="contact-cta-action-icon contact-cta-order-icon" aria-hidden="true" />
                                 <span>ORDER NOW</span>
-                            </a>
+                            </Link>
                             <a
                                 href="https://wa.me/919876543210"
                                 target="_blank"

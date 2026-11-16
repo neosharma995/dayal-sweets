@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from '@inertiajs/react';
 
 /**
  * Reusable Product Card Component
@@ -32,7 +33,7 @@ export default function ProductCard({ product, onAddToCart }) {
             const rawAmount = product.price.replace(/^from\s*/i, '');
             priceDisplay = (
                 <>
-                    <small className="oto-price-from">From </small>
+                    <small className="dayal-price-from">From </small>
                     <span>{rawAmount}</span>
                 </>
             );
@@ -52,47 +53,47 @@ export default function ProductCard({ product, onAddToCart }) {
     const productHref = product.slug ? `/product/${product.slug}/` : '/shop';
 
     return (
-        <article className="product-card oto-product-card" data-cat={product.categorySlug || ''}>
-            <a href={productHref} className="product-card__link oto-product-link" aria-label={product.name}>
-                <div className="product-card__img-wrapper oto-product-img-wrapper">
+        <article className="product-card dayal-product-card" data-cat={product.categorySlug || ''}>
+            <Link href={productHref} className="product-card__link dayal-product-link" aria-label={product.name}>
+                <div className="product-card__img-wrapper dayal-product-img-wrapper">
                     {product.badge && (
-                        <span className="product-card__badge oto-product-cat-badge">
+                        <span className="product-card__badge dayal-product-cat-badge">
                             {product.badge}
                         </span>
                     )}
                     <img
                         src={product.image}
                         alt={product.name}
-                        className="product-card__img oto-product-img"
+                        className="product-card__img dayal-product-img"
                         decoding="async"
                     />
                 </div>
-            </a>
+            </Link>
 
-            <div className="product-card__body oto-product-body">
-                <div className="product-card__meta oto-product-meta-row">
-                    <span className="product-card__category oto-product-category">
+            <div className="product-card__body dayal-product-body">
+                <div className="product-card__meta dayal-product-meta-row">
+                    <span className="product-card__category dayal-product-category">
                         {product.category}
                     </span>
                 </div>
 
-                <a href={productHref} className="product-card__title-link oto-product-title-link">
-                    <h3 className="product-card__name oto-product-name">{product.name}</h3>
-                </a>
+                <Link href={productHref} className="product-card__title-link dayal-product-title-link">
+                    <h3 className="product-card__name dayal-product-name">{product.name}</h3>
+                </Link>
 
                 {product.description && (
-                    <div className="product-card__desc oto-product-desc">
+                    <div className="product-card__desc dayal-product-desc">
                         {product.description}
                     </div>
                 )}
 
                 {hasVariations && (
-                    <div className="product-card__variations oto-variation-pills-row" role="radiogroup" aria-label="Product variations">
+                    <div className="product-card__variations dayal-variation-pills-row" role="radiogroup" aria-label="Product variations">
                         {product.variations.map((v, i) => (
                             <button
                                 key={v.label}
                                 type="button"
-                                className={`product-card__var-pill oto-var-pill-mini ${selectedVarIndex === i ? 'active' : ''}`}
+                                className={`product-card__var-pill dayal-var-pill-mini ${selectedVarIndex === i ? 'active' : ''}`}
                                 role="radio"
                                 aria-checked={selectedVarIndex === i}
                                 onClick={() => setSelectedVarIndex(i)}
@@ -103,16 +104,16 @@ export default function ProductCard({ product, onAddToCart }) {
                     </div>
                 )}
 
-                <div className="product-card__footer oto-product-footer">
-                    <div className="product-card__price oto-product-price">
+                <div className="product-card__footer dayal-product-footer">
+                    <div className="product-card__price dayal-product-price">
                         {priceDisplay}
                     </div>
 
-                    <div className="product-card__controls oto-product-cart-controls">
-                        <div className="product-card__qty-box oto-qty-box" aria-label="Select quantity">
+                    <div className="product-card__controls dayal-product-cart-controls">
+                        <div className="product-card__qty-box dayal-qty-box" aria-label="Select quantity">
                             <button
                                 type="button"
-                                className="product-card__qty-btn oto-qty-minus"
+                                className="product-card__qty-btn dayal-qty-minus"
                                 aria-label="Decrease quantity"
                                 onClick={() => setQty((q) => Math.max(1, q - 1))}
                                 disabled={qty <= 1}
@@ -121,7 +122,7 @@ export default function ProductCard({ product, onAddToCart }) {
                             </button>
                             <input
                                 type="number"
-                                className="product-card__qty-input oto-qty-input"
+                                className="product-card__qty-input dayal-qty-input"
                                 value={qty}
                                 min="1"
                                 step="1"
@@ -131,7 +132,7 @@ export default function ProductCard({ product, onAddToCart }) {
                             />
                             <button
                                 type="button"
-                                className="product-card__qty-btn oto-qty-plus"
+                                className="product-card__qty-btn dayal-qty-plus"
                                 aria-label="Increase quantity"
                                 onClick={() => setQty((q) => q + 1)}
                             >
@@ -141,7 +142,7 @@ export default function ProductCard({ product, onAddToCart }) {
 
                         <button
                             type="button"
-                            className="product-card__add-btn oto-add-circle-btn oto-add-btn"
+                            className="product-card__add-btn dayal-add-circle-btn dayal-add-btn"
                             title="Add to Cart"
                             aria-label={`Add ${product.name} to Cart`}
                             onClick={handleAddToCart}

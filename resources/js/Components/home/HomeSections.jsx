@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from '@inertiajs/react';
 import ProductCard from '../ProductCard';
 
 const trustItems = [
@@ -151,15 +152,15 @@ function CategorySlider() {
                         <div className="dayal-category-track" ref={trackRef}>
                             {productCategories.map((category) => (
                                 <article className="dayal-category-card" key={category.slug}>
-                                    <a className="dayal-category-image" href={`/product-category/${category.slug}/`}>
+                                    <Link className="dayal-category-image" href={`/shop?cats=${category.slug}`}>
                                         <img src={category.image} alt={category.name} loading="lazy" draggable="false" />
-                                    </a>
+                                    </Link>
                                     <div className="dayal-category-diamond" aria-hidden="true"><img src="/uploads/2026/08/flower.png" alt="" /></div>
                                     <h3>{category.name}</h3>
                                     <p>{category.description}</p>
-                                    <a className="dayal-category-link" href={`/product-category/${category.slug}/`}>
+                                    <Link className="dayal-category-link" href={`/shop?cats=${category.slug}`}>
                                         Order Now <img src="/uploads/2026/07/Icon-4.png" alt="" />
-                                    </a>
+                                    </Link>
                                 </article>
                             ))}
                         </div>
@@ -470,20 +471,20 @@ function BestSellers() {
         );
 
     return (
-        <section className="dayal-home-bestsellers oto-best-sellers-section">
-            <div className="dayal-home-bestsellers-inner oto-best-sellers-wrapper">
-                <header className="oto-best-sellers-header">
-                    <div className="oto-best-sellers-title-box">
-                        <span className="oto-best-sellers-subtitle">— MOST LOVED BY OUR CUSTOMERS —</span>
-                        <h2 className="oto-best-sellers-title">
-                            Our Best <span className="oto-bs-highlight">Sellers</span>
+        <section className="dayal-home-bestsellers dayal-best-sellers-section">
+            <div className="dayal-home-bestsellers-inner dayal-best-sellers-wrapper">
+                <header className="dayal-best-sellers-header">
+                    <div className="dayal-best-sellers-title-box">
+                        <span className="dayal-best-sellers-subtitle">— MOST LOVED BY OUR CUSTOMERS —</span>
+                        <h2 className="dayal-best-sellers-title">
+                            Our Best <span className="dayal-bs-highlight">Sellers</span>
                         </h2>
                     </div>
-                    <div className="oto-best-sellers-filter-bar" role="tablist" aria-label="Product categories">
+                    <div className="dayal-best-sellers-filter-bar" role="tablist" aria-label="Product categories">
                         {filters.map((filter) => (
                             <button
                                 type="button"
-                                className={`oto-bs-pill ${selected === filter ? 'active' : ''}`}
+                                className={`dayal-bs-pill ${selected === filter ? 'active' : ''}`}
                                 key={filter}
                                 onClick={() => setSelected(filter)}
                             >
@@ -493,25 +494,25 @@ function BestSellers() {
                     </div>
                 </header>
 
-                <div className="oto-products-grid oto-grid-cols-5 oto-best-sellers-grid">
+                <div className="dayal-products-grid dayal-grid-cols-5 dayal-best-sellers-grid">
                     {visibleProducts.length > 0 ? (
                         visibleProducts.map((product) => (
                             <ProductCard key={product.id || product.name} product={product} />
                         ))
                     ) : (
-                        <div className="oto-bs-filter-no-products" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px 15px', color: '#7A6355' }}>
+                        <div className="dayal-bs-filter-no-products" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px 15px', color: '#7A6355' }}>
                             No products available in this category.
                         </div>
                     )}
                 </div>
 
                 <div className="dayal-home-view-all-wrapper">
-                    <a className="dayal-home-view-all" href="/shop">
+                    <Link className="dayal-home-view-all" href="/shop">
                         <span>VIEW ALL</span>
                         <svg aria-hidden="true" viewBox="0 0 448 512">
                             <path fill="currentColor" d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z" />
                         </svg>
-                    </a>
+                    </Link>
                 </div>
             </div>
         </section>
@@ -522,8 +523,8 @@ function SpecialServices() {
     return <section className="dayal-home-services"><div className="dayal-home-services-inner">
         <SectionHeading eyebrow="Our Support">Special <span>Services</span></SectionHeading>
         <p className="dayal-home-section-description">Every celebration deserves something extraordinary. Discover our signature services, crafted with timeless recipes, premium ingredients, and generations of sweet-making excellence.</p>
-        <div className="dayal-home-services-grid">{serviceCards.map((service, index) => <article className={`dayal-home-service-card${index === 0 ? ' is-featured' : ''}`} style={{ backgroundImage: `url('/uploads/2026/07/${service.background}')` }} key={service.title}>
-            <div className="dayal-home-service-copy"><h3>{service.title}</h3><p>{service.description}</p><ul>{service.points.map((point) => <li key={point}>{point}</li>)}</ul><a href={service.href}>{service.action}<span aria-hidden="true">↗</span></a></div><img className="dayal-home-service-product" src={`/uploads/2026/07/${service.image}`} alt="" loading="lazy" />
+        <div className="dayal-home-services-grid">{serviceCards.map((service, index) => <article className={`dayal-home-service-card ${index === 0 ? ' is-featured' : ''}`} style={{ backgroundImage: `url('/uploads/2026/07/${service.background}')` }} key={service.title}>
+            <div className="dayal-home-service-copy"><h3>{service.title}</h3><p>{service.description}</p><ul>{service.points.map((point) => <li key={point}>{point}</li>)}</ul><Link href={service.href}>{service.action}<span aria-hidden="true">↗</span></Link></div><img className="dayal-home-service-product" src={`/uploads/2026/07/${service.image}`} alt="" loading="lazy" />
         </article>)}</div>
     </div></section>;
 }
@@ -548,7 +549,7 @@ function CustomerReviews() {
 }
 
 function PremiumOutlets() {
-    return <section className="dayal-home-outlets"><div className="dayal-home-outlets-inner"><SectionHeading eyebrow="View Our Stores">Premium <span>Outlets</span></SectionHeading><p className="dayal-home-section-description">Visit our premium outlets across Himachal Pradesh and experience the authentic taste<br />of tradition, craftsmanship, and celebration.</p><div className="dayal-home-outlet-grid">{outlets.map((outlet) => <article className="dayal-home-outlet-card" key={outlet.name}><img src={outlet.image} alt={`${outlet.name} Dayal Sweets outlet`} loading="lazy" />{outlet.comingSoon ? <div className="dayal-home-outlet-info"><h3>{outlet.name}</h3><em>Opening Soon</em><p>Expected Opening<br /><strong>Coming Soon</strong></p><button type="button">Notify Me</button></div> : <div className="dayal-home-outlet-info"><h3>{outlet.name}</h3>{outlet.address && <p>{outlet.address}</p>}<p>{outlet.phone}</p><a href={outlet.map} target="_blank" rel="noreferrer">View Map ↗</a></div>}</article>)}</div><div className="dayal-home-franchise"><img src="/uploads/2026/07/Frame-51-1-1.png" alt="" /><div><small>Franchise Opportunities</small><h3>Own A Premium <span>Dayal Sweets Outlet</span></h3><p>With 60+ years of trust, premium products, and a loyal customer base, Dayal Sweets offers the perfect opportunity to build a successful business in your city.</p></div><a href="tel:+919876543210">Interested in Franchise<br /><strong>+91 98765 43210</strong></a><a href="https://wa.me/919876543210">WhatsApp us<br /><strong>+91 98765 43210</strong></a><a className="dayal-home-franchise-button" href="/franchise">Fill Your Details</a></div></div></section>;
+    return <section className="dayal-home-outlets"><div className="dayal-home-outlets-inner"><SectionHeading eyebrow="View Our Stores">Premium <span>Outlets</span></SectionHeading><p className="dayal-home-section-description">Visit our premium outlets across Himachal Pradesh and experience the authentic taste<br />of tradition, craftsmanship, and celebration.</p><div className="dayal-home-outlet-grid">{outlets.map((outlet) => <article className="dayal-home-outlet-card" key={outlet.name}><img src={outlet.image} alt={`${outlet.name} Dayal Sweets outlet`} loading="lazy" />{outlet.comingSoon ? <div className="dayal-home-outlet-info"><h3>{outlet.name}</h3><em>Opening Soon</em><p>Expected Opening<br /><strong>Coming Soon</strong></p><button type="button">Notify Me</button></div> : <div className="dayal-home-outlet-info"><h3>{outlet.name}</h3>{outlet.address && <p>{outlet.address}</p>}<p>{outlet.phone}</p><a href={outlet.map} target="_blank" rel="noreferrer">View Map ↗</a></div>}</article>)}</div><div className="dayal-home-franchise"><img src="/uploads/2026/07/Frame-51-1-1.png" alt="" /><div><small>Franchise Opportunities</small><h3>Own A Premium <span>Dayal Sweets Outlet</span></h3><p>With 60+ years of trust, premium products, and a loyal customer base, Dayal Sweets offers the perfect opportunity to build a successful business in your city.</p></div><a href="tel:+919876543210">Interested in Franchise<br /><strong>+91 98765 43210</strong></a><a href="https://wa.me/919876543210">WhatsApp us<br /><strong>+91 98765 43210</strong></a><Link className="dayal-home-franchise-button" href="/franchise">Fill Your Details</Link></div></div></section>;
 }
 
 function LaunchBanners() {
@@ -637,7 +638,7 @@ function LaunchBanners() {
                                 </div>
 
                                 <div className="dayal-home-launch-actions">
-                                    <a className="dayal-home-launch-btn-primary" href={banner.buttonUrl}>
+                                    <Link className="dayal-home-launch-btn-primary" href={banner.buttonUrl}>
                                         <span>{banner.buttonText}</span>
                                         <svg
                                             aria-hidden="true"
@@ -646,7 +647,7 @@ function LaunchBanners() {
                                         >
                                             <path d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z" />
                                         </svg>
-                                    </a>
+                                    </Link>
                                     {banner.outletText && (
                                         <span className="dayal-home-launch-btn-outlet">
                                             {banner.outletText}

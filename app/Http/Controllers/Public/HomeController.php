@@ -53,6 +53,12 @@ class HomeController extends Controller
     public function shop(): Response
     {
         return Inertia::render('Shop', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+        ]);
+    }
+
+    /**
      * Display the Dayal Sweets Gallery page.
      */
     public function gallery(): Response

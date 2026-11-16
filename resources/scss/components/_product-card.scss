@@ -4,36 +4,36 @@
 // ==========================================================================
 
 // Reusable Products Grid
-.oto-products-grid {
+.dayal-products-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 28px;
     width: 100%;
 
-    &.oto-grid-cols-5 {
+    &.dayal-grid-cols-5 {
         grid-template-columns: repeat(5, minmax(0, 1fr));
     }
 
-    &.oto-grid-cols-4 {
+    &.dayal-grid-cols-4 {
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
-    &.oto-grid-cols-3 {
+    &.dayal-grid-cols-3 {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    &.oto-grid-cols-2 {
+    &.dayal-grid-cols-2 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    &.oto-grid-cols-1 {
+    &.dayal-grid-cols-1 {
         grid-template-columns: repeat(1, minmax(0, 1fr));
     }
 
     @media (max-width: 1500px) {
 
         &,
-        &.oto-grid-cols-5 {
+        &.dayal-grid-cols-5 {
             grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 20px;
         }
@@ -42,8 +42,8 @@
     @media (max-width: 1200px) {
 
         &,
-        &.oto-grid-cols-5,
-        &.oto-grid-cols-4 {
+        &.dayal-grid-cols-5,
+        &.dayal-grid-cols-4 {
             grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 20px;
         }
@@ -52,9 +52,9 @@
     @media (max-width: 992px) {
 
         &,
-        &.oto-grid-cols-5,
-        &.oto-grid-cols-4,
-        &.oto-grid-cols-3 {
+        &.dayal-grid-cols-5,
+        &.dayal-grid-cols-4,
+        &.dayal-grid-cols-3 {
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 16px;
         }
@@ -63,10 +63,10 @@
     @media (max-width: 768px) {
 
         &,
-        &.oto-grid-cols-5,
-        &.oto-grid-cols-4,
-        &.oto-grid-cols-3,
-        &.oto-grid-cols-2 {
+        &.dayal-grid-cols-5,
+        &.dayal-grid-cols-4,
+        &.dayal-grid-cols-3,
+        &.dayal-grid-cols-2 {
             grid-template-columns: 1fr;
             gap: 12px;
         }
@@ -74,7 +74,7 @@
 }
 
 .product-card,
-.oto-product-card {
+.dayal-product-card {
     background: #ffffff;
     border-radius: 16px;
     overflow: hidden;
@@ -88,21 +88,21 @@
     &:hover {
 
         .product-card__img,
-        .oto-product-img {
+        .dayal-product-img {
             transform: scale(1.04);
         }
     }
 
     // Top Product Image Wrapper
     &__link,
-    .oto-product-link {
+    .dayal-product-link {
         display: block;
         width: 100%;
         text-decoration: none;
     }
 
     &__img-wrapper,
-    .oto-product-img-wrapper {
+    .dayal-product-img-wrapper {
         position: relative;
         width: 100%;
         height: 180px;
@@ -111,7 +111,7 @@
     }
 
     &__badge,
-    .oto-product-cat-badge {
+    .dayal-product-cat-badge {
         position: absolute;
         top: 10px;
         left: 10px;
@@ -129,7 +129,7 @@
     }
 
     &__img,
-    .oto-product-img {
+    .dayal-product-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -139,7 +139,7 @@
 
     // Card Body Content
     &__body,
-    .oto-product-body {
+    .dayal-product-body {
         padding: 20px;
         display: flex;
         flex-direction: column;
@@ -149,7 +149,7 @@
     }
 
     &__meta,
-    .oto-product-meta-row {
+    .dayal-product-meta-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -161,7 +161,7 @@
     }
 
     &__category,
-    .oto-product-category {
+    .dayal-product-category {
         color: #8a8a8a;
         font-weight: 500;
         font-size: 11px;
@@ -170,21 +170,21 @@
     }
 
     &__title-link,
-    .oto-product-title-link {
+    .dayal-product-title-link {
         text-decoration: none;
         color: inherit;
 
         &:hover {
 
             .product-card__name,
-            .oto-product-name {
+            .dayal-product-name {
                 color: #7B1C2E;
             }
         }
     }
 
     &__name,
-    .oto-product-name {
+    .dayal-product-name {
         color: #5C1520;
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-weight: 600;
@@ -197,7 +197,7 @@
     }
 
     &__desc,
-    .oto-product-desc {
+    .dayal-product-desc {
         color: #7A6355;
         font-family: 'Inter', sans-serif;
         font-weight: 300;
@@ -214,7 +214,7 @@
 
     // Variation Pills Row
     &__variations,
-    .oto-variation-pills-row {
+    .dayal-variation-pills-row {
         display: flex;
         gap: 8px;
         margin: auto 0 12px 0;
@@ -228,7 +228,7 @@
     }
 
     &__var-pill,
-    .oto-var-pill-mini {
+    .dayal-var-pill-mini {
         border: 1px solid rgba(44, 24, 16, 0.15);
         border-radius: 50px;
         padding: 5px 12px;
@@ -263,7 +263,7 @@
 
     // Footer with Price & Action Controls
     &__footer,
-    .oto-product-footer {
+    .dayal-product-footer {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -272,7 +272,7 @@
     }
 
     &__price,
-    .oto-product-price {
+    .dayal-product-price {
         font-size: 18px;
         font-weight: 600;
         line-height: 28px;
@@ -281,7 +281,7 @@
         white-space: nowrap;
 
         small,
-        .oto-price-from {
+        .dayal-price-from {
             font-weight: 600;
             color: #7A6355;
             font-size: 12px;
@@ -292,14 +292,14 @@
 
     // Quantity Box & Add to Cart
     &__controls,
-    .oto-product-cart-controls {
+    .dayal-product-cart-controls {
         display: flex;
         align-items: center;
         gap: 12px;
     }
 
     &__qty-box,
-    .oto-qty-box {
+    .dayal-qty-box {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -311,8 +311,8 @@
     }
 
     &__qty-btn,
-    .oto-qty-minus,
-    .oto-qty-plus {
+    .dayal-qty-minus,
+    .dayal-qty-plus {
         width: 28px;
         height: 32px;
         border: 0;
@@ -345,7 +345,7 @@
     }
 
     &__qty-input,
-    .oto-qty-input {
+    .dayal-qty-input {
         width: 28px;
         min-width: 28px;
         height: 32px;
@@ -369,7 +369,7 @@
     }
 
     &__add-btn,
-    .oto-add-circle-btn {
+    .dayal-add-circle-btn {
         background: #7B1C2E;
         color: #ffffff;
         border: 1.5px solid #7B1C2E;
@@ -407,7 +407,7 @@
 @media (max-width: 768px) {
 
     .product-card,
-    .oto-product-card {
+    .dayal-product-card {
         border-radius: 10px;
         flex-direction: row;
         align-items: stretch;
@@ -417,7 +417,7 @@
         }
 
         &__link,
-        .oto-product-link {
+        .dayal-product-link {
             min-width: 150px;
             max-width: 150px;
             width: 150px;
@@ -427,7 +427,7 @@
         }
 
         &__img-wrapper,
-        .oto-product-img-wrapper {
+        .dayal-product-img-wrapper {
             min-width: 150px;
             max-width: 150px;
             width: 150px;
@@ -438,14 +438,14 @@
         }
 
         &__badge,
-        .oto-product-cat-badge {
+        .dayal-product-cat-badge {
             font-size: 9px;
             letter-spacing: 0.9px;
             padding: 4px 8px;
         }
 
         &__body,
-        .oto-product-body {
+        .dayal-product-body {
             padding: 12px;
             gap: 4px;
             flex: 1;
@@ -453,7 +453,7 @@
         }
 
         &__name,
-        .oto-product-name {
+        .dayal-product-name {
             margin: 0;
             line-height: 22px;
             font-size: 15px;
@@ -463,7 +463,7 @@
         }
 
         &__desc,
-        .oto-product-desc {
+        .dayal-product-desc {
             font-size: 11px;
             line-height: 16px;
             margin-bottom: 8px;
@@ -472,19 +472,19 @@
         }
 
         &__variations,
-        .oto-variation-pills-row {
+        .dayal-variation-pills-row {
             margin-bottom: 6px;
         }
 
         &__var-pill,
-        .oto-var-pill-mini {
+        .dayal-var-pill-mini {
             font-size: 10px;
             padding: 4px 8px;
             line-height: normal;
         }
 
         &__footer,
-        .oto-product-footer {
+        .dayal-product-footer {
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
@@ -492,31 +492,31 @@
         }
 
         &__price,
-        .oto-product-price {
+        .dayal-product-price {
             font-size: 14px;
             line-height: 20px;
         }
 
         &__controls,
-        .oto-product-cart-controls {
+        .dayal-product-cart-controls {
             gap: 8px;
         }
 
         &__qty-box,
-        .oto-qty-box {
+        .dayal-qty-box {
             height: 28px;
         }
 
         &__qty-btn,
-        .oto-qty-minus,
-        .oto-qty-plus {
+        .dayal-qty-minus,
+        .dayal-qty-plus {
             width: 24px;
             height: 28px;
             font-size: 16px;
         }
 
         &__qty-input,
-        .oto-qty-input {
+        .dayal-qty-input {
             width: 24px;
             min-width: 24px;
             height: 28px;
@@ -524,7 +524,7 @@
         }
 
         &__add-btn,
-        .oto-add-circle-btn {
+        .dayal-add-circle-btn {
             width: 30px;
             height: 30px;
             min-width: 30px;
@@ -541,24 +541,24 @@
 @media (max-width: 480px) {
 
     .product-card,
-    .oto-product-card {
+    .dayal-product-card {
 
         &__link,
-        .oto-product-link,
+        .dayal-product-link,
         &__img-wrapper,
-        .oto-product-img-wrapper {
+        .dayal-product-img-wrapper {
             min-width: 130px;
             max-width: 130px;
             width: 130px;
         }
 
         &__body,
-        .oto-product-body {
+        .dayal-product-body {
             padding: 10px;
         }
 
         &__footer,
-        .oto-product-footer {
+        .dayal-product-footer {
             flex-wrap: wrap;
             gap: 6px;
         }

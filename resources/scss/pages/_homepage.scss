@@ -2037,17 +2037,17 @@
 
 // 06. Best Sellers and Featured Products
 .dayal-home-bestsellers,
-.oto-best-sellers-section {
+.dayal-best-sellers-section {
     border-top: 1px solid rgba(201, 166, 110, .35);
     padding: 72px 0 64px;
     background: #faf7f2;
 
     &-inner,
-    .oto-best-sellers-wrapper {
+    .dayal-best-sellers-wrapper {
         @include dayal-container;
     }
 
-    .oto-best-sellers-header {
+    .dayal-best-sellers-header {
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
@@ -2056,13 +2056,13 @@
         gap: 20px;
     }
 
-    .oto-best-sellers-title-box {
+    .dayal-best-sellers-title-box {
         display: flex;
         flex-direction: column;
         gap: 10px;
     }
 
-    .oto-best-sellers-subtitle {
+    .dayal-best-sellers-subtitle {
         font-family: 'Inter', sans-serif;
         font-size: 14px;
         font-weight: 400;
@@ -2073,7 +2073,7 @@
         display: inline-block;
     }
 
-    .oto-best-sellers-title {
+    .dayal-best-sellers-title {
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 48px;
         font-weight: 500;
@@ -2081,19 +2081,19 @@
         margin: 0;
         line-height: 1.2;
 
-        .oto-bs-highlight {
+        .dayal-bs-highlight {
             color: #5C1520;
         }
     }
 
-    .oto-best-sellers-filter-bar {
+    .dayal-best-sellers-filter-bar {
         display: flex;
         align-items: center;
         gap: 10px;
         flex-wrap: wrap;
     }
 
-    .oto-bs-pill {
+    .dayal-bs-pill {
         background: #FFFFFF;
         border: 1.5px solid #7B1C2E;
         color: #7B1C2E;
@@ -2127,19 +2127,19 @@
     }
 
     @media (max-width: 1024px) {
-        .oto-best-sellers-header {
+        .dayal-best-sellers-header {
             flex-direction: column;
             align-items: flex-start;
             gap: 16px;
             margin-bottom: 24px;
         }
 
-        .oto-best-sellers-title {
+        .dayal-best-sellers-title {
             font-size: 32px;
             line-height: 44px;
         }
 
-        .oto-best-sellers-filter-bar {
+        .dayal-best-sellers-filter-bar {
             width: 100%;
             overflow-x: auto;
             padding-bottom: 8px;
@@ -2156,17 +2156,17 @@
     @media (max-width: 768px) {
         padding: 42px 0;
 
-        .oto-best-sellers-title {
+        .dayal-best-sellers-title {
             font-size: 26px;
             line-height: 38px;
         }
 
-        .oto-best-sellers-subtitle {
+        .dayal-best-sellers-subtitle {
             font-size: 11px;
             letter-spacing: 2px;
         }
 
-        .oto-bs-pill {
+        .dayal-bs-pill {
             font-size: 12px;
             padding: 6px 14px;
             flex-shrink: 0;

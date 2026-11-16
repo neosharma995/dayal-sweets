@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\StoreProductRequest;
 use App\Http\Requests\Admin\Product\UpdateProductRequest;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -23,7 +24,7 @@ class ProductController extends Controller
      */
     public function index(Request $request): Response|JsonResponse
     {
-        $query = Product::query()->latest('id');
+        $query = Product::query()->with('category')->latest('id');
 
         // Optional search filter by product name or description
         if ($request->filled('search')) {
@@ -56,7 +57,9 @@ class ProductController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Admin/Products/Create');
+        return Inertia::render('Admin/Products/Create', [
+            'categories' => Category::orderBy('category_name')->get(['id', 'category_name']),
+        ]);
     }
 
     /**
@@ -65,9 +68,11 @@ class ProductController extends Controller
     public function edit(Product|int|string $product): Response
     {
         $productModel = $product instanceof Product ? $product : Product::findOrFail($product);
+        $productModel->load('category');
 
         return Inertia::render('Admin/Products/Edit', [
             'product' => $productModel,
+            'categories' => Category::orderBy('category_name')->get(['id', 'category_name']),
         ]);
     }
 
@@ -77,6 +82,7 @@ class ProductController extends Controller
     public function show(Request $request, Product|int|string $product): Response|JsonResponse
     {
         $productModel = $product instanceof Product ? $product : Product::findOrFail($product);
+        $productModel->load('category');
 
         if ($request->wantsJson()) {
             return response()->json([

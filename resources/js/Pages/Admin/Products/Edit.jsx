@@ -3,9 +3,10 @@ import { Head, Link, useForm, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { BoxIcon, CheckCircleIcon } from '@/Components/Icons';
 
-export default function Edit({ product }) {
+export default function Edit({ product, categories = [] }) {
     const { data, setData, processing, errors } = useForm({
         _method: 'put',
+        category_id: product.category_id || '',
         product_name: product.product_name || '',
         product_price: product.product_price || '',
         product_selling_price: product.product_selling_price || '',
@@ -138,6 +139,36 @@ export default function Edit({ product }) {
                                 />
                                 {errors.product_name && (
                                     <div style={{ color: '#F87171', fontSize: '0.75rem', marginTop: '0.3rem' }}>{errors.product_name}</div>
+                                )}
+                            </div>
+
+                            <div style={{ marginBottom: '1.25rem' }}>
+                                <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#CBD5E1', marginBottom: '0.4rem' }}>
+                                    Product Category <span style={{ color: '#94a3b8', fontWeight: 400 }}>(Optional)</span>
+                                </label>
+                                <select
+                                    value={data.category_id}
+                                    onChange={(e) => setData('category_id', e.target.value)}
+                                    style={{
+                                        width: '100%',
+                                        padding: '0.65rem 1rem',
+                                        borderRadius: '0.5rem',
+                                        background: '#0F172A',
+                                        border: errors.category_id ? '1px solid #F87171' : '1px solid #334155',
+                                        color: '#F8FAFC',
+                                        fontSize: '0.875rem',
+                                        outline: 'none',
+                                    }}
+                                >
+                                    <option value="">-- No Category (Unassigned) --</option>
+                                    {categories && categories.map((cat) => (
+                                        <option key={cat.id} value={cat.id}>
+                                            {cat.category_name}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors.category_id && (
+                                    <div style={{ color: '#F87171', fontSize: '0.75rem', marginTop: '0.3rem' }}>{errors.category_id}</div>
                                 )}
                             </div>
 

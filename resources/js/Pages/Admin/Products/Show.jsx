@@ -175,6 +175,32 @@ export default function Show({ product }) {
                             </div>
 
                             <div className="dayal-admin-info-row">
+                                <span style={{ color: '#94a3b8' }}>Category:</span>
+                                {product.category ? (
+                                    <Link
+                                        href={route('admin.categories.show', product.category.id)}
+                                        style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '0.4rem',
+                                            padding: '0.2rem 0.65rem',
+                                            borderRadius: '999px',
+                                            background: 'rgba(184, 142, 75, 0.15)',
+                                            border: '1px solid rgba(184, 142, 75, 0.3)',
+                                            color: '#F1D7B4',
+                                            fontSize: '0.75rem',
+                                            fontWeight: 600,
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        {product.category.category_name} &rarr;
+                                    </Link>
+                                ) : (
+                                    <span style={{ color: '#64748B', fontSize: '0.8125rem', fontStyle: 'italic' }}>Unassigned</span>
+                                )}
+                            </div>
+
+                            <div className="dayal-admin-info-row">
                                 <span style={{ color: '#94a3b8' }}>Inventory Quantity:</span>
                                 <span
                                     style={{

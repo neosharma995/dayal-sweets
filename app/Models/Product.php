@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
@@ -26,6 +27,7 @@ class Product extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'category_id',
         'product_name',
         'product_description',
         'product_price',
@@ -65,12 +67,21 @@ class Product extends Model
     protected function casts(): array
     {
         return [
+            'category_id' => 'integer',
             'product_price' => 'decimal:2',
             'product_selling_price' => 'decimal:2',
             'product_qty' => 'integer',
             'product_gallaries' => 'array',
             'product_details' => 'array',
         ];
+    }
+
+    /**
+     * Relationship: Product belongs to a Category.
+     */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     /**

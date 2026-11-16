@@ -15,6 +15,7 @@ export default function Index({ products = [], filters = {} }) {
         return (
             p.product_name?.toLowerCase().includes(q) ||
             p.product_description?.toLowerCase().includes(q) ||
+            p.category?.category_name?.toLowerCase().includes(q) ||
             String(p.id).includes(q)
         );
     });
@@ -182,6 +183,7 @@ export default function Index({ products = [], filters = {} }) {
                                 <thead>
                                     <tr>
                                         <th>Product</th>
+                                        <th>Category</th>
                                         <th>Regular Price</th>
                                         <th>Selling Price</th>
                                         <th>Stock Qty</th>
@@ -239,6 +241,30 @@ export default function Index({ products = [], filters = {} }) {
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </td>
+                                                <td>
+                                                    {product.category ? (
+                                                        <Link
+                                                            href={route('admin.categories.show', product.category.id)}
+                                                            style={{
+                                                                display: 'inline-flex',
+                                                                alignItems: 'center',
+                                                                gap: '0.35rem',
+                                                                padding: '0.2rem 0.65rem',
+                                                                borderRadius: '9999px',
+                                                                background: 'rgba(184, 142, 75, 0.12)',
+                                                                border: '1px solid rgba(184, 142, 75, 0.3)',
+                                                                color: '#F1D7B4',
+                                                                fontSize: '0.75rem',
+                                                                fontWeight: 600,
+                                                                textDecoration: 'none',
+                                                            }}
+                                                        >
+                                                            {product.category.category_name}
+                                                        </Link>
+                                                    ) : (
+                                                        <span style={{ color: '#64748B', fontSize: '0.75rem', fontStyle: 'italic' }}>Unassigned</span>
+                                                    )}
                                                 </td>
                                                 <td>
                                                     <span style={{ color: '#94a3b8', textDecoration: discount > 0 ? 'line-through' : 'none' }}>

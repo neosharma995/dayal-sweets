@@ -1848,46 +1848,132 @@
 .dayal-home-trust {
     width: 100%;
     margin: 0;
-    padding: 10px 0;
-    background: $ds-color-burgundy;
+    padding: 24px 0;
+    background: #5C1520;
+    position: relative;
+    overflow: hidden;
+
+    // Left Peacock decoration
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 110px;
+        height: 100%;
+        max-height: 140px;
+        background: url('/uploads/2026/07/image-87.png') no-repeat bottom left;
+        background-size: contain;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    // Right Peacock decoration
+    &::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 110px;
+        height: 100%;
+        max-height: 140px;
+        background: url('/uploads/2026/07/image-88.png') no-repeat bottom right;
+        background-size: contain;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    &-inner {
+        position: relative;
+        z-index: 2;
+    }
 
     &-grid {
         @include dayal-container;
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 20px;
+        gap: 0;
+        align-items: center;
     }
 
     &-item {
         display: flex;
+        flex-direction: column;
         align-items: center;
+        text-align: center;
         gap: 12px;
-        color: $ds-color-white;
+        padding: 0 16px;
+        position: relative;
+        color: #ffffff;
+
+        // Vertical divider with diamond between items
+        &:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 52px;
+            background: url('/uploads/2026/07/Group-6.png') no-repeat center center;
+            background-size: contain;
+            pointer-events: none;
+        }
 
         img {
             display: block;
-            width: 80px;
-            height: 80px;
+            width: 72px;
+            height: 72px;
             object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        &:hover img {
+            transform: scale(1.06);
         }
 
         div {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            align-items: center;
+            text-align: center;
+            gap: 6px;
         }
 
         strong {
-            color: $ds-color-white;
-            font: 400 17px/1.2 'DM Sans', sans-serif;
+            color: #FFFFFF;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 17px;
+            font-weight: 400;
+            line-height: 1.25;
             letter-spacing: 0.8px;
             text-transform: uppercase;
         }
 
         span {
-            color: #faf6f1e6;
-            font: 400 14px/1.3 $ds-font-body;
+            color: #FAF6F1E6;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.35;
             letter-spacing: 0.8px;
+        }
+    }
+
+    @media (max-width: 1024px) {
+        &-item {
+            img {
+                width: 60px;
+                height: 60px;
+            }
+
+            strong {
+                font-size: 15px;
+            }
+
+            span {
+                font-size: 13px;
+            }
         }
     }
 }
@@ -1950,71 +2036,141 @@
 }
 
 // 06. Best Sellers and Featured Products
-.dayal-home-bestsellers {
+.dayal-home-bestsellers,
+.oto-best-sellers-section {
     border-top: 1px solid rgba(201, 166, 110, .35);
     padding: 72px 0 64px;
     background: #faf7f2;
 
-    &-inner {
+    &-inner,
+    .oto-best-sellers-wrapper {
         @include dayal-container;
     }
 
-    &-heading {
-        max-width: none;
-        margin-bottom: 20px;
-        text-align: left;
+    .oto-best-sellers-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 36px;
+        flex-wrap: wrap;
+        gap: 20px;
     }
 
-    &-heading>p {
-        color: $ds-color-ink;
-        font-size: 11px;
+    .oto-best-sellers-title-box {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .oto-best-sellers-subtitle {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
         font-weight: 400;
-        letter-spacing: 3px;
+        line-height: 16px;
+        letter-spacing: 4.8px;
+        text-transform: uppercase;
+        color: #1C1008;
+        display: inline-block;
     }
 
-    &-heading h2 {
-        color: $ds-color-ink;
+    .oto-best-sellers-title {
+        font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 48px;
+        font-weight: 500;
+        color: #2C1810;
+        margin: 0;
+        line-height: 1.2;
+
+        .oto-bs-highlight {
+            color: #5C1520;
+        }
     }
 
-    &-heading h2 span {
-        color: $ds-color-burgundy;
+    .oto-best-sellers-filter-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
     }
-}
 
-.dayal-home-product-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 0 0 34px;
-}
+    .oto-bs-pill {
+        background: #FFFFFF;
+        border: 1.5px solid #7B1C2E;
+        color: #7B1C2E;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 8px 16px;
+        border-radius: 33px;
+        line-height: 20px;
+        cursor: pointer;
+        transition: all 0.25s ease;
 
-.dayal-home-product-filters button {
-    border: 1px solid #c47b7e;
-    border-radius: 18px;
-    padding: 6px 13px;
-    background: #fff;
-    color: $ds-color-burgundy;
-    font: 400 11px/16px $ds-font-body;
-    cursor: pointer;
-    transition: all $ds-motion;
+        // Hover for outlined button: shows background
+        &:hover {
+            background: #7B1C2E;
+            color: #FAF7F2;
+            border-color: #7B1C2E;
+        }
 
-    &:hover {
-        background: $ds-color-burgundy;
-        border-color: $ds-color-burgundy;
-        color: #fff;
+        &.active {
+            background: #7B1C2E;
+            color: #FAF7F2;
+
+            // Hover for filled button: makes bg transparent and shows border
+            &:hover {
+                background: transparent;
+                color: #7B1C2E;
+                border-color: #7B1C2E;
+            }
+        }
     }
-}
 
-.dayal-home-product-filters button.is-active {
-    background: $ds-color-burgundy;
-    border-color: $ds-color-burgundy;
-    color: #fff;
+    @media (max-width: 1024px) {
+        .oto-best-sellers-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
 
-    &:hover {
-        background: transparent;
-        border-color: $ds-color-burgundy;
-        color: $ds-color-burgundy;
+        .oto-best-sellers-title {
+            font-size: 32px;
+            line-height: 44px;
+        }
+
+        .oto-best-sellers-filter-bar {
+            width: 100%;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            flex-wrap: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
+
+    @media (max-width: 768px) {
+        padding: 42px 0;
+
+        .oto-best-sellers-title {
+            font-size: 26px;
+            line-height: 38px;
+        }
+
+        .oto-best-sellers-subtitle {
+            font-size: 11px;
+            letter-spacing: 2px;
+        }
+
+        .oto-bs-pill {
+            font-size: 12px;
+            padding: 6px 14px;
+            flex-shrink: 0;
+        }
     }
 }
 
@@ -2131,28 +2287,50 @@
     }
 }
 
-.dayal-home-view-all {
+.dayal-home-view-all-wrapper {
     display: flex;
-    width: max-content;
-    min-width: 130px;
-    min-height: 42px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.dayal-home-view-all {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    margin: 36px auto 0;
-    border: 1px solid $ds-color-burgundy;
-    background: $ds-color-burgundy;
-    color: #fff;
-    font-size: 11px;
-    font-weight: 600;
+    gap: 12px;
+    margin: 48px auto 0;
+    border: 1px solid #6B1020;
+    background: #6B1020;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.8px;
+    line-height: 1;
     text-transform: uppercase;
     text-decoration: none;
-    transition: all $ds-motion;
+    padding: 17px 32px;
+    border-radius: 0;
+    cursor: pointer;
+    transition: all 0.25s ease;
 
     &:hover {
         background: transparent;
-        border-color: $ds-color-burgundy;
-        color: $ds-color-burgundy;
+        border-color: #6B1020;
+        color: #6B1020;
+
+        svg {
+            transform: translateX(3px);
+        }
+    }
+
+    svg {
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        fill: currentColor;
+        transition: transform 0.25s ease;
     }
 }
 
@@ -2698,39 +2876,6 @@
 
 @media (max-width: 600px) {
 
-    // 06. Best Sellers and Featured Products
-    .dayal-home-bestsellers {
-        padding: 42px 0;
-    }
-
-    .dayal-home-bestsellers-heading h2 {
-        font-size: 32px;
-    }
-
-    .dayal-home-product-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-    }
-
-    .dayal-home-product-info {
-        padding: 9px;
-    }
-
-    .dayal-home-product-info h3 {
-        font-size: 14px;
-    }
-
-    .dayal-home-product-info>p {
-        font-size: 10px;
-    }
-
-    .dayal-home-product-sizes {
-        flex-wrap: wrap;
-    }
-
-    .dayal-home-product-sizes span {
-        font-size: 8px;
-    }
 
     // 07. Signature Services
     .dayal-home-services {
@@ -2957,17 +3102,49 @@
     // 04. Trust Strip
     .dayal-home-trust {
         width: 100%;
-        padding: 12px 0;
+        padding: 36px 0;
+        background: #5C1520;
+
+        &::before,
+        &::after {
+            display: none;
+        }
+
+        &-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px 12px;
+        }
+
+        &-item {
+            padding: 0 8px;
+            gap: 10px;
+
+            &:not(:last-child)::after {
+                display: none;
+            }
+
+            img {
+                width: 52px;
+                height: 52px;
+            }
+
+            strong {
+                font-size: 14px;
+                line-height: 1.25;
+            }
+
+            span {
+                font-size: 12px;
+                line-height: 1.35;
+            }
+        }
     }
 
-    .dayal-home-trust-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 22px 16px;
-    }
-
-    .dayal-home-trust-item {
-        border-right: 0;
-        padding-right: 0;
+    .dayal-home-view-all {
+        font-size: 13px;
+        padding: 12px 24px;
+        margin: 20px auto 0;
+        border-radius: 0;
     }
 
     // 05. How It Works

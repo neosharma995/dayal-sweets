@@ -1,0 +1,684 @@
+// ==========================================================================
+// Dayal Sweets - Shop Page Styles
+// Pure SCSS Architecture - Nested, clean, no unnecessary !important
+// Matches original WordPress wc-outlet-table-ordering shop design
+// ==========================================================================
+
+.dayal-sweets-shop {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #2b2b2b;
+    background-color: #FAF7F2;
+    padding: 0 0 70px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    min-height: 85vh;
+
+    * {
+        box-sizing: border-box;
+    }
+
+    // 01. Hero Banner
+    .dayal-shop-hero {
+        width: 100%;
+        background: linear-gradient(135deg, rgba(81, 21, 39, 0.96) 0%, rgba(61, 13, 26, 0.96) 100%), url('/uploads/2026/08/Hero-Banner.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center bottom;
+        padding: 56px 20px 48px;
+        margin-bottom: 36px;
+        text-align: center;
+        color: #f4e9d8;
+        position: relative;
+        min-height: 290px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &-inner {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .dayal-shop-breadcrumb {
+            color: #a08a74;
+            font-size: 13px;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+
+            span {
+                color: #e6c991;
+            }
+
+            a {
+                color: #a08a74;
+                text-decoration: none;
+                transition: color 0.2s ease;
+
+                &:hover {
+                    color: #e6c991;
+                }
+            }
+        }
+
+        h1 {
+            font-size: 40px;
+            font-weight: 700;
+            color: #e6c991;
+            margin: 0 0 8px 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.2;
+        }
+
+        .dayal-shop-hero-arrow {
+            display: block;
+            max-width: 130px;
+            height: auto;
+            margin: 6px auto;
+        }
+
+        p {
+            font-size: 16px;
+            color: #dccab4;
+            margin: 6px auto 0;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+        }
+
+        @media (max-width: 768px) {
+            padding: 40px 16px 36px;
+            min-height: 220px;
+            margin-bottom: 24px;
+
+            h1 {
+                font-size: 26px;
+                letter-spacing: 1.2px;
+            }
+
+            p {
+                font-size: 14px;
+            }
+        }
+    }
+
+    // 02. Main Shop Layout
+    .dayal-shop-layout {
+        display: flex;
+        align-items: flex-start;
+        gap: 36px;
+        max-width: 90%;
+        margin: 0 auto;
+
+        @media (max-width: 1024px) {
+            flex-direction: column;
+            max-width: 100%;
+            padding: 0 16px;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            padding: 0 12px;
+        }
+    }
+
+    // 03. Sidebar
+    .dayal-shop-sidebar {
+        width: 314px;
+        flex-shrink: 0;
+        background: #FDFBF8;
+        padding: 24px 20px;
+        border-radius: 12px;
+        border: 1px solid #EFEBE5;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        height: fit-content;
+
+        @media (max-width: 1024px) {
+            position: fixed;
+            top: 0;
+            left: -330px;
+            width: 310px;
+            height: 100vh;
+            z-index: 1001;
+            overflow-y: auto;
+            border-radius: 0;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18);
+
+            &.is-open {
+                left: 0;
+            }
+        }
+
+        &-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 13.5px;
+            letter-spacing: 1.05px;
+            line-height: 16px;
+            border-bottom: 1px solid #F5F2EC;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+            color: #1C1008;
+            text-transform: uppercase;
+
+            span {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+
+                svg {
+                    width: 14px;
+                    height: 14px;
+                    flex-shrink: 0;
+                }
+            }
+
+            .dayal-shop-clear-all {
+                background: none;
+                border: none;
+                color: #C89539;
+                font-size: 11px;
+                font-weight: 500;
+                cursor: pointer;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                padding: 0;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+
+            .dayal-shop-close-sidebar {
+                display: none;
+                background: none;
+                border: none;
+                font-size: 18px;
+                color: #1C1008;
+                cursor: pointer;
+                padding: 0 4px;
+
+                @media (max-width: 1024px) {
+                    display: block;
+                }
+            }
+        }
+    }
+
+    // Mobile Backdrop Overlay
+    .dayal-shop-overlay {
+        display: none;
+
+        @media (max-width: 1024px) {
+            &.is-active {
+                display: block;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+                backdrop-filter: blur(2px);
+            }
+        }
+    }
+
+    // 04. Filter Groups (Accordion)
+    .dayal-shop-filter-group {
+        margin-bottom: 18px;
+        border-bottom: 1px solid #F5F2EC;
+        padding-bottom: 16px;
+
+        &:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .dayal-shop-filter-toggle {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            line-height: 16px;
+            margin: 0 0 12px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #2A1810;
+            text-transform: uppercase;
+            cursor: pointer;
+            user-select: none;
+
+            .dayal-shop-caret {
+                display: inline-flex;
+                align-items: center;
+                transition: transform 0.25s ease;
+
+                svg {
+                    width: 10px;
+                    height: 10px;
+                    color: #6E6258;
+                }
+
+                &.is-rotated {
+                    transform: rotate(180deg);
+
+                    svg path {
+                        stroke: #7A1C28;
+                    }
+                }
+            }
+        }
+
+        .dayal-shop-filter-content {
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.25s ease;
+
+            &.is-collapsed {
+                display: none;
+            }
+        }
+    }
+
+    // Search Pill Input
+    .dayal-shop-search-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #ffffff;
+        border: 1.5px solid #D5CFC8;
+        border-radius: 8px;
+        padding: 8px 12px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+        &:focus-within {
+            border-color: #7A1C28;
+            box-shadow: 0 0 0 2px rgba(122, 28, 40, 0.1);
+        }
+
+        svg {
+            width: 16px;
+            height: 16px;
+            color: #7A6355;
+            flex-shrink: 0;
+        }
+
+        input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 13px;
+            color: #2A1810;
+            background: transparent;
+
+            &::placeholder {
+                color: #9B8D82;
+            }
+        }
+
+        .dayal-shop-search-clear {
+            background: none;
+            border: none;
+            color: #9B8D82;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 2px 4px;
+
+            &:hover {
+                color: #2A1810;
+            }
+        }
+    }
+
+    // Sort Select
+    .dayal-shop-sort-select {
+        width: 100%;
+        padding: 9px 12px;
+        border: 1.5px solid #D5CFC8;
+        border-radius: 8px;
+        background-color: #ffffff;
+        font-size: 13px;
+        color: #2A1810;
+        outline: none;
+        cursor: pointer;
+        transition: border-color 0.2s ease;
+
+        &:focus {
+            border-color: #7A1C28;
+        }
+    }
+
+    // Category List
+    .dayal-shop-cat-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 220px;
+        overflow-y: auto;
+
+        li label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #4A3B32;
+            cursor: pointer;
+            transition: color 0.15s ease;
+
+            &:hover {
+                color: #7A1C28;
+            }
+
+            input[type="checkbox"] {
+                accent-color: #7A1C28;
+                width: 16px;
+                height: 16px;
+                cursor: pointer;
+            }
+
+            .dayal-shop-cat-count {
+                margin-left: auto;
+                color: #9B8D82;
+                font-size: 11.5px;
+            }
+        }
+    }
+
+    // Price Range Slider
+    .dayal-shop-price-values {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        font-weight: 600;
+        color: #2C1810;
+        margin-bottom: 10px;
+    }
+
+    .dayal-shop-slider-track {
+        position: relative;
+        height: 6px;
+        background: #E8E2D9;
+        border-radius: 3px;
+        margin: 14px 0 8px;
+
+        .dayal-shop-slider-range {
+            position: absolute;
+            height: 100%;
+            background: #7A1C28;
+            border-radius: 3px;
+        }
+
+        input[type="range"] {
+            position: absolute;
+            top: -5px;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: transparent;
+            -webkit-appearance: none;
+            pointer-events: none;
+
+            &::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: #7A1C28;
+                border: 2px solid #ffffff;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+                cursor: pointer;
+                pointer-events: auto;
+            }
+        }
+    }
+
+    .dayal-shop-price-range-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: #9B8D82;
+        margin-top: 6px;
+    }
+
+    // Tag Pills (Seasonal Mithai)
+    .dayal-shop-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+
+        .dayal-shop-tag-pill {
+            display: inline-block;
+            padding: 5px 11px;
+            background: #F4EFEA;
+            border: 1px solid #E5DDD4;
+            border-radius: 14px;
+            font-size: 11.5px;
+            color: #4A3B32;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover,
+            &.is-active {
+                background: #7A1C28;
+                border-color: #7A1C28;
+                color: #ffffff;
+            }
+        }
+    }
+
+    // Filter Options List (Occasion, Diet, Rating, etc.)
+    .dayal-shop-filter-options {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #4A3B32;
+            cursor: pointer;
+
+            &:hover {
+                color: #7A1C28;
+            }
+
+            input[type="checkbox"],
+            input[type="radio"] {
+                accent-color: #7A1C28;
+                cursor: pointer;
+            }
+
+            .dayal-shop-stars {
+                display: inline-flex;
+                align-items: center;
+                gap: 2px;
+
+                svg {
+                    width: 14px;
+                    height: 14px;
+                }
+            }
+
+            .dayal-shop-rating-label {
+                font-size: 12px;
+                color: #7A6355;
+            }
+        }
+    }
+
+    // Apply Filters Button
+    .dayal-shop-apply-btn {
+        width: 100%;
+        margin-top: 18px;
+        padding: 12px 0;
+        background: #7A1C28;
+        border: 1px solid #7A1C28;
+        color: #ffffff;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+        &:hover {
+            background: #5c1620;
+            border-color: #5c1620;
+        }
+    }
+
+    // 05. Main Shop Content
+    .dayal-shop-main {
+        flex: 1;
+        min-width: 0;
+
+        .dayal-shop-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            gap: 16px;
+
+            .dayal-shop-results-count {
+                font-size: 13.5px;
+                color: #7A6355;
+            }
+
+            .dayal-shop-filter-trigger {
+                display: none;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 16px;
+                background: #ffffff;
+                border: 1.5px solid #D5CFC8;
+                border-radius: 6px;
+                font-size: 13px;
+                font-weight: 500;
+                color: #2A1810;
+                cursor: pointer;
+
+                svg {
+                    width: 14px;
+                    height: 14px;
+                }
+
+                @media (max-width: 1024px) {
+                    display: inline-flex;
+                }
+            }
+        }
+
+        // Product Grid Layout
+        .dayal-shop-products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 24px;
+
+            @media (max-width: 1320px) {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 20px;
+            }
+
+            @media (max-width: 900px) {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 16px;
+            }
+
+            @media (max-width: 480px) {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+            }
+        }
+
+        // Empty state
+        .dayal-shop-empty {
+            text-align: center;
+            padding: 64px 20px;
+            color: #7A6355;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px dashed #D5CFC8;
+
+            h3 {
+                font-size: 18px;
+                color: #2A1810;
+                margin-bottom: 8px;
+            }
+
+            p {
+                font-size: 14px;
+                margin: 0;
+            }
+        }
+
+        // 06. Pagination
+        .dayal-shop-pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-top: 56px;
+            flex-wrap: wrap;
+
+            .dayal-shop-page-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 38px;
+                height: 38px;
+                padding: 8px;
+                border: none;
+                background: rgba(47, 43, 61, 0.08);
+                border-radius: 8px;
+                color: rgba(47, 43, 61, 0.9);
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+
+                &:hover:not(.is-disabled):not(.is-active) {
+                    background: rgba(47, 43, 61, 0.14);
+                }
+
+                &.is-active {
+                    background: #7A1C28;
+                    color: #ffffff;
+                    box-shadow: 0 2px 6px rgba(122, 28, 40, 0.3);
+                }
+
+                &.is-disabled {
+                    color: rgba(47, 43, 61, 0.3);
+                    cursor: not-allowed;
+                    pointer-events: none;
+                }
+
+                &.is-dots {
+                    background: transparent;
+                    cursor: default;
+                    min-width: 24px;
+                }
+
+                &.is-arrow {
+                    font-size: 16px;
+                }
+            }
+        }
+    }
+}

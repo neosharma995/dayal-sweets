@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
+import ProductCard from '../ProductCard';
 
 const trustItems = [
-    ['Since 1962', '60+ Years of Tradition', 'Frame-34.svg'],
-    ['Fresh Ingredients', 'Finest Quality Ingredients', 'Frame-34-1.svg'],
-    ['Hygienic Preparation', 'Prepared With Care', 'Frame-34-2.svg'],
-    ['Fast Delivery', 'Fresh To Your Doorstep', 'Frame-34-3.svg'],
+    ['SINCE 1962', '60+ Years of Tradition', 'Frame-34.svg'],
+    ['FRESH INGREDIENTS', 'Finest Quality Ingredients', 'Frame-34-1.svg'],
+    ['HYGIENIC PREPARATION', 'Prepared With Care', 'Frame-34-2.svg'],
+    ['FAST DELIVERY', 'Fresh To Your Doorstep', 'Frame-34-3.svg'],
 ];
 
 const productCategories = [
@@ -278,16 +279,154 @@ const launchBanners = [
 ];
 
 const bestSellers = [
-    ['Marwadi Ladoo', 'SWEETS', 'Traditional Rajasthani Marwadi Ladoo prepared with pure desi ghee and premium ingredients, offering an authentic rich taste in every bite.', 'Marwadi-ladoo.avif', 'From ₹120.00', ['250g', '500g', '1kg']],
-    ['Brownies', 'BAKERY', 'Rich, moist, and fudgy brownies made with premium chocolate, freshly baked to deliver an irresistible treat for every chocolate lover.', 'Brownies.jpg', 'From ₹70.00', ['1 Piece', '2 Pieces', '4 Pieces']],
-    ['Office Tea Combo', 'UNCATEGORIZED', 'Brighten up your workday with our Office Tea Combo — a perfect pairing of refreshing tea and delicious snacks.', 'Office-Tea-Combo.png', '₹150.00', []],
-    ['Donuts', 'BAKERY', 'Soft, fluffy, and freshly baked donuts topped with delicious glazes and delightful flavors, making them the perfect treat for every occasion.', 'Donuts.jpg', 'From ₹60.00', ['1 Piece', '2 Pieces', '4 Pieces']],
-    ['Engagement Combo', 'COMBO', 'Celebrate your special day with our Engagement Combo, featuring a delightful selection of delicious favorites perfect for your celebration.', 'Engagement-Combo.png', '₹250.00', []],
-    ['Birthday Party Combo', 'COMBO', 'Make every birthday celebration extra special with our Birthday Party Combo! A delicious selection of crowd-pleasing favorites.', 'Birthday-Party-Combo.png', '₹200.00', []],
-    ['Puff Patties', 'BAKERY', 'Crispy, flaky Puff Patties filled with a delicious savory stuffing, freshly baked to golden perfection for a flavorful and satisfying bite.', 'Puff-Patties.jpg', 'From ₹40.00', ['1 Piece', '2 Pieces', '4 Pieces']],
-    ['Garlic Bread', 'BAKERY', 'Freshly baked Garlic Bread with a crispy crust, soft center, buttery garlic, and aromatic herbs, perfect as a savory snack.', 'Garlic-Bread.jpg', 'From ₹80.00', ['2 Pieces', '4 Pieces', '6 Pieces']],
-    ['Cakes', 'BAKERY', 'Freshly baked cakes crafted with premium ingredients, offering a soft texture, rich flavor, and perfect sweetness for birthdays.', 'Cakes.jpg', 'From ₹450.00', ['500g', '1kg', '2kg']],
-    ['Dhokla', 'SNACKS', 'Soft, fluffy, and freshly prepared Dhokla made from premium gram flour, offering a light, healthy, and flavorful snack.', 'Dhokla.jpg', 'From ₹70.00', ['250g', '500g', '1kg']],
+    {
+        id: 1,
+        name: 'Marwadi Ladoo',
+        category: 'SWEETS',
+        categorySlug: 'sweets',
+        slug: 'marwadi-ladoo',
+        badge: 'BEST SELLER',
+        description: 'Traditional Rajasthani Marwadi Ladoo prepared with pure desi ghee and premium ingredients, offering an authentic rich taste in every bite.',
+        image: '/uploads/2026/07/Marwadi-ladoo.avif',
+        price: 'From ₹120.00',
+        variations: [
+            { label: '250g', price: 120 },
+            { label: '500g', price: 240 },
+            { label: '1kg', price: 480 },
+        ],
+    },
+    {
+        id: 2,
+        name: 'Brownies',
+        category: 'BAKERY',
+        categorySlug: 'bakery',
+        slug: 'brownies',
+        badge: 'BEST SELLER',
+        description: 'Rich, moist, and fudgy brownies made with premium chocolate, freshly baked to deliver an irresistible treat for every chocolate lover.',
+        image: '/uploads/2026/07/Brownies-768x512.jpg',
+        price: 'From ₹70.00',
+        variations: [
+            { label: '1 Piece', price: 70 },
+            { label: '2 Pieces', price: 140 },
+            { label: '4 Pieces', price: 280 },
+        ],
+    },
+    {
+        id: 3,
+        name: 'Office Tea Combo',
+        category: 'UNCATEGORIZED',
+        categorySlug: 'combo',
+        slug: 'office-tea-combo',
+        badge: 'BEST SELLER',
+        description: 'Brighten up your workday with our Office Tea Combo — a perfect pairing of refreshing tea and delicious snacks.',
+        image: '/uploads/2026/09/Office-Tea-Combo-600x450.png',
+        price: 150,
+        variations: [],
+    },
+    {
+        id: 4,
+        name: 'Donuts',
+        category: 'BAKERY',
+        categorySlug: 'bakery',
+        slug: 'donuts',
+        badge: 'BEST SELLER',
+        description: 'Soft, fluffy, and freshly baked donuts topped with delicious glazes and delightful flavors, making them the perfect treat for every occasion.',
+        image: '/uploads/2026/07/Donuts-600x750.jpg',
+        price: 'From ₹60.00',
+        variations: [
+            { label: '1 Piece', price: 60 },
+            { label: '2 Pieces', price: 120 },
+            { label: '4 Pieces', price: 240 },
+        ],
+    },
+    {
+        id: 5,
+        name: 'Engagement Combo',
+        category: 'COMBO',
+        categorySlug: 'combo',
+        slug: 'engagement-combo',
+        badge: 'BEST SELLER',
+        description: 'Celebrate your special day with our Engagement Combo, featuring a delightful selection of delicious favorites perfect for your celebration.',
+        image: '/uploads/2026/09/Engagement-Combo-600x400.png',
+        price: 250,
+        variations: [],
+    },
+    {
+        id: 6,
+        name: 'Birthday Party Combo',
+        category: 'COMBO',
+        categorySlug: 'combo',
+        slug: 'birthday-party-combo',
+        badge: 'BEST SELLER',
+        description: 'Make every birthday celebration extra special with our Birthday Party Combo! A delicious selection of crowd-pleasing favorites.',
+        image: '/uploads/2026/09/Birthday-Party-Combo-600x400.png',
+        price: 200,
+        variations: [],
+    },
+    {
+        id: 7,
+        name: 'Puff Patties',
+        category: 'BAKERY',
+        categorySlug: 'bakery',
+        slug: 'puff-patties',
+        badge: 'BEST SELLER',
+        description: 'Crispy, flaky Puff Patties filled with a delicious savory stuffing, freshly baked to golden perfection for a flavorful and satisfying bite.',
+        image: '/uploads/2026/07/Puff-Patties-600x900.jpg',
+        price: 'From ₹40.00',
+        variations: [
+            { label: '1 Piece', price: 40 },
+            { label: '2 Pieces', price: 80 },
+            { label: '4 Pieces', price: 160 },
+        ],
+    },
+    {
+        id: 8,
+        name: 'Garlic Bread',
+        category: 'BAKERY',
+        categorySlug: 'bakery',
+        slug: 'garlic-bread',
+        badge: 'BEST SELLER',
+        description: 'Freshly baked Garlic Bread with a crispy crust, soft center, buttery garlic, and aromatic herbs, perfect as a savory snack.',
+        image: '/uploads/2026/07/Garlic-Bread-600x800.jpg',
+        price: 'From ₹80.00',
+        variations: [
+            { label: '2 Pieces', price: 80 },
+            { label: '4 Pieces', price: 160 },
+            { label: '6 Pieces', price: 240 },
+        ],
+    },
+    {
+        id: 9,
+        name: 'Cakes',
+        category: 'BAKERY',
+        categorySlug: 'bakery',
+        slug: 'cakes',
+        badge: 'BEST SELLER',
+        description: 'Freshly baked cakes crafted with premium ingredients, offering a soft texture, rich flavor, and perfect sweetness for birthdays.',
+        image: '/uploads/2026/07/Cakes-768x512.jpg',
+        price: 'From ₹450.00',
+        variations: [
+            { label: '500g', price: 450 },
+            { label: '1kg', price: 900 },
+            { label: '2kg', price: 1800 },
+        ],
+    },
+    {
+        id: 10,
+        name: 'Dhokla',
+        category: 'SNACKS',
+        categorySlug: 'snacks',
+        slug: 'dhokla',
+        badge: 'BEST SELLER',
+        description: 'Soft, fluffy, and freshly prepared Dhokla made from premium gram flour, offering a light, healthy, and flavorful snack.',
+        image: '/uploads/2026/07/Dhokla-768x562.jpg',
+        price: 'From ₹70.00',
+        variations: [
+            { label: '250g', price: 70 },
+            { label: '500g', price: 140 },
+            { label: '1kg', price: 280 },
+        ],
+    },
 ];
 
 const serviceCards = [
@@ -325,18 +464,58 @@ function BestSellers() {
     const [selected, setSelected] = useState('All');
     const visibleProducts = selected === 'All' || selected === 'Best Seller'
         ? bestSellers
-        : bestSellers.filter((product) => product[1].toLowerCase() === selected.toLowerCase());
-    return <section className="dayal-home-bestsellers">
-        <div className="dayal-home-bestsellers-inner">
-            <header className="dayal-home-section-heading dayal-home-bestsellers-heading"><p>Most Loved by Our Customers</p><h2>Our Best <span>Sellers</span></h2></header>
-            <div className="dayal-home-product-filters" aria-label="Product categories">{filters.map((filter) => <button type="button" className={selected === filter ? 'is-active' : ''} key={filter} onClick={() => setSelected(filter)}>{filter}</button>)}</div>
-            <div className="dayal-home-product-grid">{visibleProducts.map(([name, category, description, image, price, sizes]) => <article className="dayal-home-product-card" key={name}>
-                <div className="dayal-home-product-image"><img src={`/uploads/2026/${image === 'Office-Tea-Combo.png' || image === 'Engagement-Combo.png' || image === 'Birthday-Party-Combo.png' ? '09' : '07'}/${image}`} alt={name} loading="lazy" /><span>Best Seller</span></div>
-                <div className="dayal-home-product-info"><small>{category}</small><h3>{name}</h3><p>{description}</p>{sizes.length > 0 && <div className="dayal-home-product-sizes">{sizes.map((size) => <span key={size}>{size}</span>)}</div>}<div className="dayal-home-product-price"><strong>{price}</strong><a href="/shop" aria-label={`View ${name}`}>↗</a></div></div>
-            </article>)}</div>
-            <a className="dayal-home-view-all" href="/shop">View All <span aria-hidden="true">→</span></a>
-        </div>
-    </section>;
+        : bestSellers.filter((product) =>
+            product.category.toLowerCase() === selected.toLowerCase() ||
+            product.categorySlug.toLowerCase() === selected.toLowerCase()
+        );
+
+    return (
+        <section className="dayal-home-bestsellers oto-best-sellers-section">
+            <div className="dayal-home-bestsellers-inner oto-best-sellers-wrapper">
+                <header className="oto-best-sellers-header">
+                    <div className="oto-best-sellers-title-box">
+                        <span className="oto-best-sellers-subtitle">— MOST LOVED BY OUR CUSTOMERS —</span>
+                        <h2 className="oto-best-sellers-title">
+                            Our Best <span className="oto-bs-highlight">Sellers</span>
+                        </h2>
+                    </div>
+                    <div className="oto-best-sellers-filter-bar" role="tablist" aria-label="Product categories">
+                        {filters.map((filter) => (
+                            <button
+                                type="button"
+                                className={`oto-bs-pill ${selected === filter ? 'active' : ''}`}
+                                key={filter}
+                                onClick={() => setSelected(filter)}
+                            >
+                                {filter}
+                            </button>
+                        ))}
+                    </div>
+                </header>
+
+                <div className="oto-products-grid oto-grid-cols-5 oto-best-sellers-grid">
+                    {visibleProducts.length > 0 ? (
+                        visibleProducts.map((product) => (
+                            <ProductCard key={product.id || product.name} product={product} />
+                        ))
+                    ) : (
+                        <div className="oto-bs-filter-no-products" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px 15px', color: '#7A6355' }}>
+                            No products available in this category.
+                        </div>
+                    )}
+                </div>
+
+                <div className="dayal-home-view-all-wrapper">
+                    <a className="dayal-home-view-all" href="/shop">
+                        <span>VIEW ALL</span>
+                        <svg aria-hidden="true" viewBox="0 0 448 512">
+                            <path fill="currentColor" d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+    );
 }
 
 function SpecialServices() {

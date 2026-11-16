@@ -13,6 +13,7 @@ export default function ContactHero({
     title = 'CONTACT US',
     subtitle = "We'd Love to Hear From You!",
     description = "Have a query, feedback, or a special request? We're here to help and make your experience with Dayal Sweets even better.",
+    rightVisual = null,
 }) {
     return (
         <section className="contact-hero-section">
@@ -46,6 +47,16 @@ export default function ContactHero({
                 className="contact-hero-decor-peacock"
                 aria-hidden="true"
             />
+
+            {/* Optional right visual graphic */}
+            {rightVisual && (
+                <img
+                    src={rightVisual}
+                    alt=""
+                    className="contact-hero-decor-right-visual"
+                    aria-hidden="true"
+                />
+            )}
 
             {/* Center Content Container */}
             <div className="contact-hero-inner">

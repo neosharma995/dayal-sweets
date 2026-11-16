@@ -512,7 +512,7 @@
             }
         }
 
-        // Product Grid Layout (4 columns on desktop)
+        // Product Grid Layout (matches Best Sellers grid responsiveness)
         .dayal-shop-products-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -524,14 +524,14 @@
                 gap: 20px;
             }
 
-            @media (max-width: 900px) {
+            @media (max-width: 992px) {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
                 gap: 16px;
             }
 
-            @media (max-width: 480px) {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 10px;
+            @media (max-width: 768px) {
+                grid-template-columns: 1fr;
+                gap: 12px;
             }
         }
 
@@ -668,14 +668,14 @@
                 gap: 20px;
             }
 
-            @media (max-width: 900px) {
+            @media (max-width: 992px) {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
                 gap: 16px;
             }
 
-            @media (max-width: 480px) {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 10px;
+            @media (max-width: 768px) {
+                grid-template-columns: 1fr;
+                gap: 12px;
             }
         }
     }

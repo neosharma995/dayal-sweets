@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DietPreferenceController;
 use App\Http\Controllers\Admin\OccasionController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductTagController;
@@ -30,6 +31,16 @@ Route::middleware(['auth', 'verified', 'role:'.UserRole::Admin->value])->prefix(
     Route::patch('/account/profile', [AccountController::class, 'updateProfile'])->name('account.profile');
     Route::put('/account/password', [AccountController::class, 'updatePassword'])->name('account.password');
     Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
+
+    // Order Management Web Routes (CRUD, Tracking & Status Workflow)
+    Route::prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::get('/create', [OrderController::class, 'create'])->name('create');
+        Route::post('/', [OrderController::class, 'store'])->name('store');
+        Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+        Route::patch('/{order}/status', [OrderController::class, 'updateStatus'])->name('update-status');
+        Route::delete('/{order}', [OrderController::class, 'destroy'])->name('destroy');
+    });
 
     // Product Management Web Routes (CRUD)
     Route::prefix('products')->name('products.')->group(function () {

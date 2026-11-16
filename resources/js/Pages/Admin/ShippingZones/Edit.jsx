@@ -127,7 +127,7 @@ export default function Edit({ zone }) {
         const payload = {
             zone_name: zoneName,
             zone_slug: zoneSlug || null,
-            description,
+            description: null,
             zone_regions: selectedRegions,
             zone_postcodes: null,
             is_active: isActive,
@@ -213,19 +213,6 @@ export default function Edit({ zone }) {
                                     style={{ width: '100%', padding: '0.55rem 0.75rem', borderRadius: '0.375rem', border: '1px solid #CBD5E1' }}
                                 />
                             </div>
-                        </div>
-
-                        <div style={{ marginBottom: '1.25rem' }}>
-                            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: '#334155', marginBottom: '0.35rem' }}>
-                                Description / Delivery Note
-                            </label>
-                            <textarea
-                                rows={2}
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                placeholder="e.g. Same-day dispatch for orders placed before 4:00 PM."
-                                style={{ width: '100%', padding: '0.55rem 0.75rem', borderRadius: '0.375rem', border: '1px solid #CBD5E1' }}
-                            />
                         </div>
 
                         {/* Zone Regions Selection */}

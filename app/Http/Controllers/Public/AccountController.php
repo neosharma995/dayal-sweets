@@ -54,32 +54,24 @@ class AccountController extends Controller
             ],
         ];
 
-        $orderHistory = [
-            [
-                'order_id' => 'DS-8921',
-                'date' => '14 Nov 2026',
-                'status' => 'Being Prepared',
-                'total' => 1250,
-                'items' => 'Kaju Katli (1kg), Mini Rasgulla (500g)',
-                'payment' => 'Prepaid (UPI)',
-            ],
-            [
-                'order_id' => 'DS-8412',
-                'date' => '02 Nov 2026',
-                'status' => 'Delivered',
-                'total' => 1100,
-                'items' => 'Desi Ghee Besan Laddu (1kg), Gulab Jamun (1kg)',
-                'payment' => 'Cash on Delivery',
-            ],
-            [
-                'order_id' => 'DS-7994',
-                'date' => '24 Oct 2026',
-                'status' => 'Delivered',
-                'total' => 2800,
-                'items' => 'Royal Celebration Dry Fruit Hamper (2kg)',
-                'payment' => 'Credit Card',
-            ],
-        ];
+        $userOrders = $user->orders()->with('items')->latest()->get();
+
+        $orderHistory = $userOrders->map(function ($order) {
+            $itemsList = $order->items->pluck('product_name')->take(3)->join(', ');
+            if ($order->items->count() > 3) {
+                $itemsList .= ' +' . ($order->items->count() - 3) . ' more';
+            }
+
+            return [
+                'order_id' => $order->order_number,
+                'date' => $order->created_at ? $order->created_at->format('d M Y') : 'Recent',
+                'status' => ucfirst($order->delivery_status),
+                'delivery_status' => $order->delivery_status,
+                'total' => (float) $order->total_amount,
+                'items' => $itemsList ?: 'Assorted Sweets',
+                'payment' => strtoupper($order->payment_method) . ' (' . ucfirst($order->payment_status) . ')',
+            ];
+        })->toArray();
 
         return Inertia::render('Customer/Account', [
             'customer' => [

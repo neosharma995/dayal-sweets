@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Enums\UserRole;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\AccountController;
+use App\Http\Controllers\Public\CheckoutController;
 use App\Http\Controllers\Public\DashboardController;
 use App\Http\Controllers\Public\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +15,13 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/shop', [HomeController::class, 'shop'])->name('shop');
 Route::get('/cart', [HomeController::class, 'cart'])->name('cart');
 Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
+
+// Authenticated Checkout Actions (User must be logged in to create orders)
+Route::middleware('auth')->prefix('checkout')->name('checkout.')->group(function () {
+    Route::post('/create-razorpay-order', [CheckoutController::class, 'createRazorpayOrder'])->name('razorpay.create');
+    Route::post('/verify-payment', [CheckoutController::class, 'verifyPayment'])->name('razorpay.verify');
+    Route::post('/place-cod-order', [CheckoutController::class, 'placeCodOrder'])->name('cod.place');
+});
 Route::get('/about-us', [HomeController::class, 'about'])->name('about-us');
 Route::get('/contact-us', [HomeController::class, 'contact'])->name('contact');
 Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');

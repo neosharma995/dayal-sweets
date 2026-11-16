@@ -284,37 +284,42 @@ export default function CustomerAccount({ customer, savedAddresses, orderHistory
                     <p className="dayal-text-muted dayal-mb-4">Complete list of previous purchases and deliveries</p>
 
                     <div>
-                        {orderHistory.map((item) => (
-                            <div key={item.order_id} className="dayal-history-row">
-                                <div>
-                                    <div className="dayal-flex-start">
-                                        <strong className="dayal-text-maroon">#{item.order_id}</strong>
-                                        <span className="dayal-text-muted">• {item.date}</span>
-                                        <span className={`dayal-badge ${
-                                            item.status === 'Delivered'
-                                                ? 'dayal-badge--green'
-                                                : 'dayal-badge--gold'
-                                        }`}>
-                                            {item.status}
-                                        </span>
+                        {orderHistory && orderHistory.length > 0 ? (
+                            orderHistory.map((item) => (
+                                <div key={item.order_id} className="dayal-history-row">
+                                    <div>
+                                        <div className="dayal-flex-start">
+                                            <strong className="dayal-text-maroon">#{item.order_id}</strong>
+                                            <span className="dayal-text-muted">• {item.date}</span>
+                                            <span className={`dayal-badge ${
+                                                item.delivery_status === 'delivered'
+                                                    ? 'dayal-badge--green'
+                                                    : item.delivery_status === 'shipping'
+                                                    ? 'dayal-badge--gold'
+                                                    : 'dayal-badge--gold-subtle'
+                                            }`}>
+                                                {item.status}
+                                            </span>
+                                        </div>
+                                        <p className="dayal-mt-1">{item.items}</p>
+                                        <p className="dayal-text-muted">{item.payment}</p>
                                     </div>
-                                    <p className="dayal-mt-1">{item.items}</p>
-                                    <p className="dayal-text-muted">{item.payment}</p>
-                                </div>
 
-                                <div className="dayal-flex-start">
-                                    <strong className="dayal-font-serif dayal-fs-lg">
-                                        ₹{item.total}
-                                    </strong>
-                                    <button
-                                        onClick={() => alert(`Downloading invoice for #${item.order_id}`)}
-                                        className="dayal-btn dayal-btn--outline dayal-btn--sm"
-                                    >
-                                        Invoice PDF
-                                    </button>
+                                    <div className="dayal-flex-start">
+                                        <strong className="dayal-font-serif dayal-fs-lg">
+                                            ₹{item.total}
+                                        </strong>
+                                    </div>
                                 </div>
+                            ))
+                        ) : (
+                            <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#64748B' }}>
+                                <p style={{ margin: '0 0 1rem 0', fontSize: '0.9375rem' }}>No purchase records found in your account.</p>
+                                <Link href="/shop" className="dayal-btn dayal-btn--primary dayal-btn--sm">
+                                    Explore Sweets &amp; Start Shopping
+                                </Link>
                             </div>
-                        ))}
+                        )}
                     </div>
                 </div>
             )}

@@ -254,30 +254,45 @@ export default function CustomerDashboard({ overview, activeOrder, recentPastOrd
                 </div>
 
                 <div>
-                    {recentPastOrders.map((order) => (
-                        <div key={order.order_id} className="dayal-history-row">
-                            <div>
-                                <div className="dayal-flex-start">
-                                    <strong className="dayal-text-maroon">#{order.order_id}</strong>
-                                    <span className="dayal-text-muted">• {order.order_date}</span>
-                                    <span className="dayal-badge dayal-badge--green">
-                                        {order.status}
-                                    </span>
+                    {recentPastOrders && recentPastOrders.length > 0 ? (
+                        recentPastOrders.map((order) => (
+                            <div key={order.order_id} className="dayal-history-row">
+                                <div>
+                                    <div className="dayal-flex-start">
+                                        <strong className="dayal-text-maroon">#{order.order_id}</strong>
+                                        <span className="dayal-text-muted">• {order.order_date}</span>
+                                        <span className={`dayal-badge ${
+                                            order.delivery_status === 'delivered'
+                                                ? 'dayal-badge--green'
+                                                : order.delivery_status === 'shipping'
+                                                ? 'dayal-badge--gold'
+                                                : 'dayal-badge--gold-subtle'
+                                        }`}>
+                                            {order.status}
+                                        </span>
+                                    </div>
+                                    <p className="dayal-text-muted dayal-mt-1">{order.items_summary}</p>
                                 </div>
-                                <p className="dayal-text-muted dayal-mt-1">{order.items_summary}</p>
-                            </div>
 
-                            <div className="dayal-flex-start">
-                                <strong className="dayal-font-serif dayal-fs-md">₹{order.total_amount}</strong>
-                                <button
-                                    onClick={() => alert(`Reordering items from #${order.order_id}`)}
-                                    className="dayal-btn dayal-btn--outline dayal-btn--sm"
-                                >
-                                    Reorder
-                                </button>
+                                <div className="dayal-flex-start">
+                                    <strong className="dayal-font-serif dayal-fs-md">₹{order.total_amount}</strong>
+                                    <Link
+                                        href={route('customer.account')}
+                                        className="dayal-btn dayal-btn--outline dayal-btn--sm"
+                                    >
+                                        View Details
+                                    </Link>
+                                </div>
                             </div>
+                        ))
+                    ) : (
+                        <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#64748B' }}>
+                            <p style={{ margin: '0 0 1rem 0' }}>You haven't placed any sweet orders yet.</p>
+                            <Link href="/shop" className="dayal-btn dayal-btn--primary dayal-btn--sm">
+                                Explore Pure Desi Ghee Sweets
+                            </Link>
                         </div>
-                    ))}
+                    )}
                 </div>
             </div>
         </CustomerLayout>

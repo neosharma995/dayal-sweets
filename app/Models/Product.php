@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,6 +30,10 @@ class Product extends Model
      */
     protected $fillable = [
         'category_id',
+        'seasonal_mithai_id',
+        'occasion_id',
+        'diet_preference_id',
+        'product_tag_id',
         'product_name',
         'product_description',
         'product_price',
@@ -72,6 +77,10 @@ class Product extends Model
     {
         return [
             'category_id' => 'integer',
+            'seasonal_mithai_id' => 'integer',
+            'occasion_id' => 'integer',
+            'diet_preference_id' => 'integer',
+            'product_tag_id' => 'integer',
             'product_price' => 'decimal:2',
             'product_selling_price' => 'decimal:2',
             'product_qty' => 'integer',
@@ -86,6 +95,46 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    /**
+     * Relationship: Product belongs to a Seasonal Mithai category.
+     */
+    public function seasonalMithai(): BelongsTo
+    {
+        return $this->belongsTo(SeasonalMithai::class, 'seasonal_mithai_id');
+    }
+
+    /**
+     * Relationship: Product belongs to an Occasion category.
+     */
+    public function occasion(): BelongsTo
+    {
+        return $this->belongsTo(Occasion::class, 'occasion_id');
+    }
+
+    /**
+     * Relationship: Product belongs to a Diet Preference category.
+     */
+    public function dietPreference(): BelongsTo
+    {
+        return $this->belongsTo(DietPreference::class, 'diet_preference_id');
+    }
+
+    /**
+     * Relationship: Product belongs to a primary Product Tag.
+     */
+    public function tag(): BelongsTo
+    {
+        return $this->belongsTo(ProductTag::class, 'product_tag_id');
+    }
+
+    /**
+     * Relationship: Product belongs to many Product Tags (via pivot).
+     */
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(ProductTag::class, 'product_tag_relations', 'product_id', 'product_tag_id');
     }
 
     /**

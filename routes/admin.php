@@ -7,8 +7,12 @@ use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DietPreferenceController;
+use App\Http\Controllers\Admin\OccasionController;
 use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductTagController;
+use App\Http\Controllers\Admin\SeasonalMithaiController;
 use Illuminate\Support\Facades\Route;
 
 // Admin Guest Authentication Routes
@@ -77,5 +81,49 @@ Route::middleware(['auth', 'verified', 'role:'.UserRole::Admin->value])->prefix(
         Route::match(['put', 'patch'], '/{attribute}', [ProductAttributeController::class, 'update'])->name('update');
         Route::delete('/delete/{attribute}', [ProductAttributeController::class, 'destroy'])->name('deleteAlias');
         Route::delete('/{attribute}', [ProductAttributeController::class, 'destroy'])->name('destroy');
+    });
+
+    // Seasonal Mithai Management Routes
+    Route::prefix('seasonal-mithais')->name('seasonal-mithais.')->group(function () {
+        Route::get('/', [SeasonalMithaiController::class, 'index'])->name('index');
+        Route::get('/create', [SeasonalMithaiController::class, 'create'])->name('create');
+        Route::post('/', [SeasonalMithaiController::class, 'store'])->name('store');
+        Route::get('/{seasonalMithai}/edit', [SeasonalMithaiController::class, 'edit'])->name('edit');
+        Route::match(['put', 'patch', 'post'], '/update/{seasonalMithai}', [SeasonalMithaiController::class, 'update'])->name('updateAlias');
+        Route::match(['put', 'patch'], '/{seasonalMithai}', [SeasonalMithaiController::class, 'update'])->name('update');
+        Route::delete('/{seasonalMithai}', [SeasonalMithaiController::class, 'destroy'])->name('destroy');
+    });
+
+    // Occasion Management Routes
+    Route::prefix('occasions')->name('occasions.')->group(function () {
+        Route::get('/', [OccasionController::class, 'index'])->name('index');
+        Route::get('/create', [OccasionController::class, 'create'])->name('create');
+        Route::post('/', [OccasionController::class, 'store'])->name('store');
+        Route::get('/{occasion}/edit', [OccasionController::class, 'edit'])->name('edit');
+        Route::match(['put', 'patch', 'post'], '/update/{occasion}', [OccasionController::class, 'update'])->name('updateAlias');
+        Route::match(['put', 'patch'], '/{occasion}', [OccasionController::class, 'update'])->name('update');
+        Route::delete('/{occasion}', [OccasionController::class, 'destroy'])->name('destroy');
+    });
+
+    // Diet Preference Management Routes
+    Route::prefix('diet-preferences')->name('diet-preferences.')->group(function () {
+        Route::get('/', [DietPreferenceController::class, 'index'])->name('index');
+        Route::get('/create', [DietPreferenceController::class, 'create'])->name('create');
+        Route::post('/', [DietPreferenceController::class, 'store'])->name('store');
+        Route::get('/{dietPreference}/edit', [DietPreferenceController::class, 'edit'])->name('edit');
+        Route::match(['put', 'patch', 'post'], '/update/{dietPreference}', [DietPreferenceController::class, 'update'])->name('updateAlias');
+        Route::match(['put', 'patch'], '/{dietPreference}', [DietPreferenceController::class, 'update'])->name('update');
+        Route::delete('/{dietPreference}', [DietPreferenceController::class, 'destroy'])->name('destroy');
+    });
+
+    // Product Tag Management Routes
+    Route::prefix('product-tags')->name('product-tags.')->group(function () {
+        Route::get('/', [ProductTagController::class, 'index'])->name('index');
+        Route::get('/create', [ProductTagController::class, 'create'])->name('create');
+        Route::post('/', [ProductTagController::class, 'store'])->name('store');
+        Route::get('/{productTag}/edit', [ProductTagController::class, 'edit'])->name('edit');
+        Route::match(['put', 'patch', 'post'], '/update/{productTag}', [ProductTagController::class, 'update'])->name('updateAlias');
+        Route::match(['put', 'patch'], '/{productTag}', [ProductTagController::class, 'update'])->name('update');
+        Route::delete('/{productTag}', [ProductTagController::class, 'destroy'])->name('destroy');
     });
 });

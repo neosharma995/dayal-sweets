@@ -51,6 +51,19 @@ class UpdateProductRequest extends FormRequest
             }
         }
 
+        if (is_string($this->input('tag_ids'))) {
+            $decoded = json_decode($this->input('tag_ids'), true);
+            if (is_array($decoded)) {
+                $mergeData['tag_ids'] = $decoded;
+            }
+        }
+
+        foreach (['category_id', 'seasonal_mithai_id', 'occasion_id', 'diet_preference_id', 'product_tag_id'] as $idField) {
+            if ($this->has($idField) && ($this->input($idField) === '' || $this->input($idField) === 'null')) {
+                $mergeData[$idField] = null;
+            }
+        }
+
         if (! empty($mergeData)) {
             $this->merge($mergeData);
         }
@@ -65,6 +78,12 @@ class UpdateProductRequest extends FormRequest
     {
         return [
             'category_id' => ['nullable', 'integer', 'exists:product_categories,id'],
+            'seasonal_mithai_id' => ['nullable', 'integer', 'exists:product_seasonal_mithais,id'],
+            'occasion_id' => ['nullable', 'integer', 'exists:product_occasions,id'],
+            'diet_preference_id' => ['nullable', 'integer', 'exists:product_diet_preferences,id'],
+            'product_tag_id' => ['nullable', 'integer', 'exists:product_tags,id'],
+            'tag_ids' => ['nullable', 'array'],
+            'tag_ids.*' => ['integer', 'exists:product_tags,id'],
             'product_name' => ['sometimes', 'required', 'string', 'max:255'],
             'product_description' => ['nullable', 'string'],
             'product_price' => ['sometimes', 'required', 'numeric', 'min:0'],

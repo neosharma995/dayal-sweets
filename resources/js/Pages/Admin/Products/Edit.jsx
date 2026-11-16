@@ -3,12 +3,27 @@ import { Head, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import WooCommerceProductForm from '@/Components/Admin/WooCommerceProductForm';
 
-export default function Edit({ product, categories = [], attributes = [] }) {
+export default function Edit({
+    product,
+    categories = [],
+    seasonalMithais = [],
+    occasions = [],
+    dietPreferences = [],
+    tags = [],
+    attributes = [],
+}) {
     const [processing, setProcessing] = useState(false);
     const [errors, setErrors] = useState({});
 
     const initialData = {
         category_id: product.category_id || '',
+        seasonal_mithai_id: product.seasonal_mithai_id || '',
+        occasion_id: product.occasion_id || '',
+        diet_preference_id: product.diet_preference_id || '',
+        product_tag_id: product.product_tag_id || '',
+        tag_ids: Array.isArray(product.tags) && product.tags.length > 0
+            ? product.tags.map((t) => t.id)
+            : (product.product_tag_id ? [product.product_tag_id] : []),
         product_name: product.product_name || '',
         product_description: product.product_description || '',
         product_price: product.product_price || '',
@@ -64,6 +79,10 @@ export default function Edit({ product, categories = [], attributes = [] }) {
                     initialData={initialData}
                     product={product}
                     categories={categories}
+                    seasonalMithais={seasonalMithais}
+                    occasions={occasions}
+                    dietPreferences={dietPreferences}
+                    tags={tags}
                     attributes={attributes}
                     isEdit={true}
                     onSubmit={handleSubmit}

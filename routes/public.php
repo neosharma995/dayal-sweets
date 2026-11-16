@@ -8,11 +8,12 @@ use App\Http\Controllers\Public\AccountController;
 use App\Http\Controllers\Public\DashboardController;
 use App\Http\Controllers\Public\HomeController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 // Public Storefront
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/shop', [HomeController::class, 'shop'])->name('shop');
+Route::get('/cart', [HomeController::class, 'cart'])->name('cart');
+Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
 Route::get('/about-us', [HomeController::class, 'about'])->name('about-us');
 Route::get('/contact-us', [HomeController::class, 'contact'])->name('contact');
 Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');

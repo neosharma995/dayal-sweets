@@ -9,6 +9,4 @@ namespace App\Models;
  *
  * Convenience alias for Category model.
  */
-class ProductCategory extends Category
-{
-}
+class ProductCategory extends Category {}

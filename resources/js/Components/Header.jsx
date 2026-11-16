@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Menu, Search, ShoppingBag, UserRound, X } from 'lucide-react';
 import { Link, usePage } from '@inertiajs/react';
+import { useCart } from '@/Context/CartContext';
+import CartDrawer from '@/Components/CartDrawer';
 
 const navItems = [
     ['Dining', '/dinning'], ['Gifting', '/gifting'], ['About Us', '/about-us'],
@@ -31,8 +33,9 @@ const shopShortcuts = [
 
 export default function Header({ auth }) {
     const { url, props } = usePage();
-    const cartCountValue = Number(props?.cartCount ?? props?.cart_count ?? props?.cart?.count ?? props?.cart?.item_count ?? props?.woocommerce?.cart_count ?? 0);
-    const cartCount = Number.isFinite(cartCountValue) ? Math.max(0, cartCountValue) : 0;
+    const cartContext = useCart();
+    const cartCount = cartContext?.cartCount ?? 0;
+    const openCart = cartContext?.openCart ?? (() => {});
     const currentPath = url.split(/[?#]/, 1)[0].replace(/\/+$/, '') || '/';
     const shopActive = currentPath === '/shop' || currentPath.startsWith('/shop/') || currentPath.startsWith('/product/');
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -175,7 +178,15 @@ export default function Header({ auth }) {
                         <div className="dayal-header-icons">
                             <button className="dayal-header-search-trigger" type="button" aria-label="Search Products" onClick={() => setSearchOpen(true)}><Search size={20} strokeWidth={1.8} aria-hidden="true" /></button>
                             <Link href="/my-account" className="dayal-header-account" aria-label={auth?.user ? 'My account' : 'Login'}><UserRound size={20} strokeWidth={1.8} aria-hidden="true" /></Link>
-                            <Link href="/cart" className="dayal-header-cart" aria-label={`View cart, ${cartCount} items`}><ShoppingBag size={20} strokeWidth={1.8} aria-hidden="true" /><span className="dayal-header-cart-count" aria-live="polite">{cartCount}</span></Link>
+                            <button
+                                type="button"
+                                className="dayal-header-cart"
+                                aria-label={`View cart, ${cartCount} items`}
+                                onClick={openCart}
+                            >
+                                <ShoppingBag size={20} strokeWidth={1.8} aria-hidden="true" />
+                                <span className="dayal-header-cart-count" aria-live="polite">{cartCount}</span>
+                            </button>
                         </div>
                         <Link className="dayal-header-order" href="/shop">Order Now</Link>
                     </div>
@@ -203,6 +214,9 @@ export default function Header({ auth }) {
                     </section>
                 </div>}
             </div>
+
+            {/* Slide-over Cart Drawer */}
+            <CartDrawer />
         </header>
     );
 }

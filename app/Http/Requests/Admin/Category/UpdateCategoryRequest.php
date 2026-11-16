@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin\Category;
 
+use App\Models\Category;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
@@ -38,7 +39,7 @@ class UpdateCategoryRequest extends FormRequest
      */
     public function rules(): array
     {
-        $categoryId = $this->route('category') instanceof \App\Models\Category
+        $categoryId = $this->route('category') instanceof Category
             ? $this->route('category')->id
             : $this->route('category');
 

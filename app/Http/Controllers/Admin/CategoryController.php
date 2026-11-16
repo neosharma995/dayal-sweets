@@ -3,18 +3,18 @@
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\Controller;
 
-use Inertia\Inertia;
-use Inertia\Response;
-use App\Models\Category;
-use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Category\StoreCategoryRequest;
 use App\Http\Requests\Admin\Category\UpdateCategoryRequest;
+use App\Models\Category;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class CategoryController extends Controller
 {
@@ -30,8 +30,8 @@ class CategoryController extends Controller
             $search = (string) $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('category_name', 'like', "%{$search}%")
-                  ->orWhere('category_description', 'like', "%{$search}%")
-                  ->orWhere('category_slug', 'like', "%{$search}%");
+                    ->orWhere('category_description', 'like', "%{$search}%")
+                    ->orWhere('category_slug', 'like', "%{$search}%");
             });
         }
 

@@ -4,6 +4,7 @@ import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import ProductCard from '@/Components/ProductCard';
 import ContactHero from '@/Components/contact/ContactHero';
+import { useCart } from '@/Context/CartContext';
 import '../../scss/pages/_contact.scss';
 
 // 12 Catalog Products matching exact live store items
@@ -22,7 +23,10 @@ const initialShopProducts = [
         ratingCount: 16,
         tags: ['Office', 'Tea Time'],
         diet: 'Vegetarian',
-        variations: [],
+        variations: [
+            { label: 'Regular (Serves 2-3)', price: 150 },
+            { label: 'Large (Serves 5-6)', price: 280 },
+        ],
     },
     {
         id: 8556,
@@ -33,12 +37,15 @@ const initialShopProducts = [
         badge: 'COMBO',
         description: 'Celebrate your special day with our Engagement Combo, thoughtfully curated with rich traditional sweets and savouries.',
         image: '/uploads/2026/09/Engagement-Combo.png',
-        price: 450,
+        price: 250,
         rating: 5,
         ratingCount: 22,
         tags: ['Wedding Collection', 'Celebration'],
         diet: 'Vegetarian',
-        variations: [],
+        variations: [
+            { label: 'Standard Box', price: 250 },
+            { label: 'Royal Hamper', price: 450 },
+        ],
     },
     {
         id: 8554,
@@ -54,7 +61,10 @@ const initialShopProducts = [
         ratingCount: 30,
         tags: ['Birthday', 'Celebration'],
         diet: 'Vegetarian',
-        variations: [],
+        variations: [
+            { label: 'Standard (1 Box)', price: 200 },
+            { label: 'Deluxe (2 Boxes)', price: 380 },
+        ],
     },
     {
         id: 8553,
@@ -331,6 +341,9 @@ export default function Shop({
         }
         return defaultDietOptions;
     }, [propDietTags]);
+export default function Shop({ auth }) {
+    const { addToCart } = useCart();
+
     // Search & Filter States
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCats, setSelectedCats] = useState([]);
@@ -975,14 +988,14 @@ export default function Shop({
                     {paginatedProducts.length > 0 ? (
                         <div className="dayal-shop-products-grid oto-products-grid-archive">
                             {paginatedProducts.map((product) => (
-                                <ProductCard key={product.id} product={product} />
+                                <ProductCard key={product.id} product={product} onAddToCart={addToCart} />
                             ))}
                         </div>
                     ) : (
                         <div className="dayal-shop-empty oto-no-products">
                             <h3>No Products Found</h3>
                             <p>Try clearing some filters or searching with a different term.</p>
-                            <button type="button" className="dayal-shop-apply-btn" onClick={handleClearAll} style={{ maxWidth: '200px', margin: '20px auto 0' }}>
+                            <button type="button" className="dayal-shop-apply-btn dayal-shop-empty-btn" onClick={handleClearAll}>
                                 Reset All Filters
                             </button>
                         </div>
@@ -1061,7 +1074,7 @@ export default function Shop({
 
                     <div className="oto-products-grid-archive oto-latest-combo-products">
                         {curatedCombos.map((combo) => (
-                            <ProductCard key={combo.id} product={combo} />
+                            <ProductCard key={combo.id} product={combo} onAddToCart={addToCart} />
                         ))}
                     </div>
                 </div>

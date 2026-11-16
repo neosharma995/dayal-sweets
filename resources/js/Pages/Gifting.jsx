@@ -9,7 +9,7 @@ import FestivalSpecials from '@/Components/gifting/FestivalSpecials';
 import WhyChooseGifting from '@/Components/gifting/WhyChooseGifting';
 import HowItWorksGifting from '@/Components/gifting/HowItWorksGifting';
 import CustomQuoteSection from '@/Components/gifting/CustomQuoteSection';
-import GiftingTestimonials from '@/Components/gifting/GiftingTestimonials';
+import Testimonials from '@/Components/Testimonials';
 import '../../scss/pages/_contact.scss';
 import '../../scss/pages/_gifting.scss';
 
@@ -75,7 +75,7 @@ export default function Gifting({ auth }) {
                 <CustomQuoteSection />
 
                 {/* Section H: Customer Testimonials */}
-                <GiftingTestimonials />
+                <Testimonials />
             </main>
 
             {/* Existing Global Footer (Includes Section I & J) */}

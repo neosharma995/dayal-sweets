@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from '@inertiajs/react';
 import ProductCard from '../ProductCard';
+import Testimonials from '../Testimonials';
+import Outlets from '../Outlets';
+import Franchise from '../Franchise';
 
 const trustItems = [
     ['SINCE 1962', '60+ Years of Tradition', 'Frame-34.svg'],
@@ -448,14 +451,6 @@ const videos = [
     ['Slow Cooking Tradition', 'Traditional wood-fire methods since 1952.'],
 ];
 
-const outlets = [
-    { name: 'Amb', phone: '+91 80627 57395', image: '/uploads/2026/08/Amb-Outlet.png', map: 'https://www.google.com/maps/search/?api=1&query=Dayal+Sweets+Amb' },
-    { name: 'Hamirpur', address: 'Dayal Sweets- Gandhi Chowk, NH-70, Pratap Nagar, Hamirpur, Himachal Pradesh 177005', phone: '+91 80627 57395', image: '/uploads/2026/08/Hamirpur-Outlet.png', map: 'https://maps.app.goo.gl/NP2CS4WAhi5xYh546' },
-    { name: 'Una', address: 'Dayal Sweets-Nangal Road, Una, Durga Colony, Himachal Pradesh 174303', phone: '+91 80627 57395', image: '/uploads/2026/07/About-Outlet.png', map: 'https://maps.app.goo.gl/NWcR3Mdg264m6SnY7' },
-    { name: 'Una (Bus Stand)', address: 'Dayal Sweets- Una - Hamirpur Rd, opp. Bus Stand, Una, Himachal Pradesh 174303', phone: '+91 80627 57395', image: '/uploads/2026/08/Nangal-Road-Una-Outlet.png', map: 'https://maps.app.goo.gl/etQYvcQMNKH1KekE8' },
-    { name: 'Palampur', image: '/uploads/2026/09/palampoor-stor.png', comingSoon: true },
-];
-
 function SectionHeading({ eyebrow, children }) {
     return <header className="dayal-home-section-heading"><p>{eyebrow}</p><h2>{children}</h2></header>;
 }
@@ -542,14 +537,6 @@ function VideoGallery() {
     return <section className="dayal-home-video"><div className="dayal-home-video-inner"><SectionHeading eyebrow="Watch the Making">The Art Behind<br /><span>Every Sweet Bite</span></SectionHeading><p className="dayal-home-section-description">From selecting the finest ingredients to handcrafted preparation and slow cooking, witness the journey that makes every Dayal sweet truly special.</p></div>
         <div className="dayal-home-video-slider" ref={slider}>{videos.map(([title, description], index) => <article className="dayal-home-video-card" key={title}><video src="/uploads/2026/07/dayal-sweets-showcase.mp4" muted loop playsInline preload="metadata" onClick={() => toggle(index)} /><button type="button" className={playing === index ? 'is-playing' : ''} aria-label={`${playing === index ? 'Pause' : 'Play'} ${title}`} onClick={() => toggle(index)}>▶</button><div><h3>{title}</h3><p>{description}</p></div></article>)}</div><div className="dayal-home-video-scroll"><span /></div>
     </section>;
-}
-
-function CustomerReviews() {
-    return <section className="dayal-home-reviews"><img className="dayal-home-reviews-mascot" src="/uploads/2026/08/Halwai.png" alt="" /><div className="dayal-home-reviews-inner"><header><SectionHeading eyebrow="What They Say">Loved By <span>Thousands</span></SectionHeading><div className="dayal-home-google-rating"><strong>4.9</strong><img src="/uploads/2026/09/google-logo.png" alt="Google" /><span>★★★★★</span><small>Based on 3,200+ reviews</small></div></header><div className="dayal-home-review-layout"><article className="dayal-home-review-feature"><img className="dayal-home-quote" src="/uploads/2026/07/quote-up.png" alt="" /><img className="dayal-home-review-google" src="/uploads/2026/09/google-logo.png" alt="Google" /><blockquote>Dayal Sweets made our wedding reception extraordinary. The custom mithai trays were not only beautiful but absolutely divine in taste. Every guest complimented the sweets — we couldn't have asked for better.</blockquote><footer><strong>Ananya Sharma</strong><span>Una, HP</span><b>★★★★★</b></footer></article><div className="dayal-home-review-side">{[['Ananya Sharma', 'Wedding', 'Dayal Sweets made our wedding reception extraordinary. The custom mithai trays were not only beautiful but absolutely divine in taste.'], ['Priya Mehta', 'Regular Customer', 'The Kaju Katli is in a league of its own. I’ve tried mithai from across Himachal but nothing comes close to Dayal’s.'], ['Rajesh Verma', 'Corporate Gifting', 'We ordered corporate Diwali hampers for 200 employees. The presentation was impeccable, delivery was on time.']].map(([name, category, quote]) => <article key={name}><strong>{name}</strong><small>{category}</small><p>{quote}</p></article>)}</div></div></div></section>;
-}
-
-function PremiumOutlets() {
-    return <section className="dayal-home-outlets"><div className="dayal-home-outlets-inner"><SectionHeading eyebrow="View Our Stores">Premium <span>Outlets</span></SectionHeading><p className="dayal-home-section-description">Visit our premium outlets across Himachal Pradesh and experience the authentic taste<br />of tradition, craftsmanship, and celebration.</p><div className="dayal-home-outlet-grid">{outlets.map((outlet) => <article className="dayal-home-outlet-card" key={outlet.name}><img src={outlet.image} alt={`${outlet.name} Dayal Sweets outlet`} loading="lazy" />{outlet.comingSoon ? <div className="dayal-home-outlet-info"><h3>{outlet.name}</h3><em>Opening Soon</em><p>Expected Opening<br /><strong>Coming Soon</strong></p><button type="button">Notify Me</button></div> : <div className="dayal-home-outlet-info"><h3>{outlet.name}</h3>{outlet.address && <p>{outlet.address}</p>}<p>{outlet.phone}</p><a href={outlet.map} target="_blank" rel="noreferrer">View Map ↗</a></div>}</article>)}</div><div className="dayal-home-franchise"><img src="/uploads/2026/07/Frame-51-1-1.png" alt="" /><div><small>Franchise Opportunities</small><h3>Own A Premium <span>Dayal Sweets Outlet</span></h3><p>With 60+ years of trust, premium products, and a loyal customer base, Dayal Sweets offers the perfect opportunity to build a successful business in your city.</p></div><a href="tel:+919876543210">Interested in Franchise<br /><strong>+91 98765 43210</strong></a><a href="https://wa.me/919876543210">WhatsApp us<br /><strong>+91 98765 43210</strong></a><Link className="dayal-home-franchise-button" href="/franchise">Fill Your Details</Link></div></div></section>;
 }
 
 function LaunchBanners() {
@@ -708,8 +695,9 @@ export default function HomeSections() {
             </section>
             <SpecialServices />
             <VideoGallery />
-            <CustomerReviews />
-            <PremiumOutlets />
+            <Testimonials />
+            <Outlets />
+            <Franchise />
         </div>
     );
 }

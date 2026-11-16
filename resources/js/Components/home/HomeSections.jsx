@@ -234,31 +234,46 @@ export function HeroCommitments() {
 const launchBanners = [
     {
         id: 'blue-bottle',
-        eyebrow: 'New Arrival',
+        tag: 'New Arrival',
+        tagClass: 'dayal-home-launch-tag-bottle',
         title: 'Blue Bottle',
         subtitle: 'Pure Himalayan Drinking Water',
         description: 'Naturally purified and enriched with essential minerals for a refreshing and healthy lifestyle.',
-        points: ['Available in 500ml & 1L', 'Chilled & Ready to Drink', 'Just at ₹30', 'Pure & safe ingredients', 'Fresh From Himalayas', 'No Added Preservatives', 'Trusted Quality'],
-        background: '/uploads/2026/08/Image-2-e1787054923923.png',
-        product: '/uploads/2026/09/a351fcd017b6d21208fd17488591d4da0a6e675b-e1789536890762.png',
-        mobileProduct: '/uploads/2026/07/image-87-1.avif',
-        mobileBackground: '/uploads/2026/08/Image-2-e1787054923923.png',
-        button: 'Shop Now',
-        url: '/shop',
+        desktopProduct: '/uploads/2026/09/a351fcd017b6d21208fd17488591d4da0a6e675b-e1789536890762.png',
+        mobileProduct: '/uploads/2026/07/image-216.avif',
+        bulletPoints: [
+            'Available in 500ml & 1L',
+            'Chilled & Ready to Drink',
+        ],
+        features: [
+            { icon: '/uploads/2026/07/Frame-86.svg', title: 'Pure & safe\ningredients' },
+            { icon: '/uploads/2026/07/Frame-88.svg', title: 'Fresh From\nHimalayas' },
+            { icon: '/uploads/2026/07/Frame-89.svg', title: 'No Added \nPreservatives' },
+            { icon: '/uploads/2026/07/Frame-90.svg', title: 'Trusted \nQuality' },
+        ],
+        buttonText: 'Shop Now',
+        buttonUrl: '/shop',
+        outletText: 'Available at all outlets',
     },
     {
         id: 'blueberry-cake',
-        eyebrow: 'New Arrival',
+        tag: 'Premium Cake',
+        tagClass: 'dayal-home-launch-tag-cake',
         title: 'Blueberry Cake',
         subtitle: 'Crafted For Every Celebration',
         description: 'A rich blend of creamy cheesecake and handpicked blueberries, finished with a smooth, indulgent texture.',
-        points: ['Real Blueberries', 'Soft & Rich Cream', 'No Added Preservatives', 'Trusted Quality'],
-        background: '/uploads/2026/08/Image-3-e1787054985167.png',
-        product: '/uploads/2026/09/318d6fa899e1eae6f78c3e1dfe6897110110cec2-e1789538227876.png',
+        desktopProduct: '/uploads/2026/09/318d6fa899e1eae6f78c3e1dfe6897110110cec2-e1789538227876.png',
         mobileProduct: '/uploads/2026/09/cake-mobile.png',
-        mobileBackground: '/uploads/2026/09/cake-image.png',
-        button: 'Order Now',
-        url: '/shop',
+        bulletPoints: null,
+        features: [
+            { icon: '/uploads/2026/07/Frame-86-1.svg', title: 'Real \nBlueberries' },
+            { icon: '/uploads/2026/07/Frame-88-1.svg', title: 'Soft & Rich\nCream' },
+            { icon: '/uploads/2026/07/Frame-89-1.svg', title: 'No Added \nPreservatives' },
+            { icon: '/uploads/2026/07/Frame-90-1.svg', title: 'Trusted \nQuality' },
+        ],
+        buttonText: 'Order Now',
+        buttonUrl: '/shop',
+        outletText: null,
     },
 ];
 
@@ -359,32 +374,115 @@ function PremiumOutlets() {
 
 function LaunchBanners() {
     return (
-        <section className="dayal-home-launch" aria-label="New products">
+        <section className="dayal-home-launch" aria-label="Our New Launch">
+            <img
+                className="dayal-home-launch-decor"
+                src="/uploads/2026/07/image-87-1.avif"
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+            />
             <div className="dayal-home-launch-inner">
-                <header className="dayal-home-section-heading dayal-home-launch-heading">
-                    <p>New Products</p>
-                    <h2>Our New <span>Launch</span></h2>
+                <header className="dayal-home-launch-header">
+                    <div className="dayal-home-launch-eyebrow-wrap">
+                        <span className="dayal-home-launch-divider" aria-hidden="true" />
+                        <p className="dayal-home-launch-eyebrow">New Products</p>
+                        <span className="dayal-home-launch-divider" aria-hidden="true" />
+                    </div>
+                    <h2 className="dayal-home-launch-title">
+                        Our New <span className="dayal-home-launch-accent">Launch</span>
+                    </h2>
                 </header>
                 <div className="dayal-home-launch-grid">
                     {launchBanners.map((banner) => (
-                        <article className={`dayal-home-launch-card dayal-home-launch-card-${banner.id}`} key={banner.id}>
-                            <picture className="dayal-home-launch-background">
-                                <source media="(max-width: 767px)" srcSet={banner.mobileBackground} />
-                                <img src={banner.background} alt="" />
-                            </picture>
-                            <div className="dayal-home-launch-copy">
-                                <p className="dayal-home-launch-eyebrow">{banner.eyebrow}</p>
-                                <h3>{banner.title}</h3>
-                                <h4>{banner.subtitle}</h4>
-                                <img className="dayal-home-launch-divider" src="/uploads/2026/07/Frame-99.png" alt="" />
+                        <article
+                            className={`dayal-home-launch-card dayal-home-launch-card-${banner.id}`}
+                            key={banner.id}
+                        >
+                            <div className="dayal-home-launch-card-content">
+                                <span className={`dayal-home-launch-tag ${banner.tagClass}`}>
+                                    {banner.tag}
+                                </span>
+                                <div className="dayal-home-launch-mobile-image">
+                                    <img src={banner.mobileProduct} alt={banner.title} loading="lazy" />
+                                </div>
+                                <h3 className="dayal-home-launch-product-title">{banner.title}</h3>
+                                <h4 className="dayal-home-launch-product-subtitle">{banner.subtitle}</h4>
+                                <img
+                                    className="dayal-home-launch-frame-divider"
+                                    src="/uploads/2026/07/Frame-99.png"
+                                    alt=""
+                                    aria-hidden="true"
+                                />
                                 <p className="dayal-home-launch-description">{banner.description}</p>
-                                <ul>{banner.points.map((point) => <li key={point}>{point}</li>)}</ul>
-                                <a href={banner.url}>{banner.button}<span aria-hidden="true">→</span></a>
+
+                                {banner.bulletPoints && (
+                                    <ul className="dayal-home-launch-bullet-list">
+                                        {banner.bulletPoints.map((point, idx) => (
+                                            <li key={idx}>
+                                                <img
+                                                    src="/uploads/2026/07/Rectangle-5.svg"
+                                                    alt=""
+                                                    aria-hidden="true"
+                                                />
+                                                <span dangerouslySetInnerHTML={{ __html: point }} />
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+
+                                <div className="dayal-home-launch-features">
+                                    {banner.features.map((feat, idx) => (
+                                        <div className="dayal-home-launch-feature-group" key={idx}>
+                                            {idx > 0 && (
+                                                <img
+                                                    className="dayal-home-launch-feature-sep"
+                                                    src="/uploads/2026/07/Line-12.png"
+                                                    alt=""
+                                                    aria-hidden="true"
+                                                />
+                                            )}
+                                            <div className="dayal-home-launch-feature-item">
+                                                <img
+                                                    className="dayal-home-launch-feature-icon"
+                                                    src={feat.icon}
+                                                    alt=""
+                                                    aria-hidden="true"
+                                                />
+                                                <span className="dayal-home-launch-feature-text">
+                                                    {feat.title}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="dayal-home-launch-actions">
+                                    <a className="dayal-home-launch-btn-primary" href={banner.buttonUrl}>
+                                        <span>{banner.buttonText}</span>
+                                        <svg
+                                            aria-hidden="true"
+                                            viewBox="0 0 448 512"
+                                            className="dayal-home-launch-btn-arrow"
+                                        >
+                                            <path d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z" />
+                                        </svg>
+                                    </a>
+                                    {banner.outletText && (
+                                        <span className="dayal-home-launch-btn-outlet">
+                                            {banner.outletText}
+                                        </span>
+                                    )}
+                                </div>
                             </div>
-                            <picture className="dayal-home-launch-product">
-                                <source media="(max-width: 767px)" srcSet={banner.mobileProduct} />
-                                <img src={banner.product} alt={banner.title} />
-                            </picture>
+
+                            <div className="dayal-home-launch-desktop-image">
+                                <img
+                                    src={banner.desktopProduct}
+                                    alt={banner.title}
+                                    loading="lazy"
+                                />
+                            </div>
                         </article>
                     ))}
                 </div>

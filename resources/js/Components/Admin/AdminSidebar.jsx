@@ -1,9 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { StoreIcon, BoxIcon, UserIcon, ShieldCheckIcon, LogOutIcon } from '@/Components/Icons';
 
 export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLogout }) {
     const { auth } = usePage().props;
+
+    const isProductRouteActive = Boolean(
+        route().current('admin.products.*') ||
+        route().current('admin.categories.*') ||
+        route().current('admin.seasonal-mithais.*') ||
+        route().current('admin.occasions.*') ||
+        route().current('admin.diet-preferences.*') ||
+        route().current('admin.product-tags.*') ||
+        route().current('admin.attributes.*')
+    );
+
+    const [productsOpen, setProductsOpen] = useState(isProductRouteActive);
+
+    useEffect(() => {
+        if (isProductRouteActive) {
+            setProductsOpen(true);
+        }
+    }, [isProductRouteActive]);
 
     return (
         <>
@@ -46,73 +64,102 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
                             <span>Store Dashboard</span>
                         </Link>
 
-                        <Link
-                            href={route('admin.products.index')}
-                            className={`dayal-sidebar-link ${route().current('admin.products.*') ? 'active' : ''}`}
-                        >
-                            <BoxIcon width="18" height="18" />
-                            <span>Products</span>
-                        </Link>
+                        {/* Products Accordion / Nested Navigation */}
+                        <div className="dayal-sidebar-dropdown-group">
+                            <div
+                                onClick={() => setProductsOpen((prev) => !prev)}
+                                className={`dayal-sidebar-link ${isProductRouteActive ? 'parent-active' : ''}`}
+                                style={{ cursor: 'pointer', justifyContent: 'space-between', userSelect: 'none' }}
+                                title="Click to toggle products menu"
+                            >
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                    <BoxIcon width="18" height="18" />
+                                    <span>Products</span>
+                                </div>
 
-                        <Link
-                            href={route('admin.categories.index')}
-                            className={`dayal-sidebar-link ${route().current('admin.categories.*') ? 'active' : ''}`}
-                        >
-                            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                            </svg>
-                            <span>Product Categories</span>
-                        </Link>
+                                <svg
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    style={{
+                                        transform: productsOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                                        transition: 'transform 0.2s ease',
+                                    }}
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
 
-                        <Link
-                            href={route('admin.seasonal-mithais.index')}
-                            className={`dayal-sidebar-link ${route().current('admin.seasonal-mithais.*') ? 'active' : ''}`}
-                        >
-                            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <span>Seasonal Mithai Categories</span>
-                        </Link>
+                            {productsOpen && (
+                                <div className="dayal-sidebar-submenu">
+                                    <Link
+                                        href={route('admin.products.index')}
+                                        className={`dayal-sidebar-sublink ${route().current('admin.products.index') || route().current('admin.products.show') ? 'active' : ''}`}
+                                    >
+                                        <span className="dayal-sublink-dot" />
+                                        <span>All Products</span>
+                                    </Link>
 
-                        <Link
-                            href={route('admin.occasions.index')}
-                            className={`dayal-sidebar-link ${route().current('admin.occasions.*') ? 'active' : ''}`}
-                        >
-                            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
-                            </svg>
-                            <span>Occasion Categories</span>
-                        </Link>
+                                    <Link
+                                        href={route('admin.products.create')}
+                                        className={`dayal-sidebar-sublink ${route().current('admin.products.create') ? 'active' : ''}`}
+                                    >
+                                        <span className="dayal-sublink-dot" />
+                                        <span>Add New Product</span>
+                                    </Link>
 
-                        <Link
-                            href={route('admin.diet-preferences.index')}
-                            className={`dayal-sidebar-link ${route().current('admin.diet-preferences.*') ? 'active' : ''}`}
-                        >
-                            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <span>Diet Preference Categories</span>
-                        </Link>
+                                    <Link
+                                        href={route('admin.categories.index')}
+                                        className={`dayal-sidebar-sublink ${route().current('admin.categories.*') ? 'active' : ''}`}
+                                    >
+                                        <span className="dayal-sublink-dot" />
+                                        <span>Product Categories</span>
+                                    </Link>
 
-                        <Link
-                            href={route('admin.product-tags.index')}
-                            className={`dayal-sidebar-link ${route().current('admin.product-tags.*') ? 'active' : ''}`}
-                        >
-                            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                            </svg>
-                            <span>Product Tags</span>
-                        </Link>
+                                    <Link
+                                        href={route('admin.seasonal-mithais.index')}
+                                        className={`dayal-sidebar-sublink ${route().current('admin.seasonal-mithais.*') ? 'active' : ''}`}
+                                    >
+                                        <span className="dayal-sublink-dot" />
+                                        <span>Seasonal Mithai</span>
+                                    </Link>
 
-                        <Link
-                            href={route('admin.attributes.index')}
-                            className={`dayal-sidebar-link ${route().current('admin.attributes.*') ? 'active' : ''}`}
-                        >
-                            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                            </svg>
-                            <span>Product Attributes</span>
-                        </Link>
+                                    <Link
+                                        href={route('admin.occasions.index')}
+                                        className={`dayal-sidebar-sublink ${route().current('admin.occasions.*') ? 'active' : ''}`}
+                                    >
+                                        <span className="dayal-sublink-dot" />
+                                        <span>Occasion Categories</span>
+                                    </Link>
+
+                                    <Link
+                                        href={route('admin.diet-preferences.index')}
+                                        className={`dayal-sidebar-sublink ${route().current('admin.diet-preferences.*') ? 'active' : ''}`}
+                                    >
+                                        <span className="dayal-sublink-dot" />
+                                        <span>Diet Preference</span>
+                                    </Link>
+
+                                    <Link
+                                        href={route('admin.attributes.index')}
+                                        className={`dayal-sidebar-sublink ${route().current('admin.attributes.*') ? 'active' : ''}`}
+                                    >
+                                        <span className="dayal-sublink-dot" />
+                                        <span>Product Attributes</span>
+                                    </Link>
+
+                                    <Link
+                                        href={route('admin.product-tags.index')}
+                                        className={`dayal-sidebar-sublink ${route().current('admin.product-tags.*') ? 'active' : ''}`}
+                                    >
+                                        <span className="dayal-sublink-dot" />
+                                        <span>Product Tags</span>
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
 
                         <Link
                             href={route('admin.account')}

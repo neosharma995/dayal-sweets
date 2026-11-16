@@ -5,6 +5,10 @@ import { BoxIcon, TagIcon, AlertIcon } from '@/Components/Icons';
 export default function WooCommerceProductForm({
     initialData = {},
     categories = [],
+    seasonalMithais = [],
+    occasions = [],
+    dietPreferences = [],
+    tags = [],
     attributes = [],
     isEdit = false,
     product = null,
@@ -17,6 +21,14 @@ export default function WooCommerceProductForm({
     const [description, setDescription] = useState(initialData.product_description || '');
     const [shortDescription, setShortDescription] = useState(initialData.short_description || '');
     const [categoryId, setCategoryId] = useState(initialData.category_id || '');
+    const [seasonalMithaiId, setSeasonalMithaiId] = useState(initialData.seasonal_mithai_id || '');
+    const [occasionId, setOccasionId] = useState(initialData.occasion_id || '');
+    const [dietPreferenceId, setDietPreferenceId] = useState(initialData.diet_preference_id || '');
+    const [selectedTagIds, setSelectedTagIds] = useState(
+        Array.isArray(initialData.tag_ids) && initialData.tag_ids.length > 0
+            ? initialData.tag_ids.map(Number)
+            : (initialData.product_tag_id ? [Number(initialData.product_tag_id)] : [])
+    );
     const [regularPrice, setRegularPrice] = useState(initialData.product_price || '');
     const [salePrice, setSalePrice] = useState(initialData.product_selling_price || '');
     const [stockQty, setStockQty] = useState(initialData.product_qty ?? 1);
@@ -320,6 +332,13 @@ export default function WooCommerceProductForm({
         setNewGalleryPreviews(newGalleryPreviews.filter((_, i) => i !== index));
     };
 
+    const handleTagToggle = (tagId) => {
+        const idNum = Number(tagId);
+        setSelectedTagIds((prev) =>
+            prev.includes(idNum) ? prev.filter((id) => id !== idNum) : [...prev, idNum]
+        );
+    };
+
     // Form Submission
     const handleFormSubmit = (e) => {
         e.preventDefault();
@@ -341,6 +360,11 @@ export default function WooCommerceProductForm({
 
         const payload = {
             category_id: categoryId || null,
+            seasonal_mithai_id: seasonalMithaiId || null,
+            occasion_id: occasionId || null,
+            diet_preference_id: dietPreferenceId || null,
+            product_tag_id: selectedTagIds.length > 0 ? selectedTagIds[0] : null,
+            tag_ids: selectedTagIds,
             product_name: title,
             product_description: description,
             product_price: finalRegularPrice,
@@ -1310,6 +1334,27 @@ export default function WooCommerceProductForm({
                         </div>
                         <div className="dayal-wc-meta-body">
                             <div style={{ maxHeight: '200px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                <label
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem',
+                                        fontSize: '0.8125rem',
+                                        color: categoryId ? '#64748B' : '#0F172A',
+                                        cursor: 'pointer',
+                                        padding: '0.2rem 0',
+                                        fontWeight: categoryId ? 400 : 600,
+                                    }}
+                                >
+                                    <input
+                                        type="radio"
+                                        name="product_category"
+                                        checked={!categoryId}
+                                        onChange={() => setCategoryId('')}
+                                        style={{ accentColor: '#B88E4B' }}
+                                    />
+                                    <span>None</span>
+                                </label>
                                 {categories.map((c) => (
                                     <label
                                         key={c.id}
@@ -1333,6 +1378,251 @@ export default function WooCommerceProductForm({
                                         <span>{c.category_name}</span>
                                     </label>
                                 ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Meta Box: Seasonal Mithai */}
+                    <div className="dayal-wc-meta-box">
+                        <div className="dayal-wc-meta-header">
+                            <span>Seasonal Mithai</span>
+                            <Link
+                                href={route('admin.seasonal-mithais.create')}
+                                target="_blank"
+                                style={{ fontSize: '0.75rem', color: '#B88E4B', textDecoration: 'none', fontWeight: 600 }}
+                            >
+                                + Add new
+                            </Link>
+                        </div>
+                        <div className="dayal-wc-meta-body">
+                            <div style={{ maxHeight: '180px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+                                <label
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem',
+                                        fontSize: '0.8125rem',
+                                        color: seasonalMithaiId ? '#64748B' : '#0F172A',
+                                        cursor: 'pointer',
+                                        padding: '0.2rem 0',
+                                        fontWeight: seasonalMithaiId ? 400 : 600,
+                                    }}
+                                >
+                                    <input
+                                        type="radio"
+                                        name="seasonal_mithai"
+                                        checked={!seasonalMithaiId}
+                                        onChange={() => setSeasonalMithaiId('')}
+                                        style={{ accentColor: '#B88E4B' }}
+                                    />
+                                    <span>None (Regular / All-Season)</span>
+                                </label>
+                                {seasonalMithais.map((s) => (
+                                    <label
+                                        key={s.id}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.5rem',
+                                            fontSize: '0.8125rem',
+                                            color: '#0F172A',
+                                            cursor: 'pointer',
+                                            padding: '0.2rem 0',
+                                        }}
+                                    >
+                                        <input
+                                            type="radio"
+                                            name="seasonal_mithai"
+                                            checked={String(seasonalMithaiId) === String(s.id)}
+                                            onChange={() => setSeasonalMithaiId(s.id)}
+                                            style={{ accentColor: '#B88E4B' }}
+                                        />
+                                        <span>{s.category_name}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Meta Box: Occasion */}
+                    <div className="dayal-wc-meta-box">
+                        <div className="dayal-wc-meta-header">
+                            <span>Occasion</span>
+                            <Link
+                                href={route('admin.occasions.create')}
+                                target="_blank"
+                                style={{ fontSize: '0.75rem', color: '#B88E4B', textDecoration: 'none', fontWeight: 600 }}
+                            >
+                                + Add new
+                            </Link>
+                        </div>
+                        <div className="dayal-wc-meta-body">
+                            <div style={{ maxHeight: '180px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+                                <label
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem',
+                                        fontSize: '0.8125rem',
+                                        color: occasionId ? '#64748B' : '#0F172A',
+                                        cursor: 'pointer',
+                                        padding: '0.2rem 0',
+                                        fontWeight: occasionId ? 400 : 600,
+                                    }}
+                                >
+                                    <input
+                                        type="radio"
+                                        name="product_occasion"
+                                        checked={!occasionId}
+                                        onChange={() => setOccasionId('')}
+                                        style={{ accentColor: '#B88E4B' }}
+                                    />
+                                    <span>None (Any Occasion)</span>
+                                </label>
+                                {occasions.map((o) => (
+                                    <label
+                                        key={o.id}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.5rem',
+                                            fontSize: '0.8125rem',
+                                            color: '#0F172A',
+                                            cursor: 'pointer',
+                                            padding: '0.2rem 0',
+                                        }}
+                                    >
+                                        <input
+                                            type="radio"
+                                            name="product_occasion"
+                                            checked={String(occasionId) === String(o.id)}
+                                            onChange={() => setOccasionId(o.id)}
+                                            style={{ accentColor: '#B88E4B' }}
+                                        />
+                                        <span>{o.category_name}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Meta Box: Diet Preference */}
+                    <div className="dayal-wc-meta-box">
+                        <div className="dayal-wc-meta-header">
+                            <span>Diet Preference</span>
+                            <Link
+                                href={route('admin.diet-preferences.create')}
+                                target="_blank"
+                                style={{ fontSize: '0.75rem', color: '#B88E4B', textDecoration: 'none', fontWeight: 600 }}
+                            >
+                                + Add new
+                            </Link>
+                        </div>
+                        <div className="dayal-wc-meta-body">
+                            <div style={{ maxHeight: '180px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+                                <label
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem',
+                                        fontSize: '0.8125rem',
+                                        color: dietPreferenceId ? '#64748B' : '#0F172A',
+                                        cursor: 'pointer',
+                                        padding: '0.2rem 0',
+                                        fontWeight: dietPreferenceId ? 400 : 600,
+                                    }}
+                                >
+                                    <input
+                                        type="radio"
+                                        name="product_diet_pref"
+                                        checked={!dietPreferenceId}
+                                        onChange={() => setDietPreferenceId('')}
+                                        style={{ accentColor: '#B88E4B' }}
+                                    />
+                                    <span>Standard (Regular / Traditional)</span>
+                                </label>
+                                {dietPreferences.map((d) => (
+                                    <label
+                                        key={d.id}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.5rem',
+                                            fontSize: '0.8125rem',
+                                            color: '#0F172A',
+                                            cursor: 'pointer',
+                                            padding: '0.2rem 0',
+                                        }}
+                                    >
+                                        <input
+                                            type="radio"
+                                            name="product_diet_pref"
+                                            checked={String(dietPreferenceId) === String(d.id)}
+                                            onChange={() => setDietPreferenceId(d.id)}
+                                            style={{ accentColor: '#B88E4B' }}
+                                        />
+                                        <span>{d.category_name}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Meta Box: Product Tags */}
+                    <div className="dayal-wc-meta-box">
+                        <div className="dayal-wc-meta-header">
+                            <span>Product Tags</span>
+                            <Link
+                                href={route('admin.product-tags.create')}
+                                target="_blank"
+                                style={{ fontSize: '0.75rem', color: '#B88E4B', textDecoration: 'none', fontWeight: 600 }}
+                            >
+                                + Add new
+                            </Link>
+                        </div>
+                        <div className="dayal-wc-meta-body">
+                            <div style={{ maxHeight: '180px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+                                {tags.length === 0 ? (
+                                    <span style={{ fontSize: '0.8125rem', color: '#94A3B8' }}>No tags available.</span>
+                                ) : (
+                                    tags.map((t) => {
+                                        const isChecked = selectedTagIds.includes(t.id);
+                                        return (
+                                            <label
+                                                key={t.id}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between',
+                                                    gap: '0.5rem',
+                                                    fontSize: '0.8125rem',
+                                                    color: '#0F172A',
+                                                    cursor: 'pointer',
+                                                    padding: '0.25rem 0.4rem',
+                                                    borderRadius: '0.25rem',
+                                                    background: isChecked ? '#FDF8F0' : 'transparent',
+                                                }}
+                                            >
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={isChecked}
+                                                        onChange={() => handleTagToggle(t.id)}
+                                                        style={{ accentColor: '#B88E4B' }}
+                                                    />
+                                                    <span style={{ fontWeight: isChecked ? 600 : 400 }}>
+                                                        {t.product_tag_name}
+                                                    </span>
+                                                </div>
+                                                {isChecked && (
+                                                    <span style={{ fontSize: '0.7rem', color: '#8C6226', fontWeight: 600 }}>
+                                                        Selected
+                                                    </span>
+                                                )}
+                                            </label>
+                                        );
+                                    })
+                                )}
                             </div>
                         </div>
                     </div>

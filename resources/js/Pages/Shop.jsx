@@ -4,6 +4,7 @@ import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import ProductCard from '@/Components/ProductCard';
 import ContactHero from '@/Components/contact/ContactHero';
+import { useCart } from '@/Context/CartContext';
 import '../../scss/pages/_contact.scss';
 
 // 12 Catalog Products matching exact live store items
@@ -22,7 +23,10 @@ const initialShopProducts = [
         ratingCount: 16,
         tags: ['Office', 'Tea Time'],
         diet: 'Vegetarian',
-        variations: [],
+        variations: [
+            { label: 'Regular (Serves 2-3)', price: 150 },
+            { label: 'Large (Serves 5-6)', price: 280 },
+        ],
     },
     {
         id: 8556,
@@ -33,12 +37,15 @@ const initialShopProducts = [
         badge: 'COMBO',
         description: 'Celebrate your special day with our Engagement Combo, thoughtfully curated with rich traditional sweets and savouries.',
         image: '/uploads/2026/09/Engagement-Combo.png',
-        price: 450,
+        price: 250,
         rating: 5,
         ratingCount: 22,
         tags: ['Wedding Collection', 'Celebration'],
         diet: 'Vegetarian',
-        variations: [],
+        variations: [
+            { label: 'Standard Box', price: 250 },
+            { label: 'Royal Hamper', price: 450 },
+        ],
     },
     {
         id: 8554,
@@ -54,7 +61,10 @@ const initialShopProducts = [
         ratingCount: 30,
         tags: ['Birthday', 'Celebration'],
         diet: 'Vegetarian',
-        variations: [],
+        variations: [
+            { label: 'Standard (1 Box)', price: 200 },
+            { label: 'Deluxe (2 Boxes)', price: 380 },
+        ],
     },
     {
         id: 8553,
@@ -243,29 +253,31 @@ const categoryList = [
     { name: 'Sweets', slug: 'sweets', count: 42 },
 ];
 
-const seasonalTags = [
-    'Raksha Bandhan',
+const defaultSeasonalTags = [
+    'Baisakhi',
+    'Christmas',
     'Diwali',
+    'Eid',
     'Holi',
-    'Winter Specials',
-    'Summer Specials',
-    'Mango Specials',
     'Navratri',
+    'New Year',
+    'Raksha Bandhan',
+    'Summer Specials',
     'Wedding Collection',
+    'Winter Specials',
 ];
 
-const occasionOptions = [
+const defaultOccasionOptions = [
     'Birthday',
     'Wedding',
-    'Festival',
-    'Parties',
-    'Family Gathering',
+    'Anniversary',
     'Corporate Gifting',
+    'Festival',
+    'Family Celebration',
+    'Housewarming',
 ];
 
-const dietOptions = [
-    'Vegetarian',
-    'Eggless',
+const defaultDietOptions = [
     'Sugar Free',
     'Low Sugar',
     'Jain Friendly',
@@ -300,7 +312,38 @@ const qrSteps = [
     },
 ];
 
-export default function Shop({ auth }) {
+export default function Shop({
+    auth,
+    products = [],
+    categories = [],
+    seasonalTags: propSeasonalTags = [],
+    occasionTags: propOccasionTags = [],
+    dietTags: propDietTags = [],
+}) {
+    const { addToCart } = useCart();
+
+    // Dynamic / Default Tag options from separate category tables
+    const seasonalTags = useMemo(() => {
+        if (Array.isArray(propSeasonalTags) && propSeasonalTags.length > 0) {
+            return propSeasonalTags.map((t) => (typeof t === 'string' ? t : t.name));
+        }
+        return defaultSeasonalTags;
+    }, [propSeasonalTags]);
+
+    const occasionOptions = useMemo(() => {
+        if (Array.isArray(propOccasionTags) && propOccasionTags.length > 0) {
+            return propOccasionTags.map((t) => (typeof t === 'string' ? t : t.name));
+        }
+        return defaultOccasionOptions;
+    }, [propOccasionTags]);
+
+    const dietOptions = useMemo(() => {
+        if (Array.isArray(propDietTags) && propDietTags.length > 0) {
+            return propDietTags.map((t) => (typeof t === 'string' ? t : t.name));
+        }
+        return defaultDietOptions;
+    }, [propDietTags]);
+
     // Search & Filter States
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCats, setSelectedCats] = useState([]);
@@ -386,9 +429,31 @@ export default function Shop({ auth }) {
         }
     };
 
+    const sourceProducts = useMemo(() => {
+        return Array.isArray(products) && products.length > 0 ? products : initialShopProducts;
+    }, [products]);
+
+    const displayCategories = useMemo(() => {
+        if (Array.isArray(categories) && categories.length > 0) {
+            return categories.map((cat) => {
+                const count = sourceProducts.filter((p) => {
+                    const pSlug = (p.categorySlug || '').toLowerCase();
+                    const cSlug = (cat.slug || '').toLowerCase();
+                    return pSlug === cSlug || pSlug.startsWith(cSlug) || cSlug.startsWith(pSlug);
+                }).length;
+
+                return {
+                    ...cat,
+                    count: count > 0 ? count : (cat.count || 0),
+                };
+            });
+        }
+        return categoryList;
+    }, [categories, sourceProducts]);
+
     // Filter Logic
     const filteredProducts = useMemo(() => {
-        return initialShopProducts.filter((product) => {
+        return sourceProducts.filter((product) => {
             // Search query filter
             if (searchQuery.trim()) {
                 const query = searchQuery.toLowerCase();
@@ -400,23 +465,34 @@ export default function Shop({ auth }) {
 
             // Categories filter (multi-select)
             if (selectedCats.length > 0) {
-                if (!selectedCats.includes(product.categorySlug)) return false;
+                const matchCat = selectedCats.some((c) => {
+                    const normalized = c.toLowerCase();
+                    const pCatSlug = (product.categorySlug || '').toLowerCase();
+                    return pCatSlug === normalized || pCatSlug.startsWith(normalized) || normalized.startsWith(pCatSlug);
+                });
+                if (!matchCat) return false;
             }
 
-            // Seasonal tag filter
+            // Seasonal category filter
             if (selectedTag) {
-                if (!product.tags || !product.tags.includes(selectedTag)) return false;
+                const matchSeasonal = product.seasonal === selectedTag ||
+                    product.seasonalSlug === selectedTag.toLowerCase().replace(/\s+/g, '-') ||
+                    (product.tags && product.tags.includes(selectedTag));
+                if (!matchSeasonal) return false;
             }
 
-            // Occasion filter
+            // Occasion category filter
             if (selectedOccasions.length > 0) {
-                const hasOccasion = product.tags && product.tags.some((t) => selectedOccasions.includes(t));
-                if (!hasOccasion) return false;
+                const matchOccasion = selectedOccasions.includes(product.occasion) ||
+                    (product.tags && product.tags.some((t) => selectedOccasions.includes(t)));
+                if (!matchOccasion) return false;
             }
 
-            // Diet filter
+            // Diet Preference category filter
             if (selectedDiet.length > 0) {
-                if (!selectedDiet.includes(product.diet)) return false;
+                const matchDiet = selectedDiet.includes(product.diet) ||
+                    (product.tags && product.tags.some((t) => selectedDiet.includes(t)));
+                if (!matchDiet) return false;
             }
 
             // Rating filter
@@ -425,14 +501,34 @@ export default function Shop({ auth }) {
             }
 
             // Price filter
-            let effectivePrice = 0;
-            if (typeof product.price === 'number') {
-                effectivePrice = product.price;
-            } else if (typeof product.price === 'string') {
-                const num = parseFloat(product.price.replace(/[^0-9.]/g, ''));
-                effectivePrice = isNaN(num) ? 0 : num;
+            let effectiveMin = typeof product.min_price === 'number' ? product.min_price : null;
+            let effectiveMax = typeof product.max_price === 'number' ? product.max_price : null;
+
+            if (effectiveMin === null || effectiveMax === null) {
+                if (product.variations && product.variations.length > 0) {
+                    const prices = product.variations.map((v) => typeof v.price === 'number' ? v.price : parseFloat(String(v.price).replace(/[^0-9.]/g, ''))).filter((p) => !isNaN(p));
+                    if (prices.length > 0) {
+                        effectiveMin = Math.min(...prices);
+                        effectiveMax = Math.max(...prices);
+                    }
+                }
             }
-            if (effectivePrice < minPrice || effectivePrice > maxPrice) return false;
+
+            if (effectiveMin === null) {
+                let p = 0;
+                if (typeof product.price === 'number') {
+                    p = product.price;
+                } else if (typeof product.price === 'string') {
+                    const num = parseFloat(product.price.replace(/[^0-9.]/g, ''));
+                    p = isNaN(num) ? 0 : num;
+                }
+                effectiveMin = p;
+                effectiveMax = p;
+            }
+
+            // Item must overlap with the user's selected [minPrice, maxPrice] range
+            if (effectiveMax < minPrice) return false;
+            if (maxPrice < 5000 && effectiveMin > maxPrice) return false;
 
             return true;
         });
@@ -444,14 +540,14 @@ export default function Shop({ auth }) {
         switch (sortOption) {
             case 'price':
                 return list.sort((a, b) => {
-                    const priceA = typeof a.price === 'number' ? a.price : parseFloat(a.price.replace(/[^0-9.]/g, '')) || 0;
-                    const priceB = typeof b.price === 'number' ? b.price : parseFloat(b.price.replace(/[^0-9.]/g, '')) || 0;
+                    const priceA = typeof a.min_price === 'number' ? a.min_price : (typeof a.price === 'number' ? a.price : parseFloat(String(a.price).replace(/[^0-9.]/g, '')) || 0);
+                    const priceB = typeof b.min_price === 'number' ? b.min_price : (typeof b.price === 'number' ? b.price : parseFloat(String(b.price).replace(/[^0-9.]/g, '')) || 0);
                     return priceA - priceB;
                 });
             case 'price-desc':
                 return list.sort((a, b) => {
-                    const priceA = typeof a.price === 'number' ? a.price : parseFloat(a.price.replace(/[^0-9.]/g, '')) || 0;
-                    const priceB = typeof b.price === 'number' ? b.price : parseFloat(b.price.replace(/[^0-9.]/g, '')) || 0;
+                    const priceA = typeof a.max_price === 'number' ? a.max_price : (typeof a.price === 'number' ? a.price : parseFloat(String(a.price).replace(/[^0-9.]/g, '')) || 0);
+                    const priceB = typeof b.max_price === 'number' ? b.max_price : (typeof b.price === 'number' ? b.price : parseFloat(String(b.price).replace(/[^0-9.]/g, '')) || 0);
                     return priceB - priceA;
                 });
             case 'rating':
@@ -630,7 +726,7 @@ export default function Shop({ auth }) {
                         </div>
                         <div className={`dayal-shop-filter-content oto-filter-content ${collapsed.categories ? 'is-collapsed' : ''}`}>
                             <ul className="dayal-shop-cat-list oto-category-filter-list">
-                                {categoryList.map((cat) => (
+                                {displayCategories.map((cat) => (
                                     <li key={cat.slug} className="oto-cat-item">
                                         <label className="oto-filter-option oto-cat-checkbox-label">
                                             <input
@@ -892,14 +988,14 @@ export default function Shop({ auth }) {
                     {paginatedProducts.length > 0 ? (
                         <div className="dayal-products-grid dayal-shop-products-grid oto-products-grid-archive">
                             {paginatedProducts.map((product) => (
-                                <ProductCard key={product.id} product={product} />
+                                <ProductCard key={product.id} product={product} onAddToCart={addToCart} />
                             ))}
                         </div>
                     ) : (
                         <div className="dayal-shop-empty oto-no-products">
                             <h3>No Products Found</h3>
                             <p>Try clearing some filters or searching with a different term.</p>
-                            <button type="button" className="dayal-shop-apply-btn" onClick={handleClearAll} style={{ maxWidth: '200px', margin: '20px auto 0' }}>
+                            <button type="button" className="dayal-shop-apply-btn dayal-shop-empty-btn" onClick={handleClearAll}>
                                 Reset All Filters
                             </button>
                         </div>
@@ -978,7 +1074,7 @@ export default function Shop({ auth }) {
 
                     <div className="dayal-products-grid oto-products-grid-archive oto-latest-combo-products">
                         {curatedCombos.map((combo) => (
-                            <ProductCard key={combo.id} product={combo} />
+                            <ProductCard key={combo.id} product={combo} onAddToCart={addToCart} />
                         ))}
                     </div>
                 </div>

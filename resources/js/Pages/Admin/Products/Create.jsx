@@ -3,7 +3,14 @@ import { Head, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import WooCommerceProductForm from '@/Components/Admin/WooCommerceProductForm';
 
-export default function Create({ categories = [], attributes = [] }) {
+export default function Create({
+    categories = [],
+    seasonalMithais = [],
+    occasions = [],
+    dietPreferences = [],
+    tags = [],
+    attributes = [],
+}) {
     const [processing, setProcessing] = useState(false);
     const [errors, setErrors] = useState({});
 
@@ -27,6 +34,10 @@ export default function Create({ categories = [], attributes = [] }) {
             <div className="dayal-container" style={{ width: '100%', maxWidth: '100%', margin: 0 }}>
                 <WooCommerceProductForm
                     categories={categories}
+                    seasonalMithais={seasonalMithais}
+                    occasions={occasions}
+                    dietPreferences={dietPreferences}
+                    tags={tags}
                     attributes={attributes}
                     isEdit={false}
                     onSubmit={handleSubmit}

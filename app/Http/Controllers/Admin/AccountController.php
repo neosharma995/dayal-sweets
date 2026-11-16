@@ -3,14 +3,14 @@
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\Controller;
 
-use Inertia\Inertia;
-use Inertia\Response;
-use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\UpdatePasswordRequest;
 use App\Http\Requests\Account\UpdateProfileRequest;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class AccountController extends Controller
 {

@@ -3,22 +3,25 @@
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\Controller;
 
-use Inertia\Inertia;
-use Inertia\Response;
-use App\Models\Product;
-use App\Models\Category;
-use Illuminate\Http\Request;
-use App\Models\ProductAttribute;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\StoreProductRequest;
 use App\Http\Requests\Admin\Product\UpdateProductRequest;
-
+use App\Models\Category;
+use App\Models\DietPreference;
+use App\Models\Occasion;
+use App\Models\Product;
+use App\Models\ProductAttribute;
+use App\Models\ProductTag;
+use App\Models\SeasonalMithai;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class ProductController extends Controller
 {
@@ -27,7 +30,7 @@ class ProductController extends Controller
      */
     public function index(Request $request): Response|JsonResponse
     {
-        $query = Product::query()->with(['category', 'variations'])->latest('id');
+        $query = Product::query()->with(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'variations'])->latest('id');
 
         // Optional search filter by product name or description
         if ($request->filled('search')) {
@@ -62,6 +65,10 @@ class ProductController extends Controller
     {
         return Inertia::render('Admin/Products/Create', [
             'categories' => Category::orderBy('category_name')->get(['id', 'category_name']),
+            'seasonalMithais' => SeasonalMithai::orderBy('category_name')->get(['id', 'category_name']),
+            'occasions' => Occasion::orderBy('category_name')->get(['id', 'category_name']),
+            'dietPreferences' => DietPreference::orderBy('category_name')->get(['id', 'category_name']),
+            'tags' => ProductTag::orderBy('product_tag_name')->get(['id', 'product_tag_name']),
             'attributes' => ProductAttribute::with('values')->orderBy('name')->get(),
         ]);
     }
@@ -72,11 +79,15 @@ class ProductController extends Controller
     public function edit(Product|int|string $product): Response
     {
         $productModel = $product instanceof Product ? $product : Product::findOrFail($product);
-        $productModel->load(['category', 'variations.attributeValue.attribute']);
+        $productModel->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'variations.attributeValue.attribute']);
 
         return Inertia::render('Admin/Products/Edit', [
             'product' => $productModel,
             'categories' => Category::orderBy('category_name')->get(['id', 'category_name']),
+            'seasonalMithais' => SeasonalMithai::orderBy('category_name')->get(['id', 'category_name']),
+            'occasions' => Occasion::orderBy('category_name')->get(['id', 'category_name']),
+            'dietPreferences' => DietPreference::orderBy('category_name')->get(['id', 'category_name']),
+            'tags' => ProductTag::orderBy('product_tag_name')->get(['id', 'product_tag_name']),
             'attributes' => ProductAttribute::with('values')->orderBy('name')->get(),
         ]);
     }
@@ -87,7 +98,7 @@ class ProductController extends Controller
     public function show(Request $request, Product|int|string $product): Response|JsonResponse
     {
         $productModel = $product instanceof Product ? $product : Product::findOrFail($product);
-        $productModel->load(['category', 'variations.attributeValue.attribute']);
+        $productModel->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'variations.attributeValue.attribute']);
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -154,11 +165,24 @@ class ProductController extends Controller
         $variationsData = $data['variations'] ?? null;
         unset($data['variations']);
 
-        $createdProduct = DB::transaction(function () use ($data, $variationsData) {
+        $tagIds = $data['tag_ids'] ?? null;
+        unset($data['tag_ids']);
+
+        if (empty($data['product_tag_id']) && is_array($tagIds) && ! empty($tagIds)) {
+            $data['product_tag_id'] = $tagIds[0];
+        }
+
+        $createdProduct = DB::transaction(function () use ($data, $variationsData, $tagIds) {
             $product = Product::create($data);
 
             if (is_array($variationsData) && ! empty($variationsData)) {
                 $this->syncProductVariations($product, $variationsData);
+            }
+
+            if (is_array($tagIds)) {
+                $product->tags()->sync($tagIds);
+            } elseif (! empty($product->product_tag_id)) {
+                $product->tags()->sync([$product->product_tag_id]);
             }
 
             return $product;
@@ -168,7 +192,7 @@ class ProductController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Product created successfully.',
-                'data' => $createdProduct->load(['category', 'variations'])->fresh(),
+                'data' => $createdProduct->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'variations'])->fresh(),
             ], 201);
         }
 
@@ -229,11 +253,24 @@ class ProductController extends Controller
         $variationsData = $data['variations'] ?? null;
         unset($data['variations']);
 
-        DB::transaction(function () use ($productModel, $data, $variationsData) {
+        $tagIds = $data['tag_ids'] ?? null;
+        unset($data['tag_ids']);
+
+        if (empty($data['product_tag_id']) && is_array($tagIds) && ! empty($tagIds)) {
+            $data['product_tag_id'] = $tagIds[0];
+        }
+
+        DB::transaction(function () use ($productModel, $data, $variationsData, $tagIds) {
             $productModel->update($data);
 
             if (is_array($variationsData)) {
                 $this->syncProductVariations($productModel, $variationsData);
+            }
+
+            if (is_array($tagIds)) {
+                $productModel->tags()->sync($tagIds);
+            } elseif (! empty($productModel->product_tag_id)) {
+                $productModel->tags()->sync([$productModel->product_tag_id]);
             }
         });
 
@@ -241,7 +278,7 @@ class ProductController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Product updated successfully.',
-                'data' => $productModel->load(['category', 'variations'])->fresh(),
+                'data' => $productModel->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'variations'])->fresh(),
             ]);
         }
 

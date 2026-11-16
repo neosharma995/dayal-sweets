@@ -6,7 +6,6 @@ namespace Tests\Feature;
 
 use App\Enums\UserRole;
 use App\Models\ProductAttribute;
-use App\Models\ProductAttributeValue;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;

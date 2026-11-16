@@ -49,23 +49,11 @@ export default function Index({ products = [], filters = {} }) {
             <Head title="Products - Dayal Sweets Admin" />
 
             <div className="dayal-container" style={{ width: '100%', maxWidth: '100%', margin: 0 }}>
-                {/* Header Title & Action */}
+                {/* Header Title */}
                 <div className="dayal-admin-view-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', width: '100%' }}>
                     <div>
                         <h1>Products</h1>
-                        <p>Manage authentic mithai inventory, pricing, pack variations, and specifications.</p>
                     </div>
-
-                    <Link
-                        href={route('admin.products.create')}
-                        className="dayal-btn dayal-btn--primary"
-                        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
-                    >
-                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-                        </svg>
-                        <span>Add New Product</span>
-                    </Link>
                 </div>
 
                 {/* Metrics Grid */}

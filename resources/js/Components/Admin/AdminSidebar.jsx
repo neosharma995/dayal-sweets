@@ -47,6 +47,14 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar }) {
                         </Link>
 
                         <Link
+                            href={route('admin.products.index')}
+                            className={`dayal-sidebar-link ${route().current('admin.products.*') ? 'active' : ''}`}
+                        >
+                            <BoxIcon width="18" height="18" />
+                            <span>Products Catalog</span>
+                        </Link>
+
+                        <Link
                             href={route('admin.account')}
                             className={`dayal-sidebar-link ${route().current('admin.account') ? 'active' : ''}`}
                         >

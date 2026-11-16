@@ -1,16 +1,51 @@
 @use '../abstracts/storefront-variables' as *;
 
-html,
-body {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+// Custom Ultra-Thin 2px Scrollbar
+::-webkit-scrollbar {
+    width: 2px !important;
+    height: 2px !important;
 }
 
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-    display: none;
-    width: 0;
-    height: 0;
+::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: $ds-color-burgundy-button !important;
+    border-radius: 1px !important;
+
+    &:hover {
+        background: #5C1520 !important;
+    }
+}
+
+::-webkit-scrollbar-button {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+// Firefox thin scrollbar
+@supports (-moz-appearance: none) {
+    html {
+        scrollbar-width: thin;
+        scrollbar-color: $ds-color-burgundy-button transparent;
+    }
+}
+
+// Hide scrollbar on mobile
+@media (max-width: 767px) {
+    html,
+    body {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+
+    ::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
 }
 
 .dayal-site {

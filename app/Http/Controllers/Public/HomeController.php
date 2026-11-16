@@ -24,4 +24,15 @@ class HomeController extends Controller
             'phpVersion' => PHP_VERSION,
         ]);
     }
+
+    /**
+     * Display the Dayal Sweets Contact Us page.
+     */
+    public function contact(): Response
+    {
+        return Inertia::render('ContactUs', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+        ]);
+    }
 }

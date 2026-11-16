@@ -10,7 +10,7 @@ export default function FranchiseOutlets() {
     return (
         <div className="franchise-outlets-wrapper">
             <Outlets
-                eyebrow="— VIEW OUR STORES —"
+                eyebrow=" VIEW OUR STORES "
                 title="Premium"
                 highlightTitle="Outlets"
                 subtitle="Visit our premium outlets across Himachal Pradesh and experience the authentic taste of tradition, craftsmanship, and celebration."

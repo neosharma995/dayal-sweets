@@ -129,7 +129,13 @@ class CheckoutController extends Controller
 
     /**
      * Verify payment signature from Razorpay.
-     * ONLY upon valid payment signature verification, the Order is created in DB.
+     * 
+     * ARCHITECTURE: PAYMENT-FIRST
+     * 1. Order is NOT created upfront during cart or checkout init.
+     * 2. When the user completes payment on the Razorpay modal, this endpoint receives the cryptographic signature.
+     * 3. HMAC signature is verified first.
+     * 4. If payment failed or user cancelled, this endpoint is never reached, so NO order is created.
+     * 5. ONLY upon successful verification, the Order & OrderItems are safely inserted into DB with payment_status = 'paid'.
      */
     public function verifyPayment(Request $request): JsonResponse
     {
@@ -404,4 +410,65 @@ class CheckoutController extends Controller
             ], 500);
         }
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | OPTIONAL PRODUCTION WEBHOOK VERIFICATION (COMMENTED OUT FOR LOCALHOST)
+    |--------------------------------------------------------------------------
+    | Why commented out at this time?
+    | - On localhost (http://localhost:8000), Razorpay servers cannot send direct
+    |   HTTP POST requests to your computer without a public tunnel (like ngrok).
+    | - The client-side verification in `verifyPayment()` already guarantees that
+    |   orders are created ONLY after payment succeeds.
+    |
+    | How to enable in Production:
+    | 1. Uncomment the route in routes/public.php:
+    |    Route::post('/webhook/razorpay', [CheckoutController::class, 'handleWebhook'])->name('razorpay.webhook');
+    | 2. Add 'webhook/razorpay' to CSRF exemptions in bootstrap/app.php.
+    | 3. Add RAZORPAY_WEBHOOK_SECRET=your_secret in .env.
+    | 4. Register the webhook URL in Razorpay Dashboard (https://dashboard.razorpay.com) -> Settings -> Webhooks.
+    |
+    public function handleWebhook(Request $request): JsonResponse
+    {
+        $webhookSecret = env('RAZORPAY_WEBHOOK_SECRET');
+        $webhookSignature = $request->header('X-Razorpay-Signature');
+        $payload = $request->getContent();
+
+        // 1. Verify Razorpay Webhook Signature
+        if ($webhookSecret && $webhookSignature) {
+            $expectedSignature = hash_hmac('sha256', $payload, $webhookSecret);
+            if (!hash_equals($expectedSignature, $webhookSignature)) {
+                Log::warning('Razorpay Webhook signature mismatch.');
+                return response()->json(['error' => 'Invalid signature'], 400);
+            }
+        }
+
+        $data = json_decode($payload, true);
+        $event = $data['event'] ?? null;
+
+        Log::info('Razorpay Webhook Event received: ' . $event);
+
+        // 2. Only save or mark order as paid when payment is captured
+        if ($event === 'payment.captured' || $event === 'order.paid') {
+            $paymentEntity = $data['payload']['payment']['entity'] ?? [];
+            $razorpayOrderId = $paymentEntity['order_id'] ?? null;
+            $razorpayPaymentId = $paymentEntity['id'] ?? null;
+
+            if ($razorpayOrderId) {
+                // If order already exists in DB, update status to paid
+                $order = Order::where('razorpay_order_id', $razorpayOrderId)->first();
+                if ($order && $order->payment_status !== 'paid') {
+                    $order->update([
+                        'payment_status' => 'paid',
+                        'razorpay_payment_id' => $razorpayPaymentId,
+                        'paid_at' => now(),
+                    ]);
+                    Log::info("Order #{$order->order_number} marked as paid via Razorpay Webhook.");
+                }
+            }
+        }
+
+        return response()->json(['status' => 'success']);
+    }
+    */
 }

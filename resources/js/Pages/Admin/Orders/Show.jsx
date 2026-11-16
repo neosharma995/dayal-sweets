@@ -114,7 +114,7 @@ export default function Show({ order }) {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', position: 'relative' }}>
                     {[
                         { step: 1, title: 'Order Received', desc: 'Order placed & recorded', isDone: currentStep >= 1 },
-                        { step: 2, title: 'Kitchen Prep', desc: 'Desi ghee batch cooking', isDone: currentStep >= 2 },
+                        { step: 2, title: 'Pending', desc: 'Order confirmed & pending', isDone: currentStep >= 2 },
                         { step: 3, title: 'Shipping / Transit', desc: 'Aroma-lock dispatched', isDone: currentStep >= 3 },
                         { step: 4, title: 'Delivered', desc: 'Doorstep arrival confirmed', isDone: currentStep >= 4 },
                     ].map((s) => (
@@ -177,7 +177,7 @@ export default function Show({ order }) {
                             onChange={(e) => setDeliveryStatus(e.target.value)}
                             style={{ width: '100%', padding: '0.55rem 0.75rem', borderRadius: '0.375rem', border: '1px solid #CBD5E1', fontSize: '0.875rem' }}
                         >
-                            <option value="pending">Pending (Kitchen Preparation)</option>
+                            <option value="pending">Pending</option>
                             <option value="shipping">Shipping (Out for Delivery / In Transit)</option>
                             <option value="delivered">Delivered (Completed)</option>
                             <option value="cancelled">Cancelled</option>

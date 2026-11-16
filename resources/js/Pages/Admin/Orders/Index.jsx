@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import Modal from '@/Components/Modal';
+import Pagination from '@/Components/Pagination';
 
 export default function Index({ orders, counts, filters }) {
     const [search, setSearch] = useState(filters?.search || '');
@@ -542,26 +543,27 @@ export default function Index({ orders, counts, filters }) {
                     </table>
                 </div>
 
-                {/* Pagination links if available */}
-                {orders.links && orders.links.length > 3 && (
-                    <div style={{ padding: '1rem', borderTop: '1px solid #E2E8F0', display: 'flex', justifyContent: 'center', gap: '0.35rem' }}>
-                        {orders.links.map((link, idx) => (
-                            <Link
-                                key={idx}
-                                href={link.url || '#'}
-                                dangerouslySetInnerHTML={{ __html: link.label }}
-                                style={{
-                                    padding: '0.35rem 0.75rem',
-                                    borderRadius: '0.375rem',
-                                    fontSize: '0.8125rem',
-                                    border: link.active ? '1px solid #8B1E28' : '1px solid #E2E8F0',
-                                    background: link.active ? '#8B1E28' : '#FFFFFF',
-                                    color: link.active ? '#FFFFFF' : link.url ? '#334155' : '#94A3B8',
-                                    textDecoration: 'none',
-                                    pointerEvents: link.url ? 'auto' : 'none',
-                                }}
-                            />
-                        ))}
+                {/* Pagination */}
+                {orders && orders.total > 0 && (
+                    <div style={{ marginTop: '1.5rem', marginBottom: '1.5rem' }}>
+                        <Pagination
+                            currentPage={orders.current_page}
+                            totalPages={orders.last_page}
+                            totalItems={orders.total}
+                            itemsPerPage={orders.per_page}
+                            onPageChange={(page) => {
+                                router.get(
+                                    route('admin.orders.index'),
+                                    {
+                                        search,
+                                        delivery_status: selectedDeliveryStatus,
+                                        payment_status: selectedPaymentStatus,
+                                        page,
+                                    },
+                                    { preserveState: true }
+                                );
+                            }}
+                        />
                     </div>
                 )}
             </div>

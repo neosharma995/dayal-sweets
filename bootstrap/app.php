@@ -26,6 +26,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
         ]);
+
+        // When enabling Razorpay Webhooks in production, exempt the webhook route from CSRF:
+        // $middleware->validateCsrfTokens(except: [
+        //     'webhook/razorpay',
+        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

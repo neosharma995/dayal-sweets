@@ -1,0 +1,178 @@
+// ==========================================================================
+// Dayal Sweets - Global Luxury Pagination Styling
+// ==========================================================================
+@use '../variables' as *;
+
+.dayal-pagination-wrapper {
+  margin: 2.25rem 0 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+
+  .pagination-summary {
+    font-size: 0.8125rem;
+    color: #6B5E55;
+    text-align: center;
+
+    strong {
+      color: #2C1810;
+      font-weight: 700;
+    }
+  }
+
+  .pagination-controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .pagination-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    background-color: #FFFFFF;
+    padding: 4px;
+    border-radius: 12px;
+    border: 1px solid #EADBCA;
+    box-shadow: 0 2px 8px rgba(44, 24, 16, 0.04);
+  }
+
+  .pagination-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 8px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #2C1810;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover:not(:disabled) {
+      background-color: #FAF6F0;
+      color: $color-maroon;
+      border-color: #E2D9CC;
+    }
+
+    &.active {
+      background-color: $color-maroon;
+      color: #FFFFFF;
+      font-weight: 700;
+      border-color: $color-maroon;
+      box-shadow: 0 2px 6px rgba(99, 24, 38, 0.25);
+      cursor: default;
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    &.arrow-btn {
+      color: #5C4A42;
+
+      &:hover:not(:disabled) {
+        color: $color-maroon;
+      }
+    }
+  }
+
+  .pagination-numbers {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .pagination-ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 36px;
+    padding: 0 4px;
+    color: #8C7D73;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    user-select: none;
+  }
+
+  .pagination-jump-form {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    color: #6B5E55;
+    font-weight: 600;
+
+    .jump-label {
+      cursor: pointer;
+    }
+
+    .jump-input-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+
+      input {
+        width: 54px;
+        height: 36px;
+        padding: 0 6px;
+        border-radius: 8px;
+        border: 1.5px solid #DDD5C7;
+        background-color: #FFFFFF;
+        color: #2C1810;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        text-align: center;
+        outline: none;
+        transition: border-color 0.15s ease;
+
+        &::-webkit-inner-spin-button,
+        &::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+
+        &:focus {
+          border-color: $color-maroon;
+          box-shadow: 0 0 0 2px rgba(99, 24, 38, 0.1);
+        }
+      }
+
+      .jump-btn {
+        height: 36px;
+        padding: 0 12px;
+        border-radius: 8px;
+        background-color: $color-maroon;
+        color: #FFFFFF;
+        border: none;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+
+        &:hover:not(:disabled) {
+          background-color: $color-maroon-hover;
+        }
+
+        &:disabled {
+          opacity: 0.45;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}

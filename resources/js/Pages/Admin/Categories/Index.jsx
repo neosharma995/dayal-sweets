@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { BoxIcon, AlertIcon } from '@/Components/Icons';
+import Pagination from '@/Components/Pagination';
 
 export default function Index({ categories = [], filters = {} }) {
+    const { paginationLimit = 20 } = usePage().props || {};
+    const itemsPerPage = Number(paginationLimit) || 20;
+
     const [search, setSearch] = useState(filters.search || '');
+    const [currentPage, setCurrentPage] = useState(1);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [categoryToDelete, setCategoryToDelete] = useState(null);
 
@@ -17,6 +22,12 @@ export default function Index({ categories = [], filters = {} }) {
             c.category_description?.toLowerCase().includes(q)
         );
     });
+
+    const totalPages = Math.ceil(filteredCategories.length / itemsPerPage) || 1;
+    const paginatedCategories = filteredCategories.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
 
     const totalProductsAcrossCategories = categories.reduce(
         (sum, c) => sum + (Number(c.products_count) || 0),
@@ -99,7 +110,10 @@ export default function Index({ categories = [], filters = {} }) {
                                 type="text"
                                 placeholder="Search category by name or slug..."
                                 value={search}
-                                onChange={(e) => setSearch(e.target.value)}
+                                onChange={(e) => {
+                                    setSearch(e.target.value);
+                                    setCurrentPage(1);
+                                }}
                                 style={{
                                     width: '100%',
                                     padding: '0.5rem 1rem 0.5rem 2.25rem',
@@ -123,7 +137,10 @@ export default function Index({ categories = [], filters = {} }) {
                             </svg>
                             {search && (
                                 <button
-                                    onClick={() => setSearch('')}
+                                    onClick={() => {
+                                        setSearch('');
+                                        setCurrentPage(1);
+                                    }}
                                     style={{
                                         position: 'absolute',
                                         right: '0.75rem',
@@ -169,7 +186,7 @@ export default function Index({ categories = [], filters = {} }) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {filteredCategories.map((category) => (
+                                    {paginatedCategories.map((category) => (
                                         <tr key={category.id}>
                                             <td>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
@@ -293,6 +310,18 @@ export default function Index({ categories = [], filters = {} }) {
                                     ))}
                                 </tbody>
                             </table>
+                        )}
+
+                        {filteredCategories.length > 0 && (
+                            <div style={{ padding: '1.25rem 1.5rem', borderTop: '1px solid #E2E8F0', background: '#FAFAFA' }}>
+                                <Pagination
+                                    currentPage={currentPage}
+                                    totalPages={totalPages}
+                                    totalItems={filteredCategories.length}
+                                    itemsPerPage={itemsPerPage}
+                                    onPageChange={setCurrentPage}
+                                />
+                            </div>
                         )}
                     </div>
                 </div>

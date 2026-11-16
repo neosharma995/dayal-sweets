@@ -3,6 +3,7 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import ProductCard from '@/Components/ProductCard';
+import Pagination from '@/Components/Pagination';
 import ContactHero from '@/Components/contact/ContactHero';
 import { useCart } from '@/Context/CartContext';
 import '../../scss/pages/_contact.scss';
@@ -358,9 +359,10 @@ export default function Shop({
 
     // UI States
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+    const { url, props } = usePage();
+    const paginationLimit = props?.paginationLimit || 20;
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 12;
-    const { url } = usePage();
+    const itemsPerPage = paginationLimit;
 
     useEffect(() => {
         try {
@@ -1002,59 +1004,16 @@ export default function Shop({
                     )}
 
                     {/* PAGINATION */}
-                    {totalPages > 1 && (
-                        <nav className="dayal-shop-pagination oto-pagination" aria-label="Catalog pages">
-                            <button
-                                type="button"
-                                className={`dayal-shop-page-btn oto-page-btn oto-page-arrow oto-page-double-arrow ${currentPage === 1 ? 'is-disabled oto-page-disabled' : ''}`}
-                                onClick={() => setCurrentPage(1)}
-                                disabled={currentPage === 1}
-                                aria-label="First page"
-                            >
-                                «
-                            </button>
-                            <button
-                                type="button"
-                                className={`dayal-shop-page-btn oto-page-btn oto-page-arrow ${currentPage === 1 ? 'is-disabled oto-page-disabled' : ''}`}
-                                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                                disabled={currentPage === 1}
-                                aria-label="Previous page"
-                            >
-                                ‹
-                            </button>
-
-                            {Array.from({ length: totalPages }, (_, idx) => idx + 1).map((pageNum) => (
-                                <button
-                                    key={pageNum}
-                                    type="button"
-                                    className={`dayal-shop-page-btn oto-page-btn ${currentPage === pageNum ? 'is-active active' : ''}`}
-                                    onClick={() => setCurrentPage(pageNum)}
-                                    aria-current={currentPage === pageNum ? 'page' : undefined}
-                                >
-                                    {pageNum}
-                                </button>
-                            ))}
-
-                            <button
-                                type="button"
-                                className={`dayal-shop-page-btn oto-page-btn oto-page-arrow ${currentPage === totalPages ? 'is-disabled oto-page-disabled' : ''}`}
-                                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                                disabled={currentPage === totalPages}
-                                aria-label="Next page"
-                            >
-                                ›
-                            </button>
-                            <button
-                                type="button"
-                                className={`dayal-shop-page-btn oto-page-btn oto-page-arrow oto-page-double-arrow ${currentPage === totalPages ? 'is-disabled oto-page-disabled' : ''}`}
-                                onClick={() => setCurrentPage(totalPages)}
-                                disabled={currentPage === totalPages}
-                                aria-label="Last page"
-                            >
-                                »
-                            </button>
-                        </nav>
-                    )}
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        totalItems={sortedProducts.length}
+                        itemsPerPage={itemsPerPage}
+                        onPageChange={(pageNum) => {
+                            setCurrentPage(pageNum);
+                            window.scrollTo({ top: 350, behavior: 'smooth' });
+                        }}
+                    />
                 </main>
             </div>
 

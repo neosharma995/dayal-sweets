@@ -96,13 +96,8 @@ class DashboardController extends Controller
                 $step = 3;
                 $statusLabel = 'Out for Delivery / In Transit';
             } elseif ($activeOrderModel->delivery_status === 'pending') {
-                if ($activeOrderModel->payment_status === 'paid') {
-                    $step = 2;
-                    $statusLabel = 'Kitchen Preparation & Packaging';
-                } else {
-                    $step = 1;
-                    $statusLabel = 'Order Placed (Pending Payment Confirmation)';
-                }
+                $step = 2;
+                $statusLabel = 'Pending';
             } elseif ($activeOrderModel->delivery_status === 'cancelled') {
                 $step = 0;
                 $statusLabel = 'Cancelled';

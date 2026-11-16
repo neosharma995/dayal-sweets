@@ -404,7 +404,7 @@ export default function Create({ users = [], products = [] }) {
                                 onChange={(e) => setDeliveryStatus(e.target.value)}
                                 style={{ width: '100%', padding: '0.55rem 0.75rem', borderRadius: '0.375rem', border: '1px solid #CBD5E1' }}
                             >
-                                <option value="pending">Pending (Kitchen Preparation)</option>
+                                <option value="pending">Pending</option>
                                 <option value="shipping">Shipping (Out for Delivery)</option>
                                 <option value="delivered">Delivered (Fulfilled)</option>
                                 <option value="cancelled">Cancelled</option>

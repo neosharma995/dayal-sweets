@@ -3,12 +3,13 @@ import { Link } from '@inertiajs/react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import ApplicationLogo from '@/Components/ApplicationLogo';
-import { CheckCircleIcon, StarIcon, ShieldCheckIcon, TruckIcon } from '@/Components/Icons';
+import { CheckCircle2, Star, ShieldCheck, Truck, Gift, ArrowLeft, Heart } from 'lucide-react';
 
 export default function GuestLayout({ 
     children, 
     title = 'Welcome to Dayal Sweets', 
-    subtitle = 'Sign in or create an account to start shopping authentic sweets' 
+    subtitle = 'Sign in or create an account to start shopping authentic sweets',
+    hideTitleBlock = false,
 }) {
     return (
         <div className="dayal-page-shell">
@@ -21,8 +22,8 @@ export default function GuestLayout({
                         <div className="dayal-auth-banner">
                             <div>
                                 <div className="banner-badge">
-                                    <StarIcon width="14" height="14" />
-                                    <span>Himachal’s Pride • Since 1962</span>
+                                    <Star size={13} fill="#D4AF37" color="#D4AF37" />
+                                    <span>Himachal’s Pride • Since 1952</span>
                                 </div>
 
                                 <h2 className="banner-title">
@@ -33,39 +34,62 @@ export default function GuestLayout({
                                     Handcrafted with time-honoured recipes, the finest Goan cashews, and pure churned desi ghee. Every bite tells a story of heritage, love, and uncompromising quality.
                                 </p>
 
+                                {/* Floating Sweet Showcase Card */}
+                                <div className="banner-sweet-showcase">
+                                    <div className="showcase-img-box">
+                                        <img
+                                            src="/uploads/2026/07/kaaju-katli.png"
+                                            alt="Royal Kaju Katli"
+                                            onError={(e) => {
+                                                e.currentTarget.src = '/uploads/2026/07/kaaju-katli.png';
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="showcase-info">
+                                        <div className="showcase-title">Royal Kaju Katli</div>
+                                        <div className="showcase-desc">100% Pure Desi Ghee &amp; 999 Silver Vark</div>
+                                        <div className="showcase-rating-row">
+                                            <div className="stars">★★★★★</div>
+                                            <span className="rating-val">4.9</span>
+                                            <span className="reviews-cnt">(15,200+ Reviews)</span>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div className="banner-perks">
                                     <div className="perk-item">
                                         <div className="perk-icon">
-                                            <CheckCircleIcon width="16" height="16" />
+                                            <Gift size={16} />
                                         </div>
-                                        <span>100% Pure Desi Ghee & Vegetarian Kitchen</span>
+                                        <span><strong>100 Bonus Points</strong> credited on joining</span>
                                     </div>
 
                                     <div className="perk-item">
                                         <div className="perk-icon">
-                                            <ShieldCheckIcon width="16" height="16" />
+                                            <CheckCircle2 size={16} />
                                         </div>
-                                        <span>Zero Preservatives & 999 Pure Silver Vark</span>
+                                        <span>100% Pure Desi Ghee &amp; Zero Preservatives</span>
                                     </div>
 
                                     <div className="perk-item">
                                         <div className="perk-icon">
-                                            <TruckIcon width="16" height="16" />
+                                            <Truck size={16} />
                                         </div>
-                                        <span>Express Aroma-Lock Insulated City Dispatch</span>
+                                        <span>Express Insulated Climate-Controlled Delivery</span>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="banner-footer">
-                                {/* Circular 60+ Years Stamp Seal */}
+                                {/* Circular 70+ Years Stamp Seal */}
                                 <div className="banner-seal">
-                                    <strong>60+</strong>
+                                    <strong>70+</strong>
                                     <span>Years Tradition</span>
                                 </div>
 
                                 <Link href="/" className="banner-return-link">
-                                    ← Return to Store
+                                    <ArrowLeft size={14} />
+                                    <span>Return to Store</span>
                                 </Link>
                             </div>
                         </div>
@@ -78,10 +102,12 @@ export default function GuestLayout({
                                 </Link>
                             </div>
 
-                            <div className="dayal-auth-title-block">
-                                <h2>{title}</h2>
-                                <p>{subtitle}</p>
-                            </div>
+                            {!hideTitleBlock && title && (
+                                <div className="dayal-auth-title-block">
+                                    <h2>{title}</h2>
+                                    {subtitle && <p>{subtitle}</p>}
+                                </div>
+                            )}
 
                             {children}
                         </div>

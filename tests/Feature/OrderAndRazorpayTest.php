@@ -54,7 +54,7 @@ class OrderAndRazorpayTest extends TestCase
         $response->assertUnauthorized();
     }
 
-    public function test_authenticated_customer_can_create_razorpay_order(): void
+    public function test_authenticated_customer_can_create_razorpay_order_session_without_creating_db_order(): void
     {
         $payload = [
             'customer_name' => 'Gurpreet Singh',
@@ -82,34 +82,86 @@ class OrderAndRazorpayTest extends TestCase
 
         $response->assertOk()
             ->assertJsonPath('success', true)
+            ->assertJsonPath('order_id', null) // Must NOT create DB order before payment!
             ->assertJsonStructure([
                 'success',
-                'order_id',
                 'order_number',
                 'razorpay_order_id',
                 'amount',
                 'currency',
             ]);
 
-        $this->assertDatabaseHas('orders', [
+        // CRUCIAL: Database must NOT contain any order before payment is verified!
+        $this->assertDatabaseMissing('orders', [
             'user_id' => $this->customer->id,
             'customer_name' => 'Gurpreet Singh',
-            'city' => 'Una',
-            'delivery_status' => 'pending',
-            'payment_status' => 'pending',
-            'payment_method' => 'razorpay',
-            'total_amount' => 750, // (350 * 2) + 50
-        ]);
-
-        $orderId = $response->json('order_id');
-        $this->assertDatabaseHas('order_items', [
-            'order_id' => $orderId,
-            'product_name' => 'Pure Desi Ghee Besan Laddu',
-            'quantity' => 2,
         ]);
     }
 
-    public function test_payment_verification_updates_order_to_paid(): void
+    public function test_order_is_created_only_after_successful_payment_verification(): void
+    {
+        $payload = [
+            'customer_name' => 'Gurpreet Singh',
+            'customer_email' => 'gurpreet@example.com',
+            'customer_phone' => '9876543210',
+            'shipping_address' => 'House 42, Civil Lines',
+            'city' => 'Una',
+            'state' => 'Himachal Pradesh',
+            'pincode' => '174303',
+            'shipping_cost' => 50,
+            'items' => [
+                [
+                    'name' => 'Pure Desi Ghee Besan Laddu',
+                    'price' => 350,
+                    'quantity' => 2,
+                    'variationLabel' => '1kg Box',
+                ],
+            ],
+        ];
+
+        // 1. Initialize Razorpay session (Order not in DB yet)
+        $createRes = $this->actingAs($this->customer)
+            ->postJson('/checkout/create-razorpay-order', $payload);
+        $createRes->assertOk();
+
+        $razorpayOrderId = $createRes->json('razorpay_order_id');
+        $this->assertNotNull($razorpayOrderId);
+        $this->assertDatabaseCount('orders', 0);
+
+        // 2. Successful payment HMAC verification
+        $secret = config('services.razorpay.secret', 'b6aFOf8O1MI0jatA8upm15UQ');
+        $signature = hash_hmac('sha256', $razorpayOrderId . '|pay_test_88888', $secret);
+
+        $verifyRes = $this->actingAs($this->customer)
+            ->postJson('/checkout/verify-payment', [
+                'razorpay_order_id' => $razorpayOrderId,
+                'razorpay_payment_id' => 'pay_test_88888',
+                'razorpay_signature' => $signature,
+                'checkout_payload' => $payload,
+            ]);
+
+        $verifyRes->assertOk()
+            ->assertJsonPath('success', true);
+
+        // 3. NOW database has the created and PAID order!
+        $this->assertDatabaseHas('orders', [
+            'user_id' => $this->customer->id,
+            'customer_name' => 'Gurpreet Singh',
+            'payment_status' => 'paid',
+            'payment_method' => 'razorpay',
+            'razorpay_order_id' => $razorpayOrderId,
+            'razorpay_payment_id' => 'pay_test_88888',
+            'total_amount' => 750, // (350 * 2) + 50
+        ]);
+
+        $createdOrder = Order::where('razorpay_payment_id', 'pay_test_88888')->first();
+        $this->assertNotNull($createdOrder);
+        $this->assertNotNull($createdOrder->paid_at);
+        $this->assertCount(1, $createdOrder->items);
+        $this->assertEquals('Pure Desi Ghee Besan Laddu', $createdOrder->items->first()->product_name);
+    }
+
+    public function test_payment_verification_updates_existing_order_if_already_present(): void
     {
         $order = Order::create([
             'user_id' => $this->customer->id,
@@ -220,6 +272,11 @@ class OrderAndRazorpayTest extends TestCase
                 ->where('activeOrder.order_id', $order->order_number)
                 ->where('activeOrder.delivery_status', 'shipping')
                 ->has('recentPastOrders', 1)
+                ->has('allOrders', 1)
+                ->has('userCreatedProducts', 1)
+                ->where('userCreatedProducts.0.name', 'Desi Ghee Motichoor Laddu')
+                ->where('userCreatedProducts.0.delivery_status', 'shipping')
+                ->where('userCreatedProducts.0.quantity', 2)
             );
 
         // Customer Account Orders

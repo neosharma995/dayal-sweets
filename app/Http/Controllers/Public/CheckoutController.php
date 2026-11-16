@@ -13,8 +13,10 @@ use App\Services\RazorpayService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
@@ -23,7 +25,8 @@ class CheckoutController extends Controller
     ) {}
 
     /**
-     * Create Razorpay Order and store pending order in DB.
+     * Initialize Razorpay Order session WITHOUT creating DB order yet.
+     * Order will ONLY be inserted into DB after payment signature is cryptographically verified.
      */
     public function createRazorpayOrder(Request $request): JsonResponse
     {
@@ -53,100 +56,68 @@ class CheckoutController extends Controller
         $shippingCost = (float) ($validated['shipping_cost'] ?? 0);
 
         try {
-            return DB::transaction(function () use ($validated, $user, $shippingCost) {
-                // Calculate subtotal from items
-                $subtotal = 0;
-                foreach ($validated['items'] as $item) {
-                    $subtotal += ((float) $item['price']) * ((int) $item['quantity']);
-                }
+            // Calculate subtotal from items
+            $subtotal = 0;
+            foreach ($validated['items'] as $item) {
+                $subtotal += ((float) $item['price']) * ((int) $item['quantity']);
+            }
 
-                $taxAmount = 0; // Tax can be included or calculated
-                $totalAmount = $subtotal + $shippingCost + $taxAmount;
+            $taxAmount = 0;
+            $totalAmount = $subtotal + $shippingCost + $taxAmount;
 
-                // Create local Order
-                $order = Order::create([
-                    'user_id' => $user->id,
-                    'customer_name' => $validated['customer_name'],
+            // Generate clean temporary receipt reference
+            $temporaryReceipt = 'RCPT-' . date('Ymd') . '-' . strtoupper(Str::random(6));
+
+            // Call Razorpay API to generate order
+            $razorpayOrder = $this->razorpayService->createOrder(
+                $totalAmount,
+                $temporaryReceipt,
+                [
+                    'customer_id' => (string) $user->id,
                     'customer_email' => $validated['customer_email'],
                     'customer_phone' => $validated['customer_phone'],
-                    'shipping_address' => $validated['shipping_address'],
-                    'apartment' => $validated['apartment'] ?? null,
-                    'city' => $validated['city'],
-                    'state' => $validated['state'],
-                    'pincode' => $validated['pincode'],
-                    'shipping_method_title' => $validated['shipping_method_title'] ?? 'Standard Delivery',
-                    'shipping_cost' => $shippingCost,
-                    'subtotal' => $subtotal,
-                    'tax_amount' => $taxAmount,
-                    'total_amount' => $totalAmount,
-                    'currency' => 'INR',
-                    'payment_method' => 'razorpay',
-                    'payment_status' => 'pending',
-                    'delivery_status' => 'pending',
-                    'order_notes' => $validated['order_notes'] ?? null,
-                ]);
+                ]
+            );
 
-                // Create Order Items
-                foreach ($validated['items'] as $item) {
-                    $itemPrice = (float) $item['price'];
-                    $itemQty = (int) $item['quantity'];
-                    $itemTotal = $itemPrice * $itemQty;
+            // Store pending order details in Cache and Session keyed by razorpay_order_id
+            $pendingOrderData = [
+                'user_id' => $user->id,
+                'customer_name' => $validated['customer_name'],
+                'customer_email' => $validated['customer_email'],
+                'customer_phone' => $validated['customer_phone'],
+                'shipping_address' => $validated['shipping_address'],
+                'apartment' => $validated['apartment'] ?? null,
+                'city' => $validated['city'],
+                'state' => $validated['state'],
+                'pincode' => $validated['pincode'],
+                'shipping_method_title' => $validated['shipping_method_title'] ?? 'Standard Delivery',
+                'shipping_cost' => $shippingCost,
+                'subtotal' => $subtotal,
+                'tax_amount' => $taxAmount,
+                'total_amount' => $totalAmount,
+                'order_notes' => $validated['order_notes'] ?? null,
+                'items' => $validated['items'],
+                'razorpay_order_id' => $razorpayOrder['id'],
+            ];
 
-                    $productId = is_numeric($item['id'] ?? null) ? (int) $item['id'] : null;
-                    if ($productId && !Product::where('id', $productId)->exists()) {
-                        $productId = null;
-                    }
+            $cacheKey = 'pending_rzp_' . $razorpayOrder['id'];
+            Cache::put($cacheKey, $pendingOrderData, now()->addHours(6));
+            session()->put($cacheKey, $pendingOrderData);
 
-                    $variationId = is_numeric($item['variationId'] ?? null) ? (int) $item['variationId'] : null;
-                    if ($variationId && !ProductVariation::where('id', $variationId)->exists()) {
-                        $variationId = null;
-                    }
-
-                    OrderItem::create([
-                        'order_id' => $order->id,
-                        'product_id' => $productId,
-                        'product_variation_id' => $variationId,
-                        'product_name' => $item['name'],
-                        'variation_name' => $item['variationLabel'] ?? null,
-                        'unit_price' => $itemPrice,
-                        'quantity' => $itemQty,
-                        'tax_rate_percent' => 0,
-                        'tax_amount' => 0,
-                        'subtotal' => $itemTotal,
-                        'total' => $itemTotal,
-                        'product_image' => $item['image'] ?? null,
-                    ]);
-                }
-
-                // Call Razorpay API to generate order
-                $razorpayOrder = $this->razorpayService->createOrder(
-                    $totalAmount,
-                    $order->order_number,
-                    [
-                        'order_id' => (string) $order->id,
-                        'customer_id' => (string) $user->id,
-                    ]
-                );
-
-                $order->update([
-                    'razorpay_order_id' => $razorpayOrder['id'],
-                ]);
-
-                return response()->json([
-                    'success' => true,
-                    'order_id' => $order->id,
-                    'order_number' => $order->order_number,
-                    'razorpay_order_id' => $razorpayOrder['id'],
-                    'amount' => $razorpayOrder['amount'],
-                    'currency' => $razorpayOrder['currency'] ?? 'INR',
-                    'key' => $this->razorpayService->getKeyId(),
-                    'customer' => [
-                        'name' => $order->customer_name,
-                        'email' => $order->customer_email,
-                        'contact' => $order->customer_phone,
-                    ],
-                ]);
-            });
+            return response()->json([
+                'success' => true,
+                'order_id' => null, // Intentionally null: Order is only created after payment succeeds!
+                'order_number' => $temporaryReceipt,
+                'razorpay_order_id' => $razorpayOrder['id'],
+                'amount' => $razorpayOrder['amount'],
+                'currency' => $razorpayOrder['currency'] ?? 'INR',
+                'key' => $this->razorpayService->getKeyId(),
+                'customer' => [
+                    'name' => $validated['customer_name'],
+                    'email' => $validated['customer_email'],
+                    'contact' => $validated['customer_phone'],
+                ],
+            ]);
         } catch (Exception $e) {
             Log::error('Checkout Razorpay Order Creation Error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return response()->json([
@@ -158,27 +129,21 @@ class CheckoutController extends Controller
 
     /**
      * Verify payment signature from Razorpay.
+     * ONLY upon valid payment signature verification, the Order is created in DB.
      */
     public function verifyPayment(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'order_id' => ['required', 'integer'],
+            'order_id' => ['nullable'],
             'razorpay_order_id' => ['required', 'string'],
             'razorpay_payment_id' => ['required', 'string'],
             'razorpay_signature' => ['required', 'string'],
+            'checkout_payload' => ['nullable', 'array'],
         ]);
 
-        $order = Order::where('id', $validated['order_id'])
-            ->where('user_id', $request->user()->id)
-            ->first();
+        $user = $request->user();
 
-        if (!$order) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Order not found.',
-            ], 404);
-        }
-
+        // 1. Verify HMAC Signature cryptographically
         $isValid = $this->razorpayService->verifySignature(
             $validated['razorpay_order_id'],
             $validated['razorpay_payment_id'],
@@ -186,32 +151,149 @@ class CheckoutController extends Controller
         );
 
         if (!$isValid) {
-            $order->update([
-                'payment_status' => 'failed',
-                'razorpay_payment_id' => $validated['razorpay_payment_id'],
-            ]);
-
             return response()->json([
                 'success' => false,
                 'message' => 'Payment signature verification failed. Please contact support.',
             ], 422);
         }
 
-        $order->update([
-            'payment_status' => 'paid',
-            'delivery_status' => 'pending',
-            'razorpay_order_id' => $validated['razorpay_order_id'],
-            'razorpay_payment_id' => $validated['razorpay_payment_id'],
-            'razorpay_signature' => $validated['razorpay_signature'],
-            'paid_at' => now(),
-        ]);
+        // 2. Check if Order already created for this payment ID or Razorpay Order ID (Idempotency)
+        $existingOrder = Order::where('razorpay_payment_id', $validated['razorpay_payment_id'])
+            ->orWhere('razorpay_order_id', $validated['razorpay_order_id'])
+            ->first();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Payment verified successfully! Your order has been placed.',
-            'order_number' => $order->order_number,
-            'order_id' => $order->id,
-        ]);
+        if ($existingOrder) {
+            $existingOrder->update([
+                'payment_status' => 'paid',
+                'delivery_status' => 'pending',
+                'razorpay_order_id' => $validated['razorpay_order_id'],
+                'razorpay_payment_id' => $validated['razorpay_payment_id'],
+                'razorpay_signature' => $validated['razorpay_signature'],
+                'paid_at' => $existingOrder->paid_at ?: now(),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Payment verified successfully! Your sweet order is confirmed.',
+                'order_number' => $existingOrder->order_number,
+                'order_id' => $existingOrder->id,
+            ]);
+        }
+
+        // 3. If an existing order_id was passed and already exists in DB (legacy/test support)
+        if (!empty($validated['order_id']) && is_numeric($validated['order_id'])) {
+            $order = Order::where('id', (int) $validated['order_id'])
+                ->where('user_id', $user->id)
+                ->first();
+
+            if ($order) {
+                $order->update([
+                    'payment_status' => 'paid',
+                    'delivery_status' => 'pending',
+                    'razorpay_order_id' => $validated['razorpay_order_id'],
+                    'razorpay_payment_id' => $validated['razorpay_payment_id'],
+                    'razorpay_signature' => $validated['razorpay_signature'],
+                    'paid_at' => now(),
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Payment verified successfully! Your order has been placed.',
+                    'order_number' => $order->order_number,
+                    'order_id' => $order->id,
+                ]);
+            }
+        }
+
+        // 4. Retrieve pending checkout payload from Cache, Session, or Request backup
+        $cacheKey = 'pending_rzp_' . $validated['razorpay_order_id'];
+        $pendingData = Cache::get($cacheKey) ?? session()->get($cacheKey) ?? $validated['checkout_payload'] ?? null;
+
+        if (!$pendingData) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Payment was charged but order session expired. Please contact Dayal Sweets support with payment ID: ' . $validated['razorpay_payment_id'],
+            ], 400);
+        }
+
+        // 5. NOW create Order & OrderItems in DB in a single safe transaction!
+        return DB::transaction(function () use ($pendingData, $user, $validated, $cacheKey) {
+            $subtotal = 0;
+            foreach ($pendingData['items'] as $item) {
+                $subtotal += ((float) $item['price']) * ((int) $item['quantity']);
+            }
+            $shippingCost = (float) ($pendingData['shipping_cost'] ?? 0);
+            $taxAmount = 0;
+            $totalAmount = $subtotal + $shippingCost + $taxAmount;
+
+            $order = Order::create([
+                'user_id' => $user->id,
+                'customer_name' => $pendingData['customer_name'],
+                'customer_email' => $pendingData['customer_email'],
+                'customer_phone' => $pendingData['customer_phone'],
+                'shipping_address' => $pendingData['shipping_address'],
+                'apartment' => $pendingData['apartment'] ?? null,
+                'city' => $pendingData['city'],
+                'state' => $pendingData['state'],
+                'pincode' => $pendingData['pincode'],
+                'shipping_method_title' => $pendingData['shipping_method_title'] ?? 'Standard Delivery',
+                'shipping_cost' => $shippingCost,
+                'subtotal' => $subtotal,
+                'tax_amount' => $taxAmount,
+                'total_amount' => $totalAmount,
+                'currency' => 'INR',
+                'payment_method' => 'razorpay',
+                'payment_status' => 'paid',
+                'delivery_status' => 'pending',
+                'razorpay_order_id' => $validated['razorpay_order_id'],
+                'razorpay_payment_id' => $validated['razorpay_payment_id'],
+                'razorpay_signature' => $validated['razorpay_signature'],
+                'order_notes' => $pendingData['order_notes'] ?? null,
+                'paid_at' => now(),
+            ]);
+
+            foreach ($pendingData['items'] as $item) {
+                $itemPrice = (float) $item['price'];
+                $itemQty = (int) $item['quantity'];
+                $itemTotal = $itemPrice * $itemQty;
+
+                $productId = is_numeric($item['id'] ?? null) ? (int) $item['id'] : null;
+                if ($productId && !Product::where('id', $productId)->exists()) {
+                    $productId = null;
+                }
+
+                $variationId = is_numeric($item['variationId'] ?? null) ? (int) $item['variationId'] : null;
+                if ($variationId && !ProductVariation::where('id', $variationId)->exists()) {
+                    $variationId = null;
+                }
+
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $productId,
+                    'product_variation_id' => $variationId,
+                    'product_name' => $item['name'],
+                    'variation_name' => $item['variationLabel'] ?? $item['variation_name'] ?? null,
+                    'unit_price' => $itemPrice,
+                    'quantity' => $itemQty,
+                    'tax_rate_percent' => 0,
+                    'tax_amount' => 0,
+                    'subtotal' => $itemTotal,
+                    'total' => $itemTotal,
+                    'product_image' => $item['image'] ?? null,
+                ]);
+            }
+
+            // Cleanup Cache & Session
+            Cache::forget($cacheKey);
+            session()->forget($cacheKey);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Payment verified successfully! Your order has been placed.',
+                'order_number' => $order->order_number,
+                'order_id' => $order->id,
+            ]);
+        });
     }
 
     /**

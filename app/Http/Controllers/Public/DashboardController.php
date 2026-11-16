@@ -22,26 +22,59 @@ class DashboardController extends Controller
     }
 
     /**
-     * Display the Customer e-commerce dashboard with real order data.
+     * Display the Customer WooCommerce-style e-commerce dashboard with real order data.
      */
     public function index(Request $request): Response
     {
         $user = $request->user();
 
-        // Fetch real orders from database for this customer
+        // Fetch real orders from database for this customer with items
         $orders = Order::where('user_id', $user->id)
-            ->with('items')
+            ->with(['items.product'])
             ->latest()
             ->get();
 
-        $totalSpent = $orders->sum('total_amount');
+        $totalSpent = (float) $orders->sum('total_amount');
         $rewardPoints = max(50, (int) round($totalSpent * 0.10));
+        $tier = $totalSpent > 5000 ? 'Platinum Sweet Connoisseur' : ($totalSpent > 1500 ? 'Gold Mithai Club Member' : 'Silver Member');
+
+        // Extract all individual sweets/products purchased across all user orders
+        $userCreatedProducts = collect();
+        foreach ($orders as $order) {
+            foreach ($order->items as $item) {
+                $image = $item->product_image;
+                if (empty($image) && $item->product && !empty($item->product->product_image)) {
+                    $image = $item->product->product_image;
+                }
+                if (empty($image)) {
+                    $image = '/uploads/2026/07/kaaju-katli.png';
+                }
+
+                $userCreatedProducts->push([
+                    'id' => $item->id,
+                    'order_id' => $order->order_number,
+                    'order_db_id' => $order->id,
+                    'order_date' => $order->created_at ? $order->created_at->format('d M Y') : 'Recent',
+                    'delivered_date' => $order->delivered_at ? $order->delivered_at->format('d M Y') : ($order->delivery_status === 'delivered' ? ($order->updated_at ? $order->updated_at->format('d M Y') : 'Recent') : null),
+                    'delivery_status' => $order->delivery_status,
+                    'payment_status' => $order->payment_status,
+                    'product_id' => $item->product_id,
+                    'name' => $item->product_name,
+                    'variation_name' => $item->variation_name ?: 'Standard Box',
+                    'unit_price' => (float) $item->unit_price,
+                    'quantity' => (int) $item->quantity,
+                    'total' => (float) $item->total,
+                    'image' => $image,
+                ]);
+            }
+        }
 
         $overview = [
             'sweet_rewards_points' => $rewardPoints,
             'points_cash_value' => '₹' . $rewardPoints . ' off on next order',
-            'tier' => $totalSpent > 5000 ? 'Platinum Sweet Connoisseur' : ($totalSpent > 1500 ? 'Gold Mithai Club Member' : 'Silver Member'),
+            'tier' => $tier,
             'total_orders_placed' => $orders->count(),
+            'total_sweets_count' => $userCreatedProducts->sum('quantity'),
             'wishlist_count' => 4,
             'saved_addresses_count' => 1,
         ];
@@ -99,59 +132,79 @@ class DashboardController extends Controller
             ];
         }
 
-        $recentPastOrders = $orders->map(function ($order) {
+        // Full orders list for WooCommerce Orders tab
+        $allOrders = $orders->map(function ($order) {
             $itemsList = $order->items->pluck('product_name')->take(3)->join(', ');
             if ($order->items->count() > 3) {
                 $itemsList .= ' +' . ($order->items->count() - 3) . ' more';
             }
 
             return [
+                'id' => $order->id,
+                'order_number' => $order->order_number,
                 'order_id' => $order->order_number,
                 'order_date' => $order->created_at ? $order->created_at->format('d M Y') : 'Recent',
+                'created_at_formatted' => $order->created_at ? $order->created_at->format('d M Y, h:i A') : 'Recent',
                 'items_summary' => $itemsList ?: 'Assorted Sweets',
+                'subtotal' => (float) $order->subtotal,
+                'shipping_cost' => (float) $order->shipping_cost,
+                'shipping_method_title' => $order->shipping_method_title ?: 'Standard Delivery',
                 'total_amount' => (float) $order->total_amount,
                 'status' => ucfirst($order->delivery_status),
                 'delivery_status' => $order->delivery_status,
                 'payment_status' => $order->payment_status,
+                'payment_method' => $order->payment_method,
                 'items_count' => $order->items->count(),
+                'shipping_address' => $order->shipping_address,
+                'apartment' => $order->apartment,
+                'city' => $order->city,
+                'state' => $order->state,
+                'pincode' => $order->pincode,
+                'customer_name' => $order->customer_name,
+                'customer_email' => $order->customer_email,
+                'customer_phone' => $order->customer_phone,
+                'order_notes' => $order->order_notes,
+                'items' => $order->items->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'product_name' => $item->product_name,
+                        'variation_name' => $item->variation_name,
+                        'unit_price' => (float) $item->unit_price,
+                        'quantity' => (int) $item->quantity,
+                        'total' => (float) $item->total,
+                        'product_image' => $item->product_image ?: '/uploads/2026/07/kaaju-katli.png',
+                    ];
+                })->toArray(),
             ];
         })->toArray();
 
-        $recommendedSweets = [
-            [
-                'id' => 101,
-                'name' => 'Special Motichoor Laddu (Desi Ghee)',
-                'weight' => '500g / 1kg',
-                'price' => 340,
-                'rating' => 4.9,
-                'tag' => 'Bestseller',
-                'description' => 'Melt-in-mouth tiny boondi pearls fried in pure churned desi ghee, scented with green cardamom.',
-            ],
-            [
-                'id' => 102,
-                'name' => 'Pista Badam Lauj (Dry Fruit Barfi)',
-                'weight' => '500g',
-                'price' => 680,
-                'rating' => 4.8,
-                'tag' => 'Chef Special',
-                'description' => 'Made from 100% California almonds and Iranian pistachio, without any refined flour or adulterants.',
-            ],
-            [
-                'id' => 103,
-                'name' => 'Fresh Kesar Jalebi (Ready to Warm)',
-                'weight' => '500g',
-                'price' => 240,
-                'rating' => 4.9,
-                'tag' => 'Crisp & Juicy',
-                'description' => 'Crispy saffron-soaked spirals prepared in pure ghee. Packed in airtight insulated box.',
-            ],
+        // Saved Addresses from orders or defaults
+        $latestOrder = $orders->first();
+        $savedAddress = [
+            'name' => $latestOrder?->customer_name ?: $user->name,
+            'email' => $latestOrder?->customer_email ?: $user->email,
+            'phone' => $latestOrder?->customer_phone ?: '+91 98765 43210',
+            'address' => $latestOrder?->shipping_address ?: 'Civil Lines, Main Market',
+            'apartment' => $latestOrder?->apartment ?: '',
+            'city' => $latestOrder?->city ?: 'Una',
+            'state' => $latestOrder?->state ?: 'Himachal Pradesh',
+            'pincode' => $latestOrder?->pincode ?: '174303',
         ];
 
         return Inertia::render('Customer/Dashboard', [
             'overview' => $overview,
             'activeOrder' => $activeOrder,
-            'recentPastOrders' => $recentPastOrders,
-            'recommendedSweets' => $recommendedSweets,
+            'recentPastOrders' => $allOrders,
+            'allOrders' => $allOrders,
+            'userCreatedProducts' => $userCreatedProducts->toArray(),
+            'savedAddress' => $savedAddress,
+            'customer' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'member_since' => $user->created_at ? $user->created_at->format('M Y') : 'Nov 2026',
+                'tier' => $tier,
+            ],
         ]);
     }
 }

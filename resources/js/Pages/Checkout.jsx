@@ -178,10 +178,11 @@ export default function Checkout({ razorpayKey }) {
                 handler: async function (response) {
                     try {
                         const verifyRes = await axios.post(route('checkout.razorpay.verify'), {
-                            order_id: rzpData.order_id,
+                            order_id: rzpData.order_id || null,
                             razorpay_order_id: response.razorpay_order_id,
                             razorpay_payment_id: response.razorpay_payment_id,
                             razorpay_signature: response.razorpay_signature,
+                            checkout_payload: orderPayload,
                         });
 
                         if (verifyRes.data.success) {
@@ -213,6 +214,7 @@ export default function Checkout({ razorpayKey }) {
                 modal: {
                     ondismiss: function () {
                         setIsSubmitting(false);
+                        setErrorMessage('Payment was cancelled or closed. No order was created and your cart is preserved.');
                     },
                 },
             };
@@ -226,7 +228,7 @@ export default function Checkout({ razorpayKey }) {
             const rzp = new window.Razorpay(options);
             rzp.on('payment.failed', function (resp) {
                 setIsSubmitting(false);
-                setErrorMessage(resp.error?.description || 'Payment was unsuccessful. You may try again or pick Cash on Delivery.');
+                setErrorMessage(resp.error?.description || 'Payment failed. No order was created. You may try again or pick Cash on Delivery.');
             });
             rzp.open();
         } catch (err) {

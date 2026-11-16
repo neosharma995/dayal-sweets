@@ -450,3 +450,886 @@
     }
   }
 }
+
+
+// ==========================================================================
+// Dayal Sweets - Customer Dashboard & User Products Page
+// Matches exact storefront look & feel
+// ==========================================================================
+
+.dayal-dashboard-page {
+  background-color: #FBF9F5;
+  min-height: 100vh;
+}
+
+.dayal-dashboard-hero {
+  background: linear-gradient(135deg, #4a0e1a 0%, #631826 60%, #360811 100%);
+  padding: 48px 24px 56px;
+  color: #ffffff;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at right, rgba(184, 142, 75, 0.2) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .dayal-dashboard-hero-inner {
+    width: 100%;
+    max-width: 1720px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+
+    @media (max-width: 767px) {
+      padding: 0 12px;
+    }
+  }
+
+  .dayal-dashboard-breadcrumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #d1bda5;
+    margin-bottom: 16px;
+
+    a {
+      color: #d1bda5;
+      text-decoration: none;
+      transition: color 0.2s;
+
+      &:hover {
+        color: #ffffff;
+      }
+    }
+
+    .current {
+      color: #d4af37;
+      font-weight: 600;
+    }
+  }
+
+  .dayal-dashboard-hero-eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #d4af37;
+    margin-bottom: 8px;
+  }
+
+  .dayal-dashboard-hero-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 44px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+
+    @media (max-width: 768px) {
+      font-size: 32px;
+    }
+  }
+
+  .dayal-dashboard-hero-subtitle {
+    font-size: 15px;
+    color: #f1e4d3;
+    margin: 0 auto;
+    max-width: 720px;
+    line-height: 1.5;
+  }
+
+  .dayal-dashboard-hero-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+}
+
+.dayal-dashboard-container {
+  width: 100%;
+  max-width: 1720px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    padding: 24px 16px 60px;
+  }
+}
+
+.dayal-dashboard-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 36px;
+}
+
+.dayal-stat-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #EBE4D8;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(99, 24, 38, 0.04);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(99, 24, 38, 0.08);
+  }
+
+  &--gold {
+    background: linear-gradient(135deg, #7A1926 0%, #4D0A14 100%);
+    color: #ffffff;
+    border-color: #9E7432;
+
+    .dayal-stat-label {
+      color: #E6CA92;
+    }
+    .dayal-stat-value {
+      color: #ffffff;
+    }
+    .dayal-stat-subtext {
+      color: #F5EBD7;
+    }
+  }
+
+  .dayal-stat-label {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #8C7B6B;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .dayal-stat-value {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 38px;
+    font-weight: 700;
+    color: #631826;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .dayal-stat-subtext {
+    font-size: 13px;
+    color: #7A6B5C;
+  }
+}
+
+.dayal-dashboard-tabs-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #EBE4D8;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.dayal-dashboard-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+
+  .dayal-tab-item {
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #64748B;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    margin-bottom: -2px;
+
+    &:hover {
+      color: #631826;
+    }
+
+    &.active {
+      color: #631826;
+      border-bottom-color: #631826;
+    }
+
+    .tab-count {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: #F1E9DF;
+      color: #631826;
+      font-weight: 800;
+    }
+  }
+}
+
+.dayal-user-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.dayal-user-product-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #EBE4D8;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(99, 24, 38, 0.1);
+    border-color: #C59B27;
+  }
+
+  .user-product-img-wrap {
+    height: 200px;
+    background-color: #F8F4EE;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    &:hover img {
+      transform: scale(1.06);
+    }
+
+    .order-badge-pill {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(99, 24, 38, 0.9);
+      color: #ffffff;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      backdrop-filter: blur(4px);
+    }
+
+    .status-badge-pill {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: capitalize;
+
+      &--pending {
+        background: #FEF3C7;
+        color: #92400E;
+        border: 1px solid #FDE68A;
+      }
+      &--shipping {
+        background: #E0E7FF;
+        color: #3730A3;
+        border: 1px solid #C7D2FE;
+      }
+      &--delivered {
+        background: #DCFCE7;
+        color: #15803D;
+        border: 1px solid #BBF7D0;
+      }
+    }
+  }
+
+  .user-product-body {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .product-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 21px;
+      font-weight: 700;
+      color: #2D181C;
+      margin: 0 0 6px 0;
+      line-height: 1.25;
+    }
+
+    .product-variant {
+      font-size: 12px;
+      font-weight: 600;
+      color: #8C7B6B;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .product-order-meta {
+      font-size: 12px;
+      color: #64748B;
+      margin-bottom: 16px;
+      padding-top: 10px;
+      border-top: 1px dashed #E2D9CC;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .product-pricing-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 16px;
+
+      .unit-price {
+        font-size: 13px;
+        color: #64748B;
+      }
+
+      .total-price {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: #631826;
+      }
+    }
+
+    .reorder-btn {
+      width: 100%;
+      padding: 10px 16px;
+      background: #631826;
+      color: #ffffff;
+      border: 1px solid #631826;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s ease, transform 0.15s ease;
+
+      &:hover {
+        background: #7A1926;
+        transform: translateY(-1px);
+      }
+    }
+  }
+}
+
+
+// ==========================================================================
+// WooCommerce-style My Account 2-Column Sidebar & Content Layout
+// ==========================================================================
+
+.dayal-myaccount-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 36px;
+  align-items: start;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+.dayal-myaccount-sidebar {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #EBE4D8;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  position: sticky;
+  top: 90px;
+
+  .myaccount-user-card {
+    padding: 24px;
+    background: linear-gradient(135deg, #4a0e1a 0%, #631826 100%);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .myaccount-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #C59B27;
+      color: #ffffff;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 22px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .myaccount-meta {
+      h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+        color: #ffffff;
+      }
+      p {
+        margin: 2px 0 0;
+        font-size: 12px;
+        color: #E2D9CC;
+      }
+    }
+  }
+
+  .myaccount-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+
+    .myaccount-nav-item {
+      button, a {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 24px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #475569;
+        background: none;
+        border: none;
+        border-left: 3px solid transparent;
+        cursor: pointer;
+        text-align: left;
+        text-decoration: none;
+        transition: all 0.15s ease;
+
+        &:hover {
+          background: #FDF9F3;
+          color: #631826;
+        }
+
+        &.active {
+          background: #FDF9F3;
+          color: #631826;
+          border-left-color: #631826;
+          font-weight: 700;
+        }
+
+        .nav-badge {
+          margin-left: auto;
+          background: #F1E9DF;
+          color: #631826;
+          font-size: 11px;
+          font-weight: 800;
+          padding: 2px 8px;
+          border-radius: 999px;
+        }
+      }
+    }
+  }
+}
+
+.dayal-myaccount-content {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #EBE4D8;
+  padding: 32px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+
+  @media (max-width: 600px) {
+    padding: 20px 16px;
+  }
+}
+
+// ==========================================================================
+// Myntra-Style Purchased Sweets & Orders View
+// ==========================================================================
+.dayal-myntra-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dayal-myntra-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 4px;
+
+  .myntra-heading {
+    margin: 0;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #631826;
+  }
+
+  .myntra-subheading {
+    margin: 4px 0 0 0;
+    color: #64748B;
+    font-size: 14px;
+  }
+}
+
+.dayal-myntra-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: #FAF7F2;
+  border: 1px solid #EBE4D8;
+  border-radius: 10px;
+  padding: 12px 16px;
+
+  .myntra-tabs-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    .myntra-tab-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid #CBD5E1;
+      background: #FFFFFF;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.15s ease;
+
+      &:hover {
+        border-color: #631826;
+        color: #631826;
+      }
+
+      &.active {
+        background: #631826;
+        color: #FFFFFF;
+        border-color: #631826;
+        box-shadow: 0 2px 8px rgba(99, 24, 38, 0.25);
+
+        .myntra-count-badge {
+          background: rgba(255, 255, 255, 0.25);
+          color: #FFFFFF;
+        }
+      }
+
+      .myntra-count-badge {
+        font-size: 11px;
+        padding: 1px 7px;
+        border-radius: 999px;
+        background: #F1F5F9;
+        color: #64748B;
+        font-weight: 700;
+        transition: all 0.15s ease;
+      }
+    }
+  }
+
+  .myntra-search-box {
+    position: relative;
+    flex: 1 1 240px;
+    max-width: 320px;
+
+    input {
+      width: 100%;
+      padding: 8px 12px 8px 34px;
+      border-radius: 6px;
+      border: 1px solid #CBD5E1;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      background: #FFFFFF;
+
+      &:focus {
+        border-color: #631826;
+        box-shadow: 0 0 0 3px rgba(99, 24, 38, 0.1);
+      }
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94A3B8;
+      pointer-events: none;
+    }
+  }
+}
+
+.dayal-myntra-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dayal-myntra-card {
+  background: #FFFFFF;
+  border: 1px solid #EBE4D8;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    border-color: #D4AF37;
+  }
+
+  .myntra-card-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 20px;
+    background: #FAF7F2;
+    border-bottom: 1px solid #F1E9DF;
+    font-size: 12px;
+
+    .myntra-status-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .status-indicator-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+        flex-shrink: 0;
+
+        &.delivered {
+          background: #16A34A;
+          box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.18);
+        }
+
+        &.shipping {
+          background: #2563EB;
+          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+        }
+
+        &.pending {
+          background: #D97706;
+          box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.18);
+        }
+
+        &.cancelled {
+          background: #DC2626;
+          box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.18);
+        }
+      }
+
+      .status-main-label {
+        font-weight: 700;
+        color: #0F172A;
+      }
+
+      .status-desc-text {
+        color: #64748B;
+        font-size: 12px;
+      }
+    }
+
+    .myntra-order-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #64748B;
+      font-size: 12px;
+
+      .order-pill {
+        font-weight: 700;
+        color: #631826;
+        background: #F4ECE1;
+        padding: 2px 8px;
+        border-radius: 4px;
+      }
+    }
+  }
+
+  .myntra-card-main {
+    display: flex;
+    align-items: center;
+    padding: 18px 20px;
+    gap: 20px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .myntra-image-box {
+      width: 96px;
+      height: 96px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #FAF7F2;
+      border: 1px solid #EBE4D8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      &:hover img {
+        transform: scale(1.05);
+      }
+    }
+
+    .myntra-content-box {
+      flex: 1 1 auto;
+      min-width: 0;
+
+      .myntra-item-name {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: 21px;
+        font-weight: 700;
+        color: #0F172A;
+        margin: 0 0 4px 0;
+        line-height: 1.25;
+      }
+
+      .myntra-variant-line {
+        font-size: 13px;
+        color: #64748B;
+        margin-bottom: 8px;
+
+        strong {
+          color: #334155;
+        }
+
+        .sep {
+          margin: 0 6px;
+          color: #CBD5E1;
+        }
+      }
+
+      .myntra-quality-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        color: #8C7B6B;
+        background: #FAF7F2;
+        padding: 3px 8px;
+        border-radius: 4px;
+        border: 1px solid #EFE8DC;
+        margin-bottom: 8px;
+      }
+
+      .myntra-rating-prompt {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: #64748B;
+
+        .star-row {
+          display: inline-flex;
+          gap: 2px;
+          color: #D4AF37;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .myntra-actions-box {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+      flex-shrink: 0;
+
+      @media (max-width: 768px) {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #F1E9DF;
+        padding-top: 14px;
+      }
+
+      .myntra-pricing {
+        text-align: right;
+
+        @media (max-width: 768px) {
+          text-align: left;
+        }
+
+        .price-val {
+          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-size: 22px;
+          font-weight: 700;
+          color: #631826;
+          line-height: 1;
+        }
+
+        .price-note {
+          display: block;
+          font-size: 11px;
+          color: #64748B;
+          margin-top: 2px;
+        }
+      }
+
+      .myntra-buttons-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+    }
+  }
+}

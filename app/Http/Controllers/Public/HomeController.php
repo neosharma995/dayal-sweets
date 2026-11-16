@@ -181,6 +181,7 @@ class HomeController extends Controller
         return Inertia::render('Checkout', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
+            'razorpayKey' => config('services.razorpay.key', env('RAZORPAY_API_KEY', '')),
         ]);
     }
 

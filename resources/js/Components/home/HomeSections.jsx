@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/react';
 import ProductCard from '../ProductCard';
 import Testimonials from '../Testimonials';
 import Outlets from '../Outlets';
-import Franchise from '../Franchise';
+import Opportunities from '../Opportunities';
 
 const trustItems = [
     ['SINCE 1962', '60+ Years of Tradition', 'Frame-34.svg'],
@@ -204,13 +204,13 @@ const processSteps = [
     },
     {
         number: '04',
-        image: 'image-198.svg',
+        image: 'image-199.svg',
         title: 'Quality & Hygiene',
         description: 'Every sweet is carefully inspected for quality and freshness. Prepared under strict hygiene standards.',
     },
     {
         number: '05',
-        image: 'image-199.svg',
+        image: 'image-198.svg',
         title: 'Packaging & Delivery',
         description: 'Packed with care to preserve taste, freshness and quality. Ready to delight every celebration.',
     },
@@ -443,12 +443,14 @@ const serviceCards = [
 const videos = [
     ['Festive Sweet Preparation', 'Fresh ingredients and traditional recipes come together for every celebration.'],
     ['Traditional Sweet Making', 'Time-honored techniques bring authentic Dayal sweets to life.'],
-    ['Diwali festival', 'Enjoying purchasing with friends and colleagues in Dayal Sweets.'],
-    ['Festival Gift Platters', 'Bespoke gifting for every celebration.'],
-    ['Jalebi Frying Fresh', 'Fried fresh every morning, served warm.'],
-    ['Khoya Pedas Magic', '100% desi ghee, pure milk, no preservatives.'],
-    ['Spounch', 'Each peda shaped by hand, one at a time.'],
-    ['Slow Cooking Tradition', 'Traditional wood-fire methods since 1952.'],
+    ['Diwali festival', 'enjoying purchasing with friends and colleagues in dayal sweets'],
+    ['Festival Gift Platters', 'Bespoke gifting for every celebration'],
+    ['Jalebi Frying Fresh', 'Fried fresh every morning, served warm'],
+    ['Khoya Pedas Magic', '100% desi ghee, Pure milk, no preservatives'],
+    ['Spounch', 'Each peda shaped by hand, one at a time'],
+    ['Slow Cooking Tradition', 'Traditional wood-fire methods since 1952'],
+    ['Kaju katli', '100% cashew, no preservatives, pure silver vark'],
+    ['Fresh Milk Poured Daily', 'Pure A2 milk sourced fresh every morning'],
 ];
 
 function SectionHeading({ eyebrow, children }) {
@@ -515,28 +517,248 @@ function BestSellers() {
 }
 
 function SpecialServices() {
-    return <section className="dayal-home-services"><div className="dayal-home-services-inner">
-        <SectionHeading eyebrow="Our Support">Special <span>Services</span></SectionHeading>
-        <p className="dayal-home-section-description">Every celebration deserves something extraordinary. Discover our signature services, crafted with timeless recipes, premium ingredients, and generations of sweet-making excellence.</p>
-        <div className="dayal-home-services-grid">{serviceCards.map((service, index) => <article className={`dayal-home-service-card ${index === 0 ? ' is-featured' : ''}`} style={{ backgroundImage: `url('/uploads/2026/07/${service.background}')` }} key={service.title}>
-            <div className="dayal-home-service-copy"><h3>{service.title}</h3><p>{service.description}</p><ul>{service.points.map((point) => <li key={point}>{point}</li>)}</ul><Link href={service.href}>{service.action}<span aria-hidden="true">↗</span></Link></div><img className="dayal-home-service-product" src={`/uploads/2026/07/${service.image}`} alt="" loading="lazy" />
-        </article>)}</div>
-    </div></section>;
+    return (
+        <section className="rt-service-section dayal-home-services" aria-label="Our Support - Special Services">
+            {/* Left Decorative Image (bg221.png) */}
+            <img
+                src="/uploads/2026/09/bg221.png"
+                alt=""
+                className="rt-service-decor-left"
+                aria-hidden="true"
+                loading="lazy"
+            />
+
+            {/* Right Decorative Image (ChatGPT-Image-Sep-7-2026-07_03_53-PM-e1788788084617.png) */}
+            <img
+                src="/uploads/2026/09/ChatGPT-Image-Sep-7-2026-07_03_53-PM-e1788788084617.png"
+                alt=""
+                className="rt-service-decor-right"
+                aria-hidden="true"
+                loading="lazy"
+            />
+
+            <div className="rt-service-container dayal-home-services-inner">
+                {/* Section Header */}
+                <header className="rt-service-header">
+                    <div className="rt-service-eyebrow-wrap">
+                        <span className="rt-service-divider" aria-hidden="true" />
+                        <p className="rt-service-eyebrow">OUR SUPPORT</p>
+                        <span className="rt-service-divider" aria-hidden="true" />
+                    </div>
+                    <h2 className="rt-service-heading">
+                        Special <span className="rt-span-color">Services</span>
+                    </h2>
+                    <p className="rt-service-desc">
+                        Every celebration deserves something extraordinary. Discover our signature services, crafted with timeless recipes, premium ingredients, and generations of sweet-making excellence.
+                    </p>
+                </header>
+
+                {/* Service Cards Slider / Grid */}
+                <div className="rt-service-slider-wrapper dayal-home-services-grid">
+                    {serviceCards.map((service, index) => (
+                        <article
+                            key={service.title}
+                            className={`rt-service-slide dayal-home-service-card ${index === 0 ? 'is-first-slide is-featured' : ''}`}
+                            style={{ backgroundImage: `url('/uploads/2026/07/${service.background}')` }}
+                        >
+                            <div className="rt-service-slide-content">
+                                <div className="rt-service-main">
+                                    <h3 className="rt-service-title">{service.title}</h3>
+                                </div>
+
+                                <div className="rt-service-description">
+                                    <p>{service.description}</p>
+                                </div>
+
+                                <ul className="rt-service-points">
+                                    {service.points.map((point) => (
+                                        <li key={point}>{point}</li>
+                                    ))}
+                                </ul>
+
+                                <div className="rt-service-product-image">
+                                    <img
+                                        src={`/uploads/2026/07/${service.image}`}
+                                        alt={`${service.title} Product`}
+                                        loading="lazy"
+                                    />
+                                </div>
+
+                                <Link className="rt-service-btn" href={service.href}>
+                                    <span>{service.action}</span>
+                                    <img
+                                        src="/uploads/2026/07/Icon.svg"
+                                        alt=""
+                                        aria-hidden="true"
+                                    />
+                                </Link>
+                            </div>
+                        </article>
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
 }
 
 function VideoGallery() {
-    const slider = useRef(null);
+    const sliderRef = useRef(null);
+    const trackRef = useRef(null);
     const [playing, setPlaying] = useState(null);
-    const toggle = async (index) => {
-        const items = slider.current?.querySelectorAll('video') ?? [];
-        const video = items[index];
-        if (!video) return;
-        if (playing === index) { video.pause(); setPlaying(null); }
-        else { items.forEach((item) => item.pause()); try { await video.play(); setPlaying(index); } catch { setPlaying(null); } }
+    const [isDragging, setIsDragging] = useState(false);
+    const [startX, setStartX] = useState(0);
+    const [scrollLeftState, setScrollLeftState] = useState(0);
+    const [scrollProgress, setScrollProgress] = useState({ width: 20, left: 0 });
+
+    const updateScrollProgress = () => {
+        if (!sliderRef.current) return;
+        const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
+        const maxScroll = scrollWidth - clientWidth;
+        const ratio = scrollWidth ? clientWidth / scrollWidth : 0.2;
+        const widthPercent = Math.max(ratio * 100, 15);
+        const leftPercent = maxScroll > 0 ? (scrollLeft / maxScroll) * (100 - widthPercent) : 0;
+        setScrollProgress({ width: widthPercent, left: leftPercent });
     };
-    return <section className="dayal-home-video"><div className="dayal-home-video-inner"><SectionHeading eyebrow="Watch the Making">The Art Behind<br /><span>Every Sweet Bite</span></SectionHeading><p className="dayal-home-section-description">From selecting the finest ingredients to handcrafted preparation and slow cooking, witness the journey that makes every Dayal sweet truly special.</p></div>
-        <div className="dayal-home-video-slider" ref={slider}>{videos.map(([title, description], index) => <article className="dayal-home-video-card" key={title}><video src="/uploads/2026/07/dayal-sweets-showcase.mp4" muted loop playsInline preload="metadata" onClick={() => toggle(index)} /><button type="button" className={playing === index ? 'is-playing' : ''} aria-label={`${playing === index ? 'Pause' : 'Play'} ${title}`} onClick={() => toggle(index)}>▶</button><div><h3>{title}</h3><p>{description}</p></div></article>)}</div><div className="dayal-home-video-scroll"><span /></div>
-    </section>;
+
+    useEffect(() => {
+        updateScrollProgress();
+        window.addEventListener('resize', updateScrollProgress);
+        return () => window.removeEventListener('resize', updateScrollProgress);
+    }, []);
+
+    const handleScroll = () => {
+        updateScrollProgress();
+    };
+
+    const handleMouseDown = (e) => {
+        setIsDragging(true);
+        setStartX(e.pageX - sliderRef.current.offsetLeft);
+        setScrollLeftState(sliderRef.current.scrollLeft);
+    };
+
+    const handleMouseLeave = () => {
+        setIsDragging(false);
+    };
+
+    const handleMouseUp = () => {
+        setIsDragging(false);
+    };
+
+    const handleMouseMove = (e) => {
+        if (!isDragging || !sliderRef.current) return;
+        e.preventDefault();
+        const x = e.pageX - sliderRef.current.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        sliderRef.current.scrollLeft = scrollLeftState - walk;
+    };
+
+    const handleTrackClick = (e) => {
+        if (!trackRef.current || !sliderRef.current) return;
+        const rect = trackRef.current.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const clickRatio = Math.max(0, Math.min(1, clickX / rect.width));
+        const maxScroll = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
+        sliderRef.current.scrollTo({
+            left: clickRatio * maxScroll,
+            behavior: 'smooth',
+        });
+    };
+
+    const togglePlay = async (index) => {
+        if (!sliderRef.current) return;
+        const items = sliderRef.current.querySelectorAll('video');
+        const targetVideo = items[index];
+        if (!targetVideo) return;
+
+        if (playing === index) {
+            targetVideo.pause();
+            setPlaying(null);
+        } else {
+            items.forEach((v) => v.pause());
+            try {
+                await targetVideo.play();
+                setPlaying(index);
+            } catch {
+                setPlaying(null);
+            }
+        }
+    };
+
+    return (
+        <section className="dsg-video-section dayal-home-video" aria-label="Watch the Making">
+            <div className="dsg-video-header-container dayal-home-video-inner">
+                <header className="dsg-video-header">
+                    <div className="dsg-video-eyebrow-wrap">
+                        <span className="dsg-video-divider" aria-hidden="true" />
+                        <p className="dsg-video-eyebrow">WATCH THE MAKING</p>
+                        <span className="dsg-video-divider" aria-hidden="true" />
+                    </div>
+                    <h2 className="dsg-video-heading">
+                        The Art Behind <span className="rt-span-color">Every Sweet Bite</span>
+                    </h2>
+                    <p className="dsg-video-desc-top">
+                        From selecting the finest ingredients to handcrafted preparation and slow cooking, witness the journey that makes every Dayal sweet truly special.
+                    </p>
+                </header>
+            </div>
+
+            <div className="dsg-our-gallery dsg-video-gallery">
+                <div
+                    className={`dsg-video-slider ${isDragging ? 'dsg-dragging' : ''}`}
+                    ref={sliderRef}
+                    onScroll={handleScroll}
+                    onMouseDown={handleMouseDown}
+                    onMouseLeave={handleMouseLeave}
+                    onMouseUp={handleMouseUp}
+                    onMouseMove={handleMouseMove}
+                >
+                    {videos.map(([title, description], index) => (
+                        <div
+                            className="dsg-video-item"
+                            key={title}
+                            onClick={() => togglePlay(index)}
+                        >
+                            <video
+                                className="dsg-video-el"
+                                src="/uploads/2026/07/dayal-sweets-showcase.mp4"
+                                muted
+                                loop
+                                playsInline
+                                preload="metadata"
+                            />
+                            <button
+                                type="button"
+                                className={`dsg-video-play ${playing === index ? 'is-playing' : ''}`}
+                                aria-label={playing === index ? `Pause ${title}` : `Play ${title}`}
+                            >
+                                <span className="dsg-play-icon" aria-hidden="true">
+                                    {playing === index ? '❚❚' : '►'}
+                                </span>
+                            </button>
+                            <div className="dsg-video-info">
+                                <h4 className="dsg-video-title">{title}</h4>
+                                <p className="dsg-video-desc">{description}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <div
+                    className="dsg-scrollbar-track"
+                    ref={trackRef}
+                    onClick={handleTrackClick}
+                >
+                    <div
+                        className="dsg-scrollbar-thumb"
+                        style={{
+                            width: `${scrollProgress.width}%`,
+                            left: `${scrollProgress.left}%`,
+                        }}
+                    />
+                </div>
+            </div>
+        </section>
+    );
 }
 
 function LaunchBanners() {
@@ -675,16 +897,25 @@ export default function HomeSections() {
                 </div>
             </section>
 
-            <section className="dayal-home-process">
+            <section className="dayal-home-process" aria-label="Our Process">
                 <div className="dayal-home-process-inner">
-                    <header className="dayal-home-section-heading">
-                        <p>Our Process</p>
-                        <h2>From Fresh Ingredients to<br />Sweet Perfection</h2>
+                    <header className="dayal-home-process-header">
+                        <div className="dayal-home-process-eyebrow-wrap">
+                            <span className="dayal-home-process-rule" aria-hidden="true" />
+                            <p className="dayal-home-process-eyebrow">Our Process</p>
+                            <span className="dayal-home-process-rule" aria-hidden="true" />
+                        </div>
+                        <h2 className="dayal-home-process-title">
+                            <span className="dayal-home-process-title-main">From Fresh Ingredients to</span>
+                            <span className="dayal-home-process-title-highlight">Sweet Perfection</span>
+                        </h2>
                     </header>
                     <ol className="dayal-home-process-grid">
                         {processSteps.map((step) => (
                             <li className="dayal-home-process-step" key={step.number}>
-                                <img src={`/uploads/2026/07/${step.image}`} alt="" loading="lazy" />
+                                <div className="dayal-home-process-media">
+                                    <img src={`/uploads/2026/07/${step.image}`} alt={step.title} loading="lazy" />
+                                </div>
                                 <span className="dayal-home-process-number">Step {step.number}</span>
                                 <h3>{step.title}</h3>
                                 <p>{step.description}</p>
@@ -697,7 +928,7 @@ export default function HomeSections() {
             <VideoGallery />
             <Testimonials />
             <Outlets />
-            <Franchise />
+            <Opportunities />
         </div>
     );
 }

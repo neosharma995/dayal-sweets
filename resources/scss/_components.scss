@@ -180,10 +180,50 @@
   cursor: pointer;
 }
 
-// --- Flash Message Wrapper ---
+// --- Flash Message Wrapper & Toaster ---
 .dayal-flash-wrapper {
   margin-top: 1.25rem;
 }
+
+@keyframes dayalToastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dayalToastSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.95);
+  }
+}
+
+@keyframes dayalToastCountdown {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.dayal-toast-enter {
+  animation: dayalToastSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.dayal-toast-exit {
+  animation: dayalToastSlideOut 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 .dayal-alert {
   padding: 1rem 1.25rem;
   border-radius: $radius-lg;
@@ -264,7 +304,7 @@
 .dayal-modal {
   position: fixed;
   inset: 0;
-  z-index: 50;
+  z-index: 9999;
   overflow-y: auto;
   padding: 1.5rem 1rem;
   display: flex;
@@ -274,8 +314,10 @@
   &-backdrop {
     position: fixed;
     inset: 0;
-    background-color: rgba(43, 37, 35, 0.65);
+    background-color: rgba(15, 23, 42, 0.65);
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1;
   }
 
   &-panel {
@@ -285,9 +327,9 @@
     background-color: $color-white;
     border: 1px solid $color-cream-border;
     border-radius: $radius-xl;
-    box-shadow: $shadow-xl;
-    padding: 2rem;
-    z-index: 10;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    padding: 1.75rem;
+    z-index: 2;
   }
 }
 

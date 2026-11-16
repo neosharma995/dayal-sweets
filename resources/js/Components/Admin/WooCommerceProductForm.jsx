@@ -10,6 +10,7 @@ export default function WooCommerceProductForm({
     dietPreferences = [],
     tags = [],
     attributes = [],
+    taxRates = [],
     isEdit = false,
     product = null,
     onSubmit,
@@ -24,6 +25,10 @@ export default function WooCommerceProductForm({
     const [seasonalMithaiId, setSeasonalMithaiId] = useState(initialData.seasonal_mithai_id || '');
     const [occasionId, setOccasionId] = useState(initialData.occasion_id || '');
     const [dietPreferenceId, setDietPreferenceId] = useState(initialData.diet_preference_id || '');
+    const [taxRateId, setTaxRateId] = useState(
+        initialData.tax_rate_id ? String(initialData.tax_rate_id) : (taxRates.length > 0 ? String(taxRates[0].id) : '')
+    );
+    const [taxStatus, setTaxStatus] = useState(initialData.tax_status || 'taxable');
     const [selectedTagIds, setSelectedTagIds] = useState(
         Array.isArray(initialData.tag_ids) && initialData.tag_ids.length > 0
             ? initialData.tag_ids.map(Number)
@@ -98,6 +103,18 @@ export default function WooCommerceProductForm({
     const regNum = Number(regularPrice) || 0;
     const saleNum = Number(salePrice) || 0;
     const discountPercent = regNum > saleNum && regNum > 0 ? Math.round(((regNum - saleNum) / regNum) * 100) : 0;
+
+    // Live Tax and Final Price Calculation
+    const selectedTaxRate = taxRates.find((t) => String(t.id) === String(taxRateId));
+    const isTaxable = taxStatus === 'taxable' && Boolean(selectedTaxRate);
+    const taxRatePercent = isTaxable ? Number(selectedTaxRate.rate) : 0;
+    const effectiveBasePrice = saleNum > 0 ? saleNum : regNum;
+    const calculatedTaxAmount = isTaxable && effectiveBasePrice > 0
+        ? (selectedTaxRate.type === 'fixed'
+            ? Number(selectedTaxRate.rate)
+            : Math.round(effectiveBasePrice * (taxRatePercent / 100) * 100) / 100)
+        : 0;
+    const finalPriceWithTax = Math.round((effectiveBasePrice + calculatedTaxAmount) * 100) / 100;
 
     // Generated slug for live permalink preview
     const slugPreview = title
@@ -364,6 +381,8 @@ export default function WooCommerceProductForm({
             occasion_id: occasionId || null,
             diet_preference_id: dietPreferenceId || null,
             product_tag_id: selectedTagIds.length > 0 ? selectedTagIds[0] : null,
+            tax_rate_id: taxRateId ? Number(taxRateId) : null,
+            tax_status: taxStatus,
             tag_ids: selectedTagIds,
             product_name: title,
             product_description: description,
@@ -960,9 +979,133 @@ export default function WooCommerceProductForm({
                                             </div>
                                         )}
 
+                                        {/* Divider */}
+                                        <hr style={{ border: 'none', borderTop: '1px solid #E2E8F0', margin: '1.5rem 0 1.25rem 0' }} />
+
+                                        {/* Tax Status (WooCommerce Standard) */}
+                                        <div style={{ marginBottom: '1.25rem' }}>
+                                            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, color: '#334155', marginBottom: '0.35rem' }}>
+                                                Tax status
+                                            </label>
+                                            <select
+                                                value={taxStatus}
+                                                onChange={(e) => setTaxStatus(e.target.value)}
+                                                style={{ width: '100%', padding: '0.55rem 0.75rem', borderRadius: '0.375rem', border: '1px solid #CBD5E1', background: '#FFFFFF', fontSize: '0.875rem' }}
+                                            >
+                                                <option value="taxable">Taxable (standard tax applied)</option>
+                                                <option value="none">None (tax exempt)</option>
+                                                <option value="shipping">Shipping only (exempt product, taxable freight)</option>
+                                            </select>
+                                            <span style={{ fontSize: '0.725rem', color: '#64748B', marginTop: '0.25rem', display: 'block' }}>
+                                                Determines whether tax is charged on this sweet or namkeen.
+                                            </span>
+                                        </div>
+
+                                        {/* Tax Rate / Class (WooCommerce Standard) */}
+                                        {taxStatus === 'taxable' && (
+                                            <div style={{ marginBottom: '1.25rem' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                                                    <label style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#334155' }}>
+                                                        Tax rate / GST class <span style={{ color: '#E11D48' }}>*</span>
+                                                    </label>
+                                                    <Link
+                                                        href={route('admin.taxes.create')}
+                                                        target="_blank"
+                                                        style={{ fontSize: '0.75rem', color: '#B88E4B', fontWeight: 600, textDecoration: 'none' }}
+                                                    >
+                                                        + Manage Tax Rates
+                                                    </Link>
+                                                </div>
+                                                <select
+                                                    value={taxRateId}
+                                                    onChange={(e) => setTaxRateId(e.target.value)}
+                                                    style={{ width: '100%', padding: '0.55rem 0.75rem', borderRadius: '0.375rem', border: '1px solid #CBD5E1', background: '#FFFFFF', fontSize: '0.875rem' }}
+                                                >
+                                                    <option value="">Select applicable GST / Tax rate</option>
+                                                    {taxRates.map((tr) => (
+                                                        <option key={tr.id} value={tr.id}>
+                                                            {tr.name} — {Number(tr.rate).toFixed(tr.rate % 1 === 0 ? 0 : 2)}% {tr.type === 'fixed' ? 'Fixed' : 'Rate'} ({tr.code})
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        )}
+
+                                        {/* Live Tax & Final Customer Price Calculation Preview Card */}
+                                        <div
+                                            style={{
+                                                marginTop: '1.25rem',
+                                                padding: '1rem 1.15rem',
+                                                borderRadius: '0.5rem',
+                                                background: '#FDFBF7',
+                                                border: '1.5px solid #E6D2B5',
+                                                boxShadow: '0 1px 3px rgba(184,142,75,0.06)',
+                                            }}
+                                        >
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
+                                                <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#8C6226', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                                    🧮 Live Price &amp; Tax Calculation
+                                                </span>
+                                                <span
+                                                    style={{
+                                                        fontSize: '0.7rem',
+                                                        fontWeight: 700,
+                                                        padding: '0.2rem 0.5rem',
+                                                        borderRadius: '999px',
+                                                        background: isTaxable ? '#ECFDF5' : '#F1F5F9',
+                                                        color: isTaxable ? '#059669' : '#64748B',
+                                                        border: isTaxable ? '1px solid #A7F3D0' : '1px solid #E2E8F0',
+                                                    }}
+                                                >
+                                                    {isTaxable ? `GST ${taxRatePercent}% Applied` : 'Tax Exempt'}
+                                                </span>
+                                            </div>
+
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', fontSize: '0.8125rem' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#475569' }}>
+                                                    <span>Base Sale Price:</span>
+                                                    <strong style={{ color: '#0F172A' }}>₹{effectiveBasePrice.toFixed(2)}</strong>
+                                                </div>
+
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#475569' }}>
+                                                    <span>
+                                                        Tax Rate ({isTaxable ? selectedTaxRate?.code : 'None'}):
+                                                    </span>
+                                                    <span style={{ color: '#0F172A', fontWeight: 600 }}>
+                                                        {isTaxable ? `+ ${taxRatePercent}%` : '₹0.00 (0%)'}
+                                                    </span>
+                                                </div>
+
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#475569' }}>
+                                                    <span>Estimated Tax / GST:</span>
+                                                    <span style={{ color: '#B88E4B', fontWeight: 700 }}>
+                                                        + ₹{calculatedTaxAmount.toFixed(2)}
+                                                    </span>
+                                                </div>
+
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center',
+                                                        paddingTop: '0.65rem',
+                                                        marginTop: '0.35rem',
+                                                        borderTop: '1px dashed #E6D2B5',
+                                                    }}
+                                                >
+                                                    <span style={{ fontSize: '0.875rem', fontWeight: 700, color: '#0F172A' }}>
+                                                        Final Customer Price (incl. tax):
+                                                    </span>
+                                                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#8C6226' }}>
+                                                        ₹{finalPriceWithTax.toFixed(2)}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         {productType === 'variable' && (
                                             <div style={{ marginTop: '1.25rem', padding: '0.85rem 1rem', background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '0.375rem', fontSize: '0.8125rem', color: '#475569' }}>
-                                                💡 <strong>Tip:</strong> In variable products, each individual pack size (e.g. 500g, 1kg) can have its own price under the <strong>Variations</strong> tab.
+                                                💡 <strong>Tip:</strong> In variable products, this tax rate ({taxRatePercent}%) also applies proportionally to each pack size variation at checkout.
                                             </div>
                                         )}
                                     </div>

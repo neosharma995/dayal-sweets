@@ -10,6 +10,7 @@ export default function Create({
     dietPreferences = [],
     tags = [],
     attributes = [],
+    taxRates = [],
 }) {
     const [processing, setProcessing] = useState(false);
     const [errors, setErrors] = useState({});
@@ -39,6 +40,7 @@ export default function Create({
                     dietPreferences={dietPreferences}
                     tags={tags}
                     attributes={attributes}
+                    taxRates={taxRates}
                     isEdit={false}
                     onSubmit={handleSubmit}
                     processing={processing}

@@ -20,3 +20,6 @@
 @use './pages/about' as *;
 @use './pages/shop' as *;
 @use './contact' as *;
+@use './components/cart-drawer' as *;
+@use './pages/cart' as *;
+@use './pages/checkout' as *;

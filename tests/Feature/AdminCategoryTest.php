@@ -19,6 +19,7 @@ class AdminCategoryTest extends TestCase
     use DatabaseTransactions;
 
     protected User $adminUser;
+
     protected User $customerUser;
 
     protected function setUp(): void

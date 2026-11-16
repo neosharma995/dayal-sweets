@@ -986,7 +986,7 @@ export default function Shop({
 
                     {/* PRODUCT GRID */}
                     {paginatedProducts.length > 0 ? (
-                        <div className="dayal-shop-products-grid oto-products-grid-archive">
+                        <div className="dayal-products-grid dayal-shop-products-grid oto-products-grid-archive">
                             {paginatedProducts.map((product) => (
                                 <ProductCard key={product.id} product={product} onAddToCart={addToCart} />
                             ))}
@@ -1072,7 +1072,7 @@ export default function Shop({
                         </p>
                     </header>
 
-                    <div className="oto-products-grid-archive oto-latest-combo-products">
+                    <div className="dayal-products-grid oto-products-grid-archive oto-latest-combo-products">
                         {curatedCombos.map((combo) => (
                             <ProductCard key={combo.id} product={combo} onAddToCart={addToCart} />
                         ))}

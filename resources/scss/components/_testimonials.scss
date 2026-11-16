@@ -1,0 +1,534 @@
+// ==========================================================================
+// Testimonials Section Component Styles
+// Exact 1:1 match with Hostinger live site & WordPress Elementor Post 1736 / 65
+// ==========================================================================
+
+@use '../abstracts/storefront-variables' as *;
+
+.dayal-testimonials-section {
+    position: relative;
+    padding: 80px 0 90px;
+    background-color: #FAF7F2;
+    overflow: hidden;
+
+    @media (max-width: 1024px) {
+        padding: 50px 0 60px;
+    }
+
+    @media (max-width: 768px) {
+        padding: 40px 0;
+    }
+
+    .dayal-testimonials-container {
+        @include dayal-container;
+        position: relative;
+    }
+
+    /* Layout: Left Mascot + Right Content (Header + Slider) */
+    .dayal-testimonials-layout {
+        display: flex;
+        align-items: flex-end;
+        gap: 20px;
+        position: relative;
+
+        @media (max-width: 1100px) {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 28px;
+        }
+
+        /* Mascot Column */
+        .dayal-testimonials-mascot-col {
+            flex-shrink: 0;
+            width: 260px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            margin-bottom: 0;
+
+            @media (max-width: 1280px) {
+                width: 220px;
+            }
+
+            @media (max-width: 1100px) {
+                display: none; // Hides mascot on tablet & mobile, exactly matching rt_style.css line 452
+            }
+
+            .dayal-testimonials-mascot-img {
+                width: 100%;
+                height: auto;
+                max-height: 450px;
+                object-fit: contain;
+                display: block;
+            }
+        }
+
+        /* Content Column (Header Row + Slider Row) */
+        .dayal-testimonials-content-col {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 36px;
+
+            @media (max-width: 768px) {
+                gap: 24px;
+            }
+        }
+    }
+
+    /* Top Row: Eyebrow + Heading (Left) and 4.9 Rating Badge (Right) */
+    /* padding-left: 64px mathematically aligns Title with the Active Card (40px arrow + 24px gap = 64px) */
+    /* padding-right: 64px aligns Rating Badge with the 3 Stacked Cards */
+    .dayal-testimonials-top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding-left: 64px;
+        padding-right: 64px;
+
+        @media (max-width: 1280px) {
+            padding-left: 54px;
+            padding-right: 54px;
+        }
+
+        @media (max-width: 768px) {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding-left: 0;
+            padding-right: 0;
+            gap: 20px;
+        }
+
+        .dayal-testimonials-heading-box {
+            display: flex;
+            flex-direction: column;
+
+            @media (max-width: 768px) {
+                align-items: center;
+            }
+
+            .dayal-testimonials-eyebrow-wrap {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 8px;
+
+                .dayal-eyebrow-divider {
+                    width: 21px;
+                    height: 1px;
+                    background-color: #1C1008;
+                    display: inline-block;
+                }
+
+                .dayal-eyebrow-text {
+                    font-family: 'Inter', sans-serif;
+                    font-size: 14px;
+                    font-weight: 400;
+                    line-height: 16px;
+                    letter-spacing: 4.8px;
+                    text-transform: uppercase;
+                    color: #1C1008;
+                }
+            }
+
+            .dayal-testimonials-heading {
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-size: 65px;
+                font-weight: 400;
+                line-height: 1.05;
+                color: #1C1008;
+                margin: 0;
+
+                .rt-span-color {
+                    color: #7B1C2E;
+                    font-weight: 500;
+                }
+
+                @media (max-width: 1280px) {
+                    font-size: 52px;
+                }
+
+                @media (max-width: 900px) {
+                    font-size: 38px;
+                }
+
+                @media (max-width: 480px) {
+                    font-size: 30px;
+                }
+            }
+        }
+
+        .dayal-testimonials-rating-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 2px;
+            flex-shrink: 0;
+
+            .dayal-rating-number {
+                font-family: 'Inter', sans-serif;
+                font-size: 40px;
+                font-weight: 500;
+                line-height: 1;
+                color: #1C1008;
+                margin: 0;
+            }
+
+            .dayal-rating-google-img {
+                width: 116px;
+                height: 20px;
+                object-fit: contain;
+                margin: 4px 0 2px 0;
+            }
+
+            .dayal-rating-stars-img {
+                width: 102px;
+                height: 35px;
+                object-fit: contain;
+                margin: 0;
+            }
+
+            .dayal-rating-text {
+                font-family: 'Inter', sans-serif;
+                font-size: 13px;
+                font-weight: 400;
+                line-height: 20px;
+                color: #1C1008;
+                margin: 0;
+            }
+        }
+    }
+
+    /* Slider Container */
+    .ts-slider-wrapper {
+        position: relative;
+        display: flex;
+        align-items: stretch;
+        gap: 24px;
+        width: 100%;
+
+        @media (max-width: 900px) {
+            gap: 14px;
+        }
+
+        @media (max-width: 600px) {
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .ts-arrow {
+            align-self: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 1px solid #EFEBE5;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+            flex-shrink: 0;
+            padding: 0;
+            transition: all 0.2s ease;
+
+            img {
+                width: 14px;
+                height: auto;
+                object-fit: contain;
+            }
+
+            &:hover {
+                background: #FAF7F2;
+                border-color: #C9A96E;
+                transform: scale(1.05);
+            }
+
+            @media (max-width: 600px) {
+                width: 32px;
+                height: 32px;
+                order: 2;
+            }
+        }
+
+        .ts-slider-inner {
+            display: flex;
+            gap: 16px;
+            flex: 1;
+            min-width: 0;
+
+            @media (max-width: 900px) {
+                flex-direction: column;
+            }
+
+            @media (max-width: 600px) {
+                order: 1;
+                flex: 1 1 100%;
+            }
+        }
+    }
+
+    /* Active Featured Card */
+    .ts-active-card {
+        position: relative;
+        flex: 1.6;
+        background: #FFFFFF;
+        border: 1px solid rgba(201, 169, 110, 0.4);
+        border-radius: 16px;
+        padding: 56px 56px 44px 56px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 380px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        transition: opacity 0.2s ease, transform 0.2s ease;
+
+        &.fade-out {
+            opacity: 0.2;
+            transform: scale(0.99);
+        }
+
+        &.fade-in {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        @media (max-width: 900px) {
+            padding: 40px 32px 32px 32px;
+            min-height: auto;
+        }
+
+        @media (max-width: 600px) {
+            padding: 28px 20px 24px 20px;
+            border-radius: 14px;
+        }
+
+        .ts-quote-icon {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            .ts-quote-img {
+                width: 36px;
+                height: 36px;
+                object-fit: contain;
+            }
+
+            .google-img-test {
+                width: 24px;
+                height: 24px;
+                object-fit: contain;
+            }
+        }
+
+        .ts-active-content {
+            margin: 20px 0 28px 0;
+
+            p {
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-size: 20px;
+                line-height: 36px;
+                color: #1C1008;
+                font-weight: 500;
+                margin: 0;
+
+                @media (max-width: 900px) {
+                    font-size: 17px;
+                    line-height: 30px;
+                    margin: 12px 0 20px 0;
+                }
+
+                @media (max-width: 600px) {
+                    font-size: 15px;
+                    line-height: 25px;
+                    margin: 10px 0 16px 0;
+                }
+            }
+        }
+
+        .ts-active-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 10px;
+
+            @media (max-width: 600px) {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .ts-footer-author {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+
+                .ts-avatar {
+                    width: 46px;
+                    height: 46px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    flex-shrink: 0;
+
+                    @media (max-width: 600px) {
+                        width: 38px;
+                        height: 38px;
+                    }
+                }
+
+                .ts-person-info {
+                    flex: 1;
+                    min-width: 0;
+
+                    .ts-person-name {
+                        font-family: 'Plus Jakarta Sans', sans-serif;
+                        font-weight: 600;
+                        font-size: 15.2px;
+                        color: #1C1008;
+                        line-height: 23px;
+
+                        @media (max-width: 600px) {
+                            font-size: 13.5px;
+                            line-height: 20px;
+                        }
+                    }
+
+                    .ts-person-location {
+                        font-family: 'Inter', sans-serif;
+                        font-size: 12.8px;
+                        color: #1C1008;
+                        line-height: 19.2px;
+
+                        @media (max-width: 600px) {
+                            font-size: 11.5px;
+                            line-height: 17px;
+                        }
+                    }
+                }
+            }
+
+            .ts-stars {
+                color: #f0a500;
+                font-size: 15px;
+                letter-spacing: 2px;
+                white-space: nowrap;
+
+                @media (max-width: 600px) {
+                    font-size: 13px;
+                    letter-spacing: 1px;
+                }
+            }
+        }
+    }
+
+    /* Side Column: 3 Stacked Cards */
+    .ts-side-column {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        @media (max-width: 900px) {
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        @media (max-width: 600px) {
+            flex-direction: column;
+        }
+
+        .ts-side-card {
+            background: #FFFFFF;
+            border-radius: 14px;
+            padding: 20px;
+            cursor: pointer;
+            border: 1px solid #EFEBE5;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+
+            &.ts-is-next {
+                border: 1px solid rgba(201, 168, 76, 0.4);
+            }
+
+            &.ts-is-plain {
+                border: 1px solid rgba(245, 240, 232, 0.06);
+            }
+
+            &:hover {
+                border-color: #C9A96E;
+                box-shadow: 0 4px 12px rgba(201, 169, 110, 0.15);
+                transform: translateY(-2px);
+            }
+
+            @media (max-width: 900px) {
+                flex: 1 1 calc(50% - 6px);
+                padding: 16px;
+            }
+
+            @media (max-width: 600px) {
+                flex: 1 1 100%;
+                padding: 14px;
+            }
+
+            .ts-side-header {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 8px;
+
+                .ts-avatar-sm {
+                    width: 34px;
+                    height: 34px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    flex-shrink: 0;
+
+                    @media (max-width: 600px) {
+                        width: 28px;
+                        height: 28px;
+                    }
+                }
+
+                .ts-person-info {
+                    display: flex;
+                    flex-direction: column;
+
+                    .ts-person-name {
+                        font-family: 'Plus Jakarta Sans', sans-serif;
+                        font-weight: 600;
+                        font-size: 14px;
+                        color: #1C1008;
+                        line-height: 1.2;
+                    }
+
+                    .ts-person-category {
+                        font-family: 'Inter', sans-serif;
+                        font-size: 12px;
+                        color: #7A6B55;
+                        line-height: 1.2;
+                        margin-top: 2px;
+                    }
+                }
+            }
+
+            .ts-side-excerpt {
+                font-family: 'Inter', sans-serif;
+                font-size: 13px;
+                line-height: 1.55;
+                color: #6b6b6b;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+
+                @media (max-width: 600px) {
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}

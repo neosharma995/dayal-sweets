@@ -10,22 +10,15 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class AuthController extends Controller
 {
     /**
-     * Display the dedicated admin login view.
+     * Redirect to the unified single login view for both admin and customer.
      */
-    public function create(): Response
+    public function create(): RedirectResponse
     {
-        return Inertia::render('Admin/Auth/Login', [
-            'status' => session('status'),
-            'defaultEmail' => 'admin@dayalsweets.com',
-            'defaultPassword' => 'password',
-            'submitUrl' => route('admin.login.store'),
-        ]);
+        return redirect()->route('login');
     }
 
     /**
@@ -63,6 +56,6 @@ class AuthController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect()->route('admin.login');
+        return redirect()->route('login');
     }
 }

@@ -422,6 +422,8 @@
             max-width: 150px;
             width: 150px;
             display: flex;
+            flex-direction: column;
+            height: 100%;
             align-self: stretch;
             flex-shrink: 0;
         }

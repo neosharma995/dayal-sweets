@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import Header from '@/Components/Header';
+import Footer from '@/Components/Footer';
+import ContactHero from '@/Components/contact/ContactHero';
+import '../../scss/pages/_contact.scss';
 import '../../scss/_contact.scss';
 
 export default function ContactUs({ auth }) {
@@ -88,16 +91,6 @@ export default function ContactUs({ auth }) {
         },
     ];
 
-    // Gallery thumbnails for footer
-    const galleryThumbs = [
-        '/uploads/2026/07/Image-Namkeen.png',
-        '/uploads/2026/07/photo-1547592180-85f173990554.png',
-        '/uploads/2026/07/photo-1601050690597-df0568f70950.png',
-        '/uploads/2026/07/Image-Gulab-Jamun.png',
-        '/uploads/2026/07/photo-1519225421980-715cb0215aed.png',
-        '/uploads/2026/07/Container-9.png',
-    ];
-
     return (
         <div className="dayal-contact-page">
             <Head title="Contact Us - Dayal Sweets" />
@@ -106,54 +99,17 @@ export default function ContactUs({ auth }) {
             <Header auth={auth} />
 
             {/* ========================================================= */}
-            {/* 1. HERO BANNER                                            */}
+            {/* 1. HERO BANNER (Canonical Red Banner)                     */}
             {/* ========================================================= */}
-            <section className="dayal-contact-hero">
-                {/* Decorative Cashews & Rose Petals (Left) */}
-                <img
-                    src="/images/contact/hero-cashews.png"
-                    alt="Decorative Cashews and Rose Petals"
-                    className="dayal-hero-decor-cashews"
-                />
-
-                {/* Decorative Peacock Feather (Right) */}
-                <img
-                    src="/images/contact/hero-peacock.png"
-                    alt="Decorative Peacock Feather"
-                    className="dayal-hero-decor-peacock"
-                />
-
-                <div className="dayal-hero-container">
-                    {/* Breadcrumbs */}
-                    <nav className="dayal-contact-breadcrumb" aria-label="Breadcrumb">
-                        <Link href="/">HOME</Link>
-                        <span className="breadcrumb-sep">&gt;</span>
-                        <span className="breadcrumb-current">CONTACT US</span>
-                    </nav>
-
-                    {/* Page Title */}
-                    <h1 className="dayal-contact-hero-title">CONTACT US</h1>
-
-                    {/* Golden Decorative Divider */}
-                    <img
-                        src="/uploads/2026/07/Group-2.png"
-                        alt=""
-                        className="dayal-hero-divider"
-                        aria-hidden="true"
-                    />
-
-                    {/* Subtitle */}
-                    <h2 className="dayal-contact-hero-subtitle">
-                        We'd Love to Hear From You!
-                    </h2>
-
-                    {/* Description */}
-                    <p className="dayal-contact-hero-desc">
-                        Have a query, feedback, or a special request? We're here to help and make your
-                        experience with Dayal Sweets even better.
-                    </p>
-                </div>
-            </section>
+            <ContactHero
+                breadcrumbs={[
+                    { label: 'HOME', url: '/' },
+                    { label: 'CONTACT US', url: null },
+                ]}
+                title="CONTACT US"
+                subtitle="We'd Love to Hear From You!"
+                description="Have a query, feedback, or a special request? We're here to help and make your experience with Dayal Sweets even better."
+            />
 
             {/* ========================================================= */}
             {/* 2. CONTACT FORM & INFORMATION SECTION                      */}
@@ -161,22 +117,16 @@ export default function ContactUs({ auth }) {
             <section className="dayal-contact-main-section">
                 {/* Floating Pistachio (Top Right) */}
                 <img
-                    src="/images/contact/pistachio.png"
+                    src="/uploads/2026/07/image-166.png"
                     alt="Pistachio Garnish"
                     className="dayal-decor-pistachio"
                 />
 
-                {/* Watermark Feathers */}
+                {/* Watermark Feather (Bottom Left) */}
                 <img
-                    src="/images/contact/peacock-left.png"
+                    src="/uploads/2026/07/image-48.png"
                     alt=""
                     className="dayal-decor-peacock-left"
-                    aria-hidden="true"
-                />
-                <img
-                    src="/images/contact/peacock-right.png"
-                    alt=""
-                    className="dayal-decor-peacock-right"
                     aria-hidden="true"
                 />
 
@@ -512,118 +462,8 @@ export default function ContactUs({ auth }) {
                 </div>
             </section>
 
-            {/* ========================================================= */}
-            {/* 5. FOOTER SECTION                                         */}
-            {/* ========================================================= */}
-            <footer className="dayal-contact-footer">
-                <div className="dayal-footer-container">
-                    <div className="dayal-footer-grid">
-                        {/* Col 1: Brand Info */}
-                        <div className="dayal-footer-col-brand">
-                            <Link href="/">
-                                <img
-                                    src="/uploads/2026/07/Frame-51-1-1.png"
-                                    alt="Dayal Sweets"
-                                    className="dayal-footer-brand-logo"
-                                />
-                            </Link>
-
-                            <p className="dayal-footer-desc">
-                                Crafting India's most loved sweet moments since 1982. Pure ingredients, authentic recipes, and a legacy of taste.
-                            </p>
-
-                            {/* Social Icons */}
-                            <div className="dayal-footer-socials" aria-label="Social media">
-                                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                                    <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                                    </svg>
-                                </a>
-                                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                                    <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M9 8h-3v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.5 5H18V0h-3.808C10.597 0 9 1.583 9 4.615V8z" />
-                                    </svg>
-                                </a>
-                                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                                    <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                                    </svg>
-                                </a>
-                                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                                    <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                                    </svg>
-                                </a>
-                            </div>
-
-                            {/* CERTIFIED & PROUD */}
-                            <div className="dayal-footer-certified">
-                                <h6>CERTIFIED &amp; PROUD</h6>
-                                <div className="certified-badges">
-                                    <img src="/uploads/2026/07/kindpng_2513820-1.png" alt="FSSAI Certified" />
-                                    <img src="/uploads/2026/07/Asset-1-2-1.png" alt="Make in India" />
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Col 2: QUICK LINK */}
-                        <div className="dayal-footer-col-nav">
-                            <h4>QUICK LINK</h4>
-                            <ul>
-                                <li><Link href="/">Home</Link></li>
-                                <li><a href="/about-us">About Us</a></li>
-                                <li><a href="/#reviews">Reviews</a></li>
-                                <li><Link href="/contact-us">Contact Us</Link></li>
-                                <li><a href="/#privacy">Privacy Policy</a></li>
-                                <li><a href="/#returns">Return Policy</a></li>
-                            </ul>
-                        </div>
-
-                        {/* Col 3: SHOP */}
-                        <div className="dayal-footer-col-nav">
-                            <h4>SHOP</h4>
-                            <ul>
-                                <li><a href="/shop/?cats=sweets">Sweets &amp; Mithai</a></li>
-                                <li><a href="/shop/?cats=namkeen">Namkeen &amp; Snacks</a></li>
-                                <li><a href="/shop/?cats=bakery">Bakery Items</a></li>
-                                <li><a href="/shop/?cats=beverages">Beverages</a></li>
-                                <li><a href="/shop/?cats=gift-hampers">Gift Hampers</a></li>
-                                <li><a href="/shop/?seasonal=all">Seasonal Specials</a></li>
-                            </ul>
-                        </div>
-
-                        {/* Col 4: CORPORATE */}
-                        <div className="dayal-footer-col-nav">
-                            <h4>CORPORATE</h4>
-                            <ul>
-                                <li><a href="/shop">Orders</a></li>
-                                <li><a href="/gifting">Corporate Gifting</a></li>
-                                <li><a href="/franchise">Franchise Enquiry</a></li>
-                            </ul>
-                        </div>
-
-                        {/* Col 5: GALLERY */}
-                        <div className="dayal-footer-col-gallery">
-                            <h4>GALLERY</h4>
-                            <div className="gallery-grid-3x2">
-                                {galleryThumbs.map((src, idx) => (
-                                    <img
-                                        key={idx}
-                                        src={src}
-                                        alt={`Dayal Sweets Gallery item ${idx + 1}`}
-                                        loading="lazy"
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Bottom Copyright */}
-                    <div className="dayal-footer-bottom">
-                        &copy; 2026 Dayal Sweets. All rights reserved.
-                    </div>
-                </div>
-            </footer>
+            {/* Modular Site-wide Reusable Footer */}
+            <Footer />
         </div>
     );
 }

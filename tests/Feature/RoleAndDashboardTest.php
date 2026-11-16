@@ -47,12 +47,43 @@ class RoleAndDashboardTest extends TestCase
         $response->assertInertia(fn ($page) => $page->component('Dining'));
     }
 
-    public function test_admin_login_screen_can_be_rendered(): void
+    public function test_public_product_single_page_is_rendered(): void
+    {
+        $response = $this->get('/product/office-tea-combo');
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page->component('Product/Show'));
+    }
+
+    public function test_public_product_with_variations_and_database_slug_is_rendered(): void
+    {
+        $response = $this->get('/product/imperial-gold-festive-sweet-hamper');
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page->component('Product/Show'));
+    }
+
+    public function test_public_product_fallback_page_is_rendered(): void
+    {
+        $response = $this->get('/product');
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page->component('Product/Show'));
+    }
+
+    public function test_single_login_screen_with_header_footer_can_be_rendered(): void
+    {
+        $response = $this->get('/login');
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page->component('Auth/Login'));
+    }
+
+    public function test_admin_login_redirects_to_single_login_screen(): void
     {
         $response = $this->get('/admin/login');
 
-        $response->assertStatus(200);
-        $response->assertInertia(fn ($page) => $page->component('Admin/Auth/Login'));
+        $response->assertRedirect(route('login'));
     }
 
     public function test_admin_can_authenticate_via_single_login_and_redirects_to_admin_dashboard(): void
@@ -119,7 +150,7 @@ class RoleAndDashboardTest extends TestCase
         $response = $this->actingAs($admin)->post('/admin/logout');
 
         $this->assertGuest();
-        $response->assertRedirect(route('admin.login'));
+        $response->assertRedirect(route('login'));
     }
 
     public function test_admin_can_access_admin_dashboard(): void

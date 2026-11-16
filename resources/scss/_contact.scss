@@ -183,8 +183,11 @@
   }
 
   .dayal-contact-container {
-    max-width: 1140px;
+    max-width: 1720px;
+    width: 100%;
     margin: 0 auto;
+    padding: 0 clamp(16px, 3.5vw, 48px);
+    box-sizing: border-box;
     position: relative;
     z-index: 1;
   }
@@ -195,8 +198,8 @@
     gap: 2.25rem;
 
     @include respond-to('lg') {
-      grid-template-columns: 1.45fr 1fr;
-      gap: 2.5rem;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 2.75rem;
       align-items: start;
     }
   }
@@ -373,7 +376,7 @@
 }
 
 // --------------------------------------------------------------------------
-// 3. "VIEW OUR STORES" — "PREMIUM OUTLETS" SECTION
+// 3. "VIEW OUR STORES" â€” "PREMIUM OUTLETS" SECTION
 // --------------------------------------------------------------------------
 .dayal-contact-outlets-section {
   position: relative;
@@ -395,8 +398,11 @@
   }
 
   .dayal-outlets-container {
-    max-width: 1140px;
+    max-width: 1720px;
+    width: 100%;
     margin: 0 auto;
+    padding: 0 clamp(16px, 3.5vw, 48px);
+    box-sizing: border-box;
     position: relative;
     z-index: 1;
   }
@@ -404,7 +410,7 @@
   // Section Header
   .dayal-outlets-header {
     text-align: center;
-    max-width: 650px;
+    max-width: 750px;
     margin: 0 auto 3rem;
 
     .dayal-outlets-tag {
@@ -419,7 +425,7 @@
 
     .dayal-outlets-title {
       font-family: $font-serif;
-      font-size: clamp(2rem, 4vw, 2.5rem);
+      font-size: clamp(2rem, 4vw, 2.75rem);
       font-weight: 700;
       color: #1B1514;
       margin: 0 0 0.85rem;
@@ -430,7 +436,7 @@
     }
 
     .dayal-outlets-subtitle {
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       color: #6B635B;
       line-height: 1.6;
       margin: 0;
@@ -441,15 +447,19 @@
   .dayal-outlets-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 1.25rem;
 
     @include respond-to('sm') {
       grid-template-columns: repeat(2, 1fr);
     }
 
+    @media (min-width: 900px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
     @include respond-to('lg') {
       grid-template-columns: repeat(5, 1fr);
-      gap: 0.85rem;
+      gap: 1.25rem;
     }
   }
 
@@ -654,7 +664,7 @@
 }
 
 // --------------------------------------------------------------------------
-// 4. "CRAVING SOMETHING SWEET —" (Order Anytime Anywhere Banner) SECTION
+// 4. "CRAVING SOMETHING SWEET â€”" (Order Anytime Anywhere Banner) SECTION
 // --------------------------------------------------------------------------
 .dayal-order-anytime-section {
   background-color: #FAF6F0;
@@ -662,16 +672,19 @@
   border-top: 1px solid #ECE2D5;
 
   .dayal-order-container {
-    max-width: 1140px;
+    max-width: 1720px;
+    width: 100%;
     margin: 0 auto;
+    padding: 0 clamp(16px, 3.5vw, 48px);
+    box-sizing: border-box;
     display: grid;
     grid-template-columns: 1fr;
     gap: 2.5rem;
     align-items: center;
 
     @include respond-to('lg') {
-      grid-template-columns: 1.2fr 1fr;
-      gap: 3rem;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 3.5rem;
     }
   }
 
@@ -826,238 +839,6 @@
   }
 }
 
-// --------------------------------------------------------------------------
-// 5. FOOTER SECTION (EXACT MOCKUP DESIGN)
-// --------------------------------------------------------------------------
 .dayal-contact-footer {
-  background-color: #380812;
-  color: #FAF6F0;
-  position: relative;
-  overflow: hidden;
-  padding: 4rem 1rem 1.75rem;
-
-  &::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 80px;
-    height: 80px;
-    background-image: url('/images/contact/footer-watermark.jpg');
-    background-repeat: no-repeat;
-    background-size: contain;
-    opacity: 0.14;
-    pointer-events: none;
-  }
-
-  .dayal-footer-container {
-    max-width: 1140px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-  }
-
-  .dayal-footer-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2.25rem;
-    margin-bottom: 2.75rem;
-
-    @include respond-to('sm') {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @include respond-to('lg') {
-      grid-template-columns: 1.8fr 1fr 1fr 1fr 1.15fr;
-      gap: 1.75rem;
-    }
-  }
-
-  // Column 1: Brand Info
-  .dayal-footer-col-brand {
-    .dayal-footer-brand-logo {
-      display: block;
-      width: 100%;
-      max-width: 240px;
-      height: auto;
-      margin-bottom: 1.25rem;
-    }
-
-    .dayal-footer-brand-title {
-      font-family: $font-serif;
-      font-size: 1.25rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      color: #FAF6F0;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin-bottom: 0.75rem;
-
-      .brand-crest {
-        width: 26px;
-        height: 26px;
-        border-radius: 50%;
-        background: #FDF8ED;
-        color: #7E1325;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 800;
-        font-size: 14px;
-      }
-    }
-
-    .dayal-footer-desc {
-      font-size: 0.775rem;
-      color: #D7CBC0;
-      line-height: 1.6;
-      margin: 0 0 1.25rem;
-      max-width: 280px;
-    }
-
-    .dayal-footer-socials {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-
-      a {
-        width: 26px;
-        height: 26px;
-        border-radius: 50%;
-        border: 1px solid rgba(255, 255, 255, 0.35);
-        color: #FAF6F0;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.7rem;
-        text-decoration: none;
-        transition: $transition-smooth;
-
-        &:hover {
-          background-color: #7E1325;
-          border-color: #7E1325;
-          transform: translateY(-1px);
-        }
-      }
-    }
-
-    .dayal-footer-certified {
-      h6 {
-        font-size: 0.68rem;
-        font-weight: 800;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: #FAF6F0;
-        margin: 0 0 0.5rem;
-      }
-
-      .certified-badges {
-        display: flex;
-        align-items: center;
-        gap: 0.85rem;
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: #E2D4C3;
-
-        img {
-          display: block;
-          height: 28px;
-          width: auto;
-          object-fit: contain;
-        }
-
-        .badge-fssai {
-          padding: 2px 6px;
-          border: 1px solid rgba(255, 255, 255, 0.25);
-          border-radius: 3px;
-          font-size: 0.65rem;
-          font-weight: 800;
-          letter-spacing: 0.05em;
-        }
-
-        .badge-quality {
-          font-size: 0.65rem;
-          display: inline-flex;
-          align-items: center;
-          gap: 0.25rem;
-        }
-      }
-    }
-  }
-
-  // Column 2, 3, 4: Nav Links
-  .dayal-footer-col-nav {
-    h4 {
-      font-size: 0.78rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #FAF6F0;
-      margin: 0 0 1rem;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.45rem;
-
-      li a {
-        font-size: 0.775rem;
-        color: #D7CBC0;
-        text-decoration: none;
-        transition: $transition-fast;
-
-        &:hover {
-          color: #D4AF37;
-          padding-left: 2px;
-        }
-      }
-    }
-  }
-
-  // Column 5: Gallery 3x2 Grid
-  .dayal-footer-col-gallery {
-    h4 {
-      font-size: 0.78rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #FAF6F0;
-      margin: 0 0 1rem;
-    }
-
-    .gallery-grid-3x2 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.35rem;
-
-      img {
-        width: 100%;
-        aspect-ratio: 1/1;
-        object-fit: cover;
-        border-radius: 4px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        transition: $transition-smooth;
-
-        &:hover {
-          transform: scale(1.06);
-          border-color: #D4AF37;
-        }
-      }
-    }
-  }
-
-  // Bottom Copyright
-  .dayal-footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 1.5rem;
-    text-align: center;
-    font-size: 0.72rem;
-    color: #C5B6A8;
-  }
+  display: none !important;
 }

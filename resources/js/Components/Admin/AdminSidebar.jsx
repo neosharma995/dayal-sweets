@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { StoreIcon, BoxIcon, UserIcon, ShieldCheckIcon, LogOutIcon } from '@/Components/Icons';
 
-export default function AdminSidebar({ sidebarOpen, onCloseSidebar }) {
+export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLogout }) {
     const { auth } = usePage().props;
 
     return (
@@ -98,15 +98,15 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar }) {
                         </div>
                     </div>
 
-                    <Link
-                        method="post"
-                        href={route('admin.logout')}
-                        as="button"
+                    <button
+                        type="button"
+                        onClick={onRequestLogout}
                         className="dayal-admin-logout-btn"
+                        style={{ cursor: 'pointer' }}
                     >
                         <LogOutIcon width="16" height="16" />
                         <span>Sign Out</span>
-                    </Link>
+                    </button>
                 </div>
             </aside>
         </>

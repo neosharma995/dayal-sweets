@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { LogOutIcon } from '@/Components/Icons';
 
-export default function AdminHeader({ onToggleSidebar, header }) {
+export default function AdminHeader({ onToggleSidebar, header, onRequestLogout }) {
     const { auth } = usePage().props;
 
     return (
@@ -28,15 +28,15 @@ export default function AdminHeader({ onToggleSidebar, header }) {
                     Admin Account
                 </Link>
 
-                <Link
-                    method="post"
-                    href={route('admin.logout')}
-                    as="button"
-                    title="Sign Out"
+                <button
+                    type="button"
+                    onClick={onRequestLogout}
+                    title="Sign Out of Admin Portal"
                     className="dayal-admin-head-logout"
+                    style={{ cursor: 'pointer' }}
                 >
                     <LogOutIcon width="16" height="16" />
-                </Link>
+                </button>
             </div>
         </header>
     );

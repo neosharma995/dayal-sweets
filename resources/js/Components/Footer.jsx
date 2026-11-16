@@ -6,6 +6,7 @@ const quickLinks = [
     ['Track Order', '/track-order'],
     ['Return Policy', '/refund-returns'],
     ['Delivery Info', '/delivery-info'],
+    ['Admin Portal', '/login'],
 ];
 
 const shopLinks = [

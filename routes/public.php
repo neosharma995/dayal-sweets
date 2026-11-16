@@ -12,8 +12,10 @@ use Inertia\Inertia;
 
 // Public Storefront
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/about-us', fn () => Inertia::render('About'))->name('about-us');
+Route::get('/about-us', [HomeController::class, 'about'])->name('about-us');
 Route::get('/contact-us', [HomeController::class, 'contact'])->name('contact');
+Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');
+Route::get('/gifting', [HomeController::class, 'gifting'])->name('gifting');
 
 // Authenticated Smart Role Dispatchers
 Route::middleware(['auth', 'verified'])->group(function () {

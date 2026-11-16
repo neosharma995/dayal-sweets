@@ -26,11 +26,44 @@ class HomeController extends Controller
     }
 
     /**
+     * Display the Dayal Sweets About Us page.
+     */
+    public function about(): Response
+    {
+        return Inertia::render('About', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+        ]);
+    }
+
+    /**
      * Display the Dayal Sweets Contact Us page.
      */
     public function contact(): Response
     {
         return Inertia::render('ContactUs', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+        ]);
+    }
+
+    /**
+     * Display the Dayal Sweets Gallery page.
+     */
+    public function gallery(): Response
+    {
+        return Inertia::render('Gallery', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+        ]);
+    }
+
+    /**
+     * Display the Dayal Sweets Gifting page.
+     */
+    public function gifting(): Response
+    {
+        return Inertia::render('Gifting', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
         ]);

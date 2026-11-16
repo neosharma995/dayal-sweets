@@ -320,6 +320,8 @@ export default function Shop({
     occasionTags: propOccasionTags = [],
     dietTags: propDietTags = [],
 }) {
+    const { addToCart } = useCart();
+
     // Dynamic / Default Tag options from separate category tables
     const seasonalTags = useMemo(() => {
         if (Array.isArray(propSeasonalTags) && propSeasonalTags.length > 0) {
@@ -341,8 +343,6 @@ export default function Shop({
         }
         return defaultDietOptions;
     }, [propDietTags]);
-export default function Shop({ auth }) {
-    const { addToCart } = useCart();
 
     // Search & Filter States
     const [searchQuery, setSearchQuery] = useState('');

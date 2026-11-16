@@ -89,7 +89,15 @@ export default function Header({ auth }) {
             </div>
             <div className="dayal-header-main" onMouseLeave={() => setShopOpen(false)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setShopOpen(false); }}>
                 <div className="dayal-header-container dayal-header-main-inner">
-                    <Link href="/" className="dayal-header-logo" aria-label="Dayal Sweets home"><img src="/uploads/2026/07/Frame-51-2.png" alt="Dayal Sweets" /></Link>
+                    <Link href="/" className="dayal-header-logo" aria-label="Dayal Sweets home">
+                        <img
+                            src="/uploads/2026/07/Frame-51-2-e1789985433447.png"
+                            srcSet="/uploads/2026/07/Frame-51-2-e1789985433447.png 1x, /uploads/2026/07/Frame-51-2-e1789985433447@2x.png 2x"
+                            alt="Dayal Sweets"
+                            width="254"
+                            height="64"
+                        />
+                    </Link>
                     <nav className={`dayal-header-nav ${mobileOpen ? 'is-open' : ''}`} aria-label="Main navigation">
                         <Link href="/" className={`dayal-header-link${currentPath === '/' ? ' is-active' : ''}`} aria-current={currentPath === '/' ? 'page' : undefined} onClick={closeMobileMenu}><span>Home</span></Link>
                         <div ref={shopNavigationRef} className="dayal-header-shop" onMouseEnter={openShopMenu}>
@@ -125,12 +133,36 @@ export default function Header({ auth }) {
                             return <a key={label} className={`dayal-header-link${active ? ' is-active' : ''}`} href={href} aria-current={active ? 'page' : undefined} onClick={closeMobileMenu}><span>{label}</span></a>;
                         })}
                     </nav>
+                    <button
+                        className="dayal-header-toggle"
+                        type="button"
+                        aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+                        aria-expanded={mobileOpen}
+                        onClick={() => setMobileOpen(!mobileOpen)}
+                    >
+                        {mobileOpen ? (
+                            <X size={30} strokeWidth={2.2} />
+                        ) : (
+                            <svg
+                                className="ekit-menu-icon ekit-svg-icon icon-burger-menu"
+                                viewBox="0 0 32 32"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="30"
+                                height="30"
+                                fill="currentColor"
+                                aria-hidden="true"
+                            >
+                                <path d="M0 18.294h32v-2.563h-32v2.563zM11.519 25.975h20.481v-2.563h-20.481v2.563zM6.4 8.056v2.563h25.6v-2.563h-25.6z" />
+                            </svg>
+                        )}
+                    </button>
                     <div className="dayal-header-actions">
-                        <button className="dayal-header-search-trigger" type="button" aria-label="Search Products" onClick={() => setSearchOpen(true)}><Search size={20} strokeWidth={1.8} aria-hidden="true" /></button>
-                        <a href="/my-account" className="dayal-header-account" aria-label={auth?.user ? 'My account' : 'Login'}><UserRound size={20} strokeWidth={1.8} aria-hidden="true" /></a>
-                        <a href="/cart" className="dayal-header-cart" aria-label={`View cart, ${cartCount} items`}><ShoppingBag size={20} strokeWidth={1.8} aria-hidden="true" /><span className="dayal-header-cart-count" aria-live="polite">{cartCount}</span></a>
+                        <div className="dayal-header-icons">
+                            <button className="dayal-header-search-trigger" type="button" aria-label="Search Products" onClick={() => setSearchOpen(true)}><Search size={20} strokeWidth={1.8} aria-hidden="true" /></button>
+                            <a href="/my-account" className="dayal-header-account" aria-label={auth?.user ? 'My account' : 'Login'}><UserRound size={20} strokeWidth={1.8} aria-hidden="true" /></a>
+                            <a href="/cart" className="dayal-header-cart" aria-label={`View cart, ${cartCount} items`}><ShoppingBag size={20} strokeWidth={1.8} aria-hidden="true" /><span className="dayal-header-cart-count" aria-live="polite">{cartCount}</span></a>
+                        </div>
                         <a className="dayal-header-order" href="/shop">Order Now</a>
-                        <button className="dayal-header-toggle" type="button" aria-label={mobileOpen ? 'Close menu' : 'Open menu'} aria-expanded={mobileOpen} onClick={() => setMobileOpen(!mobileOpen)}>{mobileOpen ? <X size={22} /> : <Menu size={22} />}</button>
                     </div>
                 </div>
                 {searchOpen && <div className="dayal-search-modal-overlay" role="presentation" onClick={() => setSearchOpen(false)}>

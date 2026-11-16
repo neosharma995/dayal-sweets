@@ -1,0 +1,1446 @@
+/**
+ * Gifting Page Scoped Styles - Dayal Sweets
+ * 100% Faithful Duplication of D:\Dayal Sweets Old (Post 65, Post 4570, Testimonials)
+ *
+ * STRICT RULES:
+ * - Units: STRICTLY px (no rem, no em)
+ * - Container: width: 90%; max-width: 100%; margin-left: auto; margin-right: auto;
+ * - No fixed pixel max-width on page containers.
+ */
+
+.gifting-page-root {
+    width: 100%;
+    background-color: #FFFDFA;
+    color: #1C1008;
+
+    /* Reusable Common Eyebrow Component */
+    .gifting-eyebrow-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 8px;
+
+        .gifting-eyebrow-divider {
+            display: inline-block;
+            width: 40px;
+            height: 1px;
+            background-color: #DAAE68;
+        }
+
+        .gifting-eyebrow-text {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #DAAE68;
+            text-transform: uppercase;
+        }
+    }
+
+    /* Common Section Heading */
+    .gifting-section-heading {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 38px;
+        font-weight: 700;
+        line-height: 48px;
+        color: #5C1520;
+        text-align: center;
+        margin: 0 0 12px 0;
+
+        .rt-span-color {
+            color: #C9A96E;
+        }
+    }
+
+    /* Common Section Subtitle */
+    .gifting-section-subtitle {
+        font-family: 'Inter', sans-serif;
+        font-size: 16px;
+        line-height: 24px;
+        color: #7A6B55;
+        text-align: center;
+        margin: 0 0 35px 0;
+    }
+
+    /* Hero Banner Right Visual (Gifting Art) */
+    .contact-hero-decor-right-visual {
+        position: absolute;
+        top: 0px;
+        right: 3px;
+        width: 33.146%;
+        max-width: 500px;
+        height: auto;
+        z-index: 1;
+        pointer-events: none;
+        object-fit: contain;
+
+        @media (max-width: 1024px) {
+            display: none !important;
+        }
+    }
+
+    /* ========================================================
+       SECTION B: SHOP BY OCCASION
+       ======================================================== */
+    .gifting-occasion-section {
+        padding: 80px 0;
+        background-color: #FFFDFA;
+
+        @media (max-width: 1024px) {
+            padding: 50px 0;
+        }
+
+        @media (max-width: 768px) {
+            padding: 40px 0;
+        }
+
+        .gifting-occasion-container {
+            width: 90%;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .gifting-occasion-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 31px;
+
+            @media (max-width: 1024px) {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+
+            @media (max-width: 768px) {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+        }
+
+        .gifting-occasion-spacer {
+            display: block;
+
+            @media (max-width: 1024px) {
+                display: none;
+            }
+        }
+
+        .gifting-occasion-card {
+            background: #FFFFFF;
+            border: 1px solid #E9DCCB;
+            border-radius: 18px;
+            box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
+            padding: 29px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            text-decoration: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+
+            &:hover {
+                transform: translateY(-4px);
+                border-color: #C9A96E;
+                box-shadow: 0px 8px 24px rgba(92, 21, 32, 0.08);
+            }
+
+            @media (max-width: 1024px) {
+                padding: 20px;
+            }
+
+            @media (max-width: 768px) {
+                padding: 20px 12px;
+            }
+
+            .gifting-occasion-icon-wrap {
+                width: 37px;
+                height: 37px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 12px;
+
+                @media (max-width: 1024px) {
+                    width: 30px;
+                    height: 30px;
+                }
+
+                @media (max-width: 768px) {
+                    width: 32px;
+                    height: 32px;
+                }
+
+                .gifting-occasion-icon {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                }
+            }
+
+            .gifting-occasion-card-title {
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-size: 22px;
+                font-weight: 600;
+                line-height: 20.4px;
+                color: #7C1F2E;
+                text-transform: capitalize;
+                margin: 0;
+
+                @media (max-width: 1200px) {
+                    font-size: 16px;
+                }
+
+                @media (max-width: 1024px) {
+                    font-size: 18px;
+                }
+
+                @media (max-width: 768px) {
+                    font-size: 14px;
+                    line-height: 18px;
+                }
+            }
+        }
+    }
+
+    /* ========================================================
+       SECTION C: FEATURED GIFT COLLECTIONS
+       ======================================================== */
+    .gifting-collections-section {
+        padding: 80px 0;
+        background-color: #FFFDFA;
+
+        @media (max-width: 1024px) {
+            padding: 50px 0;
+        }
+
+        @media (max-width: 768px) {
+            padding: 40px 0;
+        }
+
+        .gifting-collections-container {
+            width: 90%;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .gifting-collections-row {
+            display: flex;
+            gap: 24px;
+            margin-top: 30px;
+
+            @media (max-width: 1024px) {
+                flex-direction: column;
+            }
+        }
+
+        .gifting-collection-card {
+            flex: 1;
+            min-height: 480px;
+            border-radius: 10px;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+
+            @media (max-width: 768px) {
+                min-height: 420px;
+                padding: 24px;
+            }
+
+            .gifting-collection-content {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .gifting-collection-header {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 8px;
+
+                .gifting-collection-icon {
+                    width: 35px;
+                    height: 35px;
+                    flex-shrink: 0;
+
+                    @media (max-width: 768px) {
+                        width: 30px;
+                        height: 30px;
+                    }
+                }
+
+                .gifting-collection-title {
+                    font-family: 'Plus Jakarta Sans', sans-serif;
+                    font-size: 28px;
+                    font-weight: 500;
+                    margin: 0;
+
+                    @media (max-width: 768px) {
+                        font-size: 18px;
+                    }
+                }
+            }
+
+            .gifting-collection-subtitle {
+                font-family: 'Inter', sans-serif;
+                font-size: 15px;
+                font-weight: 400;
+                line-height: 22px;
+                margin: 0 0 20px 0;
+                max-width: 480px;
+
+                @media (max-width: 768px) {
+                    font-size: 14px;
+                }
+            }
+
+            .gifting-collection-features {
+                list-style: none;
+                padding: 0;
+                margin: 0 0 24px 0;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+
+                .gifting-collection-feature-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    font-family: 'Inter', sans-serif;
+                    font-size: 16px;
+                    font-weight: 400;
+                    line-height: 29px;
+
+                    .gifting-collection-bullet {
+                        display: inline-block;
+                        width: 8px;
+                        height: 8px;
+                        border-radius: 50%;
+                        flex-shrink: 0;
+                    }
+                }
+            }
+
+            .gifting-collection-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                font-family: 'Inter', sans-serif;
+                font-size: 16px;
+                font-weight: 500;
+                text-decoration: underline;
+                text-transform: capitalize;
+                line-height: 21px;
+                transition: opacity 0.2s ease, transform 0.2s ease;
+
+                &:hover {
+                    opacity: 0.85;
+                    transform: translateX(4px);
+                }
+
+                .gifting-collection-link-arrow {
+                    width: 18px;
+                    height: 18px;
+                }
+            }
+
+            /* Dark Hamper Theme */
+            &.gifting-collection-dark {
+                .gifting-collection-icon {
+                    color: #DAAE68;
+                }
+
+                .gifting-collection-title {
+                    color: #DAAE68;
+                }
+
+                .gifting-collection-subtitle {
+                    color: #F8DFB6;
+                }
+
+                .gifting-collection-feature-item {
+                    color: #DAAE68;
+
+                    .gifting-collection-bullet {
+                        background-color: #DAAE68;
+                    }
+                }
+
+                .gifting-collection-link {
+                    color: #DAAE68;
+                }
+            }
+
+            /* Light Corporate Theme */
+            &.gifting-collection-light {
+                .gifting-collection-icon {
+                    color: #1C1008;
+                }
+
+                .gifting-collection-title {
+                    color: #1C1008;
+                }
+
+                .gifting-collection-subtitle {
+                    color: #6D380B;
+                }
+
+                .gifting-collection-feature-item {
+                    color: #1C1008;
+
+                    .gifting-collection-bullet {
+                        background-color: #1C1008;
+                    }
+                }
+
+                .gifting-collection-link {
+                    color: #000000;
+                }
+            }
+        }
+    }
+
+    /* ========================================================
+       SECTION D: FESTIVAL SPECIALS
+       ======================================================== */
+    .gifting-festival-section {
+        padding: 80px 0;
+        background-color: #FFFDFA;
+
+        @media (max-width: 1024px) {
+            padding: 50px 0;
+        }
+
+        @media (max-width: 768px) {
+            padding: 40px 0;
+        }
+
+        .gifting-festival-container {
+            width: 90%;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .gifting-festival-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 27px;
+            margin-top: 30px;
+
+            @media (max-width: 1200px) {
+                gap: 15px;
+            }
+
+            @media (max-width: 1024px) {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+
+            @media (max-width: 768px) {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+        }
+
+        .gifting-festival-card {
+            background: #FFFFFF;
+            border: 1px solid rgba(201, 169, 110, 0.3);
+            border-radius: 16px;
+            overflow: hidden;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+
+            &:hover {
+                transform: translateY(-3px);
+                border-color: #C9A96E;
+                box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.06);
+            }
+
+            .gifting-festival-image-wrap {
+                width: 100%;
+                height: 132px;
+                overflow: hidden;
+
+                @media (max-width: 768px) {
+                    height: 120px;
+                }
+
+                .gifting-festival-image {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    display: block;
+                    transition: transform 0.4s ease;
+                }
+            }
+
+            &:hover .gifting-festival-image {
+                transform: scale(1.05);
+            }
+
+            .gifting-festival-title {
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-size: 18px;
+                font-weight: 600;
+                line-height: 25px;
+                color: #5C1520;
+                text-align: center;
+                padding: 12px 12px 16px 12px;
+                margin: 0;
+                text-transform: capitalize;
+
+                @media (max-width: 1200px) {
+                    font-size: 14px;
+                    line-height: 19px;
+                }
+
+                @media (max-width: 768px) {
+                    font-size: 15px;
+                }
+            }
+        }
+    }
+
+    /* ========================================================
+       SECTION E: WHY CHOOSE DAYAL SWEETS
+       ======================================================== */
+    .gifting-benefits-section {
+        padding: 80px 0;
+        background-color: #FFFDFA;
+
+        @media (max-width: 1024px) {
+            padding: 50px 0;
+        }
+
+        @media (max-width: 768px) {
+            padding: 40px 0;
+        }
+
+        .gifting-benefits-container {
+            width: 90%;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .gifting-benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+
+            @media (max-width: 1200px) {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+
+            @media (max-width: 768px) {
+                grid-template-columns: repeat(1, 1fr);
+                gap: 15px;
+            }
+        }
+
+        .gifting-benefit-card {
+            background: #FDF9F2;
+            border: 1px solid #F5E3D0;
+            border-radius: 12px;
+            box-shadow: 0px 4px 22px rgba(223, 192, 138, 0.25);
+            min-height: 340px;
+            padding: 20px 10px 15px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+            &:hover {
+                transform: translateY(-4px);
+                box-shadow: 0px 8px 28px rgba(223, 192, 138, 0.35);
+            }
+
+            @media (max-width: 1024px) {
+                min-height: 300px;
+                padding: 15px;
+            }
+
+            .gifting-benefit-icon-wrap {
+                width: 82px;
+                height: 82px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .gifting-benefit-icon {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                }
+            }
+
+            .gifting-benefit-title {
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-size: 18px;
+                font-weight: 600;
+                line-height: 20px;
+                color: #5C1520;
+                letter-spacing: 0.5px;
+                text-transform: capitalize;
+                margin: 0;
+            }
+
+            .gifting-benefit-divider {
+                width: auto;
+                max-width: 100%;
+                height: auto;
+                object-fit: contain;
+            }
+
+            .gifting-benefit-desc {
+                font-family: 'Inter', sans-serif;
+                font-size: 16px;
+                font-weight: 400;
+                line-height: 24px;
+                color: #7A6B55;
+                margin: 0;
+
+                @media (max-width: 768px) {
+                    font-size: 15px;
+                    line-height: 26px;
+                }
+            }
+
+            .gifting-benefit-arrow {
+                width: 117px;
+                height: 32px;
+                object-fit: contain;
+                margin-top: 5px;
+            }
+        }
+    }
+
+    /* ========================================================
+       SECTION F: HOW IT WORKS
+       ======================================================== */
+    .gifting-steps-section {
+        padding: 80px 0;
+        background-color: #FFFDFA;
+
+        @media (max-width: 1024px) {
+            padding: 50px 0;
+        }
+
+        @media (max-width: 768px) {
+            padding: 40px 0;
+        }
+
+        .gifting-steps-container {
+            width: 90%;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .gifting-steps-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 13px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+
+            @media (max-width: 1024px) {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            @media (max-width: 768px) {
+                gap: 13px;
+            }
+        }
+
+        .gifting-step-card {
+            background: #FFFFFF;
+            border: 1px solid #E9DCCB;
+            border-radius: 18px;
+            box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
+            padding: 32px 50px;
+            display: flex;
+            align-items: center;
+            gap: 31px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+            &:hover {
+                transform: translateY(-3px);
+                box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.08);
+            }
+
+            @media (max-width: 1024px) {
+                padding: 22px;
+                gap: 25px;
+                width: 100%;
+                max-width: 480px;
+                justify-content: center;
+            }
+
+            @media (max-width: 768px) {
+                padding: 15px 20px;
+                gap: 20px;
+                width: 100%;
+            }
+
+            .gifting-step-icon-wrap {
+                width: 29px;
+                height: 29px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+
+                @media (max-width: 1024px) {
+                    width: 25px;
+                    height: 25px;
+                }
+
+                @media (max-width: 768px) {
+                    width: 20px;
+                    height: 20px;
+                }
+
+                .gifting-step-icon {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                }
+            }
+
+            .gifting-step-title {
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-size: 22px;
+                font-weight: 500;
+                line-height: 20.4px;
+                color: #1C1008;
+                margin: 0;
+
+                @media (max-width: 1024px) {
+                    font-size: 20px;
+                }
+
+                @media (max-width: 768px) {
+                    font-size: 16px;
+                }
+            }
+        }
+
+        .gifting-step-arrow-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .gifting-step-arrow {
+                width: 39px;
+                height: auto;
+                object-fit: contain;
+            }
+
+            @media (max-width: 1024px) {
+                transform: rotate(90deg);
+                margin: 5px 0;
+            }
+        }
+    }
+
+    /* ========================================================
+       SECTION G: CUSTOM GIFTING / QUOTE FORM
+       ======================================================== */
+    .gifting-quote-section {
+        padding: 80px 0;
+        background-color: #FFFDFA;
+
+        @media (max-width: 1024px) {
+            padding: 50px 0;
+        }
+
+        @media (max-width: 768px) {
+            padding: 40px 0;
+        }
+
+        .gifting-quote-container {
+            width: 90%;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            gap: 25px;
+
+            @media (max-width: 1024px) {
+                flex-direction: column;
+                gap: 25px;
+            }
+        }
+
+        /* Col 1: Hamper Photo */
+        .gifting-quote-col-photo {
+            flex: 0 0 32%;
+            border-radius: 12px;
+            height: 557px;
+            overflow: hidden;
+            display: flex;
+
+            @media (max-width: 1024px) {
+                flex: 1 1 100%;
+                width: 100%;
+                max-height: 380px;
+            }
+
+            .gifting-quote-photo {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 12px;
+                display: block;
+            }
+        }
+
+        /* Col 2: Info & Hamper Illustration */
+        .gifting-quote-col-info {
+            flex: 0 0 28%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 15px;
+
+            @media (max-width: 1024px) {
+                flex: 1 1 100%;
+                width: 100%;
+                padding: 10px 0;
+            }
+
+            .gifting-quote-heading {
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-size: 50px;
+                font-weight: 700;
+                color: #5C1520;
+                margin: 0;
+
+                .rt-span-color {
+                    color: #C9A96E;
+                }
+
+                @media (max-width: 768px) {
+                    font-size: 28px;
+                    line-height: 36px;
+                }
+            }
+
+            .gifting-quote-description {
+                font-family: 'Inter', sans-serif;
+                font-size: 16px;
+                font-weight: 400;
+                line-height: 24px;
+                color: #7A6B55;
+                margin: 0;
+            }
+
+            .gifting-quote-illustration-wrap {
+                margin-top: 10px;
+
+                .gifting-quote-illustration {
+                    max-width: 316px;
+                    height: auto;
+                    object-fit: contain;
+                    display: block;
+                }
+            }
+        }
+
+        /* Col 3: Quote Form */
+        .gifting-quote-col-form {
+            flex: 1;
+            background: #FDF9F2;
+            border: 1px solid #F5E3D0;
+            border-radius: 12px;
+            padding: 30px 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            @media (max-width: 1024px) {
+                flex: 1 1 100%;
+                width: 100%;
+                padding: 20px;
+            }
+
+            .contact-form-wrapper {
+                width: 100%;
+            }
+
+            .contact-form-inner-wrapper {
+                width: 100%;
+
+                .form-row {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 20px;
+                    margin-bottom: 20px;
+
+                    @media (max-width: 768px) {
+                        grid-template-columns: 1fr;
+                        gap: 15px;
+                        margin-bottom: 15px;
+                    }
+                }
+
+                .form-field {
+                    width: 100%;
+
+                    &.full-width {
+                        margin-bottom: 20px;
+
+                        @media (max-width: 768px) {
+                            margin-bottom: 15px;
+                        }
+                    }
+
+                    input,
+                    textarea {
+                        font-family: 'Plus Jakarta Sans', sans-serif;
+                        width: 100%;
+                        box-sizing: border-box;
+                        border: 1px solid #F5E3D0;
+                        background: #FFFDFA;
+                        color: #222;
+                        outline: none;
+                        border-radius: 8px;
+                        font-weight: 500;
+                        font-size: 14px;
+                        line-height: 20px;
+                        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+                        &::placeholder {
+                            color: #1C1008;
+                            font-weight: 500;
+                            font-family: 'Plus Jakarta Sans', sans-serif;
+                        }
+
+                        &:focus {
+                            border-color: #8B1028;
+                            box-shadow: 0 0 0 2px rgba(139, 16, 40, 0.1);
+                        }
+                    }
+
+                    input {
+                        height: 48px;
+                        padding: 0 14px;
+
+                        @media (max-width: 768px) {
+                            height: 46px;
+                        }
+                    }
+
+                    textarea {
+                        height: 90px;
+                        min-height: 90px;
+                        resize: none;
+                        padding: 14px;
+
+                        @media (max-width: 768px) {
+                            height: 110px;
+                        }
+                    }
+                }
+
+                .form-submit {
+                    margin-top: 0;
+
+                    .gifting-quote-submit-btn {
+                        font-family: 'Inter', sans-serif;
+                        width: 100%;
+                        height: 50px;
+                        padding: 0 20px;
+                        border: none;
+                        border-radius: 8px;
+                        background: #8B1028;
+                        color: #FFFFFF;
+                        font-weight: 600;
+                        font-size: 16px;
+                        line-height: 18px;
+                        letter-spacing: 0.3px;
+                        text-transform: uppercase;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease, transform 0.1s ease;
+
+                        &:hover {
+                            background-color: #6f0d20;
+                        }
+
+                        &:active {
+                            transform: scale(0.99);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /* ========================================================
+       SECTION H: CUSTOMER TESTIMONIALS
+       ======================================================== */
+    .gifting-testimonial-section {
+        padding: 80px 0;
+        background-color: #FAF7F2;
+
+        @media (max-width: 1024px) {
+            padding: 50px 0 100px 0;
+        }
+
+        @media (max-width: 768px) {
+            padding: 30px 0;
+        }
+
+        .gifting-testimonial-container {
+            width: 90%;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Top Row: Eyebrow + Heading (Left) and Rating (Right) */
+        .gifting-testimonial-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 40px;
+
+            @media (max-width: 900px) {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 20px;
+                margin-bottom: 25px;
+            }
+
+            .gifting-testimonial-heading-box {
+                .gifting-eyebrow-wrapper {
+                    justify-content: flex-start;
+
+                    @media (max-width: 900px) {
+                        justify-content: center;
+                    }
+                }
+
+                .gifting-section-heading {
+                    text-align: left;
+                    margin: 0;
+
+                    @media (max-width: 900px) {
+                        text-align: center;
+                    }
+                }
+            }
+
+            .gifting-testimonial-rating-badge {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-decoration: none;
+                gap: 2px;
+                cursor: pointer;
+                transition: transform 0.2s ease;
+
+                &:hover {
+                    transform: scale(1.03);
+                }
+
+                .gifting-rating-number {
+                    font-family: 'Inter', sans-serif;
+                    font-size: 40px;
+                    font-weight: 500;
+                    color: #1C1008;
+                    line-height: 1;
+
+                    @media (max-width: 768px) {
+                        font-size: 30px;
+                    }
+                }
+
+                .gifting-rating-media {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+
+                    .gifting-rating-stars-img {
+                        height: 16px;
+                        width: auto;
+                    }
+
+                    .gifting-rating-google-img {
+                        height: 20px;
+                        width: auto;
+                    }
+                }
+
+                .gifting-rating-text {
+                    font-family: 'Inter', sans-serif;
+                    font-size: 13px;
+                    font-weight: 400;
+                    line-height: 20px;
+                    color: #1C1008;
+                    margin: 0;
+                }
+            }
+        }
+
+        /* Main Row: Mascot (Left) + Slider (Right) */
+        .gifting-testimonial-main-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            @media (max-width: 900px) {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .gifting-testimonial-mascot-col {
+                flex: 0 0 15%;
+                display: flex;
+                justify-content: center;
+
+                @media (max-width: 900px) {
+                    display: none;
+                }
+
+                .gifting-testimonial-mascot-img {
+                    width: 100%;
+                    height: auto;
+                    object-fit: contain;
+                }
+            }
+
+            .gifting-testimonial-slider-col {
+                flex: 1;
+                min-width: 0;
+            }
+        }
+
+        /* Testimonial Slider Styles from rt_style.css */
+        .ts-slider-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            width: 100%;
+            font-family: -apple-system, 'Plus Jakarta Sans', Inter, sans-serif;
+
+            @media (max-width: 900px) {
+                gap: 14px;
+            }
+
+            @media (max-width: 600px) {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 12px;
+            }
+
+            .ts-slider-inner {
+                display: flex;
+                gap: 16px;
+                flex: 1;
+                min-width: 0;
+
+                @media (max-width: 900px) {
+                    flex-direction: column;
+                }
+
+                @media (max-width: 600px) {
+                    order: 1;
+                    flex: 1 1 100%;
+                }
+            }
+
+            /* Active (Large) Slide */
+            .ts-active-card {
+                position: relative;
+                flex: 1.6;
+                background: #FFFFFF;
+                border: 1px solid rgba(201, 169, 110, 0.4);
+                border-radius: 16px;
+                padding: 56px 56px 44px 56px;
+                transition: opacity 0.3s ease;
+
+                &.fade-in {
+                    opacity: 1;
+                }
+
+                &.fade-out {
+                    opacity: 0;
+                }
+
+                @media (max-width: 900px) {
+                    padding: 40px 32px 32px 32px;
+                }
+
+                @media (max-width: 600px) {
+                    padding: 28px 20px 24px 20px;
+                    border-radius: 14px;
+                }
+
+                .ts-quote-icon {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 16px;
+
+                    .ts-quote-img {
+                        width: 40px;
+                        height: auto;
+                    }
+
+                    .ts-google-logo {
+                        width: 37px;
+                        height: 40px;
+                        object-fit: contain;
+
+                        @media (max-width: 900px) {
+                            width: 32px;
+                            height: 34px;
+                        }
+
+                        @media (max-width: 600px) {
+                            width: 26px;
+                            height: 28px;
+                        }
+                    }
+                }
+
+                .ts-active-content {
+                    font-family: 'Plus Jakarta Sans', sans-serif;
+                    font-style: italic;
+                    font-size: 20px;
+                    line-height: 36px;
+                    color: #1C1008;
+                    margin-top: 16px;
+                    margin-bottom: 24px;
+                    font-weight: 500;
+                    overflow-wrap: anywhere;
+
+                    p {
+                        margin: 0;
+                    }
+
+                    @media (max-width: 900px) {
+                        font-size: 17px;
+                        line-height: 30px;
+                        margin-top: 12px;
+                        margin-bottom: 20px;
+                    }
+
+                    @media (max-width: 600px) {
+                        font-size: 15px;
+                        line-height: 25px;
+                        margin-top: 10px;
+                        margin-bottom: 16px;
+                    }
+                }
+
+                .ts-active-footer {
+                    display: flex;
+                    align-items: center;
+                    gap: 16px;
+                    padding-top: 10px;
+
+                    @media (max-width: 600px) {
+                        gap: 10px;
+                        flex-wrap: wrap;
+                    }
+
+                    .ts-avatar {
+                        width: 46px;
+                        height: 46px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        flex-shrink: 0;
+
+                        @media (max-width: 600px) {
+                            width: 38px;
+                            height: 38px;
+                        }
+                    }
+
+                    .ts-person-info {
+                        flex: 1;
+                        min-width: 0;
+
+                        .ts-person-name {
+                            font-weight: 600;
+                            font-size: 15.2px;
+                            color: #1C1008;
+                            line-height: 23px;
+
+                            @media (max-width: 600px) {
+                                font-size: 13.5px;
+                                line-height: 20px;
+                            }
+                        }
+
+                        .ts-person-location {
+                            font-size: 12.8px;
+                            color: #1C1008;
+                            line-height: 19.2px;
+
+                            @media (max-width: 600px) {
+                                font-size: 11.5px;
+                                line-height: 17px;
+                            }
+                        }
+                    }
+
+                    .ts-stars {
+                        color: #f0a500;
+                        font-size: 15px;
+                        letter-spacing: 2px;
+                        white-space: nowrap;
+
+                        @media (max-width: 600px) {
+                            font-size: 13px;
+                            letter-spacing: 1px;
+                        }
+                    }
+                }
+            }
+
+            /* Side Column (Upcoming reviews on desktop) */
+            .ts-side-column {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+
+                @media (max-width: 1024px) {
+                    display: none !important;
+                }
+
+                .ts-side-card {
+                    background: #FFFFFF;
+                    border-radius: 14px;
+                    padding: 20px;
+                    cursor: pointer;
+                    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+
+                    &:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                    }
+
+                    &.ts-is-next {
+                        border: 1px solid rgba(201, 168, 76, 0.4);
+                    }
+
+                    &.ts-is-plain {
+                        border: 1px solid rgba(245, 240, 232, 0.06);
+                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+                    }
+
+                    .ts-side-header {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        margin-bottom: 8px;
+
+                        .ts-avatar-sm {
+                            width: 34px;
+                            height: 34px;
+                            border-radius: 50%;
+                            object-fit: cover;
+                            flex-shrink: 0;
+                        }
+
+                        .ts-person-info {
+                            .ts-person-name {
+                                font-weight: 600;
+                                font-size: 14px;
+                                color: #1C1008;
+                                line-height: 18px;
+                            }
+
+                            .ts-person-category {
+                                font-size: 12px;
+                                color: #888888;
+                                line-height: 16px;
+                            }
+                        }
+                    }
+
+                    .ts-side-excerpt {
+                        font-size: 13px;
+                        line-height: 1.55;
+                        color: #6B6B6B;
+                        display: -webkit-box;
+                        -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
+                    }
+                }
+            }
+
+            /* Navigation Arrows */
+            .ts-arrow {
+                flex: 0 0 40px;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                border: none;
+                background-color: #FFFFFF;
+                box-shadow: 0px 0px 4px rgba(12, 12, 13, 0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                padding: 10px;
+                z-index: 2;
+                transition: background-color 0.2s ease, transform 0.2s ease;
+
+                &:hover {
+                    background-color: #DAAE68;
+                }
+
+                img {
+                    width: 12px;
+                    height: 12px;
+                    object-fit: contain;
+                }
+
+                @media (max-width: 900px) {
+                    width: 36px;
+                    height: 36px;
+                    flex: 0 0 36px;
+                    padding: 9px;
+                }
+
+                @media (max-width: 600px) {
+                    order: 2;
+                    width: 32px;
+                    height: 32px;
+                    flex: 0 0 32px;
+                    padding: 8px;
+                }
+            }
+        }
+    }
+}

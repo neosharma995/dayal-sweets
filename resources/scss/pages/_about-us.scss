@@ -1,0 +1,1121 @@
+/* ==========================================================================
+   DAYAL SWEETS — ABOUT US PAGE STYLESHEET
+   100% Faithful Source of Truth Duplication of D:\dayal-sweets-old (Post 61)
+   CSS Unit Strict Requirements: Strictly PX units throughout (no rem, no em)
+   Strict File & CSS Isolation scoped under .about-page-root
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
+
+.about-page-root {
+  background-color: #FDFBF7;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  width: 100%;
+
+  /* --------------------------------------------------------------------------
+     GLOBAL SPAN COLOR FROM ORIGINAL THEME (Post 13 / rt_style.css)
+     -------------------------------------------------------------------------- */
+  .rt-span-color {
+    color: #7B1022 !important;
+    font-weight: 600 !important;
+  }
+
+  /* ==========================================================================
+     SECTION B: ABOUT DAYAL – OUR STORY
+     ========================================================================== */
+  .about-story-section {
+    background-color: #FDFBF7;
+    padding-top: 80px;
+    padding-bottom: 80px;
+    width: 100%;
+    box-sizing: border-box;
+
+    @media (max-width: 992px) {
+      padding-top: 40px;
+      padding-bottom: 40px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    @media (max-width: 600px) {
+      padding-top: 50px;
+      padding-bottom: 20px;
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+  }
+
+  .about-story-container {
+    width: 90%;
+    margin: 0 auto;
+    box-sizing: border-box;
+
+    @media (max-width: 992px) {
+      width: 100%;
+    }
+  }
+
+  .about-story-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 60px;
+    align-items: center;
+    box-sizing: border-box;
+
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+  }
+
+  /* Left Column: Video / Image Card */
+  .about-story-media-wrap {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    height: 547px;
+    width: 100%;
+    margin: 0 auto;
+    background-color: #000000;
+    box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+  }
+
+  .about-story-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .about-story-poster-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    &:hover img {
+      transform: scale(1.03);
+    }
+  }
+
+  .about-story-play-overlay {
+    position: absolute;
+    inset: 0px;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: background 0.3s ease;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  .about-story-play-btn {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: #7B1022;
+    color: #FFFFFF;
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+
+    svg {
+      width: 28px;
+      height: 28px;
+      fill: #FFFFFF;
+      margin-left: 4px;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+      background-color: #5C1520;
+    }
+
+    @media (max-width: 600px) {
+      width: 56px;
+      height: 56px;
+
+      svg {
+        width: 22px;
+        height: 22px;
+      }
+    }
+  }
+
+  .about-story-play-label {
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    background-color: rgba(28, 16, 8, 0.6);
+    padding: 6px 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  /* Right Column: Copy */
+  .about-story-copy {
+    box-sizing: border-box;
+  }
+
+  .about-story-eyebrow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+
+    @media (max-width: 600px) {
+      margin-bottom: 8px;
+    }
+  }
+
+  .about-story-divider {
+    width: 21px;
+    height: 1px;
+    background-color: #1C1008;
+    display: inline-block;
+  }
+
+  .about-story-eyebrow-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 4.8px;
+    color: #1C1008;
+    text-transform: uppercase;
+
+    @media (max-width: 600px) {
+      font-size: 13px;
+      letter-spacing: 3px;
+    }
+  }
+
+  .about-story-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 65px;
+    font-weight: 400;
+    line-height: 82px;
+    color: #2C1810;
+    margin-top: 10px;
+    margin-bottom: 29px;
+    margin-left: 0px;
+    margin-right: 0px;
+
+    @media (max-width: 992px) {
+      font-size: 35px;
+      line-height: 54px;
+      margin-bottom: 15px;
+    }
+
+    @media (max-width: 600px) {
+      font-size: 25px;
+      line-height: 44px;
+      margin-bottom: 10px;
+    }
+  }
+
+  .about-story-p1,
+  .about-story-p2 {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 32px;
+    color: #1C1008;
+    margin-top: 0px;
+    margin-bottom: 20px;
+
+    @media (max-width: 992px) {
+      font-size: 15px;
+      line-height: 26px;
+      margin-bottom: 16px;
+    }
+  }
+
+  .about-story-p2 {
+    margin-bottom: 0px;
+  }
+
+  /* ==========================================================================
+     SECTION C: FOUNDER'S MESSAGE AND COMMITMENTS
+     ========================================================================== */
+  .about-founder-section {
+    background-color: #FDFBF7;
+    padding-top: 0px;
+    padding-bottom: 100px;
+    width: 100%;
+    box-sizing: border-box;
+
+    @media (max-width: 992px) {
+      padding-bottom: 40px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    @media (max-width: 600px) {
+      padding-top: 20px;
+      padding-bottom: 0px;
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+  }
+
+  .about-founder-box {
+    width: 90%;
+    margin: 0 auto;
+    background-color: #FDFBF7;
+    border: 1px solid #E9DCCB;
+    border-radius: 24px;
+    padding: 64px 56px;
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+
+    @media (max-width: 1560px) {
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 1024px) {
+      flex-direction: column;
+      padding: 30px 20px;
+    }
+
+    @media (max-width: 600px) {
+      padding: 24px 16px;
+      border-radius: 16px;
+    }
+  }
+
+  /* Column 1: Founder's Message */
+  .about-founder-col1 {
+    width: 36%;
+    padding: 45px 40px 0px 0px;
+    box-sizing: border-box;
+
+    @media (max-width: 1560px) {
+      width: 48%;
+      padding-right: 20px;
+    }
+
+    @media (max-width: 1024px) {
+      width: 100%;
+      padding: 0px 0px 30px 0px;
+    }
+  }
+
+  .about-founder-eyebrow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .about-founder-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 38px;
+    font-weight: 500;
+    line-height: 50px;
+    color: #2C1810;
+    margin-top: 10px;
+    margin-bottom: 24px;
+
+    @media (max-width: 992px) {
+      font-size: 28px;
+      line-height: 38px;
+      margin-bottom: 16px;
+    }
+  }
+
+  .about-founder-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 26px;
+    color: #5C4A3E;
+    margin: 0px 0px 16px 0px;
+
+    &:last-child {
+      margin-bottom: 0px;
+    }
+  }
+
+  /* Column 2: Founder Photograph */
+  .about-founder-col2 {
+    width: 28%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 0px 10px;
+    box-sizing: border-box;
+
+    @media (max-width: 1560px) {
+      width: 48%;
+    }
+
+    @media (max-width: 1024px) {
+      width: 100%;
+      padding: 20px 0px 30px 0px;
+    }
+  }
+
+  .about-founder-photo-wrap {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .about-founder-mandala {
+    position: absolute;
+    top: 27px;
+    left: -21px;
+    width: calc(100% + 42px);
+    height: auto;
+    z-index: 0;
+    opacity: 0.85;
+    pointer-events: none;
+  }
+
+  .about-founder-img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .about-founder-name {
+    font-family: 'Dancing Script', cursive;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 36px;
+    color: #C89A4B;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    text-align: center;
+
+    @media (max-width: 600px) {
+      font-size: 26px;
+    }
+  }
+
+  .about-founder-designation-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .about-founder-designation-divider {
+    width: 21px;
+    height: 1px;
+    background-color: #C89A4B;
+    display: inline-block;
+  }
+
+  .about-founder-designation {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 17px;
+    text-transform: uppercase;
+    letter-spacing: 1.42px;
+    color: #8B6B52;
+    margin: 0px;
+
+    @media (max-width: 600px) {
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+  }
+
+  /* Column 3: Our Commitments */
+  .about-founder-col3 {
+    width: 36%;
+    padding: 45px 0px 0px 40px;
+    box-sizing: border-box;
+
+    @media (max-width: 1560px) {
+      width: 100%;
+      padding: 30px 0px 0px 0px !important;
+    }
+
+    @media (max-width: 1024px) {
+      padding: 20px 0px 0px 0px !important;
+    }
+  }
+
+  .about-commitments-heading {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #2C1810;
+    margin-top: 0px;
+    margin-bottom: 24px;
+
+    @media (max-width: 600px) {
+      font-size: 18px;
+      margin-bottom: 18px;
+    }
+  }
+
+  .about-commitments-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    @media (max-width: 1560px) {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+
+  .about-commitment-card {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .about-commitment-icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    object-fit: contain;
+  }
+
+  .about-commitment-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 22px;
+    color: #2C1810;
+    margin: 0px 0px 4px 0px;
+  }
+
+  .about-commitment-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #6E5A4D;
+    margin: 0px;
+  }
+
+  .about-commitments-stamp {
+    border-top: 1px solid #E9DCCB;
+    padding-top: 18px;
+    margin-top: 24px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .about-commitments-stamp-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+  }
+
+  .about-commitments-stamp-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 1.26px;
+    text-transform: uppercase;
+    color: #7A6B55;
+    margin: 0px;
+  }
+
+  /* ==========================================================================
+     SECTION D: OUR JOURNEY – TIMELINE
+     ========================================================================== */
+  .about-timeline-section {
+    background-color: #FAF5F0;
+    padding-top: 100px;
+    padding-bottom: 100px;
+    width: 100%;
+    box-sizing: border-box;
+
+    @media (max-width: 992px) {
+      padding-top: 40px;
+      padding-bottom: 40px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    @media (max-width: 600px) {
+      padding-top: 40px;
+      padding-bottom: 40px;
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+  }
+
+  .about-timeline-container {
+    width: 90%;
+    margin: 0 auto;
+    text-align: center;
+    box-sizing: border-box;
+
+    @media (max-width: 992px) {
+      width: 100%;
+    }
+  }
+
+  .about-timeline-eyebrow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .about-timeline-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 65px;
+    font-weight: 400;
+    line-height: 82px;
+    color: #4A2E1F;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    text-align: center;
+
+    @media (max-width: 992px) {
+      font-size: 35px;
+      line-height: 54px;
+    }
+
+    @media (max-width: 600px) {
+      font-size: 25px;
+      line-height: 44px;
+    }
+  }
+
+  /* Timeline Outer Wrapper with Flower graphics */
+  .about-timeline-wrapper {
+    position: relative;
+    overflow: hidden;
+    margin-top: 100px;
+    padding: 0px 40px;
+    box-sizing: border-box;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: 30px;
+      transform: translateY(-50%);
+      width: 34px;
+      height: 31px;
+      background: url('/uploads/2026/08/flower.png') center/contain no-repeat;
+      z-index: 1;
+    }
+
+    &::before {
+      left: 0px;
+    }
+
+    &::after {
+      right: 0px;
+    }
+
+    @media (max-width: 1024px) {
+      margin-top: 40px;
+      padding: 0px;
+
+      &::before,
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  /* Connecting Horizontal Line */
+  .about-timeline-line {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: space-between;
+    box-sizing: border-box;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 30px;
+      left: 30px;
+      width: calc(100% - 60px);
+      height: 1px;
+      background-color: #D8AE67;
+      z-index: 0;
+    }
+
+    @media (max-width: 1024px) {
+      flex-direction: column;
+      gap: 32px;
+
+      &::before {
+        display: none;
+      }
+    }
+  }
+
+  /* Milestone Item */
+  .about-timeline-item {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+
+    /* Diamond connector */
+    &::after {
+      content: "";
+      position: absolute;
+      left: 100%;
+      top: 25px;
+      transform: translateX(calc(-50% + 10px)) rotate(45deg);
+      width: 9px;
+      height: 9px;
+      background-color: #D8AE67;
+      z-index: 2;
+    }
+
+    &:last-child::after {
+      display: none;
+    }
+
+    @media (max-width: 1024px) {
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  .about-timeline-icon-wrap {
+    position: relative;
+    z-index: 3;
+    background-color: #FAF5F0;
+    padding: 0px 8px;
+    margin-bottom: 16px;
+  }
+
+  .about-timeline-icon {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    display: block;
+  }
+
+  .about-timeline-year {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 28px;
+    color: #5C1520;
+    margin: 0px 0px 8px 0px;
+
+    @media (max-width: 600px) {
+      font-size: 22px;
+    }
+  }
+
+  .about-timeline-milestone-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 24px;
+    color: #000000;
+    margin: 0px 0px 10px 0px;
+
+    @media (max-width: 600px) {
+      font-size: 16px;
+    }
+  }
+
+  .about-timeline-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 22px;
+    color: #7A6B55;
+    margin: 0px;
+    max-width: 200px;
+
+    @media (max-width: 1024px) {
+      max-width: 320px;
+    }
+  }
+
+  /* ==========================================================================
+     SECTION E: THE SIGNATURE COLLECTION
+     ========================================================================== */
+  .about-collection-section {
+    background-color: #FAF7F2;
+    border-top: 1px solid rgba(201, 169, 110, 0.4);
+    padding-top: 100px;
+    padding-bottom: 100px;
+    width: 100%;
+    box-sizing: border-box;
+
+    @media (max-width: 992px) {
+      padding-top: 40px;
+      padding-bottom: 40px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    @media (max-width: 600px) {
+      padding-top: 40px;
+      padding-bottom: 40px;
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+  }
+
+  .about-collection-container {
+    width: 90%;
+    margin: 0 auto;
+    text-align: center;
+    box-sizing: border-box;
+
+    @media (max-width: 992px) {
+      width: 100%;
+    }
+  }
+
+  .about-collection-eyebrow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .about-collection-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 65px;
+    font-weight: 400;
+    line-height: 82px;
+    color: #4A2E1F;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    text-align: center;
+
+    @media (max-width: 992px) {
+      font-size: 35px;
+      line-height: 54px;
+    }
+
+    @media (max-width: 600px) {
+      font-size: 25px;
+      line-height: 44px;
+    }
+  }
+
+  /* Two Column Layout: Left Media + Right Grid */
+  .about-collection-layout {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    gap: 44px;
+    align-items: stretch;
+    box-sizing: border-box;
+
+    @media (max-width: 1024px) {
+      flex-direction: column;
+      gap: 30px;
+      margin-top: 30px;
+    }
+  }
+
+  .about-collection-main-card {
+    width: 35%;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    background-color: #000000;
+    box-sizing: border-box;
+
+    @media (max-width: 1024px) {
+      width: 100%;
+      height: 320px;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 16px;
+    }
+  }
+
+  .about-collection-grid {
+    width: 65%;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 18px;
+    box-sizing: border-box;
+
+    @media (max-width: 1300px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (max-width: 1024px) {
+      width: 100%;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (max-width: 600px) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+  }
+
+  .about-collection-card {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    box-sizing: border-box;
+  }
+
+  .about-collection-card-img-wrap {
+    width: 100%;
+    height: 248px;
+    border-radius: 24px;
+    overflow: hidden;
+    background-color: #FAF7F2;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s ease;
+    }
+
+    &:hover img {
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 1300px) {
+      height: 180px;
+    }
+
+    @media (max-width: 600px) {
+      height: 160px;
+      border-radius: 16px;
+    }
+  }
+
+  .about-collection-card-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 22px;
+    color: #2C1810;
+    margin-top: 12px;
+    margin-bottom: 4px;
+    text-align: left;
+
+    @media (max-width: 600px) {
+      font-size: 14px;
+    }
+  }
+
+  .about-collection-card-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 19px;
+    color: #7A6B55;
+    margin: 0px;
+    text-align: left;
+  }
+
+  /* ==========================================================================
+     SECTION F: NUMBERS THAT MATTERS
+     ========================================================================== */
+  .about-stats-section {
+    background-color: #5C1520;
+    padding-top: 48px;
+    padding-bottom: 48px;
+    width: 100%;
+    box-sizing: border-box;
+
+    @media (max-width: 600px) {
+      padding-top: 36px;
+      padding-bottom: 36px;
+    }
+  }
+
+  .about-stats-container {
+    width: 90%;
+    margin: 0 auto;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .about-stats-eyebrow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .about-stats-divider {
+    width: 21px;
+    height: 1px;
+    background-color: #FFFFFF;
+    display: inline-block;
+  }
+
+  .about-stats-eyebrow-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 4.8px;
+    color: #FFFFFF;
+    text-transform: uppercase;
+
+    @media (max-width: 600px) {
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+  }
+
+  .about-stats-grid {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 36px;
+    gap: 20px;
+    box-sizing: border-box;
+
+    @media (max-width: 992px) {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 600px) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+  }
+
+  .about-stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .about-stat-number {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 45px;
+    font-weight: 500;
+    line-height: 50px;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+
+    @media (max-width: 992px) {
+      font-size: 35px;
+      line-height: 40px;
+    }
+
+    @media (max-width: 600px) {
+      font-size: 30px;
+      line-height: 34px;
+    }
+  }
+
+  .about-stat-label {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    text-transform: uppercase;
+    letter-spacing: 2.2px;
+    color: #DFC08A;
+    margin-bottom: 6px;
+    white-space: nowrap;
+
+    @media (max-width: 992px) {
+      font-size: 14px;
+      letter-spacing: 1.5px;
+    }
+
+    @media (max-width: 600px) {
+      font-size: 12px;
+      letter-spacing: 1px;
+      white-space: normal;
+    }
+  }
+
+  .about-stat-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 20px;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0px;
+
+    @media (max-width: 992px) {
+      font-size: 12px;
+    }
+  }
+}

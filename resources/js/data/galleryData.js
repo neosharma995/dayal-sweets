@@ -1,0 +1,175 @@
+export const galleryCategories = [
+    { id: 'all', name: 'All' },
+    { id: 'corporate', name: 'Corporate' },
+    { id: 'customers', name: 'Customers' },
+    { id: 'dining', name: 'Dining' },
+    { id: 'events', name: 'Events' },
+    { id: 'festival', name: 'Festival' },
+    { id: 'food', name: 'Food' },
+    { id: 'kitchen', name: 'Kitchen' },
+    { id: 'restaurant', name: 'Restaurant' },
+    { id: 'snacks', name: 'Snacks' },
+    { id: 'sweets', name: 'Sweets' },
+];
+
+export const galleryItems = [
+    {
+        id: 5314,
+        title: 'Family Dining',
+        image: '/uploads/2026/08/Family-Dining.png',
+        categories: ['dining'],
+    },
+    {
+        id: 5313,
+        title: 'Private Dining',
+        image: '/uploads/2026/08/Private-Dining.png',
+        categories: ['dining'],
+    },
+    {
+        id: 5312,
+        title: 'Live Kitchen',
+        image: '/uploads/2026/08/Live-Kitchen.png',
+        categories: ['dining', 'kitchen', 'restaurant'],
+    },
+    {
+        id: 5311,
+        title: 'Corporate Dining',
+        image: '/uploads/2026/08/Corporate-Dining.png',
+        categories: ['dining'],
+    },
+    {
+        id: 5310,
+        title: 'Outdoor Seating',
+        image: '/uploads/2026/08/Outdoor-Seating.png',
+        categories: ['dining'],
+    },
+    {
+        id: 5309,
+        title: 'Diwali',
+        image: '/uploads/2026/08/Diwali-Collection.jpg',
+        categories: ['festival'],
+    },
+    {
+        id: 5282,
+        title: 'Holi',
+        image: '/uploads/2026/08/Holi.png',
+        categories: ['festival'],
+    },
+    {
+        id: 5281,
+        title: 'Raksha Bandhan',
+        image: '/uploads/2026/08/Raksha-Bandhan.jpg',
+        categories: ['festival'],
+    },
+    {
+        id: 5280,
+        title: 'Christmas',
+        image: '/uploads/2026/08/Christmas.jpg',
+        categories: ['festival'],
+    },
+    {
+        id: 5279,
+        title: 'Navratri',
+        image: '/uploads/2026/08/Navratri.jpg',
+        categories: ['festival'],
+    },
+    {
+        id: 5278,
+        title: 'Marwadi ladoo',
+        image: '/uploads/2026/07/Marwadi-ladoo.avif',
+        categories: ['sweets'],
+    },
+    {
+        id: 5277,
+        title: 'Kaju Katli',
+        image: '/uploads/2026/07/thaal.png',
+        categories: ['sweets'],
+    },
+    {
+        id: 5275,
+        title: 'Himachali Special',
+        image: '/uploads/2026/08/Himachali-Special-1.png',
+        categories: ['food'],
+    },
+    {
+        id: 5274,
+        title: 'North Indian',
+        image: '/uploads/2026/08/North-Indian-1.png',
+        categories: ['food'],
+    },
+    {
+        id: 5273,
+        title: 'Snacks',
+        image: '/uploads/2026/08/Snacks-Collection.png',
+        categories: ['snacks'],
+    },
+    {
+        id: 5272,
+        title: 'Veg Patty',
+        image: '/uploads/2026/07/Veg-Patty-1-scaled.jpg',
+        categories: ['snacks'],
+    },
+    {
+        id: 5271,
+        title: 'Planning a Large Celebration',
+        image: '/uploads/2026/08/Planning-a-Large-Celebration.png',
+        categories: ['events'],
+    },
+    {
+        id: 5270,
+        title: 'Kitchen',
+        image: '/uploads/2026/08/Kitchen.png',
+        categories: ['kitchen'],
+    },
+    {
+        id: 5269,
+        title: 'New Year',
+        image: '/uploads/2026/08/New-Year.jpg',
+        categories: ['events', 'festival'],
+    },
+    {
+        id: 5268,
+        title: 'Gift Hamper',
+        image: '/uploads/2026/08/Gift-Hamper-img.png',
+        categories: ['corporate', 'customers'],
+    },
+];
+
+export const foodCollectionItems = [
+    {
+        id: 1,
+        title: 'Premium Mithai',
+        image: '/uploads/2026/08/Premium-Mithai-Collection.png',
+        link: '/shop',
+    },
+    {
+        id: 2,
+        title: 'North Indian',
+        image: '/uploads/2026/08/North-Indian-Collection.png',
+        link: '/shop',
+    },
+    {
+        id: 3,
+        title: 'South Indian',
+        image: '/uploads/2026/08/South-Indian-Collection.png',
+        link: '/shop',
+    },
+    {
+        id: 4,
+        title: 'Chinese',
+        image: '/uploads/2026/08/Chinese-Collection.png',
+        link: '/shop',
+    },
+    {
+        id: 5,
+        title: 'Snacks',
+        image: '/uploads/2026/08/Snacks-Collection.png',
+        link: '/shop',
+    },
+    {
+        id: 6,
+        title: 'Desserts',
+        image: '/uploads/2026/08/Desserts-Collection.png',
+        link: '/shop',
+    },
+];

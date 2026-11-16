@@ -31,6 +31,22 @@ class RoleAndDashboardTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_public_dining_page_is_rendered(): void
+    {
+        $response = $this->get('/dining');
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page->component('Dining'));
+    }
+
+    public function test_public_dinning_alias_page_is_rendered(): void
+    {
+        $response = $this->get('/dinning');
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page->component('Dining'));
+    }
+
     public function test_admin_login_screen_can_be_rendered(): void
     {
         $response = $this->get('/admin/login');

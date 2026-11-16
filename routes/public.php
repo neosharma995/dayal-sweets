@@ -18,6 +18,8 @@ Route::get('/about-us', [HomeController::class, 'about'])->name('about-us');
 Route::get('/contact-us', [HomeController::class, 'contact'])->name('contact');
 Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');
 Route::get('/gifting', [HomeController::class, 'gifting'])->name('gifting');
+Route::get('/dining', [HomeController::class, 'dining'])->name('dining');
+Route::get('/dinning', [HomeController::class, 'dining'])->name('dinning');
 
 // Authenticated Smart Role Dispatchers
 Route::middleware(['auth', 'verified'])->group(function () {

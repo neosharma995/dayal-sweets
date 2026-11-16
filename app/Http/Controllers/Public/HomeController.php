@@ -101,4 +101,15 @@ class HomeController extends Controller
             'canRegister' => Route::has('register'),
         ]);
     }
+
+    /**
+     * Display the Dayal Sweets Dining page.
+     */
+    public function dining(): Response
+    {
+        return Inertia::render('Dining', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+        ]);
+    }
 }

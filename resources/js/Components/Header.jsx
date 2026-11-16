@@ -5,7 +5,7 @@ import { useCart } from '@/Context/CartContext';
 import CartDrawer from '@/Components/CartDrawer';
 
 const navItems = [
-    ['Dining', '/dinning'], ['Gifting', '/gifting'], ['About Us', '/about-us'],
+    ['Dining', '/dining'], ['Gifting', '/gifting'], ['About Us', '/about-us'],
     ['Gallery', '/gallery'], ['Contact Us', '/contact-us'],
 ];
 
@@ -147,7 +147,8 @@ export default function Header({ auth }) {
                             </div>}
                         </div>
                         {navItems.map(([label, href]) => {
-                            const active = currentPath === href.replace(/\/+$/, '');
+                            const trimmedHref = href.replace(/\/+$/, '');
+                            const active = currentPath === trimmedHref || (trimmedHref === '/dining' && currentPath === '/dinning');
                             return <Link key={label} className={`dayal-header-link${active ? ' is-active' : ''}`} href={href} aria-current={active ? 'page' : undefined} onClick={closeMobileMenu}><span>{label}</span></Link>;
                         })}
                     </nav>

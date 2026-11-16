@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
-import { StoreIcon, BoxIcon, UserIcon, ShieldCheckIcon, LogOutIcon } from '@/Components/Icons';
+import { StoreIcon, BoxIcon, UserIcon, ShieldCheckIcon, LogOutIcon, TruckIcon } from '@/Components/Icons';
 
 export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLogout }) {
     const { auth } = usePage().props;
@@ -62,6 +62,19 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
                         >
                             <StoreIcon width="18" height="18" />
                             <span>Store Dashboard</span>
+                        </Link>
+
+                        {/* Orders Management */}
+                        <Link
+                            href={route('admin.orders.index')}
+                            className={`dayal-sidebar-link ${route().current('admin.orders.*') ? 'active' : ''}`}
+                        >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                                <line x1="3" y1="6" x2="21" y2="6" />
+                                <path d="M16 10a4 4 0 0 1-8 0" />
+                            </svg>
+                            <span>Customer Orders</span>
                         </Link>
 
                         {/* Products Accordion / Nested Navigation */}
@@ -160,6 +173,28 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
                                 </div>
                             )}
                         </div>
+
+                        {/* Shipping Zones */}
+                        <Link
+                            href={route('admin.shipping-zones.index')}
+                            className={`dayal-sidebar-link ${route().current('admin.shipping-zones.*') ? 'active' : ''}`}
+                        >
+                            <TruckIcon width="18" height="18" />
+                            <span>Shipping Zones</span>
+                        </Link>
+
+                        {/* Tax Rates */}
+                        <Link
+                            href={route('admin.taxes.index')}
+                            className={`dayal-sidebar-link ${route().current('admin.taxes.*') ? 'active' : ''}`}
+                        >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="19" y1="5" x2="5" y2="19"></line>
+                                <circle cx="6.5" cy="6.5" r="2.5"></circle>
+                                <circle cx="17.5" cy="17.5" r="2.5"></circle>
+                            </svg>
+                            <span>Taxes &amp; GST Rates</span>
+                        </Link>
 
                         <Link
                             href={route('admin.account')}

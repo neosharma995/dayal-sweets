@@ -1286,3 +1286,99 @@
   }
 }
 
+// Global Admin Modal Overlay System (Centering, Blur Backdrop & Pop Animations)
+.dayal-modal-overlay,
+.dayal-admin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  animation: dayalFadeIn 0.2s ease-out;
+}
+
+.dayal-modal-card,
+.dayal-admin-modal {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  background: #FFFFFF;
+  border-radius: 0.75rem;
+  border: 1px solid #CBD5E1;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 1.75rem;
+  animation: dayalScaleUp 0.2s ease-out;
+  z-index: 10;
+}
+
+.dayal-modal-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+
+  h3 {
+    margin: 0 0 0.35rem 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0F172A;
+    font-family: $font-sans;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: #64748B;
+    line-height: 1.5;
+  }
+}
+
+.dayal-modal-icon-alert {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #FFF1F2;
+  border: 1px solid #FECDD3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #E11D48;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.15);
+}
+
+.dayal-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #F1F5F9;
+}
+
+@keyframes dayalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dayalScaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+

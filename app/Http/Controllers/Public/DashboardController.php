@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -21,53 +22,100 @@ class DashboardController extends Controller
     }
 
     /**
-     * Display the Customer e-commerce dashboard.
+     * Display the Customer e-commerce dashboard with real order data.
      */
     public function index(Request $request): Response
     {
-        // Sample e-commerce user state for Dayal Sweets customer
+        $user = $request->user();
+
+        // Fetch real orders from database for this customer
+        $orders = Order::where('user_id', $user->id)
+            ->with('items')
+            ->latest()
+            ->get();
+
+        $totalSpent = $orders->sum('total_amount');
+        $rewardPoints = max(50, (int) round($totalSpent * 0.10));
+
         $overview = [
-            'sweet_rewards_points' => 380,
-            'points_cash_value' => '₹380 off on next order',
-            'tier' => 'Gold Mithai Club Member',
-            'total_orders_placed' => 7,
+            'sweet_rewards_points' => $rewardPoints,
+            'points_cash_value' => '₹' . $rewardPoints . ' off on next order',
+            'tier' => $totalSpent > 5000 ? 'Platinum Sweet Connoisseur' : ($totalSpent > 1500 ? 'Gold Mithai Club Member' : 'Silver Member'),
+            'total_orders_placed' => $orders->count(),
             'wishlist_count' => 4,
-            'saved_addresses_count' => 2,
+            'saved_addresses_count' => 1,
         ];
 
-        $activeOrder = [
-            'order_id' => 'DS-8921',
-            'order_date' => 'Today at 11:15 AM',
-            'estimated_delivery' => 'Today by 01:30 PM (Fresh Batch dispatch)',
-            'status' => 'Being Freshly Packed',
-            'current_step' => 2, // 1: Confirmed, 2: Fresh Preparation/Packaging, 3: Out for Delivery, 4: Delivered
-            'total_amount' => 1250,
-            'payment_mode' => 'Prepaid (UPI)',
-            'items' => [
-                ['name' => 'Kaju Katli (Pure Vark)', 'weight' => '1 kg box', 'qty' => 1, 'price' => 950],
-                ['name' => 'Mini Rasgulla (Earthen Matka)', 'weight' => '500 gm', 'qty' => 1, 'price' => 300],
-            ],
-            'delivery_address' => 'Flat 402, Royal Residency, Connaught Place, New Delhi',
-        ];
+        // Identify active in-flight order (pending or shipping), or latest order if placed recently
+        $activeOrderModel = $orders->first(function ($order) {
+            return in_array($order->delivery_status, ['pending', 'shipping'], true);
+        }) ?? $orders->first();
 
-        $recentPastOrders = [
-            [
-                'order_id' => 'DS-8412',
-                'order_date' => '02 Nov 2026',
-                'items_summary' => 'Desi Ghee Besan Laddu (1kg), Gulab Jamun (1kg)',
-                'total_amount' => 1100,
-                'status' => 'Delivered',
-                'items_count' => 2,
-            ],
-            [
-                'order_id' => 'DS-7994',
-                'order_date' => '24 Oct 2026 (Diwali Festival Special)',
-                'items_summary' => 'Royal Celebration Dry Fruit Hamper (2kg)',
-                'total_amount' => 2800,
-                'status' => 'Delivered',
-                'items_count' => 1,
-            ],
-        ];
+        $activeOrder = null;
+        if ($activeOrderModel) {
+            $step = 1;
+            $statusLabel = 'Order Confirmed';
+
+            if ($activeOrderModel->delivery_status === 'delivered') {
+                $step = 4;
+                $statusLabel = 'Delivered';
+            } elseif ($activeOrderModel->delivery_status === 'shipping') {
+                $step = 3;
+                $statusLabel = 'Out for Delivery / In Transit';
+            } elseif ($activeOrderModel->delivery_status === 'pending') {
+                if ($activeOrderModel->payment_status === 'paid') {
+                    $step = 2;
+                    $statusLabel = 'Kitchen Preparation & Packaging';
+                } else {
+                    $step = 1;
+                    $statusLabel = 'Order Placed (Pending Payment Confirmation)';
+                }
+            } elseif ($activeOrderModel->delivery_status === 'cancelled') {
+                $step = 0;
+                $statusLabel = 'Cancelled';
+            }
+
+            $activeOrder = [
+                'order_id' => $activeOrderModel->order_number,
+                'order_date' => $activeOrderModel->created_at ? $activeOrderModel->created_at->format('d M Y, h:i A') : 'Today',
+                'estimated_delivery' => $activeOrderModel->delivery_status === 'delivered'
+                    ? 'Delivered on ' . ($activeOrderModel->delivered_at ? $activeOrderModel->delivered_at->format('d M Y') : 'Date unavailable')
+                    : 'Dispatch in 24-48 Hours (Fresh Desi Ghee Batch)',
+                'status' => $statusLabel,
+                'delivery_status' => $activeOrderModel->delivery_status,
+                'payment_status' => $activeOrderModel->payment_status,
+                'current_step' => $step,
+                'total_amount' => (float) $activeOrderModel->total_amount,
+                'payment_mode' => strtoupper($activeOrderModel->payment_method) . ' (' . ucfirst($activeOrderModel->payment_status) . ')',
+                'items' => $activeOrderModel->items->map(function ($item) {
+                    return [
+                        'name' => $item->product_name,
+                        'weight' => $item->variation_name ?: 'Standard Box',
+                        'qty' => $item->quantity,
+                        'price' => (float) $item->total,
+                    ];
+                })->toArray(),
+                'delivery_address' => $activeOrderModel->shipping_address . ', ' . $activeOrderModel->city . ', ' . $activeOrderModel->state . ' - ' . $activeOrderModel->pincode,
+            ];
+        }
+
+        $recentPastOrders = $orders->map(function ($order) {
+            $itemsList = $order->items->pluck('product_name')->take(3)->join(', ');
+            if ($order->items->count() > 3) {
+                $itemsList .= ' +' . ($order->items->count() - 3) . ' more';
+            }
+
+            return [
+                'order_id' => $order->order_number,
+                'order_date' => $order->created_at ? $order->created_at->format('d M Y') : 'Recent',
+                'items_summary' => $itemsList ?: 'Assorted Sweets',
+                'total_amount' => (float) $order->total_amount,
+                'status' => ucfirst($order->delivery_status),
+                'delivery_status' => $order->delivery_status,
+                'payment_status' => $order->payment_status,
+                'items_count' => $order->items->count(),
+            ];
+        })->toArray();
 
         $recommendedSweets = [
             [

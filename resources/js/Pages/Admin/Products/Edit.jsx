@@ -11,6 +11,7 @@ export default function Edit({
     dietPreferences = [],
     tags = [],
     attributes = [],
+    taxRates = [],
 }) {
     const [processing, setProcessing] = useState(false);
     const [errors, setErrors] = useState({});
@@ -21,6 +22,8 @@ export default function Edit({
         occasion_id: product.occasion_id || '',
         diet_preference_id: product.diet_preference_id || '',
         product_tag_id: product.product_tag_id || '',
+        tax_rate_id: product.tax_rate_id || '',
+        tax_status: product.tax_status || 'taxable',
         tag_ids: Array.isArray(product.tags) && product.tags.length > 0
             ? product.tags.map((t) => t.id)
             : (product.product_tag_id ? [product.product_tag_id] : []),
@@ -84,6 +87,7 @@ export default function Edit({
                     dietPreferences={dietPreferences}
                     tags={tags}
                     attributes={attributes}
+                    taxRates={taxRates}
                     isEdit={true}
                     onSubmit={handleSubmit}
                     processing={processing}

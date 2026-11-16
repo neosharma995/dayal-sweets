@@ -52,12 +52,7 @@
         }
 
         .dayal-outlets-tag {
-            font-family: 'Inter', sans-serif;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: #1C1008;
+            @include section-eyebrow-typography;
             margin-bottom: 8px;
             display: inline-block;
 
@@ -70,36 +65,26 @@
         }
 
         .dayal-outlets-title {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 42px;
-            font-weight: 400;
-            color: #1C1008;
-            line-height: 1.2;
+            @include section-title-typography;
             margin: 0 0 12px;
 
-            .rt-span-color {
-                color: #7B1C2E;
-            }
-
             @media (max-width: 900px) {
-                font-size: 32px;
+                font-size: 36px;
             }
 
             @media (max-width: 480px) {
-                font-size: 26px;
+                font-size: 28px;
             }
         }
 
         .dayal-outlets-subtitle {
-            font-family: 'Inter', sans-serif;
-            font-size: 15px;
-            line-height: 1.65;
-            color: #7A6B55;
+            @include section-description-typography;
             margin: 0 auto;
             max-width: 680px;
 
             @media (max-width: 600px) {
-                font-size: 13px;
+                font-size: 15px;
+                line-height: 24px;
             }
         }
     }
@@ -330,8 +315,8 @@
                     .oto-notify-btn {
                         background: #7B1C2E;
                         color: #FFFFFF;
-                        border: none;
-                        border-radius: 6px;
+                        border: 1px solid #7B1C2E;
+                        border-radius: 0;
                         padding: 8px 20px;
                         font-family: 'Inter', sans-serif;
                         font-size: 13px;
@@ -340,11 +325,16 @@
                         align-items: center;
                         gap: 6px;
                         cursor: pointer;
-                        transition: all 0.2s ease;
+                        transition: all 0.25s ease;
 
                         &:hover {
-                            background: #5C1520;
-                            transform: translateY(-1px);
+                            background: transparent;
+                            color: #7B1C2E;
+                            border-color: #7B1C2E;
+
+                            svg {
+                                stroke: #7B1C2E;
+                            }
                         }
                     }
                 }

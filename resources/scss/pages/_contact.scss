@@ -420,41 +420,42 @@
   font-family: 'Plus Jakarta Sans', sans-serif;
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid #F5E3D0;
-  background: #FFFDFA;
-  color: #222222;
+  border: 1px solid #EEDBC5;
+  background: #FFFFFF;
+  color: #1C1008;
   outline: none;
-  border-radius: 0;
-  font-weight: 500;
+  border-radius: 8px;
+  font-weight: 400;
   font-size: 14px;
-  line-height: 38.4px;
-  text-transform: capitalize;
+  line-height: normal;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .contact-form-inner-wrapper input {
-  height: 48px;
-  padding: 0 14px;
+  height: 52px;
+  padding: 0 16px;
 }
 
 .contact-form-inner-wrapper textarea {
-  height: 90px;
-  min-height: 90px;
+  height: 120px;
+  min-height: 120px;
   resize: none;
-  padding: 14px;
+  padding: 16px;
 }
 
 .contact-form-inner-wrapper input::placeholder,
 .contact-form-inner-wrapper textarea::placeholder {
   color: #1C1008;
-  font-weight: 500;
-  line-height: 38.4px;
+  font-weight: 400;
+  font-size: 14px;
   font-family: 'Plus Jakarta Sans', sans-serif;
+  opacity: 1;
 }
 
 .contact-form-inner-wrapper input:focus,
 .contact-form-inner-wrapper textarea:focus {
-  border-color: #8B1028;
+  border-color: #7C1F2E;
+  box-shadow: 0 0 0 2px rgba(124, 31, 46, 0.08);
 }
 
 .contact-form-inner-wrapper .contact-form-submit {
@@ -464,27 +465,30 @@
 
 .contact-form-inner-wrapper .contact-form-submit-btn {
   font-family: 'Inter', sans-serif;
-  width: 308px;
-  height: 50px;
-  padding: 0 20px;
-  border: none;
+  width: auto;
+  min-width: 180px;
+  height: 48px;
+  padding: 0 32px;
+  border: 1px solid #7C1F2E;
   border-radius: 0;
-  background: #8B1028;
+  background: #7C1F2E;
   color: #FFFFFF;
-  font-weight: 600;
-  font-size: 16px;
+  font-weight: 700;
+  font-size: 14px;
   line-height: 18px;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .contact-form-inner-wrapper .contact-form-submit-btn:hover {
-  background: #6f0d20;
+  background: transparent;
+  color: #7C1F2E;
+  border-color: #7C1F2E;
 }
 
 /* Success / Status Message */
@@ -515,10 +519,10 @@
 /* Pistachio Nut Decorative (dca9c6f: image-166.png) */
 .contact-info-decor-pistachio {
   position: absolute;
-  top: -70px;
-  right: -26px;
-  width: 141px;
-  height: 130px;
+  top: -65px;
+  right: -20px;
+  width: 110px;
+  height: auto;
   pointer-events: none;
   z-index: 3;
 }
@@ -551,6 +555,10 @@
   font-size: 27px;
   font-weight: 500;
   line-height: 30px;
+
+  &.highlight-burgundy {
+    color: #7C1F2E;
+  }
 }
 
 .contact-info-value a {
@@ -577,26 +585,26 @@
 .contact-page-watermark-feather {
   position: absolute;
   bottom: 0;
-  left: -236px;
-  width: 24.476%;
-  max-width: 475px;
+  left: -120px;
+  width: 28%;
+  max-width: 440px;
   height: auto;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 /* Right Peacock Watermark (71de19d: Peacock.png) */
 .contact-page-watermark-peacock {
   position: absolute;
   bottom: 0;
-  right: -95px;
-  width: 20.16%;
-  max-width: 323px;
+  right: -30px;
+  width: 20%;
+  max-width: 280px;
   height: auto;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 /* Responsive: Contact Main Section B */

@@ -7,12 +7,13 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\AccountController;
 use App\Http\Controllers\Public\DashboardController;
 use App\Http\Controllers\Public\HomeController;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 // Public Storefront
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about-us', fn () => Inertia::render('About'))->name('about-us');
+Route::get('/contact-us', [HomeController::class, 'contact'])->name('contact');
 
 // Authenticated Smart Role Dispatchers
 Route::middleware(['auth', 'verified'])->group(function () {

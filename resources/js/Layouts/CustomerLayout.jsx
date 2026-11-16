@@ -2,6 +2,7 @@ import React from 'react';
 import { usePage } from '@inertiajs/react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
+import FlashToaster from '@/Components/FlashToaster';
 import { CheckCircleIcon, AlertIcon } from '@/Components/Icons';
 
 export default function CustomerLayout({ header, children }) {
@@ -12,24 +13,8 @@ export default function CustomerLayout({ header, children }) {
             {/* Modular Reusable Header Component */}
             <Header />
 
-            {/* Flash Messages */}
-            {flash?.success && (
-                <div className="dayal-container dayal-flash-wrapper">
-                    <div className="dayal-alert dayal-alert--success">
-                        <CheckCircleIcon width="20" height="20" />
-                        <span>{flash.success}</span>
-                    </div>
-                </div>
-            )}
-
-            {flash?.error && (
-                <div className="dayal-container dayal-flash-wrapper">
-                    <div className="dayal-alert dayal-alert--danger">
-                        <AlertIcon width="20" height="20" />
-                        <span>{flash.error}</span>
-                    </div>
-                </div>
-            )}
+            {/* Floating Flash Toaster with 4500ms auto-dismiss & close button */}
+            <FlashToaster />
 
             {/* Page Header (Subheader banner) */}
             {header && (

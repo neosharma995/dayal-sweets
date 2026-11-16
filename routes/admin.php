@@ -13,6 +13,8 @@ use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductTagController;
 use App\Http\Controllers\Admin\SeasonalMithaiController;
+use App\Http\Controllers\Admin\ShippingZoneController;
+use App\Http\Controllers\Admin\TaxRateController;
 use Illuminate\Support\Facades\Route;
 
 // Admin Guest Authentication Routes
@@ -125,5 +127,43 @@ Route::middleware(['auth', 'verified', 'role:'.UserRole::Admin->value])->prefix(
         Route::match(['put', 'patch', 'post'], '/update/{productTag}', [ProductTagController::class, 'update'])->name('updateAlias');
         Route::match(['put', 'patch'], '/{productTag}', [ProductTagController::class, 'update'])->name('update');
         Route::delete('/{productTag}', [ProductTagController::class, 'destroy'])->name('destroy');
+    });
+
+    // Shipping Zone Management Web Routes (CRUD - WooCommerce Style)
+    Route::prefix('shipping-zones')->name('shipping-zones.')->group(function () {
+        Route::get('/', [ShippingZoneController::class, 'index'])->name('index');
+        Route::get('/get-all', [ShippingZoneController::class, 'index'])->name('getAll');
+        Route::get('/get_all', [ShippingZoneController::class, 'index'])->name('getAllUnderscore');
+        Route::get('/create', [ShippingZoneController::class, 'create'])->name('create');
+        Route::post('/', [ShippingZoneController::class, 'store'])->name('store');
+        Route::post('/create', [ShippingZoneController::class, 'store'])->name('storeAlias');
+        Route::get('/get/{shippingZone}', [ShippingZoneController::class, 'show'])->name('getById');
+        Route::get('/get_by_id/{shippingZone}', [ShippingZoneController::class, 'show'])->name('getByIdUnderscore');
+        Route::get('/{shippingZone}/edit', [ShippingZoneController::class, 'edit'])->name('edit');
+        Route::get('/{shippingZone}', [ShippingZoneController::class, 'show'])->name('show');
+        Route::match(['put', 'patch', 'post'], '/update/{shippingZone}', [ShippingZoneController::class, 'update'])->name('updateAlias');
+        Route::match(['put', 'patch'], '/{shippingZone}', [ShippingZoneController::class, 'update'])->name('update');
+        Route::patch('/{shippingZone}/toggle', [ShippingZoneController::class, 'toggleActive'])->name('toggle');
+        Route::delete('/delete/{shippingZone}', [ShippingZoneController::class, 'destroy'])->name('deleteAlias');
+        Route::delete('/{shippingZone}', [ShippingZoneController::class, 'destroy'])->name('destroy');
+    });
+
+    // Tax Rates Management Web Routes (CRUD - WooCommerce Style)
+    Route::prefix('taxes')->name('taxes.')->group(function () {
+        Route::get('/', [TaxRateController::class, 'index'])->name('index');
+        Route::get('/get-all', [TaxRateController::class, 'index'])->name('getAll');
+        Route::get('/get_all', [TaxRateController::class, 'index'])->name('getAllUnderscore');
+        Route::get('/create', [TaxRateController::class, 'create'])->name('create');
+        Route::post('/', [TaxRateController::class, 'store'])->name('store');
+        Route::post('/create', [TaxRateController::class, 'store'])->name('storeAlias');
+        Route::get('/get/{tax}', [TaxRateController::class, 'show'])->name('getById');
+        Route::get('/get_by_id/{tax}', [TaxRateController::class, 'show'])->name('getByIdUnderscore');
+        Route::get('/{tax}/edit', [TaxRateController::class, 'edit'])->name('edit');
+        Route::get('/{tax}', [TaxRateController::class, 'show'])->name('show');
+        Route::match(['put', 'patch', 'post'], '/update/{tax}', [TaxRateController::class, 'update'])->name('updateAlias');
+        Route::match(['put', 'patch'], '/{tax}', [TaxRateController::class, 'update'])->name('update');
+        Route::patch('/{tax}/toggle', [TaxRateController::class, 'toggleActive'])->name('toggle');
+        Route::delete('/delete/{tax}', [TaxRateController::class, 'destroy'])->name('deleteAlias');
+        Route::delete('/{tax}', [TaxRateController::class, 'destroy'])->name('destroy');
     });
 });

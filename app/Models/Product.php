@@ -34,6 +34,8 @@ class Product extends Model
         'occasion_id',
         'diet_preference_id',
         'product_tag_id',
+        'tax_rate_id',
+        'tax_status',
         'product_name',
         'product_description',
         'product_price',
@@ -51,6 +53,7 @@ class Product extends Model
      */
     protected $attributes = [
         'product_qty' => 1,
+        'tax_status' => 'taxable',
         'product_gallaries' => '[]',
         'product_details' => '[]',
     ];
@@ -66,6 +69,8 @@ class Product extends Model
         'min_price',
         'max_price',
         'total_stock',
+        'tax_amount',
+        'price_with_tax',
     ];
 
     /**
@@ -81,6 +86,8 @@ class Product extends Model
             'occasion_id' => 'integer',
             'diet_preference_id' => 'integer',
             'product_tag_id' => 'integer',
+            'tax_rate_id' => 'integer',
+            'tax_status' => 'string',
             'product_price' => 'decimal:2',
             'product_selling_price' => 'decimal:2',
             'product_qty' => 'integer',
@@ -135,6 +142,60 @@ class Product extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(ProductTag::class, 'product_tag_relations', 'product_id', 'product_tag_id');
+    }
+
+    /**
+     * Relationship: Product belongs to a Tax Rate.
+     */
+    public function taxRate(): BelongsTo
+    {
+        return $this->belongsTo(TaxRate::class, 'tax_rate_id');
+    }
+
+    /**
+     * Accessor for calculated tax amount based on product selling price and tax rate.
+     */
+    protected function taxAmount(): Attribute
+    {
+        return Attribute::make(
+            get: function (): float {
+                if ($this->tax_status !== 'taxable' || ! $this->tax_rate_id) {
+                    return 0.0;
+                }
+
+                $taxRate = $this->relationLoaded('taxRate') ? $this->taxRate : $this->taxRate()->first();
+                if (! $taxRate) {
+                    return 0.0;
+                }
+
+                $basePrice = (float) ($this->product_selling_price ?? $this->product_price ?? 0);
+
+                return $taxRate->calculateTax($basePrice);
+            }
+        );
+    }
+
+    /**
+     * Accessor for final price including tax.
+     */
+    protected function priceWithTax(): Attribute
+    {
+        return Attribute::make(
+            get: function (): float {
+                $basePrice = (float) ($this->product_selling_price ?? $this->product_price ?? 0);
+
+                if ($this->tax_status !== 'taxable' || ! $this->tax_rate_id) {
+                    return round($basePrice, 2);
+                }
+
+                $taxRate = $this->relationLoaded('taxRate') ? $this->taxRate : $this->taxRate()->first();
+                if (! $taxRate) {
+                    return round($basePrice, 2);
+                }
+
+                return round($basePrice + $taxRate->calculateTax($basePrice), 2);
+            }
+        );
     }
 
     /**

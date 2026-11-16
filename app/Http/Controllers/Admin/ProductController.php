@@ -14,6 +14,7 @@ use App\Models\Product;
 use App\Models\ProductAttribute;
 use App\Models\ProductTag;
 use App\Models\SeasonalMithai;
+use App\Models\TaxRate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ class ProductController extends Controller
      */
     public function index(Request $request): Response|JsonResponse
     {
-        $query = Product::query()->with(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'variations'])->latest('id');
+        $query = Product::query()->with(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'taxRate', 'variations'])->latest('id');
 
         // Optional search filter by product name or description
         if ($request->filled('search')) {
@@ -70,6 +71,7 @@ class ProductController extends Controller
             'dietPreferences' => DietPreference::orderBy('category_name')->get(['id', 'category_name']),
             'tags' => ProductTag::orderBy('product_tag_name')->get(['id', 'product_tag_name']),
             'attributes' => ProductAttribute::with('values')->orderBy('name')->get(),
+            'taxRates' => TaxRate::where('is_active', true)->orderBy('rate')->get(['id', 'name', 'code', 'rate', 'type', 'tax_class']),
         ]);
     }
 
@@ -79,7 +81,7 @@ class ProductController extends Controller
     public function edit(Product|int|string $product): Response
     {
         $productModel = $product instanceof Product ? $product : Product::findOrFail($product);
-        $productModel->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'variations.attributeValue.attribute']);
+        $productModel->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'taxRate', 'variations.attributeValue.attribute']);
 
         return Inertia::render('Admin/Products/Edit', [
             'product' => $productModel,
@@ -89,6 +91,7 @@ class ProductController extends Controller
             'dietPreferences' => DietPreference::orderBy('category_name')->get(['id', 'category_name']),
             'tags' => ProductTag::orderBy('product_tag_name')->get(['id', 'product_tag_name']),
             'attributes' => ProductAttribute::with('values')->orderBy('name')->get(),
+            'taxRates' => TaxRate::where('is_active', true)->orderBy('rate')->get(['id', 'name', 'code', 'rate', 'type', 'tax_class']),
         ]);
     }
 
@@ -98,7 +101,7 @@ class ProductController extends Controller
     public function show(Request $request, Product|int|string $product): Response|JsonResponse
     {
         $productModel = $product instanceof Product ? $product : Product::findOrFail($product);
-        $productModel->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'variations.attributeValue.attribute']);
+        $productModel->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'taxRate', 'variations.attributeValue.attribute']);
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -192,7 +195,7 @@ class ProductController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Product created successfully.',
-                'data' => $createdProduct->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'variations'])->fresh(),
+                'data' => $createdProduct->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'taxRate', 'variations'])->fresh(),
             ], 201);
         }
 

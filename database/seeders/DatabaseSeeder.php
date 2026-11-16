@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             RoleAndPermissionSeeder::class,
             ProductCatalogSeeder::class,
             ProductTagSeeder::class,
+            ShippingAndTaxSeeder::class,
         ]);
     }
 }

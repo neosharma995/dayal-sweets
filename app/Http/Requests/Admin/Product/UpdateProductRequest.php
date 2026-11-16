@@ -58,7 +58,7 @@ class UpdateProductRequest extends FormRequest
             }
         }
 
-        foreach (['category_id', 'seasonal_mithai_id', 'occasion_id', 'diet_preference_id', 'product_tag_id'] as $idField) {
+        foreach (['category_id', 'seasonal_mithai_id', 'occasion_id', 'diet_preference_id', 'product_tag_id', 'tax_rate_id'] as $idField) {
             if ($this->has($idField) && ($this->input($idField) === '' || $this->input($idField) === 'null')) {
                 $mergeData[$idField] = null;
             }
@@ -82,6 +82,8 @@ class UpdateProductRequest extends FormRequest
             'occasion_id' => ['nullable', 'integer', 'exists:product_occasions,id'],
             'diet_preference_id' => ['nullable', 'integer', 'exists:product_diet_preferences,id'],
             'product_tag_id' => ['nullable', 'integer', 'exists:product_tags,id'],
+            'tax_rate_id' => ['nullable', 'integer', 'exists:tax_rates,id'],
+            'tax_status' => ['nullable', 'string', 'in:taxable,none,shipping'],
             'tag_ids' => ['nullable', 'array'],
             'tag_ids.*' => ['integer', 'exists:product_tags,id'],
             'product_name' => ['sometimes', 'required', 'string', 'max:255'],

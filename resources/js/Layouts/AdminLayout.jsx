@@ -3,6 +3,7 @@ import { usePage, router } from '@inertiajs/react';
 import AdminHeader from '@/Components/Admin/AdminHeader';
 import AdminSidebar from '@/Components/Admin/AdminSidebar';
 import AdminFooter from '@/Components/Admin/AdminFooter';
+import FlashToaster from '@/Components/FlashToaster';
 import { AlertIcon, CheckCircleIcon, LogOutIcon } from '@/Components/Icons';
 import Modal from '@/Components/Modal';
 
@@ -40,24 +41,8 @@ export default function AdminLayout({ header, children }) {
                     onRequestLogout={() => setLogoutModalOpen(true)}
                 />
 
-                {/* Flash Messages */}
-                {flash?.success && (
-                    <div className="dayal-container dayal-flash-wrapper">
-                        <div className="dayal-alert dayal-alert--success">
-                            <CheckCircleIcon width="20" height="20" />
-                            <span>{flash.success}</span>
-                        </div>
-                    </div>
-                )}
-
-                {flash?.error && (
-                    <div className="dayal-container dayal-flash-wrapper">
-                        <div className="dayal-alert dayal-alert--danger">
-                            <AlertIcon width="20" height="20" />
-                            <span>{flash.error}</span>
-                        </div>
-                    </div>
-                )}
+                {/* Floating Flash Toaster with 4500ms auto-dismiss & close button */}
+                <FlashToaster />
 
                 {/* Page Content */}
                 <main className="dayal-admin-body">

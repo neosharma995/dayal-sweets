@@ -31,6 +31,10 @@ Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');
 Route::get('/gifting', [HomeController::class, 'gifting'])->name('gifting');
 Route::get('/dining', [HomeController::class, 'dining'])->name('dining');
 Route::get('/dinning', [HomeController::class, 'dining'])->name('dinning');
+Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('privacy-policy');
+Route::get('/refund-returns', [HomeController::class, 'refundReturns'])->name('refund-returns');
+Route::get('/refund-and-returns-policy', [HomeController::class, 'refundReturns'])->name('refund-returns.alias');
+Route::get('/franchise', [HomeController::class, 'franchise'])->name('franchise');
 Route::get('/product/{slug?}', [HomeController::class, 'product'])->name('product.show');
 
 // Authenticated Smart Role Dispatchers

@@ -5,10 +5,7 @@ const quickLinks = [
     ['About us', '/about-us'],
     ['Contact Us', '/contact-us'],
     ['Privacy Policy', '/privacy-policy'],
-    ['Track Order', '/track-order'],
     ['Return Policy', '/refund-returns'],
-    ['Delivery Info', '/delivery-info'],
-    ['Admin Portal', '/login'],
 ];
 
 const shopLinks = [
@@ -21,9 +18,8 @@ const shopLinks = [
 ];
 
 const corporateLinks = [
-    ['Bulk Orders', '/shop'],
+    ['Orders', '/shop'],
     ['Corporate Gifting', '/gifting'],
-    ['Event Catering', '/gifting'],
     ['Franchise Enquiry', '/franchise'],
 ];
 

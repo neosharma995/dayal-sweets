@@ -3,71 +3,67 @@ import { Head } from '@inertiajs/react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import ContactHero from '@/Components/contact/ContactHero';
-import DiningSpaces from '@/Components/dining/DiningSpaces';
-import DiningMenuHighlights from '@/Components/dining/DiningMenuHighlights';
-import DiningPromise from '@/Components/dining/DiningPromise';
-import TableReservationForm from '@/Components/dining/TableReservationForm';
-import DiningOutlets from '@/Components/dining/DiningOutlets';
+import DiningIntroduction from '@/Components/dining/DiningIntroduction';
+import DiningQROrdering from '@/Components/dining/DiningQROrdering';
+import DiningMenu from '@/Components/dining/DiningMenu';
+import DiningReservation from '@/Components/dining/DiningReservation';
 import '../../scss/pages/_contact.scss';
 import '../../scss/pages/_dining.scss';
 
 /**
  * Dayal Sweets - Dining Page
- * Pure SCSS Architecture with 1720px standard container
+ * Exact 1:1 Static Duplication from D:\Dayal Sweets Old (Post 3125 & Post 64)
+ * Matches the exact reference screenshot:
  *
- * Page Structure:
+ * Page Structure (in exact visual screenshot order):
  * 1. Global Header
- * 2. Section A: Reusable Red Hero Banner (DINING EXPERIENCE)
- * 3. Section B: Curated Dining Spaces (Family, Corporate, Private, Outdoor)
- * 4. Section C: Chef's Curated Menu Highlights (Interactive category filter)
- * 5. Section D: Our Culinary Promise (Pure Desi Ghee, Live Kitchen, Hygiene, 1962 Heritage)
- * 6. Section E: Table Reservation & Event Booking Form
- * 7. Section F: Our Dining Destinations (Amb, Hamirpur, Nangal Road Una Outlets)
- * 8. Global Footer & Promotional CTA
+ * 2. Section A: Reusable Red Hero Banner (DINNING)
+ * 3. Section B: Welcome to Dayal Sweets Dining (Large Interior Photo + 4 Feature Cards)
+ * 4. Section C: QR Table Ordering (Phone Stand + Scan. Order. Enjoy + 5-Step Process)
+ * 5. Section D: Explore Our Menu (7 Categories in 1 Row + EXPLORE FULL MENU CTA)
+ * 6. Section E: Book Your Table (Chef's Special Card + Table Reservation Form)
+ * 7. Section F & G: Promotional CTA & Global Footer
  */
 export default function Dining({ auth }) {
     return (
-        <div className="dayal-site dayal-dining-page-root">
+        <div className="dining-page-root">
             <Head>
-                <title>Dining Experience | Dayal Sweets - Pure Traditional Taste</title>
+                <title>Dining | Dayal Sweets</title>
                 <meta
                     name="description"
-                    content="Experience royal Himachali hospitality and authentic vegetarian delicacies at Dayal Sweets. Book family tables, private celebration suites, and executive corporate dining."
+                    content="Enjoy authentic Indian, Himachali, Chinese, South Indian, and Fast Food prepared fresh every day by our experienced chefs at Dayal Sweets."
                 />
             </Head>
 
             {/* Global Header */}
             <Header auth={auth} />
 
-            <main className="dayal-dining-main">
-                {/* Section A: Reusable Royal Maroon Hero Banner */}
+            <main>
+                {/* Section A: Common Red Hero Banner (Reusable) */}
                 <ContactHero
                     breadcrumbs={[
                         { label: 'HOME', url: '/' },
-                        { label: 'DINING', url: null },
+                        { label: 'DINNING', url: null },
                     ]}
-                    title="DINING EXPERIENCE"
-                    subtitle="Savor Authentic Flavors in Royal Ambience"
-                    description="From slow-simmered Himachali Madra and North Indian gravies to sizzling Indo-Chinese and artisanal desserts, experience Himachal's most loved dining destination."
+                    title="DINNING"
+                    subtitle="Good Food. Great Moments."
+                    description="Enjoy authentic Indian, Himachali, Chinese, South Indian, and Fast Food prepared fresh every day by our experienced chefs."
                 />
 
-                {/* Section B: Curated Dining Spaces */}
-                <DiningSpaces />
+                {/* Section B: Welcome to Dayal Sweets Dining */}
+                <DiningIntroduction />
 
-                {/* Section C: Chef's Curated Menu Highlights */}
-                <DiningMenuHighlights />
+                {/* Section C: QR Table Ordering */}
+                <DiningQROrdering />
 
-                {/* Section D: Our Culinary Promise */}
-                <DiningPromise />
+                {/* Section D: Explore Our Menu */}
+                <DiningMenu />
 
-                {/* Section E: Table Reservation & Event Booking Form */}
-                <TableReservationForm />
-
-                {/* Section F: Our Dining Outlets & Destinations */}
-                <DiningOutlets />
+                {/* Section E: Book Your Table / Reservation */}
+                <DiningReservation />
             </main>
 
-            {/* Global Footer */}
+            {/* Section F & G: Promotional CTA & Global Footer */}
             <Footer />
         </div>
     );

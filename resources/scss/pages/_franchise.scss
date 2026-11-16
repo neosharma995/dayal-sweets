@@ -1,0 +1,670 @@
+// ==========================================================================
+// Franchise Page Styles - Dayal Sweets
+// Strictly 'px' units - Container width: 90%, max-width: 100%
+// Scoped under .franchise-page-root
+// ==========================================================================
+
+.franchise-page-root {
+    width: 100%;
+    background-color: #FAF7F2;
+
+    // Enforce 90% container rule across all inner sections & imported components
+    .dayal-outlets-container,
+    .dayal-testimonials-container,
+    .franchise-benefits-container,
+    .franchise-enquiry-container,
+    .franchise-timeline-container {
+        width: 90%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    // Highlighting Maroon Span
+    .rt-span-color {
+        color: #7B1C2E;
+    }
+
+    // ==========================================================================
+    // Section A: Why Partner With Dayal Sweets?
+    // ==========================================================================
+    .franchise-benefits-section {
+        background-color: #FAF7F2;
+        padding: 80px 0 75px 0;
+        border-bottom: 1px solid rgba(201, 169, 110, 0.2);
+
+        @media (max-width: 1024px) {
+            padding: 50px 0;
+        }
+
+        @media (max-width: 640px) {
+            padding: 40px 0;
+        }
+    }
+
+    .franchise-benefits-heading {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 55px;
+        font-weight: 400;
+        color: #4A2E1F;
+        text-align: center;
+        line-height: 82px;
+        margin: 0 0 51px 0;
+
+        .rt-span-color {
+            font-weight: 500;
+        }
+
+        @media (max-width: 1024px) {
+            font-size: 35px;
+            line-height: 54px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 640px) {
+            font-size: 25px;
+            line-height: 44px;
+            margin-bottom: 25px;
+        }
+    }
+
+    .franchise-benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 20px;
+
+        @media (max-width: 1280px) {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        @media (max-width: 540px) {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+    }
+
+    .franchise-benefits-card {
+        background-color: #FDF9F2;
+        border: 1px solid #F5E3D0;
+        border-radius: 12px;
+        box-shadow: 0 4px 22px 0 rgba(223, 192, 138, 0.25);
+        min-height: 340px;
+        padding: 24px 14px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        text-align: center;
+        gap: 10px;
+        transition: transform 300ms ease, box-shadow 300ms ease;
+
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 28px 0 rgba(223, 192, 138, 0.35);
+        }
+
+        @media (max-width: 1024px) {
+            min-height: 300px;
+            padding: 20px 12px;
+        }
+    }
+
+    .franchise-benefits-icon-wrap {
+        width: 82px;
+        height: 82px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 4px;
+    }
+
+    .franchise-benefits-icon {
+        width: 82px;
+        height: 82px;
+        object-fit: contain;
+    }
+
+    .franchise-benefits-card-title {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        text-transform: capitalize;
+        color: #5C1520;
+        line-height: 22px;
+        letter-spacing: 0.5px;
+        margin: 0;
+    }
+
+    .franchise-benefits-divider {
+        width: 80px;
+        height: auto;
+        object-fit: contain;
+        margin: 2px 0;
+    }
+
+    .franchise-benefits-desc {
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 23px;
+        color: #7A6B55;
+        margin: 0;
+        flex-grow: 1;
+
+        @media (max-width: 640px) {
+            font-size: 14px;
+            line-height: 22px;
+        }
+    }
+
+    .franchise-benefits-arrow {
+        width: 117px;
+        height: 32px;
+        object-fit: contain;
+        margin-top: auto;
+    }
+
+    // ==========================================================================
+    // Section B: Become Our Franchise Partner
+    // ==========================================================================
+    .franchise-enquiry-section {
+        position: relative;
+        background-color: #FAF7F2;
+        padding: 80px 0 75px 0;
+        border-bottom: 1px solid rgba(201, 169, 110, 0.2);
+        overflow: hidden;
+
+        @media (max-width: 1024px) {
+            padding: 50px 0;
+        }
+
+        @media (max-width: 640px) {
+            padding: 40px 0;
+        }
+    }
+
+    .franchise-enquiry-decor-saffron {
+        position: absolute;
+        top: 10px;
+        right: -14px;
+        width: 140px;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.9;
+
+        @media (max-width: 768px) {
+            width: 90px;
+            right: -20px;
+            top: 5px;
+        }
+    }
+
+    .franchise-enquiry-decor-cashew {
+        position: absolute;
+        top: 90px;
+        right: 50px;
+        width: 100px;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.9;
+
+        @media (max-width: 768px) {
+            width: 70px;
+            right: 15px;
+            top: 60px;
+        }
+    }
+
+    .franchise-enquiry-decor-peacock {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 220px;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.7;
+
+        @media (max-width: 900px) {
+            display: none;
+        }
+    }
+
+    .franchise-enquiry-container {
+        position: relative;
+        z-index: 2;
+    }
+
+    .franchise-enquiry-header {
+        text-align: center;
+        margin-bottom: 48px;
+
+        @media (max-width: 768px) {
+            margin-bottom: 30px;
+        }
+    }
+
+    .franchise-enquiry-eyebrow-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .franchise-enquiry-eyebrow-line {
+        display: inline-block;
+        width: 21px;
+        height: 1px;
+        background-color: #1C1008;
+    }
+
+    .franchise-enquiry-eyebrow {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 4.8px;
+        color: #1C1008;
+
+        @media (max-width: 640px) {
+            font-size: 12px;
+            letter-spacing: 3px;
+        }
+    }
+
+    .franchise-enquiry-title {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 55px;
+        font-weight: 400;
+        color: #1C1008;
+        line-height: 70px;
+        margin: 0 0 10px 0;
+
+        .rt-span-color {
+            font-weight: 500;
+        }
+
+        @media (max-width: 1024px) {
+            font-size: 36px;
+            line-height: 48px;
+        }
+
+        @media (max-width: 640px) {
+            font-size: 26px;
+            line-height: 36px;
+        }
+    }
+
+    .franchise-enquiry-subtitle {
+        font-family: 'Inter', sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        color: #6E5A4D;
+        margin: 0;
+
+        @media (max-width: 640px) {
+            font-size: 14px;
+        }
+    }
+
+    .franchise-enquiry-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 36px;
+        align-items: stretch;
+
+        @media (max-width: 1024px) {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+    }
+
+    .franchise-enquiry-card {
+        background-color: #FFFFFF;
+        border: 1px solid #EFE4D6;
+        border-radius: 16px;
+        padding: 40px;
+        box-shadow: 0 4px 24px rgba(123, 28, 46, 0.06);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        @media (max-width: 1024px) {
+            padding: 30px;
+        }
+
+        @media (max-width: 640px) {
+            padding: 22px 16px;
+        }
+    }
+
+    .franchise-enquiry-card-title {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 26px;
+        font-weight: 600;
+        color: #1C1008;
+        margin: 0 0 24px 0;
+
+        @media (max-width: 640px) {
+            font-size: 22px;
+            margin-bottom: 18px;
+        }
+    }
+
+    .franchise-form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 16px;
+
+        @media (max-width: 640px) {
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+    }
+
+    .franchise-form-field {
+        width: 100%;
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            background-color: #FAF7F2;
+            border: 1px solid #E6D8C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #1C1008;
+            outline: none;
+            transition: border-color 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
+
+            &:focus {
+                border-color: #7B1C2E;
+                box-shadow: 0 0 0 2px rgba(123, 28, 46, 0.12);
+                background-color: #FFFFFF;
+            }
+
+            &::placeholder {
+                color: #9D8A78;
+                font-weight: 400;
+            }
+        }
+    }
+
+    .franchise-form-field-full {
+        margin-bottom: 20px;
+
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            background-color: #FAF7F2;
+            border: 1px solid #E6D8C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #1C1008;
+            outline: none;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
+
+            &:focus {
+                border-color: #7B1C2E;
+                box-shadow: 0 0 0 2px rgba(123, 28, 46, 0.12);
+                background-color: #FFFFFF;
+            }
+
+            &::placeholder {
+                color: #9D8A78;
+                font-weight: 400;
+            }
+        }
+    }
+
+    .franchise-form-submit-wrap {
+        display: flex;
+        justify-content: flex-start;
+
+        @media (max-width: 640px) {
+            justify-content: stretch;
+        }
+    }
+
+    .franchise-form-submit-btn {
+        background-color: #7B1C2E;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 6px;
+        padding: 14px 34px;
+        font-family: 'Inter', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background-color 250ms ease, transform 150ms ease;
+
+        &:hover {
+            background-color: #5C1520;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 640px) {
+            width: 100%;
+            text-align: center;
+        }
+    }
+
+    .franchise-enquiry-media {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        min-height: 440px;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+
+        @media (max-width: 1024px) {
+            min-height: 360px;
+            max-height: 480px;
+        }
+    }
+
+    .franchise-enquiry-outlet-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        border-radius: 16px;
+    }
+
+    // ==========================================================================
+    // Section C: Premium Outlets Wrapper
+    // ==========================================================================
+    .franchise-outlets-wrapper {
+        width: 100%;
+        background-color: #FAF5F0;
+    }
+
+    // ==========================================================================
+    // Section D: How It Works? (Timeline)
+    // ==========================================================================
+    .franchise-timeline-section {
+        background-color: #FAF5F0;
+        padding: 100px 0;
+        border-bottom: 1px solid rgba(201, 169, 110, 0.2);
+        position: relative;
+
+        @media (max-width: 1024px) {
+            padding: 50px 0;
+        }
+
+        @media (max-width: 640px) {
+            padding: 40px 0;
+        }
+    }
+
+    .franchise-timeline-heading {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 65px;
+        font-weight: 500;
+        color: #4A2E1F;
+        line-height: 82px;
+        text-align: center;
+        margin: 0 0 60px 0;
+
+        .rt-span-color {
+            font-weight: 500;
+        }
+
+        @media (max-width: 1024px) {
+            font-size: 38px;
+            line-height: 52px;
+            margin-bottom: 35px;
+        }
+
+        @media (max-width: 640px) {
+            font-size: 28px;
+            line-height: 40px;
+            margin-bottom: 25px;
+        }
+    }
+
+    .franchise-timeline-wrapper {
+        position: relative;
+        width: 100%;
+    }
+
+    .franchise-timeline-track-line {
+        position: absolute;
+        top: 30px;
+        left: 5%;
+        right: 5%;
+        height: 2px;
+        background: linear-gradient(90deg, #E2CEB5 0%, #C9A96E 50%, #E2CEB5 100%);
+        z-index: 1;
+
+        @media (max-width: 1024px) {
+            display: none;
+        }
+    }
+
+    .franchise-timeline-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 16px;
+        position: relative;
+        z-index: 2;
+
+        @media (max-width: 1024px) {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px 16px;
+        }
+
+        @media (max-width: 640px) {
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+    }
+
+    .franchise-timeline-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        position: relative;
+    }
+
+    .franchise-timeline-icon-wrap {
+        position: relative;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        background-color: #FAF5F0;
+        border-radius: 50%;
+    }
+
+    .franchise-timeline-icon {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+        display: block;
+    }
+
+    .franchise-timeline-diamond {
+        position: absolute;
+        top: 50%;
+        left: calc(50% + 55px);
+        transform: translateY(-50%) rotate(45deg);
+        width: 8px;
+        height: 8px;
+        background-color: #C9A96E;
+        z-index: 2;
+        pointer-events: none;
+
+        @media (max-width: 1280px) {
+            left: calc(50% + 40px);
+        }
+
+        @media (max-width: 1024px) {
+            display: none;
+        }
+    }
+
+    .franchise-timeline-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 6px;
+    }
+
+    .franchise-timeline-step-num {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: #5C1520;
+    }
+
+    .franchise-timeline-step-title {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: #000000;
+        margin: 0;
+        line-height: 24px;
+
+        @media (max-width: 640px) {
+            font-size: 16px;
+        }
+    }
+
+    .franchise-timeline-step-desc {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        color: #7A6B55;
+        line-height: 21px;
+        margin: 0;
+    }
+
+    // ==========================================================================
+    // Section E: Customer Testimonials Wrapper
+    // ==========================================================================
+    .franchise-testimonials-wrapper {
+        width: 100%;
+        background-color: #FAF7F2;
+    }
+}

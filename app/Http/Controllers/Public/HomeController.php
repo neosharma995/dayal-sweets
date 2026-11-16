@@ -219,6 +219,39 @@ class HomeController extends Controller
     }
 
     /**
+     * Display the Dayal Sweets Privacy Policy page.
+     */
+    public function privacyPolicy(): Response
+    {
+        return Inertia::render('PrivacyPolicy', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+        ]);
+    }
+
+    /**
+     * Display the Dayal Sweets Refund and Returns Policy page.
+     */
+    public function refundReturns(): Response
+    {
+        return Inertia::render('RefundReturns', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+        ]);
+    }
+
+    /**
+     * Display the Dayal Sweets Franchise page.
+     */
+    public function franchise(): Response
+    {
+        return Inertia::render('Franchise', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+        ]);
+    }
+
+    /**
      * Display the Dayal Sweets Single Product page.
      */
     public function product(?string $slug = 'office-tea-combo'): Response

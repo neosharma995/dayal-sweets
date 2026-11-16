@@ -1,0 +1,698 @@
+// ==========================================================================
+// Dayal Sweets - Single Product Page Styles
+// Pure SCSS Architecture with 1720px Standard Container
+// Zero Inline Styles, Zero Tailwind CSS
+// ==========================================================================
+
+@use '../variables' as *;
+@use '../abstracts/storefront-variables' as *;
+
+.dayal-product-single-page {
+    background-color: #faf7f2;
+    color: #1c1008;
+    min-height: 100vh;
+}
+
+.dayal-product-single-main {
+    padding-bottom: 56px;
+}
+
+// --------------------------------------------------------------------------
+// Standard 1720px Container
+// --------------------------------------------------------------------------
+.dayal-product-single-container {
+    width: 100%;
+    max-width: 1720px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+
+    @media (max-width: 767px) {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+}
+
+// --------------------------------------------------------------------------
+// 01. Product Hero Banner
+// --------------------------------------------------------------------------
+.dayal-product-single-hero {
+    position: relative;
+    background: linear-gradient(135deg, #4a0e1a 0%, #631826 60%, #360811 100%);
+    color: #ffffff;
+    padding: 56px 20px;
+    text-align: center;
+    overflow: hidden;
+    box-sizing: border-box;
+    width: 100%;
+
+    .dayal-product-hero-overlay {
+        position: absolute;
+        inset: 0;
+        background-image: url('/uploads/2026/07/04724c94306c3afb47b7f5d77ffc2559098edd85.webp');
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        opacity: 0.95;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    // Decorative assets matching project standards
+    .dayal-hero-decor-peacock {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: auto;
+        max-height: 220px;
+        pointer-events: none;
+        z-index: 2;
+
+        @media (max-width: 1024px) {
+            max-height: 140px;
+        }
+
+        @media (max-width: 640px) {
+            display: none;
+        }
+    }
+
+    .dayal-hero-decor-sweet-1 {
+        position: absolute;
+        left: 50px;
+        bottom: -5%;
+        width: auto;
+        max-width: 120px;
+        pointer-events: none;
+        z-index: 2;
+
+        @media (max-width: 840px) {
+            display: none;
+        }
+    }
+
+    .dayal-hero-decor-sweet-2 {
+        position: absolute;
+        left: 170px;
+        bottom: -10%;
+        width: auto;
+        max-width: 95px;
+        pointer-events: none;
+        z-index: 2;
+
+        @media (max-width: 840px) {
+            display: none;
+        }
+    }
+
+    .dayal-hero-decor-sweet-3 {
+        position: absolute;
+        left: 150px;
+        bottom: 20%;
+        width: auto;
+        max-width: 52px;
+        pointer-events: none;
+        z-index: 2;
+
+        @media (max-width: 840px) {
+            display: none;
+        }
+    }
+
+    .dayal-product-hero-inner {
+        position: relative;
+        z-index: 3;
+        max-width: 850px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .dayal-product-breadcrumb {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+
+            a {
+                color: #dfc08a;
+                text-decoration: none;
+                transition: color 0.2s;
+
+                &:hover {
+                    color: #ffffff;
+                    text-decoration: underline;
+                }
+            }
+
+            .breadcrumb-sep {
+                color: rgba(223, 192, 138, 0.7);
+                font-size: 11px;
+            }
+
+            .breadcrumb-current {
+                color: #e6c88a;
+                font-weight: 700;
+            }
+        }
+
+        .dayal-product-hero-title {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 44px;
+            font-weight: 700;
+            line-height: 1.15;
+            color: #ffffff;
+            margin: 0 0 8px;
+            letter-spacing: 0.02em;
+
+            @media (max-width: 768px) {
+                font-size: 32px;
+            }
+        }
+
+        .dayal-product-hero-subtitle {
+            font-size: 15px;
+            color: #f1e4d3;
+            margin: 0;
+            letter-spacing: 0.02em;
+        }
+    }
+}
+
+// --------------------------------------------------------------------------
+// 02. Product Showcase Layout
+// --------------------------------------------------------------------------
+.dayal-product-showcase-section {
+    padding: 56px 0 64px;
+
+    .dayal-product-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+        gap: 56px;
+        align-items: flex-start;
+
+        @media (max-width: 1200px) {
+            gap: 36px;
+        }
+
+        @media (max-width: 992px) {
+            grid-template-columns: 1fr;
+            gap: 32px;
+        }
+    }
+
+    // Left Gallery Column
+    .dayal-product-gallery-column {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .dayal-product-main-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #ebdccb;
+            box-shadow: 0 6px 24px rgba(43, 37, 35, 0.06);
+            overflow: hidden;
+            aspect-ratio: 4 / 3.4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+
+            .dayal-product-featured-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+                transition: transform 0.4s ease;
+
+                &:hover {
+                    transform: scale(1.02);
+                }
+            }
+        }
+
+        .dayal-product-thumbnails-row {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+
+            .dayal-thumbnail-btn {
+                width: 76px;
+                height: 76px;
+                border-radius: 8px;
+                border: 2px solid #ebdccb;
+                background: #ffffff;
+                padding: 3px;
+                cursor: pointer;
+                overflow: hidden;
+                transition: all 0.2s ease;
+                flex-shrink: 0;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 4px;
+                    display: block;
+                }
+
+                &:hover,
+                &.is-active {
+                    border-color: #631826;
+                    box-shadow: 0 2px 8px rgba(99, 24, 38, 0.2);
+                }
+            }
+        }
+    }
+
+    // Right Details Column
+    .dayal-product-details-column {
+        display: flex;
+        flex-direction: column;
+
+        .product-category-eyebrow {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            color: #8c827a;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .product-single-title {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 38px;
+            font-weight: 700;
+            color: #1c1008;
+            margin: 0 0 14px;
+            line-height: 1.2;
+
+            @media (max-width: 768px) {
+                font-size: 28px;
+            }
+        }
+
+        .product-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 18px;
+
+            .product-stars-rating {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+
+                .stars-cluster {
+                    display: flex;
+                    align-items: center;
+                    gap: 2px;
+
+                    .star-filled {
+                        color: #d4af37;
+                    }
+
+                    .star-empty {
+                        color: #d8cdbf;
+                    }
+                }
+
+                .rating-text {
+                    font-size: 12.5px;
+                    color: #78716c;
+                }
+            }
+
+            .product-stock-badge {
+                padding: 4px 10px;
+                border-radius: 999px;
+                background: #ecfdf5;
+                color: #059669;
+                border: 1px solid #a7f3d0;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+            }
+        }
+
+        .product-price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f0eae1;
+
+            .price-label {
+                font-size: 13.5px;
+                color: #78716c;
+            }
+
+            .price-amount {
+                font-size: 32px;
+                font-weight: 700;
+                color: #631826;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+
+            .original-price-amount {
+                font-size: 18px;
+                color: #a8a29e;
+                text-decoration: line-through;
+            }
+        }
+
+        .product-short-description {
+            font-size: 14.5px;
+            line-height: 1.65;
+            color: #57534e;
+            margin: 0 0 24px;
+        }
+
+        // Variations Selector
+        .product-variations-group {
+            margin-bottom: 24px;
+
+            .variations-label {
+                display: block;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                color: #2b2523;
+                margin-bottom: 10px;
+            }
+
+            .variations-pills {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+
+                .variation-pill-btn {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 8px 14px;
+                    background: #ffffff;
+                    border: 1.5px solid #d8cdbf;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 13px;
+                    transition: all 0.2s ease;
+
+                    .var-title {
+                        color: #1c1008;
+                        font-weight: 600;
+                    }
+
+                    .var-price {
+                        color: #631826;
+                        font-weight: 700;
+                    }
+
+                    &:hover {
+                        border-color: #631826;
+                    }
+
+                    &.is-selected {
+                        border-color: #631826;
+                        background: #fbf4e8;
+                        box-shadow: 0 0 0 1px #631826;
+                    }
+                }
+            }
+        }
+
+        // Actions: Quantity, Add to Cart, Buy Now
+        .product-actions-cluster {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+
+            .product-quantity-counter {
+                display: inline-flex;
+                align-items: center;
+                background: #ffffff;
+                border: 1px solid #d8cdbf;
+                border-radius: 6px;
+                overflow: hidden;
+                height: 48px;
+
+                .qty-btn {
+                    width: 40px;
+                    height: 100%;
+                    border: none;
+                    background: transparent;
+                    color: #1c1008;
+                    font-size: 16px;
+                    font-weight: 700;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: background 0.15s;
+
+                    &:hover {
+                        background: #f4ecdf;
+                    }
+                }
+
+                .qty-value {
+                    min-width: 40px;
+                    text-align: center;
+                    font-size: 15px;
+                    font-weight: 700;
+                    color: #1c1008;
+                }
+            }
+
+            .btn-add-to-cart {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                height: 48px;
+                padding: 0 24px;
+                background: #631826;
+                color: #ffffff;
+                border: none;
+                border-radius: 6px;
+                font-size: 13.5px;
+                font-weight: 700;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                cursor: pointer;
+                transition: all 0.2s ease;
+
+                &:hover {
+                    background: #4a0e1a;
+                    box-shadow: 0 4px 14px rgba(99, 24, 38, 0.25);
+                }
+
+                &.is-success {
+                    background: #059669;
+                }
+            }
+
+            .btn-buy-now {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                height: 48px;
+                padding: 0 26px;
+                background: #b88e4b;
+                color: #ffffff;
+                border: none;
+                border-radius: 6px;
+                font-size: 13.5px;
+                font-weight: 700;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                cursor: pointer;
+                transition: all 0.2s ease;
+
+                &:hover {
+                    background: #9e7432;
+                    box-shadow: 0 4px 14px rgba(184, 142, 75, 0.3);
+                }
+            }
+
+            @media (max-width: 640px) {
+                flex-direction: column;
+                align-items: stretch;
+
+                .product-quantity-counter {
+                    justify-content: center;
+                }
+
+                .btn-add-to-cart,
+                .btn-buy-now {
+                    width: 100%;
+                }
+            }
+        }
+
+        // Guarantees 2x2 Grid matching image
+        .product-guarantees-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 24px;
+            background: #ffffff;
+            border: 1px solid #ebdccb;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 28px;
+
+            .guarantee-cell {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+
+                .guarantee-check-icon {
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    background: #631826;
+                    color: #ffffff;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+                }
+
+                .guarantee-label {
+                    font-size: 13px;
+                    font-weight: 600;
+                    color: #2b2523;
+                }
+            }
+
+            @media (max-width: 500px) {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+
+        // Accordion Tabs matching image
+        .product-accordions-group {
+            display: flex;
+            flex-direction: column;
+            border-top: 1px solid #ebdccb;
+
+            .accordion-item {
+                border-bottom: 1px solid #ebdccb;
+
+                .accordion-trigger {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    width: 100%;
+                    padding: 16px 0;
+                    background: transparent;
+                    border: none;
+                    cursor: pointer;
+                    text-align: left;
+
+                    .accordion-title {
+                        font-size: 13px;
+                        font-weight: 700;
+                        letter-spacing: 0.08em;
+                        text-transform: uppercase;
+                        color: #1c1008;
+                    }
+
+                    .accordion-icon {
+                        color: #78716c;
+                        transition: transform 0.2s;
+                    }
+
+                    &:hover .accordion-title {
+                        color: #631826;
+                    }
+                }
+
+                .accordion-content {
+                    padding: 0 0 18px 0;
+
+                    p {
+                        font-size: 13.5px;
+                        line-height: 1.6;
+                        color: #6e6258;
+                        margin: 0 0 8px;
+
+                        &:last-child {
+                            margin-bottom: 0;
+                        }
+
+                        strong {
+                            color: #1c1008;
+                        }
+                    }
+
+                    .facility-note {
+                        font-size: 12px;
+                        color: #8c827a;
+                        font-style: italic;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// --------------------------------------------------------------------------
+// 03. YOU MAY ALSO LIKE Section
+// --------------------------------------------------------------------------
+.dayal-product-related-section {
+    padding: 60px 0 72px;
+    background: #ffffff;
+    border-top: 1px solid #ebdccb;
+
+    .dayal-related-header {
+        text-align: center;
+        margin-bottom: 40px;
+
+        .related-title {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: #1c1008;
+            margin: 0;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+
+            .title-accent {
+                color: #631826;
+            }
+        }
+    }
+
+    .dayal-related-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+
+        @media (max-width: 1200px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (max-width: 640px) {
+            grid-template-columns: 1fr;
+        }
+    }
+}

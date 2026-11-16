@@ -29,8 +29,8 @@ class SeasonalMithaiController extends Controller
             $search = (string) $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('category_name', 'like', "%{$search}%")
-                  ->orWhere('category_description', 'like', "%{$search}%")
-                  ->orWhere('category_slug', 'like', "%{$search}%");
+                    ->orWhere('category_description', 'like', "%{$search}%")
+                    ->orWhere('category_slug', 'like', "%{$search}%");
             });
         }
 

@@ -29,8 +29,8 @@ class ProductTagController extends Controller
             $search = (string) $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('product_tag_name', 'like', "%{$search}%")
-                  ->orWhere('product_tag_description', 'like', "%{$search}%")
-                  ->orWhere('product_tag_slug', 'like', "%{$search}%");
+                    ->orWhere('product_tag_description', 'like', "%{$search}%")
+                    ->orWhere('product_tag_slug', 'like', "%{$search}%");
             });
         }
 

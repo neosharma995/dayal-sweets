@@ -19,12 +19,12 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Admin/Auth/Login', [
+        return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
-            'defaultEmail' => 'admin@dayalsweets.com',
+            'defaultEmail' => 'customer@dayalsweets.com',
             'defaultPassword' => 'password',
-            'submitUrl' => route('login'),
+            'canRegister' => Route::has('register'),
         ]);
     }
 

@@ -13,6 +13,7 @@ use App\Models\ProductTag;
 use App\Models\SeasonalMithai;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class AdminCategoryCustomizationsTest extends TestCase
@@ -26,7 +27,7 @@ class AdminCategoryCustomizationsTest extends TestCase
         parent::setUp();
 
         foreach (UserRole::values() as $role) {
-            \Spatie\Permission\Models\Role::firstOrCreate(['name' => $role, 'guard_name' => 'web']);
+            Role::firstOrCreate(['name' => $role, 'guard_name' => 'web']);
         }
 
         $this->adminUser = User::factory()->create([

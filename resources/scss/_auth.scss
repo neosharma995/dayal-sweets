@@ -236,6 +236,58 @@
   }
 }
 
+.dayal-auth-mode-switch {
+  display: flex;
+  background: #F4ECE1;
+  border-radius: $radius-md;
+  padding: 4px;
+  margin-bottom: 1.5rem;
+  border: 1px solid $color-cream-border;
+
+  .auth-mode-tab {
+    flex: 1;
+    padding: 0.625rem 0.75rem;
+    background: transparent;
+    border: none;
+    border-radius: $radius-sm;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: $color-text-muted;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+
+    &:hover {
+      color: $color-maroon;
+    }
+
+    &.is-active {
+      background: $color-white;
+      color: $color-maroon;
+      box-shadow: 0 2px 6px rgba(43, 37, 35, 0.08);
+    }
+  }
+}
+
+.dayal-role-customer-notice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: $radius-md;
+  background: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  color: #065F46;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+
+  svg {
+    flex-shrink: 0;
+    color: #059669;
+  }
+}
+
 .dayal-submit-btn {
   @include btn-maroon;
   width: 100%;
@@ -465,6 +517,22 @@
 
     &:hover {
       text-decoration: underline;
+    }
+  }
+
+  button.dayal-auth-switch-link {
+    background: transparent;
+    border: none;
+    color: $color-maroon;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+    margin-left: 0.25rem;
+
+    &:hover {
+      color: $color-maroon-dark;
     }
   }
 }

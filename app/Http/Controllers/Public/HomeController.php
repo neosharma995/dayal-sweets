@@ -9,7 +9,6 @@ use App\Models\Category;
 use App\Models\DietPreference;
 use App\Models\Occasion;
 use App\Models\Product;
-use App\Models\ProductTag;
 use App\Models\SeasonalMithai;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -213,6 +212,66 @@ class HomeController extends Controller
     public function dining(): Response
     {
         return Inertia::render('Dining', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+        ]);
+    }
+
+    /**
+     * Display the Dayal Sweets Single Product page.
+     */
+    public function product(?string $slug = 'office-tea-combo'): Response
+    {
+        $cleanSlug = $slug ? trim($slug, '/') : 'office-tea-combo';
+
+        $dbProduct = null;
+        $formattedName = str_replace('-', ' ', $cleanSlug);
+        $found = Product::with(['category', 'variations.attributeValue'])
+            ->where(function ($query) use ($formattedName, $cleanSlug) {
+                $query->where('product_name', 'like', $formattedName)
+                    ->orWhere('product_name', 'like', '%'.$formattedName.'%')
+                    ->orWhereRaw('LOWER(product_name) = ?', [strtolower($formattedName)]);
+                if (is_numeric($cleanSlug)) {
+                    $query->orWhere('id', (int) $cleanSlug);
+                }
+            })
+            ->first();
+
+        if ($found) {
+            $image = $found->product_image ?: $found->product_image_url;
+            $galleries = ! empty($found->product_gallaries) ? $found->product_gallaries : ($found->product_gallaries_urls ?: []);
+            if ($image && ! in_array($image, $galleries, true)) {
+                array_unshift($galleries, $image);
+            }
+
+            $variations = $found->variations->map(fn ($v) => [
+                'label' => $v->variation_name ?: ($v->attributeValue?->value ?? ($v->weight_value ? "{$v->weight_value}{$v->weight_unit}" : 'Standard')),
+                'price' => (float) ($v->selling_price ?: $v->price ?: 0),
+            ])->values()->toArray();
+
+            $basePrice = (float) ($found->product_selling_price ?: $found->product_price ?: ($variations[0]['price'] ?? 150));
+            $originalPrice = $found->product_price && (float) $found->product_price > $basePrice ? (float) $found->product_price : null;
+
+            $dbProduct = [
+                'id' => $found->id,
+                'name' => $found->product_name,
+                'category' => strtoupper($found->category?->category_name ?? 'UNCATEGORIZED'),
+                'categorySlug' => $found->category?->category_slug ?? 'uncategorized',
+                'slug' => $cleanSlug,
+                'description' => $found->product_description,
+                'fullDescription' => $found->product_description,
+                'image' => $image,
+                'gallery' => $galleries,
+                'price' => $basePrice,
+                'originalPrice' => $originalPrice,
+                'inStock' => ($found->total_stock ?? $found->product_qty ?? 1) > 0,
+                'variations' => $variations,
+            ];
+        }
+
+        return Inertia::render('Product/Show', [
+            'slug' => $cleanSlug,
+            'product' => $dbProduct,
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
         ]);

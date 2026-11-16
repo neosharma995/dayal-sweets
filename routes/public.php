@@ -20,6 +20,7 @@ Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');
 Route::get('/gifting', [HomeController::class, 'gifting'])->name('gifting');
 Route::get('/dining', [HomeController::class, 'dining'])->name('dining');
 Route::get('/dinning', [HomeController::class, 'dining'])->name('dinning');
+Route::get('/product/{slug?}', [HomeController::class, 'product'])->name('product.show');
 
 // Authenticated Smart Role Dispatchers
 Route::middleware(['auth', 'verified'])->group(function () {

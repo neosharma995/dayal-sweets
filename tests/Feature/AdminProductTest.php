@@ -148,6 +148,13 @@ class AdminProductTest extends TestCase
             'product_gallaries' => ['https://dayalsweets.com/roll.jpg'],
             'product_details' => ['Net Wt: 500g', 'Desi Ghee'],
         ]);
+        $product->variations()->create([
+            'variation_name' => '500g Box',
+            'price' => 600.00,
+            'selling_price' => 550.00,
+            'product_qty' => 4,
+            'is_default' => true,
+        ]);
 
         $response = $this->actingAs($this->adminUser)
             ->getJson("/admin/products/{$product->id}");
@@ -158,9 +165,8 @@ class AdminProductTest extends TestCase
                 'data' => [
                     'id' => $product->id,
                     'product_name' => 'Kaju Roll Special',
-                    'product_price' => '600.00',
-                    'product_selling_price' => '550.00',
-                    'product_qty' => 4,
+                    'min_price' => 550.00,
+                    'total_stock' => 4,
                 ],
             ]);
 
@@ -203,14 +209,15 @@ class AdminProductTest extends TestCase
                 'message' => 'Product created successfully.',
                 'data' => [
                     'product_name' => 'Desi Ghee Motichoor Laddu',
-                    'product_price' => '480.00',
-                    'product_selling_price' => '430.00',
-                    'product_qty' => 1, // Automatically set to initial 1
+                    'min_price' => 430.00,
+                    'total_stock' => 1,
                 ],
             ]);
 
         $this->assertDatabaseHas('products', [
             'product_name' => 'Desi Ghee Motichoor Laddu',
+            'product_price' => 480.00,
+            'product_selling_price' => 430.00,
             'product_qty' => 1,
         ]);
     }
@@ -244,15 +251,16 @@ class AdminProductTest extends TestCase
                 'message' => 'Product updated successfully.',
                 'data' => [
                     'product_name' => 'Updated Premium Laddu',
-                    'product_price' => '350.00',
-                    'product_selling_price' => '320.00',
-                    'product_qty' => 12,
+                    'min_price' => 320.00,
+                    'total_stock' => 12,
                 ],
             ]);
 
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
             'product_name' => 'Updated Premium Laddu',
+            'product_price' => 350.00,
+            'product_selling_price' => 320.00,
             'product_qty' => 12,
         ]);
     }
@@ -314,5 +322,139 @@ class AdminProductTest extends TestCase
 
         $deleteResponse->assertStatus(302);
         Storage::disk('public')->assertMissing($product->product_image);
+    }
+
+    /**
+     * Admin can create a product with inline variations.
+     */
+    public function test_admin_can_create_product_with_inline_variations(): void
+    {
+        $payload = [
+            'product_name' => 'Royal Assorted Kaju Pack',
+            'product_price' => 500.00,
+            'product_selling_price' => 450.00,
+            'product_qty' => 10,
+            'variations' => [
+                [
+                    'variation_name' => '250g Box',
+                    'price' => 260.00,
+                    'selling_price' => 240.00,
+                    'product_qty' => 20,
+                    'weight_value' => 250,
+                    'weight_unit' => 'g',
+                    'sku' => 'RAK-250G',
+                    'is_default' => false,
+                ],
+                [
+                    'variation_name' => '500g Box',
+                    'price' => 500.00,
+                    'selling_price' => 450.00,
+                    'product_qty' => 30,
+                    'weight_value' => 500,
+                    'weight_unit' => 'g',
+                    'sku' => 'RAK-500G',
+                    'is_default' => true,
+                ],
+            ],
+        ];
+
+        $response = $this->actingAs($this->adminUser)
+            ->postJson('/admin/products', $payload);
+
+        $response->assertStatus(201);
+        $productId = $response->json('data.id');
+
+        $this->assertDatabaseHas('products', [
+            'id' => $productId,
+            'product_name' => 'Royal Assorted Kaju Pack',
+        ]);
+
+        $this->assertDatabaseHas('product_variations', [
+            'product_id' => $productId,
+            'variation_name' => '250g Box',
+            'selling_price' => 240.00,
+            'is_default' => false,
+        ]);
+
+        $this->assertDatabaseHas('product_variations', [
+            'product_id' => $productId,
+            'variation_name' => '500g Box',
+            'selling_price' => 450.00,
+            'is_default' => true,
+        ]);
+    }
+
+    /**
+     * Admin can update a product and sync its inline variations.
+     */
+    public function test_admin_can_update_product_and_sync_inline_variations(): void
+    {
+        $product = Product::create([
+            'product_name' => 'Dry Fruit Laddu',
+            'product_price' => 400.00,
+            'product_selling_price' => 380.00,
+            'product_qty' => 5,
+        ]);
+
+        $v1 = $product->variations()->create([
+            'variation_name' => 'Old 250g Pack',
+            'price' => 220.00,
+            'selling_price' => 200.00,
+            'product_qty' => 15,
+            'is_default' => true,
+        ]);
+
+        $vToDelete = $product->variations()->create([
+            'variation_name' => 'Obsolete 100g Pack',
+            'price' => 100.00,
+            'selling_price' => 90.00,
+            'product_qty' => 5,
+            'is_default' => false,
+        ]);
+
+        $updatePayload = [
+            'product_name' => 'Dry Fruit Laddu Premium',
+            'variations' => [
+                [
+                    'id' => $v1->id,
+                    'variation_name' => 'Updated 250g Pack',
+                    'price' => 240.00,
+                    'selling_price' => 220.00,
+                    'product_qty' => 25,
+                    'is_default' => false,
+                ],
+                [
+                    'variation_name' => 'New 1kg Festive Pack',
+                    'price' => 800.00,
+                    'selling_price' => 750.00,
+                    'product_qty' => 10,
+                    'is_default' => true,
+                ],
+            ],
+        ];
+
+        $response = $this->actingAs($this->adminUser)
+            ->putJson("/admin/products/{$product->id}", $updatePayload);
+
+        $response->assertStatus(200);
+
+        // v1 updated
+        $this->assertDatabaseHas('product_variations', [
+            'id' => $v1->id,
+            'variation_name' => 'Updated 250g Pack',
+            'selling_price' => 220.00,
+        ]);
+
+        // new variation created
+        $this->assertDatabaseHas('product_variations', [
+            'product_id' => $product->id,
+            'variation_name' => 'New 1kg Festive Pack',
+            'is_default' => true,
+        ]);
+
+        // vToDelete removed
+        $this->assertDatabaseMissing('product_variations', [
+            'id' => $vToDelete->id,
+        ]);
     }
 }

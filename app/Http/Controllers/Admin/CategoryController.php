@@ -3,18 +3,18 @@
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
-
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\Category\StoreCategoryRequest;
-use App\Http\Requests\Admin\Category\UpdateCategoryRequest;
-use App\Models\Category;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
+
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\Admin\Category\StoreCategoryRequest;
+use App\Http\Requests\Admin\Category\UpdateCategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -96,7 +96,7 @@ class CategoryController extends Controller
     public function show(Request $request, Category|int|string $category): Response|JsonResponse
     {
         $categoryModel = $category instanceof Category ? $category : Category::findOrFail($category);
-        $categoryModel->load(['products' => fn ($q) => $q->latest('id')])->loadCount('products');
+        $categoryModel->load(['products' => fn ($q) => $q->with('variations')->latest('id')])->loadCount('products');
 
         if ($request->wantsJson()) {
             return response()->json([

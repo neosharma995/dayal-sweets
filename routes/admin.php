@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -58,5 +59,23 @@ Route::middleware(['auth', 'verified', 'role:'.UserRole::Admin->value])->prefix(
         Route::match(['put', 'patch'], '/{category}', [CategoryController::class, 'update'])->name('update');
         Route::delete('/delete/{category}', [CategoryController::class, 'destroy'])->name('deleteAlias');
         Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy');
+    });
+
+    // Product Attributes Web Routes (CRUD)
+    Route::prefix('attributes')->name('attributes.')->group(function () {
+        Route::get('/', [ProductAttributeController::class, 'index'])->name('index');
+        Route::get('/get-all', [ProductAttributeController::class, 'index'])->name('getAll');
+        Route::get('/get_all', [ProductAttributeController::class, 'index'])->name('getAllUnderscore');
+        Route::get('/create', [ProductAttributeController::class, 'create'])->name('create');
+        Route::post('/', [ProductAttributeController::class, 'store'])->name('store');
+        Route::post('/create', [ProductAttributeController::class, 'store'])->name('storeAlias');
+        Route::get('/get/{attribute}', [ProductAttributeController::class, 'show'])->name('getById');
+        Route::get('/get_by_id/{attribute}', [ProductAttributeController::class, 'show'])->name('getByIdUnderscore');
+        Route::get('/{attribute}/edit', [ProductAttributeController::class, 'edit'])->name('edit');
+        Route::get('/{attribute}', [ProductAttributeController::class, 'show'])->name('show');
+        Route::match(['put', 'patch', 'post'], '/update/{attribute}', [ProductAttributeController::class, 'update'])->name('updateAlias');
+        Route::match(['put', 'patch'], '/{attribute}', [ProductAttributeController::class, 'update'])->name('update');
+        Route::delete('/delete/{attribute}', [ProductAttributeController::class, 'destroy'])->name('deleteAlias');
+        Route::delete('/{attribute}', [ProductAttributeController::class, 'destroy'])->name('destroy');
     });
 });

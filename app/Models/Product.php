@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
@@ -57,6 +58,9 @@ class Product extends Model
     protected $appends = [
         'product_image_url',
         'product_gallaries_urls',
+        'min_price',
+        'max_price',
+        'total_stock',
     ];
 
     /**
@@ -82,6 +86,69 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    /**
+     * Relationship: Product has many Variations (weights/pack sizes).
+     */
+    public function variations(): HasMany
+    {
+        return $this->hasMany(ProductVariation::class, 'product_id')->orderBy('price');
+    }
+
+    /**
+     * Accessor for minimum selling price among variations (falls back to base product selling price).
+     */
+    protected function minPrice(): Attribute
+    {
+        return Attribute::make(
+            get: function (): ?float {
+                $vars = $this->relationLoaded('variations') ? $this->variations : $this->variations()->get();
+                if ($vars->isNotEmpty()) {
+                    return (float) $vars->min('selling_price');
+                }
+
+                $basePrice = $this->product_selling_price ?? $this->product_price;
+
+                return $basePrice !== null ? (float) $basePrice : null;
+            }
+        );
+    }
+
+    /**
+     * Accessor for maximum selling price among variations (falls back to base product price).
+     */
+    protected function maxPrice(): Attribute
+    {
+        return Attribute::make(
+            get: function (): ?float {
+                $vars = $this->relationLoaded('variations') ? $this->variations : $this->variations()->get();
+                if ($vars->isNotEmpty()) {
+                    return (float) $vars->max('selling_price');
+                }
+
+                $basePrice = $this->product_price ?? $this->product_selling_price;
+
+                return $basePrice !== null ? (float) $basePrice : null;
+            }
+        );
+    }
+
+    /**
+     * Accessor for total inventory stock across all variations (falls back to base product qty).
+     */
+    protected function totalStock(): Attribute
+    {
+        return Attribute::make(
+            get: function (): int {
+                $vars = $this->relationLoaded('variations') ? $this->variations : $this->variations()->get();
+                if ($vars->isNotEmpty()) {
+                    return (int) $vars->sum('product_qty');
+                }
+
+                return (int) ($this->product_qty ?? 0);
+            }
+        );
     }
 
     /**

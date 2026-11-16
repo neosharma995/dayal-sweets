@@ -203,14 +203,24 @@ export default function Show({ category }) {
                                                             {prod.product_name}
                                                         </Link>
                                                         <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
-                                                            MRP: ₹{Number(prod.product_price).toFixed(2)}
+                                                            {Array.isArray(prod.variations) && prod.variations.length > 0
+                                                                ? `${prod.variations.length} pack size(s)`
+                                                                : 'Standard'}
                                                         </div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
                                                 <span style={{ color: '#F1D7B4', fontWeight: 700 }}>
-                                                    ₹{Number(prod.product_selling_price).toFixed(2)}
+                                                    {prod.min_price != null ? (
+                                                        prod.min_price === prod.max_price ? (
+                                                            `₹${Number(prod.min_price).toFixed(2)}`
+                                                        ) : (
+                                                            `₹${Number(prod.min_price).toFixed(2)} - ₹${Number(prod.max_price).toFixed(2)}`
+                                                        )
+                                                    ) : (
+                                                        'N/A'
+                                                    )}
                                                 </span>
                                             </td>
                                             <td>
@@ -220,11 +230,11 @@ export default function Show({ category }) {
                                                         fontWeight: 700,
                                                         padding: '0.2rem 0.5rem',
                                                         borderRadius: '999px',
-                                                        background: Number(prod.product_qty) > 0 ? 'rgba(5, 150, 105, 0.12)' : 'rgba(239, 68, 68, 0.15)',
-                                                        color: Number(prod.product_qty) > 0 ? '#34D399' : '#F87171',
+                                                        background: Number(prod.total_stock ?? 0) > 0 ? 'rgba(5, 150, 105, 0.12)' : 'rgba(239, 68, 68, 0.15)',
+                                                        color: Number(prod.total_stock ?? 0) > 0 ? '#34D399' : '#F87171',
                                                     }}
                                                 >
-                                                    {prod.product_qty} in stock
+                                                    {prod.total_stock ?? 0} in stock
                                                 </span>
                                             </td>
                                             <td>

@@ -31,11 +31,12 @@ class RoleAndDashboardTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_admin_login_url_redirects_to_single_login(): void
+    public function test_admin_login_screen_can_be_rendered(): void
     {
         $response = $this->get('/admin/login');
 
-        $response->assertRedirect(route('login'));
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page->component('Admin/Auth/Login'));
     }
 
     public function test_admin_can_authenticate_via_single_login_and_redirects_to_admin_dashboard(): void
@@ -102,7 +103,7 @@ class RoleAndDashboardTest extends TestCase
         $response = $this->actingAs($admin)->post('/admin/logout');
 
         $this->assertGuest();
-        $response->assertRedirect(route('login'));
+        $response->assertRedirect(route('admin.login'));
     }
 
     public function test_admin_can_access_admin_dashboard(): void

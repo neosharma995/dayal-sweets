@@ -322,7 +322,7 @@ const bestSellers = [
     {
         id: 3,
         name: 'Office Tea Combo',
-        category: 'UNCATEGORIZED',
+        category: 'COMBO',
         categorySlug: 'combo',
         slug: 'office-tea-combo',
         badge: 'BEST SELLER',

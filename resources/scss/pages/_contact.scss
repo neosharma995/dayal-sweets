@@ -379,10 +379,13 @@
   box-sizing: border-box;
   position: relative;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  justify-content: space-between;
 }
 
 .contact-form-title {
-  margin: 0 0 30px 0;
   color: #1C1008;
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 40px;
@@ -419,26 +422,30 @@
 .contact-form-inner-wrapper textarea {
   font-family: 'Plus Jakarta Sans', sans-serif;
   width: 100%;
+
+
   box-sizing: border-box;
-  border: 1px solid #EEDBC5;
-  background: #FFFFFF;
-  color: #1C1008;
+  border: 1px solid #F5E3D0;
+  background: #FFFDFA;
+  color: #222;
+  font-family: inherit;
   outline: none;
-  border-radius: 8px;
-  font-weight: 400;
+  border-radius: 0;
+  font-weight: 500;
   font-size: 14px;
-  line-height: normal;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  line-height: 38.4px;
+  text-transform: capitalize;
 }
 
 .contact-form-inner-wrapper input {
-  height: 52px;
-  padding: 0 16px;
+  height: 48px;
+  padding: 0 16px !important;
 }
 
+
 .contact-form-inner-wrapper textarea {
-  height: 120px;
-  min-height: 120px;
+  height: 90px;
+  min-height: 90px;
   resize: none;
   padding: 16px;
 }
@@ -455,7 +462,6 @@
 .contact-form-inner-wrapper input:focus,
 .contact-form-inner-wrapper textarea:focus {
   border-color: #7C1F2E;
-  box-shadow: 0 0 0 2px rgba(124, 31, 46, 0.08);
 }
 
 .contact-form-inner-wrapper .contact-form-submit {
@@ -546,15 +552,18 @@
   font-size: 18px;
   font-weight: 400;
   line-height: 24px;
+  margin-bottom: 15px;
 }
 
-.contact-info-value {
+.contact-info-value,
+.contact-info-value a {
   margin: 0 0 4px 0;
-  color: #1C1008;
+  color: #5C1520 !important;
   font-family: 'Inter', sans-serif;
   font-size: 27px;
   font-weight: 500;
   line-height: 30px;
+  margin: 0px;
 
   &.highlight-burgundy {
     color: #7C1F2E;
@@ -585,7 +594,7 @@
 .contact-page-watermark-feather {
   position: absolute;
   bottom: 0;
-  left: -120px;
+  left: -231px;
   width: 28%;
   max-width: 440px;
   height: auto;
@@ -599,8 +608,8 @@
   position: absolute;
   bottom: 0;
   right: -30px;
-  width: 20%;
-  max-width: 280px;
+  max-width: 205px;
+  height: 225px;
   height: auto;
   pointer-events: none;
   z-index: 1;
@@ -628,7 +637,6 @@
   .contact-form-title {
     font-size: 35px;
     line-height: 48px;
-    margin-bottom: 25px;
   }
 
   .contact-info-column {
@@ -663,7 +671,7 @@
   .contact-form-title {
     font-size: 25px;
     line-height: 34px;
-    margin-bottom: 20px;
+
   }
 
   .contact-form-inner-wrapper .contact-form-row {
@@ -677,11 +685,12 @@
   }
 
   .contact-form-inner-wrapper input {
-    height: 46px;
+    height: 48px;
+    padding: 0 16px !important;
   }
 
   .contact-form-inner-wrapper textarea {
-    height: 110px;
+    height: 90px;
   }
 
   .contact-form-inner-wrapper .contact-form-submit-btn {

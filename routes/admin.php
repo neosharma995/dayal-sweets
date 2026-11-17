@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DietPreferenceController;
 use App\Http\Controllers\Admin\OccasionController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\OutletController;
 use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductTagController;
@@ -176,5 +177,24 @@ Route::middleware(['auth', 'verified', 'role:'.UserRole::Admin->value])->prefix(
         Route::patch('/{tax}/toggle', [TaxRateController::class, 'toggleActive'])->name('toggle');
         Route::delete('/delete/{tax}', [TaxRateController::class, 'destroy'])->name('deleteAlias');
         Route::delete('/{tax}', [TaxRateController::class, 'destroy'])->name('destroy');
+    });
+
+    // Outlet Management Web Routes (CRUD & Status Workflow)
+    Route::prefix('outlets')->name('outlets.')->group(function () {
+        Route::get('/', [OutletController::class, 'index'])->name('index');
+        Route::get('/get-all', [OutletController::class, 'index'])->name('getAll');
+        Route::get('/get_all', [OutletController::class, 'index'])->name('getAllUnderscore');
+        Route::get('/create', [OutletController::class, 'create'])->name('create');
+        Route::post('/', [OutletController::class, 'store'])->name('store');
+        Route::post('/create', [OutletController::class, 'store'])->name('storeAlias');
+        Route::get('/get/{outlet}', [OutletController::class, 'show'])->name('getById');
+        Route::get('/get_by_id/{outlet}', [OutletController::class, 'show'])->name('getByIdUnderscore');
+        Route::get('/{outlet}/edit', [OutletController::class, 'edit'])->name('edit');
+        Route::get('/{outlet}', [OutletController::class, 'show'])->name('show');
+        Route::match(['put', 'patch', 'post'], '/update/{outlet}', [OutletController::class, 'update'])->name('updateAlias');
+        Route::match(['put', 'patch'], '/{outlet}', [OutletController::class, 'update'])->name('update');
+        Route::patch('/{outlet}/toggle', [OutletController::class, 'toggleActive'])->name('toggle');
+        Route::delete('/delete/{outlet}', [OutletController::class, 'destroy'])->name('deleteAlias');
+        Route::delete('/{outlet}', [OutletController::class, 'destroy'])->name('destroy');
     });
 });

@@ -3,7 +3,8 @@ import { Head, Link, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { TruckIcon } from '@/Components/Icons';
 
-export default function Create() {
+export default function Create({ availableRegions = [], outlet = null, outlets = [] }) {
+    const [selectedOutletId, setSelectedOutletId] = useState(outlet?.id || (outlets[0]?.id ?? ''));
     const [zoneName, setZoneName] = useState('');
     const [zoneSlug, setZoneSlug] = useState('');
     const [selectedRegions, setSelectedRegions] = useState([]);
@@ -119,7 +120,9 @@ export default function Create() {
         setProcessing(true);
         setErrors({});
 
+        const targetOutletId = outlet?.id || selectedOutletId;
         const payload = {
+            outlet_id: targetOutletId ? Number(targetOutletId) : null,
             zone_name: zoneName,
             zone_slug: zoneSlug || null,
             description: null,
@@ -137,7 +140,11 @@ export default function Create() {
             })),
         };
 
-        router.post(route('admin.shipping-zones.store'), payload, {
+        const postUrl = targetOutletId
+            ? route('admin.outlets.shipping-zones.store', targetOutletId)
+            : route('admin.shipping-zones.store');
+
+        router.post(postUrl, payload, {
             onFinish: () => setProcessing(false),
             onError: (errs) => {
                 setErrors(errs);
@@ -147,26 +154,37 @@ export default function Create() {
     };
 
     return (
-        <AdminLayout header="Add Shipping Zone">
-            <Head title="Add Shipping Zone - Dayal Sweets Admin" />
+        <AdminLayout header={outlet ? `Add Shipping Zone — ${outlet.name}` : 'Add Shipping Zone'}>
+            <Head title={`Add Shipping Zone${outlet ? ` - ${outlet.name}` : ''} - Dayal Sweets Admin`} />
 
             <div className="dayal-container" style={{ width: '100%', maxWidth: '100%', margin: 0 }}>
                 {/* Header */}
                 <div style={{ marginBottom: '1.5rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
                         <Link
-                            href={route('admin.shipping-zones.index')}
+                            href={route('admin.outlets.index')}
                             style={{ color: '#64748B', fontSize: '0.8125rem', textDecoration: 'none' }}
                         >
-                            Shipping Zones
+                            Outlets
                         </Link>
                         <span style={{ color: '#CBD5E1', fontSize: '0.75rem' }}>/</span>
-                        <span style={{ color: '#0F172A', fontSize: '0.8125rem', fontWeight: 600 }}>
+                        {outlet && (
+                            <>
+                                <Link
+                                    href={route('admin.outlets.shipping-zones.index', outlet.id)}
+                                    style={{ color: '#64748B', fontSize: '0.8125rem', textDecoration: 'none' }}
+                                >
+                                    {outlet.name} Zones
+                                </Link>
+                                <span style={{ color: '#CBD5E1', fontSize: '0.75rem' }}>/</span>
+                            </>
+                        )}
+                        <span style={{ color: '#B88E4B', fontSize: '0.8125rem', fontWeight: 600 }}>
                             Add Zone
                         </span>
                     </div>
                     <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: '#0F172A', margin: 0 }}>
-                        Add New Shipping Zone
+                        {outlet ? `Add Shipping Zone for ${outlet.name}` : 'Add New Shipping Zone'}
                     </h1>
                 </div>
 
@@ -586,7 +604,7 @@ export default function Create() {
                     {/* Actions Bar */}
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', alignItems: 'center' }}>
                         <Link
-                            href={route('admin.shipping-zones.index')}
+                            href={outlet ? route('admin.outlets.shipping-zones.index', outlet.id) : route('admin.outlets.index')}
                             className="dayal-admin-head-btn"
                             style={{ textDecoration: 'none' }}
                         >

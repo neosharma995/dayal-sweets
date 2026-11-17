@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import Modal from '@/Components/Modal';
-import { MapPinIcon, PhoneIcon, AlertIcon } from '@/Components/Icons';
+import { MapPinIcon, PhoneIcon, AlertIcon, TruckIcon } from '@/Components/Icons';
 
 export default function Index({ outlets = [], filters = {}, stats = {} }) {
     const [search, setSearch] = useState(filters.search || '');
@@ -327,6 +327,9 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                                         Products
                                     </th>
                                     <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                        Shipping Zones
+                                    </th>
+                                    <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                                         Status
                                     </th>
                                     <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right' }}>
@@ -337,7 +340,7 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                             <tbody>
                                 {filteredOutlets.length === 0 ? (
                                     <tr>
-                                        <td colSpan="7" style={{ padding: '3rem 1rem', textAlign: 'center', color: '#64748B' }}>
+                                        <td colSpan="8" style={{ padding: '3rem 1rem', textAlign: 'center', color: '#64748B' }}>
                                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem' }}>
                                                 <MapPinIcon width="40" height="40" style={{ color: '#CBD5E1' }} />
                                                 <div>
@@ -503,6 +506,30 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                                                 </Link>
                                             </td>
 
+                                            {/* Shipping Zones Count */}
+                                            <td style={{ padding: '0.875rem 1rem', verticalAlign: 'top' }}>
+                                                <Link
+                                                    href={route('admin.outlets.shipping-zones.index', outlet.id)}
+                                                    style={{
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.35rem',
+                                                        padding: '0.25rem 0.65rem',
+                                                        borderRadius: '9999px',
+                                                        fontSize: '0.75rem',
+                                                        fontWeight: 600,
+                                                        background: '#EFF6FF',
+                                                        color: '#1D4ED8',
+                                                        border: '1px solid #BFDBFE',
+                                                        textDecoration: 'none',
+                                                    }}
+                                                    title={`Manage delivery zones for ${outlet.name}`}
+                                                >
+                                                    <TruckIcon width="13" height="13" />
+                                                    <span>{outlet.shipping_zones_count ?? 0} Zones</span>
+                                                </Link>
+                                            </td>
+
                                             {/* Status */}
                                             <td style={{ padding: '0.875rem 1rem', verticalAlign: 'top' }}>
                                                 {getStatusBadge(outlet)}
@@ -511,6 +538,28 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                                             {/* Actions */}
                                             <td style={{ padding: '0.875rem 1rem', verticalAlign: 'top', textAlign: 'right' }}>
                                                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                                                    {/* Manage Shipping Zones */}
+                                                    <Link
+                                                        href={route('admin.outlets.shipping-zones.index', outlet.id)}
+                                                        title="Manage Delivery Zones"
+                                                        style={{
+                                                            background: '#EFF6FF',
+                                                            border: '1px solid #BFDBFE',
+                                                            borderRadius: '0.375rem',
+                                                            padding: '0.35rem 0.55rem',
+                                                            color: '#1D4ED8',
+                                                            fontSize: '0.75rem',
+                                                            textDecoration: 'none',
+                                                            fontWeight: 600,
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '0.25rem',
+                                                        }}
+                                                    >
+                                                        <TruckIcon width="13" height="13" />
+                                                        <span>Zones</span>
+                                                    </Link>
+
                                                     {/* Toggle Active status */}
                                                     <button
                                                         type="button"

@@ -3,7 +3,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { TruckIcon } from '@/Components/Icons';
 
-export default function Edit({ zone }) {
+export default function Edit({ zone, outlet = null, outlets = [] }) {
     const [zoneName, setZoneName] = useState(zone.zone_name || '');
     const [zoneSlug, setZoneSlug] = useState(zone.zone_slug || '');
     const [selectedRegions, setSelectedRegions] = useState(
@@ -124,7 +124,9 @@ export default function Edit({ zone }) {
         setProcessing(true);
         setErrors({});
 
+        const targetOutletId = zone.outlet_id || outlet?.id;
         const payload = {
+            outlet_id: targetOutletId ? Number(targetOutletId) : null,
             zone_name: zoneName,
             zone_slug: zoneSlug || null,
             description: null,
@@ -143,7 +145,11 @@ export default function Edit({ zone }) {
             })),
         };
 
-        router.put(route('admin.shipping-zones.update', zone.id), payload, {
+        const putUrl = targetOutletId
+            ? route('admin.outlets.shipping-zones.update', [targetOutletId, zone.id])
+            : route('admin.shipping-zones.update', zone.id);
+
+        router.put(putUrl, payload, {
             onFinish: () => setProcessing(false),
             onError: (errs) => {
                 setErrors(errs);
@@ -153,26 +159,37 @@ export default function Edit({ zone }) {
     };
 
     return (
-        <AdminLayout header={`Edit Shipping Zone: ${zone.zone_name}`}>
-            <Head title={`Edit ${zone.zone_name} - Dayal Sweets Admin`} />
+        <AdminLayout header={outlet ? `Edit Shipping Zone: ${zone.zone_name} (${outlet.name})` : `Edit Shipping Zone: ${zone.zone_name}`}>
+            <Head title={`Edit ${zone.zone_name}${outlet ? ` - ${outlet.name}` : ''} - Dayal Sweets Admin`} />
 
             <div className="dayal-container" style={{ width: '100%', maxWidth: '100%', margin: 0 }}>
                 {/* Header */}
                 <div style={{ marginBottom: '1.5rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
                         <Link
-                            href={route('admin.shipping-zones.index')}
+                            href={route('admin.outlets.index')}
                             style={{ color: '#64748B', fontSize: '0.8125rem', textDecoration: 'none' }}
                         >
-                            Shipping Zones
+                            Outlets
                         </Link>
                         <span style={{ color: '#CBD5E1', fontSize: '0.75rem' }}>/</span>
-                        <span style={{ color: '#0F172A', fontSize: '0.8125rem', fontWeight: 600 }}>
+                        {outlet && (
+                            <>
+                                <Link
+                                    href={route('admin.outlets.shipping-zones.index', outlet.id)}
+                                    style={{ color: '#64748B', fontSize: '0.8125rem', textDecoration: 'none' }}
+                                >
+                                    {outlet.name} Zones
+                                </Link>
+                                <span style={{ color: '#CBD5E1', fontSize: '0.75rem' }}>/</span>
+                            </>
+                        )}
+                        <span style={{ color: '#B88E4B', fontSize: '0.8125rem', fontWeight: 600 }}>
                             Edit Zone
                         </span>
                     </div>
                     <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: '#0F172A', margin: 0 }}>
-                        Edit Shipping Zone: {zone.zone_name}
+                        Edit Shipping Zone: {zone.zone_name} {outlet && <span style={{ fontSize: '1.125rem', color: '#64748B', fontWeight: 400 }}>({outlet.name} Outlet)</span>}
                     </h1>
                 </div>
 
@@ -592,7 +609,7 @@ export default function Edit({ zone }) {
                     {/* Actions Bar */}
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', alignItems: 'center' }}>
                         <Link
-                            href={route('admin.shipping-zones.index')}
+                            href={outlet ? route('admin.outlets.shipping-zones.index', outlet.id) : route('admin.outlets.index')}
                             className="dayal-admin-head-btn"
                             style={{ textDecoration: 'none' }}
                         >

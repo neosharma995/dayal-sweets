@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
             RoleAndPermissionSeeder::class,
             ProductCatalogSeeder::class,
             ProductTagSeeder::class,
-            ShippingAndTaxSeeder::class,
             OutletSeeder::class,
+            ShippingAndTaxSeeder::class,
         ]);
     }
 }

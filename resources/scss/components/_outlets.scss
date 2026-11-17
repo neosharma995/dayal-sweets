@@ -18,7 +18,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-image: url('/uploads/2026/07/7db0abdd9e2d9d33a882093690959f196ff5c0b2.webp');
+        background-image: url('/public/images/contact/gallery/outlets-bg.png');
         background-position: center bottom;
         background-repeat: no-repeat;
         background-size: 100% 100%;
@@ -103,8 +103,10 @@
     .oto-outlets-track {
         display: grid;
         grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 14px;
+        gap: 20px;
         width: 100%;
+        max-width: 1580px;
+        margin: auto;
 
         @media (max-width: 1280px) {
             display: flex;
@@ -123,14 +125,18 @@
 
     // Outlet Card
     .oto-outlet-card {
-        background: #FFFFFF;
-        border-radius: 10px;
-        border: 1px solid #E8DDD2;
-        box-shadow: 0px 2px 10px rgba(29, 23, 21, 0.04);
+        position: relative;
+        flex: 0 0 300px;
+        width: 300px;
+        min-width: 300px;
+        box-sizing: border-box;
+        background: #ffffff;
+        border-radius: 14px;
         overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 6px 22px rgba(73, 38, 20, 0.10);
+        border: 1px solid rgba(122, 28, 40, 0.07);
+        scroll-snap-align: start;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
 
         @media (max-width: 1280px) {
             flex: 0 0 290px;
@@ -140,12 +146,12 @@
 
         &:hover {
             transform: translateY(-4px);
-            box-shadow: 0px 8px 24px rgba(29, 23, 21, 0.08);
+            box-shadow: 0 14px 30px rgba(73, 38, 20, 0.16);
         }
 
         .oto-outlet-card-img-wrap {
             width: 100%;
-            height: 160px;
+            height: 200px;
             overflow: hidden;
             background: #FAF7F2;
             position: relative;
@@ -163,37 +169,39 @@
         }
 
         .oto-outlet-card-content {
-            padding: 18px 16px 20px;
+            padding: 20px 18px 18px;
             display: flex;
             flex-direction: column;
             flex: 1;
 
             .oto-outlet-card-title {
                 font-family: 'Plus Jakarta Sans', sans-serif;
-                font-size: 21px;
+                font-size: 24px;
                 font-weight: 700;
                 color: #5C1520;
-                line-height: 1.25;
                 text-align: center;
                 margin: 0 0 12px 0;
+                line-height: 38.4px;
             }
 
             .oto-outlet-card-row {
-                font-family: 'Inter', sans-serif;
+                font-family: "Inter", sans-serif;
                 display: flex;
                 align-items: flex-start;
-                gap: 8px;
+                gap: 7px;
                 font-size: 13px;
                 font-weight: 400;
                 color: #5A4A42;
-                line-height: 1.45;
-                margin-bottom: 8px;
+                line-height: 1.4;
+                margin-bottom: 9px;
 
                 .oto-card-icon {
                     flex-shrink: 0;
                     margin-top: 2px;
                     display: flex;
                     align-items: center;
+
+
                 }
 
                 .oto-card-link {
@@ -215,7 +223,7 @@
 
                 .oto-view-map-link {
                     font-family: 'Inter', sans-serif;
-                    font-size: 14px;
+                    font-size: 13.5px;
                     font-weight: 600;
                     color: #7B1C2E;
                     text-decoration: none;
@@ -241,21 +249,40 @@
         &.oto-coming-soon-card {
             .oto-coming-soon-ribbon {
                 position: absolute;
-                top: 14px;
-                left: -32px;
-                width: 120px;
-                transform: rotate(-45deg);
-                background: #7B1C2E;
-                color: #FFFFFF;
+                top: 16px;
+                left: -46px;
+                width: 175px;
+                height: 34px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #7a1c28;
+                color: #ffffff;
                 font-family: 'Inter', sans-serif;
-                font-size: 9px;
-                font-weight: 700;
-                letter-spacing: 1px;
-                text-transform: uppercase;
-                text-align: center;
-                padding: 4px 0;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-                z-index: 2;
+                font-weight: 600;
+                font-size: 11.5px;
+                letter-spacing: 0.3px;
+                transform: rotate(-39deg);
+                z-index: 10;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            }
+
+            .oto-outlet-card-img::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(180deg, rgba(255, 251, 246, 0.35) 0%, rgba(255, 251, 246, 0.95) 92%);
+                pointer-events: none;
+            }
+
+            .oto-outlet-card-img {
+                filter: grayscale(0.55) sepia(0.35) opacity(0.6);
+                opacity: 0.3;
+                background-color: #f3e8d8;
+            }
+
+            .oto-outlet-card-title {
+                margin: 0px;
             }
 
             .oto-coming-soon-body {
@@ -265,11 +292,12 @@
                 justify-content: space-between;
 
                 .oto-opening-soon-text {
-                    font-family: Georgia, 'Times New Roman', serif;
+                    color: #98652f;
+                    font-family: 'Playfair Display', serif;
+                    font-size: 33px;
+                    font-weight: 500;
                     font-style: italic;
-                    font-size: 19px;
-                    color: #AD8251;
-                    margin: -4px 0 10px;
+                    letter-spacing: 0.5px;
                 }
 
                 .oto-laurel-badge {
@@ -277,11 +305,11 @@
                     align-items: center;
                     justify-content: center;
                     gap: 8px;
-                    margin: 8px 0 16px;
+                    margin: 16px;
 
                     .oto-laurel-leaf {
-                        width: 22px;
-                        height: 44px;
+                        width: 28px;
+                        height: 56px;
                         object-fit: contain;
                         opacity: 0.85;
                     }
@@ -293,18 +321,19 @@
                         text-align: center;
 
                         .oto-laurel-label {
+                            color: #8a7a6c;
                             font-family: 'Inter', sans-serif;
-                            font-size: 11px;
-                            color: #7A6B55;
-                            font-weight: 500;
+                            font-size: 14px;
+                            font-weight: 400;
+                            text-transform: capitalize;
                         }
 
                         .oto-laurel-val {
-                            font-family: 'Plus Jakarta Sans', sans-serif;
-                            font-size: 13px;
+                            color: #1c1008;
+                            font-family: 'Inter', sans-serif;
+                            font-size: 16px;
                             font-weight: 700;
-                            color: #1C1008;
-                            margin-top: 2px;
+                            letter-spacing: 0.3px;
                         }
                     }
                 }
@@ -322,6 +351,9 @@
                         font-size: 13px;
                         font-weight: 600;
                         display: inline-flex;
+                        min-width: 120px;
+                        height: 40px;
+                        margin-top: 10px;
                         align-items: center;
                         gap: 6px;
                         cursor: pointer;
@@ -339,6 +371,11 @@
                     }
                 }
             }
+
+            .oto-outlet-card-title {
+                font-size: 30px;
+            }
+
         }
     }
 

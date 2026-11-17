@@ -24,8 +24,8 @@
      ========================================================================== */
   .gallery-moments-section {
     background-color: #FAF7F2;
-    padding-top: 50px;
-    padding-bottom: 50px;
+    padding-top: 80px;
+    padding-bottom: 80px;
     width: 100%;
     box-sizing: border-box;
 
@@ -62,7 +62,7 @@
     color: #2C1810;
     text-align: center;
     margin-top: 0px;
-    margin-bottom: 29px;
+    margin-bottom: 45px;
     margin-left: 0px;
     margin-right: 0px;
 
@@ -115,7 +115,7 @@
     font-size: 18px !important;
     font-weight: 600 !important;
     line-height: 20px !important;
-    box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.04);
+    box-shadow: 0px 4px 16px 0px #0000000A;
     cursor: pointer;
     transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     white-space: nowrap;
@@ -380,10 +380,10 @@
   /* Title: Signature Food Collection */
   .gallery-food-title {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 65px;
-    font-weight: 500;
-    line-height: 72px;
-    color: #2C1810;
+    font-size: 55px;
+    font-weight: 400;
+    line-height: 82px;
+    color: #4A2E1F;
     text-align: center;
     margin-top: 0px;
     margin-bottom: 0px;
@@ -403,14 +403,13 @@
 
   /* Subtitle */
   .gallery-food-subtitle {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 24px;
-    color: #4F3C31;
-    text-align: center;
     margin-top: 12px;
     margin-bottom: 45px;
+    font-family: "Inter", Sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 32.2px;
+    color: #1C1008;
 
     @media (max-width: 992px) {
       font-size: 15px;

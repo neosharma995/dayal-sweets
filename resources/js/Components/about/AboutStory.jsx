@@ -40,14 +40,17 @@ export default function AboutStory() {
                                     alt="Dayal Sweets Kitchen & Outlet"
                                 />
                                 <div className="about-story-play-overlay">
-                                    <div className="about-story-play-btn" aria-hidden="true">
-                                        <svg viewBox="0 0 24 24">
-                                            <path d="M8 5v14l11-7z" />
-                                        </svg>
+
+                                    <div className="about-story-play-wrapper">
+                                        <div className="about-story-play-btn" aria-hidden="true">
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M8 5v14l11-7z" />
+                                            </svg>
+                                        </div>
+                                        <span className="about-story-play-label">
+                                            WATCH OUR STORY
+                                        </span>
                                     </div>
-                                    <span className="about-story-play-label">
-                                        WATCH OUR STORY
-                                    </span>
                                 </div>
                             </div>
                         )}

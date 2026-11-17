@@ -16,24 +16,72 @@ export default function ContactUs({ auth, page }) {
         requirements: '',
     });
     const [submitted, setSubmitted] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+        if (name === 'phone') {
+            // Only allow digits [0-9]
+            const numeric = value.replace(/\D/g, '');
+            // Prevent typing more than 10 digits: return so user can't write after 10 digits
+            if (numeric.length > 10) {
+                return;
+            }
+            setFormData((prev) => ({ ...prev, phone: numeric }));
+            return;
+        }
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
-        setSubmitted(true);
-        setTimeout(() => {
-            setFormData({
-                name: '',
-                phone: '',
-                email: '',
-                subject: '',
-                requirements: '',
+        setErrorMessage('');
+
+        // Validate 10 digit phone number
+        if (formData.phone.length !== 10) {
+            setErrorMessage('Please enter a valid 10-digit mobile number (e.g. 9999999999).');
+            return;
+        }
+
+        setSubmitting(true);
+
+        const metaTag = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        const cookieMatch = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+        const csrfToken = metaTag || (cookieMatch ? decodeURIComponent(cookieMatch[1]) : '');
+
+        try {
+            const res = await fetch(route('contact.submit'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken || '',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: JSON.stringify(formData),
             });
-        }, 800);
+
+            const data = await res.json();
+            if (data.success) {
+                setSubmitted(true);
+                setFormData({
+                    name: '',
+                    phone: '',
+                    email: '',
+                    subject: '',
+                    requirements: '',
+                });
+                setTimeout(() => setSubmitted(false), 9000);
+            } else {
+                setErrorMessage(data.message || 'Please check your information and try again.');
+            }
+        } catch (err) {
+            console.error('Contact form submission error:', err);
+            setErrorMessage('Network error while sending message. Please try again.');
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     // Dynamic fields from admin
@@ -115,8 +163,88 @@ export default function ContactUs({ auth, page }) {
                         </h2>
 
                         {submitted && (
-                            <div className="contact-form-status">
-                                Thank you! Your message has been received. Our team will contact you shortly.
+                            <div
+                                className="contact-form-status"
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    gap: '12px',
+                                }}
+                            >
+                                <span>Thank you! Your message has been received. Our team will contact you shortly.</span>
+                                <button
+                                    type="button"
+                                    onClick={() => setSubmitted(false)}
+                                    aria-label="Close notification"
+                                    style={{
+                                        background: 'transparent',
+                                        border: 'none',
+                                        color: '#0D4F35',
+                                        cursor: 'pointer',
+                                        padding: '4px',
+                                        lineHeight: 1,
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        opacity: 0.8,
+                                        flexShrink: 0,
+                                    }}
+                                    onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
+                                    onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.8')}
+                                    title="Close notification"
+                                >
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18" />
+                                        <line x1="6" y1="6" x2="18" y2="18" />
+                                    </svg>
+                                </button>
+                            </div>
+                        )}
+
+                        {errorMessage && (
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    gap: '12px',
+                                    padding: '0.75rem 1rem',
+                                    background: '#FEE2E2',
+                                    border: '1px solid #FECACA',
+                                    borderRadius: '0.375rem',
+                                    color: '#DC2626',
+                                    marginBottom: '1.25rem',
+                                    fontSize: '0.85rem',
+                                }}
+                            >
+                                <span>{errorMessage}</span>
+                                <button
+                                    type="button"
+                                    onClick={() => setErrorMessage('')}
+                                    aria-label="Close error"
+                                    style={{
+                                        background: 'transparent',
+                                        border: 'none',
+                                        color: '#DC2626',
+                                        cursor: 'pointer',
+                                        padding: '4px',
+                                        lineHeight: 1,
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        opacity: 0.8,
+                                        flexShrink: 0,
+                                    }}
+                                    onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
+                                    onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.8')}
+                                    title="Close error"
+                                >
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18" />
+                                        <line x1="6" y1="6" x2="18" y2="18" />
+                                    </svg>
+                                </button>
                             </div>
                         )}
 
@@ -139,7 +267,10 @@ export default function ContactUs({ auth, page }) {
                                         name="phone"
                                         value={formData.phone}
                                         onChange={handleInputChange}
-                                        placeholder="Mobile Number*"
+                                        maxLength={10}
+                                        inputMode="numeric"
+                                        pattern="[0-9]{10}"
+                                        placeholder="Mobile Number* (10 Digits)"
                                         required
                                     />
                                 </div>
@@ -183,8 +314,8 @@ export default function ContactUs({ auth, page }) {
 
                             {/* Row 4: Submit Button */}
                             <div className="contact-form-submit">
-                                <button type="submit" className="contact-form-submit-btn">
-                                    SEND MESSAGE
+                                <button type="submit" className="contact-form-submit-btn" disabled={submitting}>
+                                    {submitting ? 'SENDING...' : 'SEND MESSAGE'}
                                 </button>
                             </div>
                         </form>

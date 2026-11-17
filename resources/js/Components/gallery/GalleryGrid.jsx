@@ -9,21 +9,73 @@ import GalleryLightbox from './GalleryLightbox';
  * - Load More / Show Less toggle
  * - Integrated Lightbox Modal
  */
-export default function GalleryGrid() {
+export default function GalleryGrid({ categories: propCategories, images: propImages }) {
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [isExpanded, setIsExpanded] = useState(false);
     const [lightboxIndex, setLightboxIndex] = useState(null);
     const gridRef = useRef(null);
 
-    // Filter items based on selected category
+    // Dynamic Categories with 'All' tab always prepended
+    const activeCategories = useMemo(() => {
+        const rawCats = Array.isArray(propCategories)
+            ? propCategories
+            : (propCategories && typeof propCategories === 'object' ? Object.values(propCategories) : null);
+
+        if (rawCats && rawCats.length > 0) {
+            const hasAll = rawCats.some((c) => String(c?.id || '').toLowerCase() === 'all');
+            if (hasAll) return rawCats;
+            return [{ id: 'all', name: 'All' }, ...rawCats];
+        }
+        return galleryCategories;
+    }, [propCategories]);
+
+    // Dynamic Gallery Items
+    const activeItems = useMemo(() => {
+        const rawImgs = Array.isArray(propImages)
+            ? propImages
+            : (propImages && typeof propImages === 'object' ? Object.values(propImages) : null);
+
+        if (rawImgs && rawImgs.length > 0) {
+            return rawImgs.map((img, idx) => {
+                let imgUrl = img.image || '';
+                if (imgUrl && !imgUrl.startsWith('http') && !imgUrl.startsWith('/')) {
+                    imgUrl = '/' + imgUrl;
+                }
+                return {
+                    id: img.id || idx + 1,
+                    title: img.name || img.title || 'Dayal Sweets Moment',
+                    image: imgUrl || '/uploads/2026/08/Family-Dining.png',
+                    category: img.category || 'all',
+                    categories: Array.isArray(img.categories) ? img.categories : [img.category || 'all'],
+                };
+            });
+        }
+        return galleryItems;
+    }, [propImages]);
+
+    // Filter items based on selected category (case-insensitive & matches both id and name)
     const filteredItems = useMemo(() => {
         if (selectedCategory === 'all') {
-            return galleryItems;
+            return activeItems;
         }
-        return galleryItems.filter(
-            (item) => item.categories && item.categories.includes(selectedCategory)
-        );
-    }, [selectedCategory]);
+        const selLower = String(selectedCategory || '').toLowerCase();
+        const selCatObj = activeCategories.find((c) => String(c.id).toLowerCase() === selLower);
+        const selNameLower = selCatObj ? String(selCatObj.name || '').toLowerCase() : '';
+
+        return activeItems.filter((item) => {
+            const itemCat = String(item.category || '').toLowerCase();
+            if (itemCat === selLower || (selNameLower && itemCat === selNameLower)) {
+                return true;
+            }
+            if (Array.isArray(item.categories)) {
+                return item.categories.some((c) => {
+                    const cLower = String(c || '').toLowerCase();
+                    return cLower === selLower || (selNameLower && cLower === selNameLower);
+                });
+            }
+            return false;
+        });
+    }, [selectedCategory, activeItems, activeCategories]);
 
     // Initial batch shows 19 items (exactly 4 in row 1 + 5 in row 2 + 5 in row 3 + 5 in row 4)
     const displayedItems = useMemo(() => {
@@ -75,7 +127,7 @@ export default function GalleryGrid() {
 
                 {/* Filter Tabs */}
                 <div className="gallery-tabs" role="tablist" aria-label="Gallery category filters">
-                    {galleryCategories.map((cat) => {
+                    {activeCategories.map((cat) => {
                         const isActive = selectedCategory === cat.id;
                         return (
                             <button

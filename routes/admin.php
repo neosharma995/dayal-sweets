@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\DietPreferenceController;
 use App\Http\Controllers\Admin\OccasionController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\OutletController;
+use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductTagController;
@@ -196,5 +197,15 @@ Route::middleware(['auth', 'verified', 'role:'.UserRole::Admin->value])->prefix(
         Route::patch('/{outlet}/toggle', [OutletController::class, 'toggleActive'])->name('toggle');
         Route::delete('/delete/{outlet}', [OutletController::class, 'destroy'])->name('deleteAlias');
         Route::delete('/{outlet}', [OutletController::class, 'destroy'])->name('destroy');
+    });
+
+    // Dynamic Pages Management Web Routes
+    Route::prefix('pages')->name('pages.')->group(function () {
+        Route::get('/', [PageController::class, 'index'])->name('index');
+        Route::get('/contact-us', [PageController::class, 'contactUs'])->name('contact-us');
+        Route::match(['put', 'patch', 'post'], '/contact-us', [PageController::class, 'updateContactUs'])->name('contact-us.update');
+        Route::get('/gallery', [PageController::class, 'gallery'])->name('gallery');
+        Route::match(['put', 'patch', 'post'], '/gallery', [PageController::class, 'updateGallery'])->name('gallery.update');
+        Route::post('/gallery/upload-image', [PageController::class, 'uploadGalleryImage'])->name('gallery.upload-image');
     });
 });

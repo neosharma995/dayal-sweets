@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
-import { StoreIcon, BoxIcon, UserIcon, ShieldCheckIcon, LogOutIcon, TruckIcon, MapPinIcon } from '@/Components/Icons';
+import { StoreIcon, BoxIcon, UserIcon, ShieldCheckIcon, LogOutIcon, TruckIcon, MapPinIcon, FileTextIcon } from '@/Components/Icons';
 
 export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLogout }) {
     const { auth } = usePage().props;
@@ -15,13 +15,24 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
         route().current('admin.attributes.*')
     );
 
+    const isPageRouteActive = Boolean(
+        route().current('admin.pages.*')
+    );
+
     const [productsOpen, setProductsOpen] = useState(isProductRouteActive);
+    const [pagesOpen, setPagesOpen] = useState(isPageRouteActive);
 
     useEffect(() => {
         if (isProductRouteActive) {
             setProductsOpen(true);
         }
     }, [isProductRouteActive]);
+
+    useEffect(() => {
+        if (isPageRouteActive) {
+            setPagesOpen(true);
+        }
+    }, [isPageRouteActive]);
 
     return (
         <>
@@ -204,6 +215,63 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
                             </svg>
                             <span>Taxes &amp; GST Rates</span>
                         </Link>
+
+                        {/* Dynamic Pages Accordion / Dropdown */}
+                        <div className="dayal-sidebar-dropdown-group">
+                            <div
+                                onClick={() => setPagesOpen((prev) => !prev)}
+                                className={`dayal-sidebar-link ${isPageRouteActive ? 'parent-active' : ''}`}
+                                style={{ cursor: 'pointer', justifyContent: 'space-between', userSelect: 'none' }}
+                                title="Click to toggle pages menu"
+                            >
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                    <FileTextIcon width="18" height="18" />
+                                    <span>Pages</span>
+                                </div>
+
+                                <svg
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    style={{
+                                        transform: pagesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                                        transition: 'transform 0.2s ease',
+                                    }}
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+
+                            {pagesOpen && (
+                                <div className="dayal-sidebar-submenu">
+                                    <Link
+                                        href={route('admin.pages.index')}
+                                        className={`dayal-sidebar-sublink ${route().current('admin.pages.index') ? 'active' : ''}`}
+                                    >
+                                        <span className="dayal-sublink-dot" />
+                                        <span>All Pages</span>
+                                    </Link>
+
+                                    <Link
+                                        href={route('admin.pages.contact-us')}
+                                        className={`dayal-sidebar-sublink ${route().current('admin.pages.contact-us*') ? 'active' : ''}`}
+                                    >
+                                        <span className="dayal-sublink-dot" />
+                                        <span>Contact Us</span>
+                                    </Link>
+
+                                    <Link
+                                        href={route('admin.pages.gallery')}
+                                        className={`dayal-sidebar-sublink ${route().current('admin.pages.gallery*') ? 'active' : ''}`}
+                                    >
+                                        <span className="dayal-sublink-dot" />
+                                        <span>Gallery</span>
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
 
                         <Link
                             href={route('admin.account')}

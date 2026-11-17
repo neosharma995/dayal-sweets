@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\DietPreference;
 use App\Models\Occasion;
+use App\Models\Page;
 use App\Models\Product;
 use App\Models\SeasonalMithai;
 use Illuminate\Foundation\Application;
@@ -106,6 +107,7 @@ class HomeController extends Controller
         return Inertia::render('ContactUs', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
+            'page' => Page::getOrCreateContactUs(),
         ]);
     }
 
@@ -249,6 +251,7 @@ class HomeController extends Controller
         return Inertia::render('Gallery', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
+            'page' => Page::getOrCreateGallery(),
         ]);
     }
 

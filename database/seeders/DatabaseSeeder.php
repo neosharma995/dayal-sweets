@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             ProductTagSeeder::class,
             ShippingAndTaxSeeder::class,
             OutletSeeder::class,
+            PageSeeder::class,
         ]);
     }
 }

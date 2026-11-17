@@ -272,4 +272,34 @@ class RoleAndDashboardTest extends TestCase
         $passwordResponse->assertSessionHasNoErrors();
         $this->assertTrue(Hash::check('new-customer-password', $customer->fresh()->password));
     }
+
+    public function test_customer_can_access_orders_page(): void
+    {
+        $customer = User::factory()->create();
+        $customer->assignRole(UserRole::Customer->value);
+
+        $response = $this->actingAs($customer)->get('/customer/orders');
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page->component('Customer/Orders'));
+    }
+
+    public function test_customer_can_access_purchased_sweets_page(): void
+    {
+        $customer = User::factory()->create();
+        $customer->assignRole(UserRole::Customer->value);
+
+        $response = $this->actingAs($customer)->get('/customer/purchased-sweets');
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page->component('Customer/PurchasedSweets'));
+    }
+
+    public function test_customer_can_access_addresses_page(): void
+    {
+        $customer = User::factory()->create();
+        $customer->assignRole(UserRole::Customer->value);
+
+        $response = $this->actingAs($customer)->get('/customer/addresses');
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page->component('Customer/Addresses'));
+    }
 }

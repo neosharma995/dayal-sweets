@@ -18,17 +18,14 @@ class DashboardController extends Controller
      */
     public function redirect(Request $request): RedirectResponse
     {
-        return redirect()->route($request->user()->dashboardRoute());
+        return redirect()->route($request->user()->dashboardRoute(), $request->query());
     }
 
     /**
-     * Display the Customer WooCommerce-style e-commerce dashboard with real order data.
+     * Helper to compute customer orders, sweets, addresses, and tier data.
      */
-    public function index(Request $request): Response
+    private function getCustomerData($user): array
     {
-        $user = $request->user();
-
-        // Fetch real orders from database for this customer with items
         $orders = Order::where('user_id', $user->id)
             ->with(['items.product'])
             ->latest()
@@ -38,7 +35,6 @@ class DashboardController extends Controller
         $rewardPoints = max(50, (int) round($totalSpent * 0.10));
         $tier = $totalSpent > 5000 ? 'Platinum Sweet Connoisseur' : ($totalSpent > 1500 ? 'Gold Mithai Club Member' : 'Silver Member');
 
-        // Extract all individual sweets/products purchased across all user orders
         $userCreatedProducts = collect();
         foreach ($orders as $order) {
             foreach ($order->items as $item) {
@@ -68,6 +64,89 @@ class DashboardController extends Controller
                 ]);
             }
         }
+
+        $allOrders = $orders->map(function ($order) {
+            $itemsList = $order->items->pluck('product_name')->take(3)->join(', ');
+            if ($order->items->count() > 3) {
+                $itemsList .= ' +' . ($order->items->count() - 3) . ' more';
+            }
+
+            return [
+                'id' => $order->id,
+                'order_number' => $order->order_number,
+                'order_id' => $order->order_number,
+                'order_date' => $order->created_at ? $order->created_at->format('d M Y') : 'Recent',
+                'created_at_formatted' => $order->created_at ? $order->created_at->format('d M Y, h:i A') : 'Recent',
+                'items_summary' => $itemsList ?: 'Assorted Sweets',
+                'subtotal' => (float) $order->subtotal,
+                'shipping_cost' => (float) $order->shipping_cost,
+                'shipping_method_title' => $order->shipping_method_title ?: 'Standard Delivery',
+                'total_amount' => (float) $order->total_amount,
+                'status' => ucfirst($order->delivery_status),
+                'delivery_status' => $order->delivery_status,
+                'payment_status' => $order->payment_status,
+                'payment_method' => $order->payment_method,
+                'items_count' => $order->items->count(),
+                'shipping_address' => $order->shipping_address,
+                'apartment' => $order->apartment,
+                'city' => $order->city,
+                'state' => $order->state,
+                'pincode' => $order->pincode,
+                'customer_name' => $order->customer_name,
+                'customer_email' => $order->customer_email,
+                'customer_phone' => $order->customer_phone,
+                'order_notes' => $order->order_notes,
+                'items' => $order->items->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'product_name' => $item->product_name,
+                        'variation_name' => $item->variation_name,
+                        'unit_price' => (float) $item->unit_price,
+                        'quantity' => (int) $item->quantity,
+                        'total' => (float) $item->total,
+                        'product_image' => $item->product_image ?: '/uploads/2026/07/kaaju-katli.png',
+                    ];
+                })->toArray(),
+            ];
+        })->toArray();
+
+        $latestOrder = $orders->first();
+        $savedAddress = [
+            'name' => $latestOrder?->customer_name ?: $user->name,
+            'email' => $latestOrder?->customer_email ?: $user->email,
+            'phone' => $latestOrder?->customer_phone ?: '+91 98765 43210',
+            'address' => $latestOrder?->shipping_address ?: 'Civil Lines, Main Market',
+            'apartment' => $latestOrder?->apartment ?: '',
+            'city' => $latestOrder?->city ?: 'Una',
+            'state' => $latestOrder?->state ?: 'Himachal Pradesh',
+            'pincode' => $latestOrder?->pincode ?: '174303',
+        ];
+
+        return [
+            'orders' => $orders,
+            'allOrders' => $allOrders,
+            'userCreatedProducts' => $userCreatedProducts,
+            'savedAddress' => $savedAddress,
+            'tier' => $tier,
+            'rewardPoints' => $rewardPoints,
+            'totalSpent' => $totalSpent,
+        ];
+    }
+
+    /**
+     * Display the Customer Dashboard Overview page.
+     */
+    public function index(Request $request): Response
+    {
+        $user = $request->user();
+        $data = $this->getCustomerData($user);
+
+        $orders = $data['orders'];
+        $allOrders = $data['allOrders'];
+        $userCreatedProducts = $data['userCreatedProducts'];
+        $tier = $data['tier'];
+        $rewardPoints = $data['rewardPoints'];
+        $savedAddress = $data['savedAddress'];
 
         $overview = [
             'sweet_rewards_points' => $rewardPoints,
@@ -127,65 +206,6 @@ class DashboardController extends Controller
             ];
         }
 
-        // Full orders list for WooCommerce Orders tab
-        $allOrders = $orders->map(function ($order) {
-            $itemsList = $order->items->pluck('product_name')->take(3)->join(', ');
-            if ($order->items->count() > 3) {
-                $itemsList .= ' +' . ($order->items->count() - 3) . ' more';
-            }
-
-            return [
-                'id' => $order->id,
-                'order_number' => $order->order_number,
-                'order_id' => $order->order_number,
-                'order_date' => $order->created_at ? $order->created_at->format('d M Y') : 'Recent',
-                'created_at_formatted' => $order->created_at ? $order->created_at->format('d M Y, h:i A') : 'Recent',
-                'items_summary' => $itemsList ?: 'Assorted Sweets',
-                'subtotal' => (float) $order->subtotal,
-                'shipping_cost' => (float) $order->shipping_cost,
-                'shipping_method_title' => $order->shipping_method_title ?: 'Standard Delivery',
-                'total_amount' => (float) $order->total_amount,
-                'status' => ucfirst($order->delivery_status),
-                'delivery_status' => $order->delivery_status,
-                'payment_status' => $order->payment_status,
-                'payment_method' => $order->payment_method,
-                'items_count' => $order->items->count(),
-                'shipping_address' => $order->shipping_address,
-                'apartment' => $order->apartment,
-                'city' => $order->city,
-                'state' => $order->state,
-                'pincode' => $order->pincode,
-                'customer_name' => $order->customer_name,
-                'customer_email' => $order->customer_email,
-                'customer_phone' => $order->customer_phone,
-                'order_notes' => $order->order_notes,
-                'items' => $order->items->map(function ($item) {
-                    return [
-                        'id' => $item->id,
-                        'product_name' => $item->product_name,
-                        'variation_name' => $item->variation_name,
-                        'unit_price' => (float) $item->unit_price,
-                        'quantity' => (int) $item->quantity,
-                        'total' => (float) $item->total,
-                        'product_image' => $item->product_image ?: '/uploads/2026/07/kaaju-katli.png',
-                    ];
-                })->toArray(),
-            ];
-        })->toArray();
-
-        // Saved Addresses from orders or defaults
-        $latestOrder = $orders->first();
-        $savedAddress = [
-            'name' => $latestOrder?->customer_name ?: $user->name,
-            'email' => $latestOrder?->customer_email ?: $user->email,
-            'phone' => $latestOrder?->customer_phone ?: '+91 98765 43210',
-            'address' => $latestOrder?->shipping_address ?: 'Civil Lines, Main Market',
-            'apartment' => $latestOrder?->apartment ?: '',
-            'city' => $latestOrder?->city ?: 'Una',
-            'state' => $latestOrder?->state ?: 'Himachal Pradesh',
-            'pincode' => $latestOrder?->pincode ?: '174303',
-        ];
-
         return Inertia::render('Customer/Dashboard', [
             'overview' => $overview,
             'activeOrder' => $activeOrder,
@@ -193,12 +213,87 @@ class DashboardController extends Controller
             'allOrders' => $allOrders,
             'userCreatedProducts' => $userCreatedProducts->toArray(),
             'savedAddress' => $savedAddress,
+            'tier' => $tier,
+            'ordersCount' => $orders->count(),
+            'sweetsCount' => $userCreatedProducts->count(),
             'customer' => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
                 'member_since' => $user->created_at ? $user->created_at->format('M Y') : 'Nov 2026',
                 'tier' => $tier,
+            ],
+        ]);
+    }
+
+    /**
+     * Display Customer Orders page.
+     */
+    public function orders(Request $request): Response
+    {
+        $user = $request->user();
+        $data = $this->getCustomerData($user);
+
+        return Inertia::render('Customer/Orders', [
+            'orders' => $data['allOrders'],
+            'allOrders' => $data['allOrders'],
+            'tier' => $data['tier'],
+            'ordersCount' => $data['orders']->count(),
+            'sweetsCount' => $data['userCreatedProducts']->count(),
+            'customer' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'member_since' => $user->created_at ? $user->created_at->format('M Y') : 'Nov 2026',
+                'tier' => $data['tier'],
+            ],
+        ]);
+    }
+
+    /**
+     * Display Customer Purchased Sweets page.
+     */
+    public function purchasedSweets(Request $request): Response
+    {
+        $user = $request->user();
+        $data = $this->getCustomerData($user);
+
+        return Inertia::render('Customer/PurchasedSweets', [
+            'sweets' => $data['userCreatedProducts']->toArray(),
+            'userCreatedProducts' => $data['userCreatedProducts']->toArray(),
+            'allOrders' => $data['allOrders'],
+            'tier' => $data['tier'],
+            'ordersCount' => $data['orders']->count(),
+            'sweetsCount' => $data['userCreatedProducts']->count(),
+            'customer' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'member_since' => $user->created_at ? $user->created_at->format('M Y') : 'Nov 2026',
+                'tier' => $data['tier'],
+            ],
+        ]);
+    }
+
+    /**
+     * Display Customer Addresses page.
+     */
+    public function addresses(Request $request): Response
+    {
+        $user = $request->user();
+        $data = $this->getCustomerData($user);
+
+        return Inertia::render('Customer/Addresses', [
+            'savedAddress' => $data['savedAddress'],
+            'tier' => $data['tier'],
+            'ordersCount' => $data['orders']->count(),
+            'sweetsCount' => $data['userCreatedProducts']->count(),
+            'customer' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'member_since' => $user->created_at ? $user->created_at->format('M Y') : 'Nov 2026',
+                'tier' => $data['tier'],
             ],
         ]);
     }

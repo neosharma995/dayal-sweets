@@ -405,7 +405,8 @@ export default function Create({ users = [], products = [] }) {
                                 style={{ width: '100%', padding: '0.55rem 0.75rem', borderRadius: '0.375rem', border: '1px solid #CBD5E1' }}
                             >
                                 <option value="pending">Pending</option>
-                                <option value="shipping">Shipping (Out for Delivery)</option>
+                                <option value="shipping">Shipping (In Transit)</option>
+                                <option value="out_for_delivery">Out for Delivery</option>
                                 <option value="delivered">Delivered (Fulfilled)</option>
                                 <option value="cancelled">Cancelled</option>
                             </select>

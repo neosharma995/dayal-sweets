@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { usePage } from '@inertiajs/react';
 import CustomerPortalLayout from '@/Layouts/CustomerPortalLayout';
 import Modal from '@/Components/Modal';
-import { MapPin, CheckCircle2 } from 'lucide-react';
+import { MapPin, CheckCircle2, Pencil } from 'lucide-react';
 
 export default function CustomerAddresses({
     savedAddress = {},
@@ -134,22 +134,21 @@ export default function CustomerAddresses({
                             </div>
                         </div>
 
-                        <div style={{ marginTop: '20px', paddingTop: '12px', borderTop: '1px solid #EBE4D8' }}>
+                        <div style={{ marginTop: '20px', paddingTop: '12px', borderTop: '1px solid #EBE4D8', display: 'flex', justifyContent: 'flex-start' }}>
                             <button
                                 type="button"
                                 onClick={() => setEditModalType('shipping')}
+                                className="dayal-btn dayal-btn--outline dayal-btn--sm"
                                 style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    color: '#631826',
-                                    fontWeight: 700,
-                                    fontSize: '13px',
-                                    cursor: 'pointer',
-                                    padding: 0,
-                                    textDecoration: 'underline',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    fontSize: '12px',
+                                    padding: '6px 14px',
                                 }}
                             >
-                                Edit Address
+                                <Pencil size={13} />
+                                <span>Edit Address</span>
                             </button>
                         </div>
                     </div>
@@ -191,22 +190,21 @@ export default function CustomerAddresses({
                             </div>
                         </div>
 
-                        <div style={{ marginTop: '20px', paddingTop: '12px', borderTop: '1px solid #EBE4D8' }}>
+                        <div style={{ marginTop: '20px', paddingTop: '12px', borderTop: '1px solid #EBE4D8', display: 'flex', justifyContent: 'flex-start' }}>
                             <button
                                 type="button"
                                 onClick={() => setEditModalType('billing')}
+                                className="dayal-btn dayal-btn--outline dayal-btn--sm"
                                 style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    color: '#631826',
-                                    fontWeight: 700,
-                                    fontSize: '13px',
-                                    cursor: 'pointer',
-                                    padding: 0,
-                                    textDecoration: 'underline',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    fontSize: '12px',
+                                    padding: '6px 14px',
                                 }}
                             >
-                                Edit Address
+                                <Pencil size={13} />
+                                <span>Edit Address</span>
                             </button>
                         </div>
                     </div>

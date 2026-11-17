@@ -29,8 +29,10 @@ export default function Show({ order }) {
                 return order.payment_status === 'paid' ? 2 : 1;
             case 'shipping':
                 return 3;
-            case 'delivered':
+            case 'out_for_delivery':
                 return 4;
+            case 'delivered':
+                return 5;
             default:
                 return 1;
         }
@@ -111,12 +113,13 @@ export default function Show({ order }) {
                 </div>
 
                 {/* Progress Steps Timeline */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', position: 'relative' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '0.75rem', position: 'relative' }}>
                     {[
                         { step: 1, title: 'Order Received', desc: 'Order placed & recorded', isDone: currentStep >= 1 },
                         { step: 2, title: 'Pending', desc: 'Order confirmed & pending', isDone: currentStep >= 2 },
-                        { step: 3, title: 'Shipping / Transit', desc: 'Aroma-lock dispatched', isDone: currentStep >= 3 },
-                        { step: 4, title: 'Delivered', desc: 'Doorstep arrival confirmed', isDone: currentStep >= 4 },
+                        { step: 3, title: 'Shipping', desc: 'Dispatched from kitchen', isDone: currentStep >= 3 },
+                        { step: 4, title: 'Out for Delivery', desc: 'With delivery partner', isDone: currentStep >= 4 },
+                        { step: 5, title: 'Delivered', desc: 'Doorstep arrival confirmed', isDone: currentStep >= 5 },
                     ].map((s) => (
                         <div
                             key={s.step}
@@ -178,7 +181,8 @@ export default function Show({ order }) {
                             style={{ width: '100%', padding: '0.55rem 0.75rem', borderRadius: '0.375rem', border: '1px solid #CBD5E1', fontSize: '0.875rem' }}
                         >
                             <option value="pending">Pending</option>
-                            <option value="shipping">Shipping (Out for Delivery / In Transit)</option>
+                            <option value="shipping">Shipping (In Transit)</option>
+                            <option value="out_for_delivery">Out for Delivery</option>
                             <option value="delivered">Delivered (Completed)</option>
                             <option value="cancelled">Cancelled</option>
                         </select>

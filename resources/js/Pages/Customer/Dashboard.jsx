@@ -34,7 +34,9 @@ export default function CustomerDashboard({
             case 'pending':
                 return { bg: '#FEF3C7', text: '#92400E', border: '#FDE68A', label: 'Pending' };
             case 'shipping':
-                return { bg: '#E0E7FF', text: '#3730A3', border: '#C7D2FE', label: 'In Transit / Shipping' };
+                return { bg: '#E0E7FF', text: '#3730A3', border: '#C7D2FE', label: 'In Transit' };
+            case 'out_for_delivery':
+                return { bg: '#F3E8FF', text: '#6B21A8', border: '#E9D5FF', label: 'Out for Delivery' };
             case 'delivered':
                 return { bg: '#DCFCE7', text: '#15803D', border: '#BBF7D0', label: 'Delivered' };
             case 'cancelled':

@@ -217,13 +217,42 @@
     .dayal-variation-pills-row {
         display: flex;
         gap: 8px;
-        margin: auto 0 12px 0;
+        margin: auto 0 10px 0;
         overflow-x: auto;
-        scrollbar-width: none;
+        overflow-y: hidden;
         white-space: nowrap;
+        padding-bottom: 6px;
+        padding-top: 2px;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-x;
+        cursor: grab;
+
+        &:active {
+            cursor: grabbing;
+        }
+
+        /* Sleek luxury custom scrollbar */
+        scrollbar-width: thin;
+        scrollbar-color: rgba(123, 28, 46, 0.35) rgba(235, 228, 216, 0.4);
 
         &::-webkit-scrollbar {
-            display: none;
+            height: 4px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: rgba(235, 228, 216, 0.4);
+            border-radius: 999px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: rgba(123, 28, 46, 0.35);
+            border-radius: 999px;
+            transition: background 0.2s ease;
+        }
+
+        &:hover::-webkit-scrollbar-thumb {
+            background: #7B1C2E;
         }
     }
 

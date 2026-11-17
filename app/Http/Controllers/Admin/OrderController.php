@@ -54,6 +54,7 @@ class OrderController extends Controller
             'total' => Order::count(),
             'pending' => Order::where('delivery_status', 'pending')->count(),
             'shipping' => Order::where('delivery_status', 'shipping')->count(),
+            'out_for_delivery' => Order::where('delivery_status', 'out_for_delivery')->count(),
             'delivered' => Order::where('delivery_status', 'delivered')->count(),
             'cancelled' => Order::where('delivery_status', 'cancelled')->count(),
             'total_revenue' => (float) Order::where('payment_status', 'paid')->sum('total_amount'),
@@ -105,7 +106,7 @@ class OrderController extends Controller
             'shipping_cost' => ['nullable', 'numeric', 'min:0'],
             'payment_method' => ['required', 'string', 'in:razorpay,cod,bank_transfer,cash'],
             'payment_status' => ['required', 'string', 'in:pending,paid,failed,refunded'],
-            'delivery_status' => ['required', 'string', 'in:pending,shipping,delivered,cancelled'],
+            'delivery_status' => ['required', 'string', 'in:pending,shipping,out_for_delivery,delivered,cancelled'],
             'order_notes' => ['nullable', 'string', 'max:1000'],
             'items' => ['required', 'array', 'min:1'],
             'items.*.product_id' => ['nullable', 'exists:products,id'],
@@ -125,7 +126,7 @@ class OrderController extends Controller
             $totalAmount = $subtotal + $shippingCost + $taxAmount;
 
             $paidAt = $validated['payment_status'] === 'paid' ? now() : null;
-            $shippedAt = $validated['delivery_status'] === 'shipping' ? now() : null;
+            $shippedAt = in_array($validated['delivery_status'], ['shipping', 'out_for_delivery'], true) ? now() : null;
             $deliveredAt = $validated['delivery_status'] === 'delivered' ? now() : null;
 
             $createdOrder = Order::create([
@@ -194,7 +195,7 @@ class OrderController extends Controller
     public function updateStatus(Request $request, Order $order): RedirectResponse
     {
         $validated = $request->validate([
-            'delivery_status' => ['nullable', 'string', 'in:pending,shipping,delivered,cancelled'],
+            'delivery_status' => ['nullable', 'string', 'in:pending,shipping,out_for_delivery,delivered,cancelled'],
             'payment_status' => ['nullable', 'string', 'in:pending,paid,failed,refunded'],
         ]);
 
@@ -203,7 +204,7 @@ class OrderController extends Controller
         if (!empty($validated['delivery_status'])) {
             $updates['delivery_status'] = $validated['delivery_status'];
 
-            if ($validated['delivery_status'] === 'shipping' && $order->shipped_at === null) {
+            if (in_array($validated['delivery_status'], ['shipping', 'out_for_delivery'], true) && $order->shipped_at === null) {
                 $updates['shipped_at'] = now();
             }
 

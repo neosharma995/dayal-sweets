@@ -8,6 +8,7 @@ use App\Http\Controllers\Public\AccountController;
 use App\Http\Controllers\Public\CheckoutController;
 use App\Http\Controllers\Public\DashboardController;
 use App\Http\Controllers\Public\HomeController;
+use App\Http\Controllers\Public\ProductReviewController;
 use Illuminate\Support\Facades\Route;
 
 // Public Storefront
@@ -54,6 +55,7 @@ Route::middleware(['auth', 'verified', 'role:'.UserRole::Customer->value])->pref
     Route::get('/account', [AccountController::class, 'index'])->name('account');
     Route::patch('/account/profile', [AccountController::class, 'updateProfile'])->name('account.profile');
     Route::put('/account/password', [AccountController::class, 'updatePassword'])->name('account.password');
+    Route::post('/reviews', [ProductReviewController::class, 'store'])->name('reviews.store');
 });
 
 // General Profile Management (Fallback / Shared)

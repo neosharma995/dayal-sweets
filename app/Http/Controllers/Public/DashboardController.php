@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\ProductReview;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -35,6 +36,10 @@ class DashboardController extends Controller
         $rewardPoints = max(50, (int) round($totalSpent * 0.10));
         $tier = $totalSpent > 5000 ? 'Platinum Sweet Connoisseur' : ($totalSpent > 1500 ? 'Gold Mithai Club Member' : 'Silver Member');
 
+        $userReviews = ProductReview::where('user_id', $user->id)
+            ->get()
+            ->keyBy('product_id');
+
         $userCreatedProducts = collect();
         foreach ($orders as $order) {
             foreach ($order->items as $item) {
@@ -46,6 +51,20 @@ class DashboardController extends Controller
                     $image = '/uploads/2026/07/kaaju-katli.png';
                 }
 
+                $resolvedProductId = $item->product_id;
+                if (!$resolvedProductId) {
+                    $cleanName = explode(' - ', $item->product_name)[0];
+                    $matchedProduct = Product::where('product_name', $item->product_name)
+                        ->orWhere('product_name', 'like', $cleanName . '%')
+                        ->first();
+                    if ($matchedProduct) {
+                        $resolvedProductId = $matchedProduct->id;
+                        $item->update(['product_id' => $resolvedProductId]);
+                    }
+                }
+
+                $review = $resolvedProductId ? $userReviews->get($resolvedProductId) : null;
+
                 $userCreatedProducts->push([
                     'id' => $item->id,
                     'order_id' => $order->order_number,
@@ -54,18 +73,20 @@ class DashboardController extends Controller
                     'delivered_date' => $order->delivered_at ? $order->delivered_at->format('d M Y') : ($order->delivery_status === 'delivered' ? ($order->updated_at ? $order->updated_at->format('d M Y') : 'Recent') : null),
                     'delivery_status' => $order->delivery_status,
                     'payment_status' => $order->payment_status,
-                    'product_id' => $item->product_id,
+                    'product_id' => $resolvedProductId,
                     'name' => $item->product_name,
                     'variation_name' => $item->variation_name ?: 'Standard Box',
                     'unit_price' => (float) $item->unit_price,
                     'quantity' => (int) $item->quantity,
                     'total' => (float) $item->total,
                     'image' => $image,
+                    'user_rating' => $review?->rating,
+                    'user_review' => $review?->review,
                 ]);
             }
         }
 
-        $allOrders = $orders->map(function ($order) {
+        $allOrders = $orders->map(function ($order) use ($userReviews) {
             $itemsList = $order->items->pluck('product_name')->take(3)->join(', ');
             if ($order->items->count() > 3) {
                 $itemsList .= ' +' . ($order->items->count() - 3) . ' more';
@@ -96,15 +117,30 @@ class DashboardController extends Controller
                 'customer_email' => $order->customer_email,
                 'customer_phone' => $order->customer_phone,
                 'order_notes' => $order->order_notes,
-                'items' => $order->items->map(function ($item) {
+                'items' => $order->items->map(function ($item) use ($userReviews) {
+                    $resolvedProductId = $item->product_id;
+                    if (!$resolvedProductId) {
+                        $cleanName = explode(' - ', $item->product_name)[0];
+                        $matchedProduct = Product::where('product_name', $item->product_name)
+                            ->orWhere('product_name', 'like', $cleanName . '%')
+                            ->first();
+                        if ($matchedProduct) {
+                            $resolvedProductId = $matchedProduct->id;
+                            $item->update(['product_id' => $resolvedProductId]);
+                        }
+                    }
+                    $review = $resolvedProductId ? $userReviews->get($resolvedProductId) : null;
                     return [
                         'id' => $item->id,
+                        'product_id' => $resolvedProductId,
                         'product_name' => $item->product_name,
                         'variation_name' => $item->variation_name,
                         'unit_price' => (float) $item->unit_price,
                         'quantity' => (int) $item->quantity,
                         'total' => (float) $item->total,
                         'product_image' => $item->product_image ?: '/uploads/2026/07/kaaju-katli.png',
+                        'user_rating' => $review?->rating,
+                        'user_review' => $review?->review,
                     ];
                 })->toArray(),
             ];
@@ -158,9 +194,9 @@ class DashboardController extends Controller
             'saved_addresses_count' => 1,
         ];
 
-        // Identify active in-flight order (pending or shipping), or latest order if placed recently
+        // Identify active in-flight order (pending, shipping, or out_for_delivery), or latest order if placed recently
         $activeOrderModel = $orders->first(function ($order) {
-            return in_array($order->delivery_status, ['pending', 'shipping'], true);
+            return in_array($order->delivery_status, ['pending', 'shipping', 'out_for_delivery'], true);
         }) ?? $orders->first();
 
         $activeOrder = null;
@@ -169,11 +205,14 @@ class DashboardController extends Controller
             $statusLabel = 'Order Confirmed';
 
             if ($activeOrderModel->delivery_status === 'delivered') {
-                $step = 4;
+                $step = 5;
                 $statusLabel = 'Delivered';
+            } elseif ($activeOrderModel->delivery_status === 'out_for_delivery') {
+                $step = 4;
+                $statusLabel = 'Out for Delivery';
             } elseif ($activeOrderModel->delivery_status === 'shipping') {
                 $step = 3;
-                $statusLabel = 'Out for Delivery / In Transit';
+                $statusLabel = 'In Transit';
             } elseif ($activeOrderModel->delivery_status === 'pending') {
                 $step = 2;
                 $statusLabel = 'Pending';

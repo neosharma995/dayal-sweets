@@ -2,8 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import CustomerPortalLayout from '@/Layouts/CustomerPortalLayout';
 import Pagination from '@/Components/Pagination';
-import { useCart } from '@/Context/CartContext';
-import { Search, ShoppingBag, CheckCircle2, RotateCw } from 'lucide-react';
+import ReviewModal from '@/Components/ReviewModal';
+import { Search, ShoppingBag, CheckCircle2, Star, Sparkles } from 'lucide-react';
 
 export default function CustomerPurchasedSweets({
     sweets = [],
@@ -14,31 +14,13 @@ export default function CustomerPurchasedSweets({
 }) {
     const { paginationLimit = 20 } = usePage().props || {};
     const itemsPerPage = paginationLimit || 20;
-    const { addToCart } = useCart();
 
     const rawSweets = sweets.length > 0 ? sweets : userCreatedProducts;
     const [statusFilter, setStatusFilter] = useState('all');
     const [productSearch, setProductSearch] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [toastMessage, setToastMessage] = useState('');
-
-    const handleReorder = (product) => {
-        addToCart(
-            {
-                id: product.product_id || product.id,
-                name: product.name,
-                price: product.unit_price,
-                image: product.image,
-            },
-            1,
-            product.variation_name
-                ? { label: product.variation_name, price: product.unit_price }
-                : null
-        );
-
-        setToastMessage(`Added "${product.name}" to your shopping bag!`);
-        setTimeout(() => setToastMessage(''), 4500);
-    };
+    const [reviewingProduct, setReviewingProduct] = useState(null);
 
     const getStatusInfo = (prod) => {
         switch (prod.delivery_status) {
@@ -49,10 +31,17 @@ export default function CustomerPurchasedSweets({
                     desc: 'Your pure desi ghee sweet box was delivered',
                     color: '#16A34A',
                 };
+            case 'out_for_delivery':
+                return {
+                    dotClass: 'out_for_delivery',
+                    title: 'Out for Delivery',
+                    desc: 'Your package is out for delivery with our delivery partner',
+                    color: '#7C3AED',
+                };
             case 'shipping':
                 return {
                     dotClass: 'shipping',
-                    title: 'In Transit • Out for Delivery',
+                    title: 'In Transit • Dispatched',
                     desc: 'Dispatched from kitchen with express courier',
                     color: '#2563EB',
                 };
@@ -85,6 +74,7 @@ export default function CustomerPurchasedSweets({
             all: rawSweets.length,
             pending: rawSweets.filter((p) => p.delivery_status === 'pending').length,
             shipping: rawSweets.filter((p) => p.delivery_status === 'shipping').length,
+            out_for_delivery: rawSweets.filter((p) => p.delivery_status === 'out_for_delivery').length,
             delivered: rawSweets.filter((p) => p.delivery_status === 'delivered').length,
         };
     }, [rawSweets]);
@@ -166,6 +156,7 @@ export default function CustomerPurchasedSweets({
                             { id: 'all', label: 'All Items', count: statusCounts.all },
                             { id: 'pending', label: 'Pending', count: statusCounts.pending },
                             { id: 'shipping', label: 'In Transit', count: statusCounts.shipping },
+                            { id: 'out_for_delivery', label: 'Out for Delivery', count: statusCounts.out_for_delivery },
                             { id: 'delivered', label: 'Delivered', count: statusCounts.delivered },
                         ].map((tab) => (
                             <button
@@ -225,14 +216,14 @@ export default function CustomerPurchasedSweets({
                                                 <div className="myntra-order-meta">
                                                     <span>Order:</span>
                                                     <span className="order-pill">#{prod.order_id}</span>
-                                                    <span>• Ordered on {prod.order_date}</span>
+                                                    <span className="order-date-text">• Ordered on {prod.order_date}</span>
                                                 </div>
                                             </div>
 
                                             {/* Main Content Body */}
-                                            <div className="myntra-card-body">
+                                            <div className="myntra-card-main">
                                                 <div className="myntra-product-left">
-                                                    <div className="myntra-img-box">
+                                                    <div className="myntra-image-box">
                                                         <img
                                                             src={prod.image || '/uploads/2026/07/kaaju-katli.png'}
                                                             alt={prod.name}
@@ -242,14 +233,43 @@ export default function CustomerPurchasedSweets({
                                                         />
                                                     </div>
 
-                                                    <div className="myntra-product-info">
-                                                        <h3 className="myntra-product-title">
+                                                    <div className="myntra-content-box">
+                                                        {/* Show rating on top of this product after rating is provided */}
+                                                        {prod.user_rating && (
+                                                            <div className="myntra-top-rating-badge">
+                                                                <div className="myntra-stars-row">
+                                                                    {[1, 2, 3, 4, 5].map((s) => (
+                                                                        <Star
+                                                                            key={s}
+                                                                            size={12}
+                                                                            fill={s <= prod.user_rating ? '#F59E0B' : '#E2E8F0'}
+                                                                            color={s <= prod.user_rating ? '#F59E0B' : '#CBD5E1'}
+                                                                        />
+                                                                    ))}
+                                                                </div>
+                                                                <strong className="myntra-rating-score">
+                                                                    {Number(prod.user_rating).toFixed(1)} / 5
+                                                                </strong>
+                                                                <span className="myntra-rating-label">• Your Rating</span>
+                                                            </div>
+                                                        )}
+
+                                                        <h3 className="myntra-item-name">
                                                             {prod.name}
                                                         </h3>
-                                                        <p className="myntra-product-variant">
-                                                            Weight: <strong>{prod.variation_name || 'Standard Pack'}</strong>
-                                                            {' '}• Qty: <strong>{prod.quantity}</strong>
-                                                        </p>
+
+                                                        <div className="myntra-tags-row">
+                                                            <span className="myntra-tag-pill myntra-tag-pill--variant">
+                                                                Pack: <strong>{prod.variation_name || 'Standard Pack'}</strong>
+                                                            </span>
+                                                            <span className="myntra-tag-pill">
+                                                                Qty: <strong>{prod.quantity}</strong>
+                                                            </span>
+                                                            <span className="myntra-tag-pill myntra-tag-pill--quality">
+                                                                <Sparkles size={11} color="#C9A96E" />
+                                                                <span>100% Desi Ghee</span>
+                                                            </span>
+                                                        </div>
 
                                                         <div className="myntra-price-row">
                                                             <span className="item-price">
@@ -259,21 +279,32 @@ export default function CustomerPurchasedSweets({
                                                                 (₹{Number(prod.unit_price).toFixed(2)} per pack)
                                                             </span>
                                                         </div>
+
+                                                        {prod.user_review && (
+                                                            <div className="myntra-review-quote">
+                                                                “{prod.user_review}”
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
 
-                                                {/* Right Action: 1-Click Reorder */}
-                                                <div className="myntra-product-right">
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleReorder(prod)}
-                                                        className="dayal-btn dayal-btn--primary dayal-btn--sm"
-                                                        style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-                                                    >
-                                                        <RotateCw size={13} />
-                                                        <span>Reorder Again</span>
-                                                    </button>
-                                                </div>
+                                                {/* Right Action: Show single Rate Product button only when Delivered & not yet rated */}
+                                                {prod.delivery_status === 'delivered' && !prod.user_rating && (
+                                                    <div className="myntra-actions-box">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setReviewingProduct(prod)}
+                                                            className="dayal-btn dayal-btn--outline dayal-btn--sm"
+                                                            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                                                        >
+                                                            <Star
+                                                                size={13}
+                                                                color="#631826"
+                                                            />
+                                                            <span>Rate Product</span>
+                                                        </button>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     );
@@ -309,6 +340,19 @@ export default function CustomerPurchasedSweets({
                     </div>
                 )}
             </div>
+
+            {/* Product Rating & Review Modal (Myntra/Amazon style) */}
+            <ReviewModal
+                show={Boolean(reviewingProduct)}
+                product={reviewingProduct}
+                onClose={(submitted) => {
+                    if (submitted) {
+                        setToastMessage('Thank you! Your rating and review have been submitted.');
+                        setTimeout(() => setToastMessage(''), 4500);
+                    }
+                    setReviewingProduct(null);
+                }}
+            />
         </CustomerPortalLayout>
     );
 }

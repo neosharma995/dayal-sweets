@@ -3,7 +3,8 @@ import { Link, usePage } from '@inertiajs/react';
 import CustomerPortalLayout from '@/Layouts/CustomerPortalLayout';
 import Modal from '@/Components/Modal';
 import Pagination from '@/Components/Pagination';
-import { Search, Eye, PackageCheck } from 'lucide-react';
+import ReviewModal from '@/Components/ReviewModal';
+import { Search, Eye, PackageCheck, Star } from 'lucide-react';
 
 export default function CustomerOrders({
     orders = [],
@@ -21,13 +22,16 @@ export default function CustomerOrders({
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
+    const [reviewingProduct, setReviewingProduct] = useState(null);
 
     const getDeliveryBadge = (status) => {
         switch (status) {
             case 'pending':
                 return { bg: '#FEF3C7', text: '#92400E', border: '#FDE68A', label: 'Pending' };
             case 'shipping':
-                return { bg: '#E0E7FF', text: '#3730A3', border: '#C7D2FE', label: 'In Transit / Shipping' };
+                return { bg: '#E0E7FF', text: '#3730A3', border: '#C7D2FE', label: 'In Transit' };
+            case 'out_for_delivery':
+                return { bg: '#F3E8FF', text: '#6B21A8', border: '#E9D5FF', label: 'Out for Delivery' };
             case 'delivered':
                 return { bg: '#DCFCE7', text: '#15803D', border: '#BBF7D0', label: 'Delivered' };
             case 'cancelled':
@@ -95,6 +99,7 @@ export default function CustomerOrders({
                             { id: 'all', label: 'All Orders' },
                             { id: 'pending', label: 'Pending' },
                             { id: 'shipping', label: 'In Transit' },
+                            { id: 'out_for_delivery', label: 'Out for Delivery' },
                             { id: 'delivered', label: 'Delivered' },
                             { id: 'cancelled', label: 'Cancelled' },
                         ].map((tab) => (
@@ -307,8 +312,66 @@ export default function CustomerOrders({
                                                 </div>
                                             </div>
                                         </div>
-                                        <div style={{ fontSize: '13px', fontWeight: 700, color: '#631826' }}>
-                                            ₹{Number(it.total).toFixed(2)}
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                            <div style={{ fontSize: '13px', fontWeight: 700, color: '#631826' }}>
+                                                ₹{Number(it.total).toFixed(2)}
+                                            </div>
+                                            {it.user_rating ? (
+                                                <span
+                                                    style={{
+                                                        padding: '3px 8px',
+                                                        fontSize: '11px',
+                                                        fontWeight: 600,
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: '4px',
+                                                        border: '1px solid #FDE68A',
+                                                        color: '#92400E',
+                                                        background: '#FFFBEB',
+                                                        borderRadius: '999px',
+                                                    }}
+                                                >
+                                                    <Star size={11} fill="#F59E0B" color="#F59E0B" />
+                                                    <span>Rated {it.user_rating}.0</span>
+                                                </span>
+                                            ) : (
+                                                selectedOrder.delivery_status === 'delivered' && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setReviewingProduct({
+                                                                product_id: it.product_id,
+                                                                id: it.product_id,
+                                                                name: it.product_name,
+                                                                product_name: it.product_name,
+                                                                variation_name: it.variation_name,
+                                                                image: it.product_image,
+                                                                order_id: selectedOrder.order_number,
+                                                                order_db_id: selectedOrder.id,
+                                                                user_rating: it.user_rating,
+                                                                user_review: it.user_review,
+                                                            });
+                                                        }}
+                                                        className="dayal-btn dayal-btn--outline dayal-btn--sm"
+                                                        style={{
+                                                            padding: '4px 8px',
+                                                            fontSize: '11px',
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '4px',
+                                                            borderColor: '#631826',
+                                                            color: '#631826',
+                                                            background: '#FFFFFF',
+                                                        }}
+                                                    >
+                                                        <Star
+                                                            size={11}
+                                                            color="#631826"
+                                                        />
+                                                        <span>Rate</span>
+                                                    </button>
+                                                )
+                                            )}
                                         </div>
                                     </div>
                                 ))}
@@ -356,6 +419,13 @@ export default function CustomerOrders({
                     </div>
                 )}
             </Modal>
+
+            {/* Product Rating & Review Modal */}
+            <ReviewModal
+                show={Boolean(reviewingProduct)}
+                product={reviewingProduct}
+                onClose={() => setReviewingProduct(null)}
+            />
         </CustomerPortalLayout>
     );
 }

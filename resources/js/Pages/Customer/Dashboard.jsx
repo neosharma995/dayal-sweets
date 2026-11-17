@@ -4,6 +4,7 @@ import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import FlashToaster from '@/Components/FlashToaster';
 import Modal from '@/Components/Modal';
+import Pagination from '@/Components/Pagination';
 import { useCart } from '@/Context/CartContext';
 import {
     LayoutDashboard,
@@ -33,9 +34,13 @@ export default function CustomerDashboard({
     savedAddress = {},
     customer = {},
 }) {
-    const { auth } = usePage().props;
+    const { auth, paginationLimit = 20 } = usePage().props;
     const user = auth?.user || customer;
     const { addToCart } = useCart();
+    const itemsPerPage = paginationLimit || 20;
+
+    const [ordersPage, setOrdersPage] = useState(1);
+    const [productsPage, setProductsPage] = useState(1);
 
     // Default to 'dashboard' tab (or 'orders' / 'products' if query param set)
     const [activeTab, setActiveTab] = useState('dashboard');
@@ -128,6 +133,20 @@ export default function CustomerDashboard({
             return matchesSearch && matchesStatus;
         });
     }, [userCreatedProducts, productSearch, statusFilter]);
+
+    // Paginated Orders for Orders Tab
+    const totalOrdersPages = Math.ceil(allOrders.length / itemsPerPage) || 1;
+    const paginatedOrders = useMemo(() => {
+        const start = (ordersPage - 1) * itemsPerPage;
+        return allOrders.slice(start, start + itemsPerPage);
+    }, [allOrders, ordersPage, itemsPerPage]);
+
+    // Paginated User Products for Purchased Sweets Tab
+    const totalProductsPages = Math.ceil(filteredUserProducts.length / itemsPerPage) || 1;
+    const paginatedUserProducts = useMemo(() => {
+        const start = (productsPage - 1) * itemsPerPage;
+        return filteredUserProducts.slice(start, start + itemsPerPage);
+    }, [filteredUserProducts, productsPage, itemsPerPage]);
 
     // 1-Click Reorder Sweet
     const handleReorder = (product) => {
@@ -607,74 +626,84 @@ export default function CustomerDashboard({
                                     </p>
 
                                     {allOrders && allOrders.length > 0 ? (
-                                        <div style={{ overflowX: 'auto' }}>
-                                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px', textAlign: 'left' }}>
-                                                <thead>
-                                                    <tr style={{ borderBottom: '2px solid #EBE4D8', color: '#64748B', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                                        <th style={{ padding: '12px 16px' }}>Order</th>
-                                                        <th style={{ padding: '12px 16px' }}>Date</th>
-                                                        <th style={{ padding: '12px 16px' }}>Status</th>
-                                                        <th style={{ padding: '12px 16px' }}>Total</th>
-                                                        <th style={{ padding: '12px 16px', textAlign: 'right' }}>Actions</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {allOrders.map((ord) => {
-                                                        const badge = getDeliveryBadge(ord.delivery_status);
-                                                        return (
-                                                            <tr key={ord.id} style={{ borderBottom: '1px solid #F1E9DF' }}>
-                                                                <td style={{ padding: '16px' }}>
-                                                                    <strong style={{ color: '#631826' }}>
-                                                                        #{ord.order_number}
-                                                                    </strong>
-                                                                    <div style={{ fontSize: '12px', color: '#64748B', marginTop: '2px' }}>
-                                                                        {ord.items_summary}
-                                                                    </div>
-                                                                </td>
-                                                                <td style={{ padding: '16px', color: '#475569' }}>
-                                                                    {ord.order_date}
-                                                                </td>
-                                                                <td style={{ padding: '16px' }}>
-                                                                    <span
-                                                                        style={{
-                                                                            display: 'inline-block',
-                                                                            padding: '3px 8px',
-                                                                            borderRadius: '999px',
-                                                                            fontSize: '11px',
-                                                                            fontWeight: 700,
-                                                                            background: badge.bg,
-                                                                            color: badge.text,
-                                                                            border: `1px solid ${badge.border}`,
-                                                                        }}
-                                                                    >
-                                                                        {badge.label}
-                                                                    </span>
-                                                                    <div style={{ fontSize: '11px', color: '#64748B', marginTop: '3px' }}>
-                                                                        {ord.payment_method?.toUpperCase()} ({ord.payment_status})
-                                                                    </div>
-                                                                </td>
-                                                                <td style={{ padding: '16px', fontWeight: 700, color: '#0F172A' }}>
-                                                                    ₹{ord.total_amount.toFixed(2)}
-                                                                    <div style={{ fontSize: '11px', color: '#64748B', fontWeight: 400 }}>
-                                                                        for {ord.items_count} item{ord.items_count === 1 ? '' : 's'}
-                                                                    </div>
-                                                                </td>
-                                                                <td style={{ padding: '16px', textAlign: 'right' }}>
-                                                                    <button
-                                                                        type="button"
-                                                                        onClick={() => handleViewOrder(ord)}
-                                                                        className="dayal-btn dayal-btn--outline dayal-btn--sm"
-                                                                        style={{ padding: '6px 12px', fontSize: '12px' }}
-                                                                    >
-                                                                        View Details
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        );
-                                                    })}
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                        <>
+                                            <div style={{ overflowX: 'auto' }}>
+                                                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px', textAlign: 'left' }}>
+                                                    <thead>
+                                                        <tr style={{ borderBottom: '2px solid #EBE4D8', color: '#64748B', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                                            <th style={{ padding: '12px 16px' }}>Order</th>
+                                                            <th style={{ padding: '12px 16px' }}>Date</th>
+                                                            <th style={{ padding: '12px 16px' }}>Status</th>
+                                                            <th style={{ padding: '12px 16px' }}>Total</th>
+                                                            <th style={{ padding: '12px 16px', textAlign: 'right' }}>Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {paginatedOrders.map((ord) => {
+                                                            const badge = getDeliveryBadge(ord.delivery_status);
+                                                            return (
+                                                                <tr key={ord.id} style={{ borderBottom: '1px solid #F1E9DF' }}>
+                                                                    <td style={{ padding: '16px' }}>
+                                                                        <strong style={{ color: '#631826' }}>
+                                                                            #{ord.order_number}
+                                                                        </strong>
+                                                                        <div style={{ fontSize: '12px', color: '#64748B', marginTop: '2px' }}>
+                                                                            {ord.items_summary}
+                                                                        </div>
+                                                                    </td>
+                                                                    <td style={{ padding: '16px', color: '#475569' }}>
+                                                                        {ord.order_date}
+                                                                    </td>
+                                                                    <td style={{ padding: '16px' }}>
+                                                                        <span
+                                                                            style={{
+                                                                                display: 'inline-block',
+                                                                                padding: '3px 8px',
+                                                                                borderRadius: '999px',
+                                                                                fontSize: '11px',
+                                                                                fontWeight: 700,
+                                                                                background: badge.bg,
+                                                                                color: badge.text,
+                                                                                border: `1px solid ${badge.border}`,
+                                                                            }}
+                                                                        >
+                                                                            {badge.label}
+                                                                        </span>
+                                                                        <div style={{ fontSize: '11px', color: '#64748B', marginTop: '3px' }}>
+                                                                            {ord.payment_method?.toUpperCase()} ({ord.payment_status})
+                                                                        </div>
+                                                                    </td>
+                                                                    <td style={{ padding: '16px', fontWeight: 700, color: '#0F172A' }}>
+                                                                        ₹{ord.total_amount.toFixed(2)}
+                                                                        <div style={{ fontSize: '11px', color: '#64748B', fontWeight: 400 }}>
+                                                                            for {ord.items_count} item{ord.items_count === 1 ? '' : 's'}
+                                                                        </div>
+                                                                    </td>
+                                                                    <td style={{ padding: '16px', textAlign: 'right' }}>
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => handleViewOrder(ord)}
+                                                                            className="dayal-btn dayal-btn--outline dayal-btn--sm"
+                                                                            style={{ padding: '6px 12px', fontSize: '12px' }}
+                                                                        >
+                                                                            View Details
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            );
+                                                        })}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <Pagination
+                                                currentPage={ordersPage}
+                                                totalPages={totalOrdersPages}
+                                                totalItems={allOrders.length}
+                                                itemsPerPage={itemsPerPage}
+                                                onPageChange={(p) => setOrdersPage(p)}
+                                            />
+                                        </>
                                     ) : (
                                         <div style={{ textAlign: 'center', padding: '40px 16px', color: '#64748B' }}>
                                             <p style={{ margin: '0 0 16px 0', fontSize: '15px' }}>No orders placed yet.</p>
@@ -737,119 +766,129 @@ export default function CustomerDashboard({
                                     </div>
 
                                     {/* Myntra-Style List of Items */}
-                                    {filteredUserProducts.length > 0 ? (
-                                        <div className="dayal-myntra-items-list">
-                                            {filteredUserProducts.map((prod) => {
-                                                const statusInfo = getMyntraStatusInfo(prod);
-                                                const currentRating = itemRatings[prod.id] || 5;
+                                    {paginatedUserProducts.length > 0 ? (
+                                        <>
+                                            <div className="dayal-myntra-items-list">
+                                                {paginatedUserProducts.map((prod) => {
+                                                    const statusInfo = getMyntraStatusInfo(prod);
+                                                    const currentRating = itemRatings[prod.id] || 5;
 
-                                                return (
-                                                    <div key={prod.id} className="dayal-myntra-card">
-                                                        {/* Top Status Bar */}
-                                                        <div className="myntra-card-topbar">
-                                                            <div className="myntra-status-left">
-                                                                <span className={`status-indicator-dot ${statusInfo.dotClass}`} />
-                                                                <div>
-                                                                    <span className="status-main-label" style={{ color: statusInfo.color }}>
-                                                                        {statusInfo.title}
-                                                                    </span>
-                                                                    <span style={{ margin: '0 8px', color: '#CBD5E1' }}>•</span>
-                                                                    <span className="status-desc-text">
-                                                                        {statusInfo.desc}
-                                                                    </span>
+                                                    return (
+                                                        <div key={prod.id} className="dayal-myntra-card">
+                                                            {/* Top Status Bar */}
+                                                            <div className="myntra-card-topbar">
+                                                                <div className="myntra-status-left">
+                                                                    <span className={`status-indicator-dot ${statusInfo.dotClass}`} />
+                                                                    <div>
+                                                                        <span className="status-main-label" style={{ color: statusInfo.color }}>
+                                                                            {statusInfo.title}
+                                                                        </span>
+                                                                        <span style={{ margin: '0 8px', color: '#CBD5E1' }}>•</span>
+                                                                        <span className="status-desc-text">
+                                                                            {statusInfo.desc}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="myntra-order-meta">
+                                                                    <span>Order:</span>
+                                                                    <span className="order-pill">#{prod.order_id}</span>
+                                                                    <span>• Ordered on {prod.order_date}</span>
                                                                 </div>
                                                             </div>
 
-                                                            <div className="myntra-order-meta">
-                                                                <span>Order:</span>
-                                                                <span className="order-pill">#{prod.order_id}</span>
-                                                                <span>• Ordered on {prod.order_date}</span>
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Main Content Body */}
-                                                        <div className="myntra-card-main">
-                                                            <div className="myntra-image-box">
-                                                                <img
-                                                                    src={prod.image}
-                                                                    alt={prod.name}
-                                                                    onError={(e) => {
-                                                                        e.currentTarget.src = '/uploads/2026/07/kaaju-katli.png';
-                                                                    }}
-                                                                />
-                                                            </div>
-
-                                                            <div className="myntra-content-box">
-                                                                <h3 className="myntra-item-name">
-                                                                    {prod.name}
-                                                                </h3>
-                                                                <div className="myntra-variant-line">
-                                                                    <span>Pack / Size: <strong>{prod.variation_name}</strong></span>
-                                                                    <span className="sep">•</span>
-                                                                    <span>Quantity: <strong>{prod.quantity}</strong></span>
-                                                                    <span className="sep">•</span>
-                                                                    <span>₹{prod.unit_price.toFixed(2)} per box</span>
+                                                            {/* Main Content Body */}
+                                                            <div className="myntra-card-main">
+                                                                <div className="myntra-image-box">
+                                                                    <img
+                                                                        src={prod.image}
+                                                                        alt={prod.name}
+                                                                        onError={(e) => {
+                                                                            e.currentTarget.src = '/uploads/2026/07/kaaju-katli.png';
+                                                                        }}
+                                                                    />
                                                                 </div>
 
-                                                                <div className="myntra-quality-tag">
-                                                                    <span>✨ 100% Pure Desi Ghee</span>
-                                                                    <span>•</span>
-                                                                    <span>Una Traditional Recipe</span>
+                                                                <div className="myntra-content-box">
+                                                                    <h3 className="myntra-item-name">
+                                                                        {prod.name}
+                                                                    </h3>
+                                                                    <div className="myntra-variant-line">
+                                                                        <span>Pack / Size: <strong>{prod.variation_name}</strong></span>
+                                                                        <span className="sep">•</span>
+                                                                        <span>Quantity: <strong>{prod.quantity}</strong></span>
+                                                                        <span className="sep">•</span>
+                                                                        <span>₹{prod.unit_price.toFixed(2)} per box</span>
+                                                                    </div>
+
+                                                                    <div className="myntra-quality-tag">
+                                                                        <span>✨ 100% Pure Desi Ghee</span>
+                                                                        <span>•</span>
+                                                                        <span>Una Traditional Recipe</span>
+                                                                    </div>
+
+                                                                    <div className="myntra-rating-prompt">
+                                                                        <span>Rate sweet:</span>
+                                                                        <div className="star-row" title="Click to rate this sweet">
+                                                                            {[1, 2, 3, 4, 5].map((star) => (
+                                                                                <Star
+                                                                                    key={star}
+                                                                                    size={14}
+                                                                                    onClick={() => handleItemRating(prod.id, star)}
+                                                                                    fill={star <= currentRating ? '#D4AF37' : 'none'}
+                                                                                    color="#D4AF37"
+                                                                                />
+                                                                            ))}
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
 
-                                                                <div className="myntra-rating-prompt">
-                                                                    <span>Rate sweet:</span>
-                                                                    <div className="star-row" title="Click to rate this sweet">
-                                                                        {[1, 2, 3, 4, 5].map((star) => (
-                                                                            <Star
-                                                                                key={star}
-                                                                                size={14}
-                                                                                onClick={() => handleItemRating(prod.id, star)}
-                                                                                fill={star <= currentRating ? '#D4AF37' : 'none'}
-                                                                                color="#D4AF37"
-                                                                            />
-                                                                        ))}
+                                                                <div className="myntra-actions-box">
+                                                                    <div className="myntra-pricing">
+                                                                        <div className="price-val">
+                                                                            ₹{prod.total.toFixed(2)}
+                                                                        </div>
+                                                                        <span className="price-note">
+                                                                            Total for {prod.quantity} {prod.quantity === 1 ? 'box' : 'boxes'}
+                                                                        </span>
+                                                                    </div>
+
+                                                                    <div className="myntra-buttons-row">
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => handleReorder(prod)}
+                                                                            className="dayal-btn dayal-btn--primary dayal-btn--sm"
+                                                                            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                                                                        >
+                                                                            <RotateCcw size={13} />
+                                                                            <span>Order Again</span>
+                                                                        </button>
+
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => handleViewOrderByNumber(prod.order_id)}
+                                                                            className="dayal-btn dayal-btn--outline dayal-btn--sm"
+                                                                            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                                                                        >
+                                                                            <Eye size={13} />
+                                                                            <span>View Details</span>
+                                                                        </button>
                                                                     </div>
                                                                 </div>
                                                             </div>
-
-                                                            <div className="myntra-actions-box">
-                                                                <div className="myntra-pricing">
-                                                                    <div className="price-val">
-                                                                        ₹{prod.total.toFixed(2)}
-                                                                    </div>
-                                                                    <span className="price-note">
-                                                                        Total for {prod.quantity} {prod.quantity === 1 ? 'box' : 'boxes'}
-                                                                    </span>
-                                                                </div>
-
-                                                                <div className="myntra-buttons-row">
-                                                                    <button
-                                                                        type="button"
-                                                                        onClick={() => handleReorder(prod)}
-                                                                        className="dayal-btn dayal-btn--primary dayal-btn--sm"
-                                                                        style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-                                                                    >
-                                                                        <RotateCcw size={13} />
-                                                                        <span>Order Again</span>
-                                                                    </button>
-
-                                                                    <button
-                                                                        type="button"
-                                                                        onClick={() => handleViewOrderByNumber(prod.order_id)}
-                                                                        className="dayal-btn dayal-btn--outline dayal-btn--sm"
-                                                                        style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-                                                                    >
-                                                                        <Eye size={13} />
-                                                                        <span>View Details</span>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
                                                         </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+
+                                            <Pagination
+                                                currentPage={productsPage}
+                                                totalPages={totalProductsPages}
+                                                totalItems={filteredUserProducts.length}
+                                                itemsPerPage={itemsPerPage}
+                                                onPageChange={(p) => setProductsPage(p)}
+                                            />
+                                        </>
                                     ) : (
                                         <div style={{ textAlign: 'center', padding: '48px 16px', color: '#64748B', background: '#FAF7F2', borderRadius: '10px', border: '1px solid #EBE4D8' }}>
                                             <ShoppingBag size={40} color="#B88E4B" style={{ margin: '0 auto 12px' }} />

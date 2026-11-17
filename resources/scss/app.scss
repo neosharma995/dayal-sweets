@@ -8,6 +8,7 @@
 @use './base' as *;
 @use './layout' as *;
 @use './components' as *;
+@use './components/pagination' as *;
 @use './components/product-card' as *;
 @use './components/testimonials' as *;
 @use './components/outlets' as *;

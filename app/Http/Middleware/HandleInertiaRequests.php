@@ -48,6 +48,7 @@ class HandleInertiaRequests extends Middleware
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),
             ],
+            'paginationLimit' => (int) env('PAGINATION_LIMIT', 20),
         ];
     }
 }

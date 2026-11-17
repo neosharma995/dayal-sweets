@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { BoxIcon, AlertIcon } from '@/Components/Icons';
+import Pagination from '@/Components/Pagination';
 
 export default function Index({ products = [], filters = {} }) {
+    const { paginationLimit = 20 } = usePage().props || {};
+    const itemsPerPage = Number(paginationLimit) || 20;
+
     const [search, setSearch] = useState(filters.search || '');
+    const [currentPage, setCurrentPage] = useState(1);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
 
@@ -19,6 +24,13 @@ export default function Index({ products = [], filters = {} }) {
             String(p.id).includes(q)
         );
     });
+
+    // Compute pagination
+    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage) || 1;
+    const paginatedProducts = filteredProducts.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
 
     // Compute basic statistics
     const totalCount = products.length;
@@ -111,7 +123,10 @@ export default function Index({ products = [], filters = {} }) {
                                 type="text"
                                 placeholder="Search by name, desc, or ID..."
                                 value={search}
-                                onChange={(e) => setSearch(e.target.value)}
+                                onChange={(e) => {
+                                    setSearch(e.target.value);
+                                    setCurrentPage(1);
+                                }}
                                 style={{
                                     width: '100%',
                                     padding: '0.55rem 1rem 0.55rem 2.25rem',
@@ -135,7 +150,10 @@ export default function Index({ products = [], filters = {} }) {
                             </svg>
                             {search && (
                                 <button
-                                    onClick={() => setSearch('')}
+                                    onClick={() => {
+                                        setSearch('');
+                                        setCurrentPage(1);
+                                    }}
                                     style={{
                                         position: 'absolute',
                                         right: '0.75rem',
@@ -186,7 +204,7 @@ export default function Index({ products = [], filters = {} }) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {filteredProducts.map((product) => {
+                                    {paginatedProducts.map((product) => {
                                         const regularPrice = Number(product.product_price);
                                         const sellingPrice = Number(product.product_selling_price);
                                         const discount = regularPrice > sellingPrice
@@ -392,6 +410,18 @@ export default function Index({ products = [], filters = {} }) {
                                     })}
                                 </tbody>
                             </table>
+                        )}
+
+                        {filteredProducts.length > 0 && (
+                            <div style={{ padding: '1.25rem 1.5rem', borderTop: '1px solid #E2E8F0', background: '#FAFAFA' }}>
+                                <Pagination
+                                    currentPage={currentPage}
+                                    totalPages={totalPages}
+                                    totalItems={filteredProducts.length}
+                                    itemsPerPage={itemsPerPage}
+                                    onPageChange={setCurrentPage}
+                                />
+                            </div>
                         )}
                     </div>
                 </div>

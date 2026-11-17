@@ -22,6 +22,9 @@ Route::middleware('auth')->prefix('checkout')->name('checkout.')->group(function
     Route::post('/verify-payment', [CheckoutController::class, 'verifyPayment'])->name('razorpay.verify');
     Route::post('/place-cod-order', [CheckoutController::class, 'placeCodOrder'])->name('cod.place');
 });
+
+// Production Webhook Route (Commented out for local testing - enable on live server):
+// Route::post('/webhook/razorpay', [CheckoutController::class, 'handleWebhook'])->name('razorpay.webhook');
 Route::get('/about-us', [HomeController::class, 'about'])->name('about-us');
 Route::get('/contact-us', [HomeController::class, 'contact'])->name('contact');
 Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');

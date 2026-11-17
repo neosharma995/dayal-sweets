@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, usePage, router } from '@inertiajs/react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import { useCart } from '@/Context/CartContext';
@@ -41,6 +41,26 @@ export default function Checkout({ razorpayKey }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [orderPlaced, setOrderPlaced] = useState(null);
+    const [countdown, setCountdown] = useState(5);
+
+    // Auto-redirect to customer dashboard after 5 seconds countdown on successful order
+    useEffect(() => {
+        if (!orderPlaced) return;
+
+        setCountdown(5);
+        const timer = setInterval(() => {
+            setCountdown((prev) => {
+                if (prev <= 1) {
+                    clearInterval(timer);
+                    router.visit(route('customer.dashboard'));
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [orderPlaced]);
 
     // Keep formData synced if user logs in or profile changes
     useEffect(() => {
@@ -182,7 +202,7 @@ export default function Checkout({ razorpayKey }) {
                             razorpay_order_id: response.razorpay_order_id,
                             razorpay_payment_id: response.razorpay_payment_id,
                             razorpay_signature: response.razorpay_signature,
-                            checkout_payload: orderPayload,
+                            checkout_payload: payload,
                         });
 
                         if (verifyRes.data.success) {
@@ -256,6 +276,44 @@ export default function Checkout({ razorpayKey }) {
                         <p className="order-number">
                             Order ID: <strong>{orderPlaced.orderId}</strong>
                         </p>
+
+                        {/* Auto Redirection Countdown Banner */}
+                        <div
+                            style={{
+                                background: '#FEF3C7',
+                                border: '1px solid #FCD34D',
+                                color: '#92400E',
+                                padding: '10px 18px',
+                                borderRadius: '9999px',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                fontWeight: '600',
+                                fontSize: '13px',
+                                margin: '14px auto',
+                                boxShadow: '0 2px 8px rgba(217, 119, 6, 0.12)',
+                            }}
+                        >
+                            <span>Redirecting to your dashboard in</span>
+                            <span
+                                style={{
+                                    background: '#D97706',
+                                    color: '#FFFFFF',
+                                    width: '26px',
+                                    height: '26px',
+                                    borderRadius: '50%',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontWeight: '800',
+                                    fontSize: '14px',
+                                }}
+                            >
+                                {countdown}
+                            </span>
+                            <span>seconds...</span>
+                        </div>
+
                         <p className="success-desc">
                             Your handcrafted batch is now in our kitchen, being prepared in 100% pure desi ghee.
                             We have recorded this purchase in your account dashboard and sent confirmation to{' '}
@@ -282,7 +340,7 @@ export default function Checkout({ razorpayKey }) {
 
                         <div className="success-actions" style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                             <Link href={route('customer.dashboard')} className="dayal-btn dayal-btn--primary">
-                                View Order in Dashboard →
+                                Go to Dashboard Now ({countdown}s) →
                             </Link>
                             <Link href="/shop" className="dayal-btn dayal-btn--outline">
                                 Continue Shopping

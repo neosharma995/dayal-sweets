@@ -37,7 +37,7 @@ export default function Index({ pages = [] }) {
                             Website Pages
                         </h1>
                         <p style={{ color: '#64748B', fontSize: '0.875rem', marginTop: '0.25rem' }}>
-                            Manage editable dynamic sections and settings for public storefront pages.
+                            Manage editable dynamic sections and settings for public website pages.
                         </p>
                     </div>
                 </div>

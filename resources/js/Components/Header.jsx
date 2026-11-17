@@ -36,6 +36,7 @@ const shopShortcuts = [
 export default function Header({ auth }) {
     const { url, props } = usePage();
     const user = auth?.user || props?.auth?.user;
+    const headerLogo = props?.headerFooter?.header_logo || '/uploads/2026/07/Frame-51-2-e1789985433447.png';
     const userInitial = user?.name ? user.name.trim().charAt(0).toUpperCase() : 'U';
     const roles = Array.isArray(user?.roles) ? user.roles : [];
     const isAdmin = roles.includes('admin') || roles.includes('super-admin');
@@ -180,8 +181,7 @@ export default function Header({ auth }) {
                 <div className="dayal-header-container dayal-header-main-inner">
                     <Link href="/" className="dayal-header-logo" aria-label="Dayal Sweets home">
                         <img
-                            src="/uploads/2026/07/Frame-51-2-e1789985433447.png"
-                            srcSet="/uploads/2026/07/Frame-51-2-e1789985433447.png 1x, /uploads/2026/07/Frame-51-2-e1789985433447@2x.png 2x"
+                            src={headerLogo}
                             alt="Dayal Sweets"
                             width="254"
                             height="64"

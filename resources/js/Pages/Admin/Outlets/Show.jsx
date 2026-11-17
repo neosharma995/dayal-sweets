@@ -248,10 +248,10 @@ export default function Show({ outlet }) {
                         </div>
                     </div>
 
-                    {/* Right Live Storefront Card Preview */}
+                    {/* Right Live Outlet Card Preview */}
                     <div>
                         <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#475569', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                            Storefront Card Preview
+                            Live Outlet Card Preview
                         </div>
 
                         {/* Customer-facing card styled identically to Outlets.jsx */}

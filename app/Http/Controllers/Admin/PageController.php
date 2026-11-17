@@ -21,7 +21,7 @@ class PageController extends Controller
     {
         Page::getOrCreateContactUs();
         Page::getOrCreateGallery();
-        $pages = Page::query()->orderBy('id')->get();
+        $pages = Page::query()->where('slug', '!=', 'header-footer')->orderBy('id')->get();
 
         if ($request->wantsJson()) {
             return response()->json([

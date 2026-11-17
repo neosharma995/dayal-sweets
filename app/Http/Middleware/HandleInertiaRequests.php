@@ -48,6 +48,7 @@ class HandleInertiaRequests extends Middleware
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),
             ],
+            'headerFooter' => fn () => \App\Models\Page::getOrCreateHeaderFooter()->sections,
             'outlets' => fn () => \App\Models\Outlet::where('is_active', true)->orderBy('sort_order')->orderBy('id')->get(),
             'paginationLimit' => (int) env('PAGINATION_LIMIT', 20),
         ];

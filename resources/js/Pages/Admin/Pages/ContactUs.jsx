@@ -228,7 +228,7 @@ export default function ContactUs({ page }) {
 
                 {saveSuccess && (
                     <div style={{ padding: '0.85rem 1.25rem', background: '#ECFDF5', border: '1px solid #A7F3D0', borderRadius: '0.5rem', color: '#065F46', marginBottom: '1.5rem', fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <span>✓</span> Contact Us content updated successfully! Check the live storefront.
+                        <span>✓</span> Contact Us content updated successfully! Check the live website.
                     </div>
                 )}
 

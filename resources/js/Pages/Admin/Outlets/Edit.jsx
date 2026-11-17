@@ -210,7 +210,7 @@ export default function Edit({ outlet }) {
                                     </label>
                                     <input
                                         type="text"
-                                        placeholder="e.g. Storefront, Gandhi Chowk, Opp. Bus Stand"
+                                        placeholder="e.g. Main Market, Gandhi Chowk, Opp. Bus Stand"
                                         value={data.subtitle}
                                         onChange={(e) => setData('subtitle', e.target.value)}
                                         style={{
@@ -448,13 +448,13 @@ export default function Edit({ outlet }) {
                         {/* Section 4: Image & Display */}
                         <div>
                             <h3 style={{ margin: '0 0 1rem', fontSize: '1rem', fontWeight: 700, color: '#0F172A', borderBottom: '1px solid #F1F5F9', paddingBottom: '0.5rem' }}>
-                                4. Storefront Image &amp; Display Order
+                                4. Outlet Image &amp; Display Order
                             </h3>
 
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
                                 <div>
                                     <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#334155', marginBottom: '0.35rem' }}>
-                                        Upload New Storefront Photo
+                                        Upload New Outlet Photo
                                     </label>
                                     <input
                                         type="file"

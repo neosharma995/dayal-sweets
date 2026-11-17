@@ -96,6 +96,86 @@ class Page extends Model
     }
 
     /**
+     * Default data for Header & Footer settings.
+     * Contains:
+     * - Header: header_logo
+     * - Footer Bar: sub_heading, heading, description, phone_number, image, items [heading, para]
+     * - Footer: footer_logo, footer_description, certified_groups, social_links [name, link], copyright_description
+     */
+    public static function getHeaderFooterDefaults(): array
+    {
+        return [
+            // Header Settings
+            'header_logo' => '/uploads/2026/07/Frame-51-2-e1789985433447.png',
+
+            // Footer Bar / CTA Section
+            'footer_bar' => [
+                'sub_heading' => 'craving something sweet',
+                'heading' => 'Order your favorites Anytime, Anywhere',
+                'description' => "From our kitchen to your doorstep,\nwe make every order special.",
+                'phone_number' => '+91 98765 43210',
+                'image' => '/uploads/2026/07/25a75be7cdf9333748b57b1e795b01d57a04548a.webp',
+                'items' => [
+                    ['heading' => '100% SECURE', 'para' => 'Safe & Secure Payments', 'icon' => 'Vector-3.svg'],
+                    ['heading' => 'LIVE TRACKING', 'para' => 'Real-time Updates', 'icon' => 'Icon-1.svg'],
+                    ['heading' => 'FAST DELIVERY', 'para' => 'On Time, Every Time', 'icon' => 'Icon-2.svg'],
+                    ['heading' => 'PREMIUM QUALITY', 'para' => 'Handcrafted with Love & Purity', 'icon' => 'Vector-4.svg'],
+                ],
+            ],
+
+            // Footer Main Settings
+            'footer_logo' => '/uploads/2026/07/Frame-51-1-1.png',
+            'footer_description' => "Crafting India's most loved sweet moments since 1962. Pure ingredients, authentic recipes, and a legacy of taste.",
+            'certified_groups' => [
+                '/uploads/2026/07/kindpng_2513820-1.png',
+                '/uploads/2026/07/Asset-1-2-1.png',
+            ],
+            'social_links' => [
+                ['name' => 'Instagram', 'link' => 'https://www.instagram.com/'],
+                ['name' => 'Facebook', 'link' => 'https://www.facebook.com/'],
+                ['name' => 'YouTube', 'link' => 'https://www.youtube.com/'],
+            ],
+            'copyright_description' => '© 2026 Dayal Sweets. All rights reserved.',
+        ];
+    }
+
+    /**
+     * Find or create the Header & Footer page record with defaults.
+     */
+    public static function getOrCreateHeaderFooter(): self
+    {
+        $page = static::firstOrCreate(
+            ['slug' => 'header-footer'],
+            [
+                'title' => 'Header & Footer',
+                'sections' => static::getHeaderFooterDefaults(),
+                'is_active' => true,
+                'meta_title' => 'Header & Footer Settings - Dayal Sweets',
+                'meta_description' => 'Manage Header Logo, Footer Bar CTA, Footer Logo, Bio, Certificates, Social Links and Copyright.',
+            ]
+        );
+
+        $sections = $page->sections ?? [];
+        $defaults = static::getHeaderFooterDefaults();
+
+        // Ensure all required default keys exist
+        $dirty = false;
+        foreach ($defaults as $key => $value) {
+            if (! isset($sections[$key])) {
+                $sections[$key] = $value;
+                $dirty = true;
+            }
+        }
+
+        if ($dirty) {
+            $page->sections = $sections;
+            $page->save();
+        }
+
+        return $page;
+    }
+
+    /**
      * Default data for Gallery page.
      * Contains:
      * - Top Bar: top_bar_Heading, top_bar_sub_heading, top_bar_description

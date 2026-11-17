@@ -7,6 +7,7 @@ import { MapPinIcon, PhoneIcon, AlertIcon, TruckIcon } from '@/Components/Icons'
 export default function Index({ outlets = [], filters = {}, stats = {} }) {
     const [search, setSearch] = useState(filters.search || '');
     const [selectedStatus, setSelectedStatus] = useState(filters.status || 'all');
+    const [viewMode, setViewMode] = useState('cards'); // 'cards' (default 4x4) or 'table'
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [outletToDelete, setOutletToDelete] = useState(null);
 
@@ -258,117 +259,622 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                             ))}
                         </div>
 
-                        {/* Search Input */}
-                        <div style={{ position: 'relative', minWidth: '260px' }}>
-                            <input
-                                type="text"
-                                placeholder="Search by name, city, address..."
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
+                        {/* Right Controls: Search, View Mode, Count */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                            {/* Search Input */}
+                            <div style={{ position: 'relative', minWidth: '240px' }}>
+                                <input
+                                    type="text"
+                                    placeholder="Search by name, city, address..."
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    style={{
+                                        width: '100%',
+                                        padding: '0.45rem 0.75rem 0.45rem 2.25rem',
+                                        fontSize: '0.8125rem',
+                                        borderRadius: '0.375rem',
+                                        border: '1px solid #CBD5E1',
+                                        background: '#FFFFFF',
+                                        color: '#0F172A',
+                                    }}
+                                />
+                                <svg
+                                    width="16"
+                                    height="16"
+                                    fill="none"
+                                    stroke="#94A3B8"
+                                    viewBox="0 0 24 24"
+                                    style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)' }}
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                                {search && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setSearch('')}
+                                        style={{
+                                            position: 'absolute',
+                                            right: '0.6rem',
+                                            top: '50%',
+                                            transform: 'translateY(-50%)',
+                                            background: 'transparent',
+                                            border: 'none',
+                                            color: '#94A3B8',
+                                            cursor: 'pointer',
+                                        }}
+                                    >
+                                        &times;
+                                    </button>
+                                )}
+                            </div>
+
+                            {/* View Switcher: Cards vs Table */}
+                            <div
                                 style={{
-                                    width: '100%',
-                                    padding: '0.5rem 0.75rem 0.5rem 2.25rem',
-                                    fontSize: '0.8125rem',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    background: '#F1F5F9',
                                     borderRadius: '0.375rem',
-                                    border: '1px solid #CBD5E1',
-                                    background: '#FFFFFF',
-                                    color: '#0F172A',
+                                    padding: '2px',
+                                    border: '1px solid #E2E8F0',
                                 }}
-                            />
-                            <svg
-                                width="16"
-                                height="16"
-                                fill="none"
-                                stroke="#94A3B8"
-                                viewBox="0 0 24 24"
-                                style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)' }}
                             >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                            {search && (
                                 <button
                                     type="button"
-                                    onClick={() => setSearch('')}
+                                    onClick={() => setViewMode('cards')}
+                                    title="Modern 4x4 Cards View"
                                     style={{
-                                        position: 'absolute',
-                                        right: '0.6rem',
-                                        top: '50%',
-                                        transform: 'translateY(-50%)',
-                                        background: 'transparent',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '0.35rem',
+                                        padding: '0.35rem 0.65rem',
+                                        borderRadius: '0.25rem',
+                                        fontSize: '0.75rem',
+                                        fontWeight: 600,
                                         border: 'none',
-                                        color: '#94A3B8',
                                         cursor: 'pointer',
+                                        background: viewMode === 'cards' ? '#FFFFFF' : 'transparent',
+                                        color: viewMode === 'cards' ? '#B88E4B' : '#64748B',
+                                        boxShadow: viewMode === 'cards' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
                                     }}
                                 >
-                                    &times;
+                                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zm-11 11h7v7H3v-7zm11 0h7v7h-7v-7z" />
+                                    </svg>
+                                    <span>Cards (4x4)</span>
                                 </button>
-                            )}
+                                <button
+                                    type="button"
+                                    onClick={() => setViewMode('table')}
+                                    title="Table View"
+                                    style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '0.35rem',
+                                        padding: '0.35rem 0.65rem',
+                                        borderRadius: '0.25rem',
+                                        fontSize: '0.75rem',
+                                        fontWeight: 600,
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        background: viewMode === 'table' ? '#FFFFFF' : 'transparent',
+                                        color: viewMode === 'table' ? '#B88E4B' : '#64748B',
+                                        boxShadow: viewMode === 'table' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                                    }}
+                                >
+                                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M3 4h18v3H3V4zm0 6h18v3H3v-3zm0 6h18v3H3v-3z" />
+                                    </svg>
+                                    <span>Table</span>
+                                </button>
+                            </div>
+
+                            <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 500 }}>
+                                Showing <strong>{filteredOutlets.length}</strong> of {outlets.length}
+                            </span>
                         </div>
                     </div>
 
-                    {/* Table View */}
-                    <div style={{ overflowX: 'auto' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.875rem' }}>
-                            <thead>
-                                <tr style={{ borderBottom: '1px solid #E2E8F0', background: '#F8FAFC' }}>
-                                    <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                        Outlet
-                                    </th>
-                                    <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                        Address &amp; Location
-                                    </th>
-                                    <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                        Contact Info
-                                    </th>
-                                    <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                        Timings / Notes
-                                    </th>
-                                    <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                        Products
-                                    </th>
-                                    <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                        Shipping Zones
-                                    </th>
-                                    <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                        Status
-                                    </th>
-                                    <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right' }}>
-                                        Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredOutlets.length === 0 ? (
-                                    <tr>
-                                        <td colSpan="8" style={{ padding: '3rem 1rem', textAlign: 'center', color: '#64748B' }}>
-                                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem' }}>
-                                                <MapPinIcon width="40" height="40" style={{ color: '#CBD5E1' }} />
-                                                <div>
-                                                    <p style={{ fontWeight: 600, color: '#334155', margin: 0 }}>No outlets found</p>
-                                                    <p style={{ fontSize: '0.8125rem', color: '#94A3B8', marginTop: '0.25rem' }}>
-                                                        {search ? 'Try clearing your search query' : 'Get started by creating your first outlet'}
-                                                    </p>
+                    {/* Responsive Grid & Modern Card Styles */}
+                    <style>{`
+                        .dayal-outlets-4-grid {
+                            display: grid;
+                            grid-template-columns: repeat(4, minmax(0, 1fr));
+                            gap: 1.25rem;
+                            padding: 1.25rem;
+                            box-sizing: border-box;
+                        }
+                        @media (max-width: 1400px) {
+                            .dayal-outlets-4-grid {
+                                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+                                gap: 1rem !important;
+                                padding: 1rem !important;
+                            }
+                        }
+                        @media (max-width: 1024px) {
+                            .dayal-outlets-4-grid {
+                                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                            }
+                        }
+                        @media (max-width: 640px) {
+                            .dayal-outlets-4-grid {
+                                grid-template-columns: 1fr !important;
+                                padding: 0.75rem !important;
+                            }
+                        }
+                        .dayal-outlet-modern-card {
+                            background: #FFFFFF;
+                            border-radius: 0.875rem;
+                            border: 1px solid #E2E8F0;
+                            overflow: hidden;
+                            display: flex;
+                            flex-direction: column;
+                            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+                            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+                            position: relative;
+                        }
+                        .dayal-outlet-modern-card:hover {
+                            transform: translateY(-4px);
+                            box-shadow: 0 16px 28px -6px rgba(15, 23, 42, 0.1), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+                            border-color: #CBD5E1;
+                        }
+                        .dayal-outlet-modern-card:hover .dayal-card-zoom-img {
+                            transform: scale(1.06);
+                        }
+                        .dayal-card-zoom-img {
+                            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                        }
+                        .dayal-card-action-btn {
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 0.25rem;
+                            padding: 0.35rem 0.65rem;
+                            border-radius: 0.375rem;
+                            font-size: 0.75rem;
+                            font-weight: 600;
+                            text-decoration: none;
+                            transition: all 0.15s ease;
+                            border: 1px solid #CBD5E1;
+                            background: #FFFFFF;
+                            color: #334155;
+                            cursor: pointer;
+                        }
+                        .dayal-card-action-btn:hover {
+                            background: #F8FAFC;
+                            border-color: #94A3B8;
+                            color: #0F172A;
+                        }
+                        .dayal-card-action-delete:hover {
+                            background: #FEF2F2 !important;
+                            border-color: #FCA5A5 !important;
+                            color: #DC2626 !important;
+                        }
+                    `}</style>
+
+                    {/* Empty State */}
+                    {filteredOutlets.length === 0 ? (
+                        <div style={{ padding: '3.5rem 1.5rem', textAlign: 'center', color: '#64748B' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem' }}>
+                                <MapPinIcon width="44" height="44" style={{ color: '#CBD5E1' }} />
+                                <div>
+                                    <p style={{ fontWeight: 700, color: '#334155', fontSize: '1.05rem', margin: 0 }}>No outlets found</p>
+                                    <p style={{ fontSize: '0.85rem', color: '#94A3B8', marginTop: '0.25rem' }}>
+                                        {search ? 'Try clearing your search filters' : 'Get started by creating your first outlet location.'}
+                                    </p>
+                                </div>
+                                <Link
+                                    href={route('admin.outlets.create')}
+                                    style={{
+                                        marginTop: '0.5rem',
+                                        padding: '0.5rem 1.25rem',
+                                        background: '#B88E4B',
+                                        color: '#FFFFFF',
+                                        borderRadius: '0.375rem',
+                                        fontSize: '0.8125rem',
+                                        textDecoration: 'none',
+                                        fontWeight: 600,
+                                        boxShadow: '0 2px 4px rgba(184, 142, 75, 0.25)',
+                                    }}
+                                >
+                                    + Add First Outlet
+                                </Link>
+                            </div>
+                        </div>
+                    ) : viewMode === 'cards' ? (
+                        /* Modern 4 4 4 Cards Grid */
+                        <div className="dayal-outlets-4-grid">
+                            {filteredOutlets.map((outlet) => (
+                                <div key={outlet.id} className="dayal-outlet-modern-card">
+                                    {/* Card Visual Header / Image Banner */}
+                                    <div
+                                        style={{
+                                            position: 'relative',
+                                            height: '155px',
+                                            background: 'linear-gradient(135deg, #FAF7F2 0%, #F5EADB 100%)',
+                                            overflow: 'hidden',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        {outlet.image_url || outlet.image ? (
+                                            <img
+                                                src={outlet.image_url || outlet.image}
+                                                alt={outlet.name}
+                                                className="dayal-card-zoom-img"
+                                                onError={(e) => {
+                                                    e.target.style.display = 'none';
+                                                }}
+                                            />
+                                        ) : (
+                                            <div style={{ textAlign: 'center', color: '#B88E4B' }}>
+                                                <MapPinIcon width="40" height="40" style={{ opacity: 0.75 }} />
+                                                <div style={{ fontSize: '0.725rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginTop: '0.25rem', opacity: 0.85 }}>
+                                                    Dayal Sweets
                                                 </div>
-                                                <Link
-                                                    href={route('admin.outlets.create')}
+                                            </div>
+                                        )}
+
+                                        {/* Subtle Dark Gradient Overlay at Bottom */}
+                                        <div
+                                            style={{
+                                                position: 'absolute',
+                                                inset: 0,
+                                                background: 'linear-gradient(to top, rgba(15, 23, 42, 0.55) 0%, rgba(15, 23, 42, 0) 50%, rgba(15, 23, 42, 0.25) 100%)',
+                                                pointerEvents: 'none',
+                                            }}
+                                        />
+
+                                        {/* Top Badges Overlay */}
+                                        <div
+                                            style={{
+                                                position: 'absolute',
+                                                top: '0.65rem',
+                                                left: '0.65rem',
+                                                right: '0.65rem',
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                                pointerEvents: 'none',
+                                                zIndex: 2,
+                                            }}
+                                        >
+                                            {/* ID & Flagship Badge */}
+                                            <div style={{ display: 'flex', gap: '0.35rem', pointerEvents: 'auto' }}>
+                                                <span
                                                     style={{
-                                                        marginTop: '0.5rem',
-                                                        padding: '0.45rem 1rem',
-                                                        background: '#B88E4B',
+                                                        background: 'rgba(15, 23, 42, 0.75)',
                                                         color: '#FFFFFF',
+                                                        padding: '0.2rem 0.5rem',
                                                         borderRadius: '0.375rem',
-                                                        fontSize: '0.8125rem',
-                                                        textDecoration: 'none',
-                                                        fontWeight: 600,
+                                                        fontSize: '0.6875rem',
+                                                        fontWeight: 700,
+                                                        letterSpacing: '0.04em',
+                                                        backdropFilter: 'blur(6px)',
+                                                        border: '1px solid rgba(255, 255, 255, 0.2)',
                                                     }}
                                                 >
-                                                    Add First Outlet
-                                                </Link>
+                                                    #{outlet.id}
+                                                </span>
+                                                {outlet.is_flagship && (
+                                                    <span
+                                                        style={{
+                                                            background: 'linear-gradient(135deg, #B88E4B 0%, #D4AF37 100%)',
+                                                            color: '#FFFFFF',
+                                                            padding: '0.2rem 0.55rem',
+                                                            borderRadius: '0.375rem',
+                                                            fontSize: '0.6875rem',
+                                                            fontWeight: 700,
+                                                            letterSpacing: '0.02em',
+                                                            boxShadow: '0 2px 6px rgba(184, 142, 75, 0.4)',
+                                                        }}
+                                                    >
+                                                        ★ Flagship
+                                                    </span>
+                                                )}
                                             </div>
-                                        </td>
+
+                                            {/* Status Badge */}
+                                            <div style={{ pointerEvents: 'auto' }}>
+                                                {getStatusBadge(outlet)}
+                                            </div>
+                                        </div>
+
+                                        {/* Bottom Overlay Pill: City */}
+                                        {outlet.city && (
+                                            <div
+                                                style={{
+                                                    position: 'absolute',
+                                                    bottom: '0.6rem',
+                                                    left: '0.65rem',
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    gap: '0.3rem',
+                                                    background: 'rgba(15, 23, 42, 0.75)',
+                                                    backdropFilter: 'blur(6px)',
+                                                    color: '#FFFFFF',
+                                                    padding: '0.2rem 0.55rem',
+                                                    borderRadius: '0.375rem',
+                                                    fontSize: '0.7rem',
+                                                    fontWeight: 600,
+                                                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                                                    zIndex: 2,
+                                                }}
+                                            >
+                                                <MapPinIcon width="11" height="11" style={{ color: '#FCD34D' }} />
+                                                <span>{outlet.city}{outlet.state ? `, ${outlet.state}` : ''}</span>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Card Content Body */}
+                                    <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', flex: 1, gap: '0.65rem' }}>
+                                        {/* Title & Subtitle */}
+                                        <div>
+                                            <h3
+                                                style={{
+                                                    margin: 0,
+                                                    fontSize: '1.025rem',
+                                                    fontWeight: 700,
+                                                    color: '#0F172A',
+                                                    lineHeight: 1.35,
+                                                }}
+                                            >
+                                                {outlet.name}
+                                            </h3>
+                                            {outlet.subtitle && (
+                                                <p style={{ margin: '0.15rem 0 0 0', fontSize: '0.75rem', color: '#64748B', fontWeight: 500 }}>
+                                                    {outlet.subtitle}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        {/* Address & Direct Map Link */}
+                                        <div style={{ fontSize: '0.8125rem', color: '#334155', lineHeight: 1.45 }}>
+                                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.4rem' }}>
+                                                <MapPinIcon width="14" height="14" style={{ color: '#B88E4B', marginTop: '2px', flexShrink: 0 }} />
+                                                <span style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', flex: 1 }}>
+                                                    {outlet.address || 'Address not configured'}
+                                                </span>
+                                            </div>
+                                            <div style={{ marginTop: '0.35rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.4rem', flexWrap: 'wrap' }}>
+                                                {outlet.pincode && (
+                                                    <span style={{ fontSize: '0.7rem', color: '#64748B', background: '#F1F5F9', padding: '0.1rem 0.4rem', borderRadius: '0.25rem', fontWeight: 600 }}>
+                                                        PIN: {outlet.pincode}
+                                                    </span>
+                                                )}
+                                                {outlet.map_url && (
+                                                    <a
+                                                        href={outlet.map_url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        style={{
+                                                            fontSize: '0.72rem',
+                                                            color: '#B88E4B',
+                                                            fontWeight: 600,
+                                                            textDecoration: 'none',
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '0.2rem',
+                                                            marginLeft: 'auto',
+                                                        }}
+                                                    >
+                                                        <span>View Map</span>
+                                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                                            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
+                                                        </svg>
+                                                    </a>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Contact & Hours Info Strip */}
+                                        <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.3rem', fontSize: '0.75rem', color: '#475569' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                                {outlet.phone && (
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                                                        <PhoneIcon width="12" height="12" style={{ color: '#64748B' }} />
+                                                        <a href={`tel:${outlet.phone}`} style={{ color: '#0F172A', textDecoration: 'none', fontWeight: 600, fontSize: '0.75rem' }}>
+                                                            {outlet.phone}
+                                                        </a>
+                                                    </div>
+                                                )}
+                                                {outlet.whatsapp && (
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#059669', fontSize: '0.72rem', fontWeight: 600 }}>
+                                                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#059669' }} />
+                                                        <span>WA: {outlet.whatsapp}</span>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#64748B' }}>
+                                                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                                                    <path strokeLinecap="round" strokeWidth="2" d="M12 6v6l4 2" />
+                                                </svg>
+                                                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.72rem' }}>
+                                                    {outlet.timings || (outlet.is_coming_soon ? 'Opening Soon' : 'Standard store hours')}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {/* Micro-Metrics Segmented Bar (Products & Shipping Zones) */}
+                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.45rem', marginTop: 'auto', paddingTop: '0.5rem' }}>
+                                            <Link
+                                                href={route('admin.outlets.show', outlet.id)}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '0.35rem',
+                                                    padding: '0.45rem 0.5rem',
+                                                    borderRadius: '0.375rem',
+                                                    fontSize: '0.725rem',
+                                                    fontWeight: 600,
+                                                    background: '#FDF8F0',
+                                                    color: '#8C6226',
+                                                    border: '1px solid #E6D2B5',
+                                                    textDecoration: 'none',
+                                                    transition: 'all 0.15s ease',
+                                                }}
+                                                title={`View ${outlet.name} details & products`}
+                                            >
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                                                    <line x1="12" y1="22.08" x2="12" y2="12" />
+                                                </svg>
+                                                <span>{outlet.products_count ?? 0} Products</span>
+                                            </Link>
+
+                                            <Link
+                                                href={route('admin.outlets.shipping-zones.index', outlet.id)}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '0.35rem',
+                                                    padding: '0.45rem 0.5rem',
+                                                    borderRadius: '0.375rem',
+                                                    fontSize: '0.725rem',
+                                                    fontWeight: 600,
+                                                    background: '#EFF6FF',
+                                                    color: '#1D4ED8',
+                                                    border: '1px solid #BFDBFE',
+                                                    textDecoration: 'none',
+                                                    transition: 'all 0.15s ease',
+                                                }}
+                                                title={`Manage delivery zones for ${outlet.name}`}
+                                            >
+                                                <TruckIcon width="12" height="12" />
+                                                <span>{outlet.shipping_zones_count ?? 0} Zones</span>
+                                            </Link>
+                                        </div>
+                                    </div>
+
+                                    {/* Card Footer Actions */}
+                                    <div
+                                        style={{
+                                            padding: '0.65rem 0.85rem',
+                                            background: '#F8FAFC',
+                                            borderTop: '1px solid #E2E8F0',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            gap: '0.4rem',
+                                        }}
+                                    >
+                                        {/* Quick Active Toggle */}
+                                        <button
+                                            type="button"
+                                            onClick={() => toggleStatus(outlet.id)}
+                                            title={outlet.is_active ? 'Click to deactivate outlet' : 'Click to activate outlet'}
+                                            style={{
+                                                padding: '0.3rem 0.6rem',
+                                                borderRadius: '0.375rem',
+                                                fontSize: '0.7rem',
+                                                fontWeight: 600,
+                                                cursor: 'pointer',
+                                                border: outlet.is_active ? '1px solid #A7F3D0' : '1px solid #CBD5E1',
+                                                background: outlet.is_active ? '#ECFDF5' : '#FFFFFF',
+                                                color: outlet.is_active ? '#065F46' : '#64748B',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '0.3rem',
+                                            }}
+                                        >
+                                            <span
+                                                style={{
+                                                    width: '6px',
+                                                    height: '6px',
+                                                    borderRadius: '50%',
+                                                    background: outlet.is_active ? '#059669' : '#94A3B8',
+                                                }}
+                                            />
+                                            <span>{outlet.is_active ? 'Active' : 'Inactive'}</span>
+                                        </button>
+
+                                        {/* Action buttons (View, Edit, Delete) */}
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                                            <Link
+                                                href={route('admin.outlets.show', outlet.id)}
+                                                className="dayal-card-action-btn"
+                                                title="View Details"
+                                            >
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                    <circle cx="12" cy="12" r="3" />
+                                                </svg>
+                                                <span>View</span>
+                                            </Link>
+
+                                            <Link
+                                                href={route('admin.outlets.edit', outlet.id)}
+                                                className="dayal-card-action-btn"
+                                                title="Edit Outlet"
+                                            >
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                                </svg>
+                                                <span>Edit</span>
+                                            </Link>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => handleDeleteClick(outlet)}
+                                                className="dayal-card-action-btn dayal-card-action-delete"
+                                                title="Delete Outlet"
+                                                style={{ color: '#DC2626', borderColor: '#FECACA', background: '#FEF2F2' }}
+                                            >
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <polyline points="3 6 5 6 21 6" />
+                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        /* Table View */
+                        <div style={{ overflowX: 'auto' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.875rem' }}>
+                                <thead>
+                                    <tr style={{ borderBottom: '1px solid #E2E8F0', background: '#F8FAFC' }}>
+                                        <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                            Outlet
+                                        </th>
+                                        <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                            Address &amp; Location
+                                        </th>
+                                        <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                            Contact Info
+                                        </th>
+                                        <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                            Timings / Notes
+                                        </th>
+                                        <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                            Products
+                                        </th>
+                                        <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                            Shipping Zones
+                                        </th>
+                                        <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                            Status
+                                        </th>
+                                        <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right' }}>
+                                            Actions
+                                        </th>
                                     </tr>
-                                ) : (
-                                    filteredOutlets.map((outlet) => (
+                                </thead>
+                                <tbody>
+                                    {filteredOutlets.map((outlet) => (
                                         <tr
                                             key={outlet.id}
                                             style={{
@@ -632,11 +1138,11 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                                                 </div>
                                             </td>
                                         </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
                 </div>
             </div>
 

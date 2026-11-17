@@ -202,7 +202,7 @@ export default function AdminLogin({ status, defaultEmail = 'admin@dayalsweets.c
                     {/* Footer Nav Links */}
                     <div className="dayal-admin-login-footer-links">
                         <Link href="/" title="Return to public sweet shop">
-                            ← Back to Storefront
+                            ← Back to Website
                         </Link>
                         <Link href={route('contact')} title="Dayal Sweets Support">
                             Need Help? Contact Store →

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactQueryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DietPreferenceController;
+use App\Http\Controllers\Admin\HeaderFooterController;
 use App\Http\Controllers\Admin\OccasionController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\OutletController;
@@ -222,6 +223,13 @@ Route::middleware(['auth', 'verified', 'role:'.UserRole::Admin->value])->prefix(
         Route::get('/gallery', [PageController::class, 'gallery'])->name('gallery');
         Route::match(['put', 'patch', 'post'], '/gallery', [PageController::class, 'updateGallery'])->name('gallery.update');
         Route::post('/gallery/upload-image', [PageController::class, 'uploadGalleryImage'])->name('gallery.upload-image');
+    });
+
+    // Standalone Header & Footer Management Web Routes
+    Route::prefix('header-footer')->name('header-footer.')->group(function () {
+        Route::get('/', [HeaderFooterController::class, 'index'])->name('index');
+        Route::match(['put', 'patch', 'post'], '/', [HeaderFooterController::class, 'update'])->name('update');
+        Route::post('/upload-image', [HeaderFooterController::class, 'uploadImage'])->name('upload-image');
     });
 
     // Customer Contact Queries Management Web Routes

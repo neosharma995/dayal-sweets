@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ContactQueryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DietPreferenceController;
 use App\Http\Controllers\Admin\OccasionController;
@@ -221,5 +222,13 @@ Route::middleware(['auth', 'verified', 'role:'.UserRole::Admin->value])->prefix(
         Route::get('/gallery', [PageController::class, 'gallery'])->name('gallery');
         Route::match(['put', 'patch', 'post'], '/gallery', [PageController::class, 'updateGallery'])->name('gallery.update');
         Route::post('/gallery/upload-image', [PageController::class, 'uploadGalleryImage'])->name('gallery.upload-image');
+    });
+
+    // Customer Contact Queries Management Web Routes
+    Route::prefix('contact-queries')->name('contact-queries.')->group(function () {
+        Route::get('/', [ContactQueryController::class, 'index'])->name('index');
+        Route::get('/{query}', [ContactQueryController::class, 'show'])->name('show');
+        Route::patch('/{query}/status', [ContactQueryController::class, 'updateStatus'])->name('update-status');
+        Route::delete('/{query}', [ContactQueryController::class, 'destroy'])->name('destroy');
     });
 });

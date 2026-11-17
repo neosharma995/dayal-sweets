@@ -190,26 +190,49 @@ export default function Index({ pages = [] }) {
                                             </span>
                                         </td>
                                         <td style={{ padding: '1rem 1.25rem', textAlign: 'right' }}>
-                                            <Link
-                                                href={editUrl}
-                                                style={{
-                                                    display: 'inline-flex',
-                                                    alignItems: 'center',
-                                                    gap: '0.375rem',
-                                                    padding: '0.5rem 0.875rem',
-                                                    borderRadius: '0.375rem',
-                                                    backgroundColor: '#7A1C1C',
-                                                    color: '#FFFFFF',
-                                                    fontSize: '0.8125rem',
-                                                    fontWeight: 600,
-                                                    textDecoration: 'none',
-                                                }}
-                                            >
-                                                <span>Edit Page</span>
-                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                                                </svg>
-                                            </Link>
+                                            <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', alignItems: 'center' }}>
+                                                {page.slug === 'contact-us' && (
+                                                    <Link
+                                                        href={route('admin.contact-queries.index')}
+                                                        style={{
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '0.35rem',
+                                                            padding: '0.45rem 0.75rem',
+                                                            borderRadius: '0.375rem',
+                                                            backgroundColor: '#FEF3C7',
+                                                            color: '#92400E',
+                                                            border: '1px solid #FDE68A',
+                                                            fontSize: '0.8125rem',
+                                                            fontWeight: 600,
+                                                            textDecoration: 'none',
+                                                        }}
+                                                        title="View inquiries submitted on Contact Us form"
+                                                    >
+                                                        <span>View Queries</span>
+                                                    </Link>
+                                                )}
+                                                <Link
+                                                    href={editUrl}
+                                                    style={{
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.375rem',
+                                                        padding: '0.5rem 0.875rem',
+                                                        borderRadius: '0.375rem',
+                                                        backgroundColor: '#7A1C1C',
+                                                        color: '#FFFFFF',
+                                                        fontSize: '0.8125rem',
+                                                        fontWeight: 600,
+                                                        textDecoration: 'none',
+                                                    }}
+                                                >
+                                                    <span>Edit Page</span>
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                </Link>
+                                            </div>
                                         </td>
                                     </tr>
                                 );

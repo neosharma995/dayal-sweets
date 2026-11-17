@@ -6,12 +6,16 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\ContactQuery;
 use App\Models\DietPreference;
 use App\Models\Occasion;
 use App\Models\Page;
 use App\Models\Product;
 use App\Models\SeasonalMithai;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -109,6 +113,50 @@ class HomeController extends Controller
             'canRegister' => Route::has('register'),
             'page' => Page::getOrCreateContactUs(),
         ]);
+    }
+
+    /**
+     * Handle public Contact Us form submission.
+     */
+    public function submitContact(Request $request): JsonResponse|RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'regex:/^[0-9]{10}$/'],
+            'email' => ['required', 'email', 'max:255'],
+            'subject' => ['required', 'string', 'max:255'],
+            'requirements' => ['required', 'string', 'max:5000'],
+        ], [
+            'name.required' => 'Please enter your name.',
+            'phone.required' => 'Please enter your mobile number.',
+            'phone.regex' => 'The mobile number must be exactly 10 digits (e.g. 9999999999).',
+            'email.required' => 'Please enter your email address.',
+            'email.email' => 'Please enter a valid email address.',
+            'subject.required' => 'Please enter a subject.',
+            'requirements.required' => 'Please tell us about your requirements.',
+        ]);
+
+        $query = ContactQuery::create([
+            'name' => $validated['name'],
+            'phone' => $validated['phone'],
+            'email' => $validated['email'],
+            'subject' => $validated['subject'],
+            'requirements' => $validated['requirements'],
+            'message' => $validated['requirements'],
+            'status' => 'unread',
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+        ]);
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Thank you! Your message has been received. Our team will contact you shortly.',
+                'data' => $query,
+            ]);
+        }
+
+        return back()->with('success', 'Thank you! Your message has been received. Our team will contact you shortly.');
     }
 
     /**

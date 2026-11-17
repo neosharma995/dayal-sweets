@@ -29,6 +29,8 @@ Route::middleware('auth')->prefix('checkout')->name('checkout.')->group(function
 // Route::post('/webhook/razorpay', [CheckoutController::class, 'handleWebhook'])->name('razorpay.webhook');
 Route::get('/about-us', [HomeController::class, 'about'])->name('about-us');
 Route::get('/contact-us', [HomeController::class, 'contact'])->name('contact');
+Route::post('/contact-us', [HomeController::class, 'submitContact'])->name('contact.submit');
+Route::post('/contact-us/submit', [HomeController::class, 'submitContact'])->name('contact.submit.alias');
 Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');
 Route::get('/gifting', [HomeController::class, 'gifting'])->name('gifting');
 Route::get('/dining', [HomeController::class, 'dining'])->name('dining');

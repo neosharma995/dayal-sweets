@@ -46,6 +46,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Customer Portal Routes
 Route::middleware(['auth', 'verified', 'role:'.UserRole::Customer->value])->prefix('customer')->name('customer.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/orders', [DashboardController::class, 'orders'])->name('orders');
+    Route::get('/purchased-items', [DashboardController::class, 'purchasedSweets'])->name('purchased-items');
+    Route::get('/purchased-sweets', [DashboardController::class, 'purchasedSweets'])->name('purchased-sweets');
+    Route::get('/products', [DashboardController::class, 'purchasedSweets'])->name('products');
+    Route::get('/addresses', [DashboardController::class, 'addresses'])->name('addresses');
     Route::get('/account', [AccountController::class, 'index'])->name('account');
     Route::patch('/account/profile', [AccountController::class, 'updateProfile'])->name('account.profile');
     Route::put('/account/password', [AccountController::class, 'updatePassword'])->name('account.password');

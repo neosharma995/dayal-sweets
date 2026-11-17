@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, Menu, Search, ShoppingBag, UserRound, X } from 'lucide-react';
-import { Link, usePage } from '@inertiajs/react';
+import { ChevronDown, LayoutDashboard, LogOut, Menu, Package, Search, ShoppingBag, UserRound, X } from 'lucide-react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { useCart } from '@/Context/CartContext';
 import CartDrawer from '@/Components/CartDrawer';
+import Modal from '@/Components/Modal';
 
 const navItems = [
     ['Dining', '/dining'], ['Gifting', '/gifting'], ['About Us', '/about-us'],
@@ -33,17 +34,29 @@ const shopShortcuts = [
 
 export default function Header({ auth }) {
     const { url, props } = usePage();
+    const user = auth?.user || props?.auth?.user;
+    const userInitial = user?.name ? user.name.trim().charAt(0).toUpperCase() : 'U';
+    const roles = Array.isArray(user?.roles) ? user.roles : [];
+    const isAdmin = roles.includes('admin') || roles.includes('super-admin');
+    const dashboardUrl = isAdmin ? '/admin/dashboard' : '/customer/dashboard';
+    const ordersUrl = isAdmin ? '/admin/orders' : '/customer/orders';
+    const accountUrl = isAdmin ? '/admin/account' : '/customer/account';
+
     const cartContext = useCart();
     const cartCount = cartContext?.cartCount ?? 0;
-    const openCart = cartContext?.openCart ?? (() => {});
+    const openCart = cartContext?.openCart ?? (() => { });
     const currentPath = url.split(/[?#]/, 1)[0].replace(/\/+$/, '') || '/';
     const shopActive = currentPath === '/shop' || currentPath.startsWith('/shop/') || currentPath.startsWith('/product/');
     const [mobileOpen, setMobileOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
     const [shopOpen, setShopOpen] = useState(false);
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+    const [loggingOut, setLoggingOut] = useState(false);
     const [openShopCategory, setOpenShopCategory] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const shopNavigationRef = useRef(null);
+    const userMenuRef = useRef(null);
 
     const closeMobileMenu = () => setMobileOpen(false);
     const openShopMenu = () => {
@@ -52,6 +65,42 @@ export default function Header({ auth }) {
     const toggleShopMenu = () => {
         setShopOpen((open) => !open);
     };
+
+    const handleConfirmLogout = () => {
+        setLoggingOut(true);
+        const logoutTarget = isAdmin && typeof route === 'function' && route().has('admin.logout')
+            ? route('admin.logout')
+            : (typeof route === 'function' && route().has('logout') ? route('logout') : '/logout');
+
+        router.post(logoutTarget, {}, {
+            onFinish: () => {
+                setLoggingOut(false);
+                setLogoutModalOpen(false);
+                setUserMenuOpen(false);
+            },
+        });
+    };
+
+    // Auto-close user dropdown on outside click or Escape key
+    useEffect(() => {
+        if (!userMenuOpen) return undefined;
+        const handleOutsideClick = (event) => {
+            if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+                setUserMenuOpen(false);
+            }
+        };
+        const handleEscape = (event) => {
+            if (event.key === 'Escape') {
+                setUserMenuOpen(false);
+            }
+        };
+        document.addEventListener('pointerdown', handleOutsideClick);
+        window.addEventListener('keydown', handleEscape);
+        return () => {
+            document.removeEventListener('pointerdown', handleOutsideClick);
+            window.removeEventListener('keydown', handleEscape);
+        };
+    }, [userMenuOpen]);
 
     useEffect(() => {
         if (!searchOpen) return undefined;
@@ -126,16 +175,16 @@ export default function Header({ auth }) {
                             {shopOpen && <div className="dayal-header-mega-menu" id="dayal-shop-menu">
                                 <div className="dayal-header-mega-menu-inner">
                                     <div className="dayal-header-mega-category-area">
-                                    <div className="dayal-header-mega-columns">
-                                        {shopCategories.map((category) => <section className={`dayal-header-mega-category${openShopCategory === category.title ? ' is-expanded' : ''}`} key={category.title}>
-                                            <h3><button type="button" aria-expanded={openShopCategory === category.title} onClick={() => setOpenShopCategory((open) => open === category.title ? null : category.title)}><img src={`/uploads/2026/07/${category.icon}`} alt="" loading="lazy" />{category.title}<ChevronDown size={14} aria-hidden="true" /></button></h3>
-                                            <ul>
-                                                {category.products.map(([label, slug]) => <li key={slug}><Link href={`/product/${slug}/`} onClick={() => { setShopOpen(false); closeMobileMenu(); }}>{label}</Link></li>)}
-                                                <li className="dayal-header-mega-view-all"><Link href={category.all} onClick={() => { setShopOpen(false); closeMobileMenu(); }}>{category.allLabel}</Link></li>
-                                            </ul>
-                                        </section>)}
-                                    </div>
-                                    <div className="dayal-header-mega-shortcuts"><div className="dayal-header-mega-shortcuts-inner">{shopShortcuts.map(([label, image]) => <div className="dayal-header-mega-shortcut" key={label}><img src={`/uploads/2026/07/${image}`} alt="" loading="lazy" /><span>{label}</span></div>)}</div></div>
+                                        <div className="dayal-header-mega-columns">
+                                            {shopCategories.map((category) => <section className={`dayal-header-mega-category${openShopCategory === category.title ? ' is-expanded' : ''}`} key={category.title}>
+                                                <h3><button type="button" aria-expanded={openShopCategory === category.title} onClick={() => setOpenShopCategory((open) => open === category.title ? null : category.title)}><img src={`/uploads/2026/07/${category.icon}`} alt="" loading="lazy" />{category.title}<ChevronDown size={14} aria-hidden="true" /></button></h3>
+                                                <ul>
+                                                    {category.products.map(([label, slug]) => <li key={slug}><Link href={`/product/${slug}/`} onClick={() => { setShopOpen(false); closeMobileMenu(); }}>{label}</Link></li>)}
+                                                    <li className="dayal-header-mega-view-all"><Link href={category.all} onClick={() => { setShopOpen(false); closeMobileMenu(); }}>{category.allLabel}</Link></li>
+                                                </ul>
+                                            </section>)}
+                                        </div>
+                                        <div className="dayal-header-mega-shortcuts"><div className="dayal-header-mega-shortcuts-inner">{shopShortcuts.map(([label, image]) => <div className="dayal-header-mega-shortcut" key={label}><img src={`/uploads/2026/07/${image}`} alt="" loading="lazy" /><span>{label}</span></div>)}</div></div>
                                     </div>
                                     <aside className="dayal-header-mega-promo">
                                         <h3>Crafted <span>For Every Celebration</span></h3>
@@ -178,7 +227,123 @@ export default function Header({ auth }) {
                     <div className="dayal-header-actions">
                         <div className="dayal-header-icons">
                             <button className="dayal-header-search-trigger" type="button" aria-label="Search Products" onClick={() => setSearchOpen(true)}><Search size={20} strokeWidth={1.8} aria-hidden="true" /></button>
-                            <Link href="/my-account" className="dayal-header-account" aria-label={auth?.user ? 'My account' : 'Login'}><UserRound size={20} strokeWidth={1.8} aria-hidden="true" /></Link>
+                            {user ? (
+                                <div className="dayal-header-user-wrapper" ref={userMenuRef}>
+                                    <button
+                                        type="button"
+                                        className={`dayal-header-avatar-btn ${userMenuOpen ? 'is-active' : ''}`}
+                                        onClick={() => setUserMenuOpen((prev) => !prev)}
+                                        aria-expanded={userMenuOpen}
+                                        aria-label={`Open account menu for ${user.name}`}
+                                        title={`${user.name} (${user.email})`}
+                                    >
+                                        <span className="dayal-header-avatar-text">{userInitial}</span>
+                                    </button>
+
+                                    {userMenuOpen && (
+                                        <div className="dayal-header-dropdown" role="menu">
+                                            <div className="dayal-dropdown-header">
+                                                <div className="dayal-dropdown-user-info">
+                                                    <div className="dayal-dropdown-avatar-badge">
+                                                        {userInitial}
+                                                    </div>
+                                                    <div className="dayal-dropdown-text-details">
+                                                        <div className="dayal-dropdown-name" title={user.name}>
+                                                            {user.name}
+                                                        </div>
+                                                        <div className="dayal-dropdown-email" title={user.email}>
+                                                            {user.email}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="dayal-dropdown-badge-row">
+                                                    <span className={`dayal-role-badge ${isAdmin ? 'dayal-role-badge--admin' : 'dayal-role-badge--customer'}`}>
+                                                        {isAdmin ? 'Administrator' : 'Customer Account'}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div className="dayal-dropdown-body">
+                                                <Link
+                                                    href={dashboardUrl}
+                                                    className="dayal-dropdown-item"
+                                                    onClick={() => setUserMenuOpen(false)}
+                                                >
+                                                    <span className="dayal-dropdown-icon-box">
+                                                        <LayoutDashboard size={15} />
+                                                    </span>
+                                                    <div className="dayal-dropdown-item-content">
+                                                        <span className="dayal-dropdown-item-title">Dashboard</span>
+                                                        <span className="dayal-dropdown-item-desc">
+                                                            {isAdmin ? 'Store & catalog controls' : 'Orders & items tracking'}
+                                                        </span>
+                                                    </div>
+                                                </Link>
+
+                                                <Link
+                                                    href={ordersUrl}
+                                                    className="dayal-dropdown-item"
+                                                    onClick={() => setUserMenuOpen(false)}
+                                                >
+                                                    <span className="dayal-dropdown-icon-box">
+                                                        <Package size={15} />
+                                                    </span>
+                                                    <div className="dayal-dropdown-item-content">
+                                                        <span className="dayal-dropdown-item-title">
+                                                            {isAdmin ? 'All Orders' : 'My Orders & Items'}
+                                                        </span>
+                                                        <span className="dayal-dropdown-item-desc">
+                                                            {isAdmin ? 'Manage kitchen & dispatch' : 'Purchased items & status'}
+                                                        </span>
+                                                    </div>
+                                                </Link>
+
+                                                <Link
+                                                    href={accountUrl}
+                                                    className="dayal-dropdown-item"
+                                                    onClick={() => setUserMenuOpen(false)}
+                                                >
+                                                    <span className="dayal-dropdown-icon-box">
+                                                        <UserRound size={15} />
+                                                    </span>
+                                                    <div className="dayal-dropdown-item-content">
+                                                        <span className="dayal-dropdown-item-title">Account Details</span>
+                                                        <span className="dayal-dropdown-item-desc">Profile, password & addresses</span>
+                                                    </div>
+                                                </Link>
+
+                                                <div className="dayal-dropdown-divider" />
+
+                                                <button
+                                                    type="button"
+                                                    className="dayal-dropdown-item dayal-dropdown-item--logout"
+                                                    onClick={() => {
+                                                        setUserMenuOpen(false);
+                                                        setLogoutModalOpen(true);
+                                                    }}
+                                                >
+                                                    <span className="dayal-dropdown-icon-box dayal-dropdown-icon-box--logout">
+                                                        <LogOut size={15} />
+                                                    </span>
+                                                    <div className="dayal-dropdown-item-content">
+                                                        <span className="dayal-dropdown-item-title">Sign Out</span>
+                                                        <span className="dayal-dropdown-item-desc">End your active session</span>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <Link
+                                    href="/login"
+                                    className="dayal-header-account"
+                                    aria-label="Login or create account"
+                                    title="Sign In / Register"
+                                >
+                                    <UserRound size={20} strokeWidth={1.8} aria-hidden="true" />
+                                </Link>
+                            )}
                             <button
                                 type="button"
                                 className="dayal-header-cart"
@@ -218,6 +383,78 @@ export default function Header({ auth }) {
 
             {/* Slide-over Cart Drawer */}
             <CartDrawer />
+
+            {/* Logout Confirmation Modal */}
+            <Modal show={logoutModalOpen} onClose={() => !loggingOut && setLogoutModalOpen(false)}>
+                <div style={{ padding: '24px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px' }}>
+                        <div
+                            style={{
+                                width: '48px',
+                                height: '48px',
+                                borderRadius: '50%',
+                                background: '#FEE2E2',
+                                border: '1px solid #FECACA',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: '#DC2626',
+                                flexShrink: 0,
+                            }}
+                        >
+                            <LogOut size={22} color="#DC2626" />
+                        </div>
+                        <div>
+                            <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 700, color: '#0F172A', fontFamily: 'Cormorant Garamond, serif' }}>
+                                Confirm Sign Out
+                            </h3>
+                            <span style={{ fontSize: '12px', color: '#64748B' }}>
+                                Dayal Sweets Active Session
+                            </span>
+                        </div>
+                    </div>
+
+                    <p style={{ color: '#475569', fontSize: '14px', lineHeight: '1.6', margin: '0 0 24px 0' }}>
+                        Are you sure you want to sign out, <strong>{user?.name}</strong>? Any items in your active shopping bag and addresses will remain saved for your next visit.
+                    </p>
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                        <button
+                            type="button"
+                            disabled={loggingOut}
+                            onClick={() => setLogoutModalOpen(false)}
+                            className="dayal-btn dayal-btn--outline dayal-btn--sm"
+                            style={{ padding: '8px 16px', fontSize: '13px' }}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="button"
+                            disabled={loggingOut}
+                            onClick={handleConfirmLogout}
+                            className="dayal-btn dayal-btn--primary dayal-btn--sm"
+                            style={{
+                                padding: '8px 18px',
+                                fontSize: '13px',
+                                background: '#DC2626',
+                                borderColor: '#DC2626',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                            }}
+                        >
+                            {loggingOut ? (
+                                <span>Signing out...</span>
+                            ) : (
+                                <>
+                                    <LogOut size={14} />
+                                    <span>Sign Out</span>
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </header>
     );
 }

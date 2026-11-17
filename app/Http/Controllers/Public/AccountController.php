@@ -73,6 +73,8 @@ class AccountController extends Controller
             ];
         })->toArray();
 
+        $totalItems = $userOrders->flatMap->items->sum('quantity');
+
         return Inertia::render('Customer/Account', [
             'customer' => [
                 'id' => $user->id,
@@ -83,6 +85,9 @@ class AccountController extends Controller
             ],
             'savedAddresses' => $savedAddresses,
             'orderHistory' => $orderHistory,
+            'tier' => 'Gold Mithai Club',
+            'ordersCount' => $userOrders->count(),
+            'sweetsCount' => (int) $totalItems,
         ]);
     }
 

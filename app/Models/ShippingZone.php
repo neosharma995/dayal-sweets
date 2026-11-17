@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
@@ -16,6 +17,7 @@ class ShippingZone extends Model
     protected $table = 'shipping_zones';
 
     protected $fillable = [
+        'outlet_id',
         'zone_name',
         'zone_slug',
         'zone_regions',
@@ -33,6 +35,7 @@ class ShippingZone extends Model
     protected function casts(): array
     {
         return [
+            'outlet_id' => 'integer',
             'zone_regions' => 'array',
             'is_active' => 'boolean',
             'sort_order' => 'integer',
@@ -46,12 +49,28 @@ class ShippingZone extends Model
                 $baseSlug = Str::slug($zone->zone_name);
                 $slug = $baseSlug;
                 $counter = 1;
-                while (static::where('zone_slug', $slug)->exists()) {
+                $query = static::where('zone_slug', $slug);
+                if ($zone->outlet_id) {
+                    $query->where('outlet_id', $zone->outlet_id);
+                }
+                while ($query->exists()) {
                     $slug = $baseSlug . '-' . $counter++;
+                    $query = static::where('zone_slug', $slug);
+                    if ($zone->outlet_id) {
+                        $query->where('outlet_id', $zone->outlet_id);
+                    }
                 }
                 $zone->zone_slug = $slug;
             }
         });
+    }
+
+    /**
+     * Relationship: Shipping Zone belongs to an Outlet.
+     */
+    public function outlet(): BelongsTo
+    {
+        return $this->belongsTo(Outlet::class, 'outlet_id');
     }
 
     /**

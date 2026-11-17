@@ -174,19 +174,10 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
                             )}
                         </div>
 
-                        {/* Shipping Zones */}
-                        <Link
-                            href={route('admin.shipping-zones.index')}
-                            className={`dayal-sidebar-link ${route().current('admin.shipping-zones.*') ? 'active' : ''}`}
-                        >
-                            <TruckIcon width="18" height="18" />
-                            <span>Shipping Zones</span>
-                        </Link>
-
-                        {/* Outlets Management */}
+                        {/* Outlets Management (includes per-outlet Shipping Zones) */}
                         <Link
                             href={route('admin.outlets.index')}
-                            className={`dayal-sidebar-link ${route().current('admin.outlets.*') ? 'active' : ''}`}
+                            className={`dayal-sidebar-link ${route().current('admin.outlets.*') || route().current('admin.shipping-zones.*') ? 'active' : ''}`}
                         >
                             <MapPinIcon width="18" height="18" />
                             <span>Outlets</span>

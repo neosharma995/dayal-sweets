@@ -101,9 +101,13 @@ export default function Index({ pages = [] }) {
                             {filteredPages.map((page) => {
                                 const editUrl = page.slug === 'contact-us'
                                     ? route('admin.pages.contact-us')
+                                    : page.slug === 'gallery'
+                                    ? route('admin.pages.gallery')
                                     : '#';
                                 const publicUrl = page.slug === 'contact-us'
                                     ? route('contact')
+                                    : page.slug === 'gallery'
+                                    ? route('gallery')
                                     : `/${page.slug}`;
 
                                 return (
@@ -130,7 +134,14 @@ export default function Index({ pages = [] }) {
                                                     <FileTextIcon width="18" height="18" />
                                                 </div>
                                                 <div>
-                                                    <div style={{ fontWeight: 600, color: '#0F172A' }}>{page.title}</div>
+                                                    <Link
+                                                        href={editUrl}
+                                                        style={{ fontWeight: 600, color: '#0F172A', textDecoration: 'none' }}
+                                                        onMouseEnter={(e) => (e.currentTarget.style.color = '#7A1C1C')}
+                                                        onMouseLeave={(e) => (e.currentTarget.style.color = '#0F172A')}
+                                                    >
+                                                        {page.title}
+                                                    </Link>
                                                     <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>ID: #{page.id}</div>
                                                 </div>
                                             </div>
@@ -157,6 +168,8 @@ export default function Index({ pages = [] }) {
                                         <td style={{ padding: '1rem 1.25rem', color: '#64748B', fontSize: '0.8125rem' }}>
                                             {page.slug === 'contact-us' ? (
                                                 <span>Top Bar (Heading, Subheading, Description) + Contact Info (Emails, Phone Numbers, Opening Hours)</span>
+                                            ) : page.slug === 'gallery' ? (
+                                                <span>Top Bar (Heading, Subheading, Description) + Categories &amp; Photo Gallery Items</span>
                                             ) : (
                                                 <span>Standard dynamic content</span>
                                             )}

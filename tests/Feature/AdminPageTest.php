@@ -39,6 +39,10 @@ class AdminPageTest extends TestCase
     {
         $response = $this->actingAs($this->admin)->get('/admin/pages');
         $response->assertOk();
+        $response->assertInertia(fn ($assert) => $assert
+            ->component('Admin/Pages/Index')
+            ->has('pages', 2)
+        );
     }
 
     public function test_admin_can_view_contact_us_editor(): void

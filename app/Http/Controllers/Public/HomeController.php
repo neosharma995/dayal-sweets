@@ -23,11 +23,67 @@ class HomeController extends Controller
      */
     public function index(): Response
     {
+        $products = Product::with(['category', 'variations'])
+            ->latest('id')
+            ->get()
+            ->map(function (Product $product) {
+                $hasVariations = $product->variations->isNotEmpty();
+                $minPrice = $product->min_price ?? (float) ($product->product_selling_price ?? $product->product_price ?? 0);
+
+                $price = $hasVariations
+                    ? 'From ₹'.number_format((float) $minPrice, 2)
+                    : (float) ($product->product_selling_price ?? $product->product_price ?? 0);
+
+                $image = $product->product_image;
+                if ($image && ! str_starts_with($image, 'http') && ! str_starts_with($image, '/')) {
+                    $image = '/storage/'.$image;
+                }
+                if (! $image) {
+                    $image = '/uploads/2026/07/kaaju-katli.png';
+                }
+
+                $catName = $product->category?->category_name ?? 'Sweets';
+                $catSlug = $product->category?->category_slug ?? Str::slug($catName);
+
+                $variations = $product->variations->map(fn ($v) => [
+                    'id' => $v->id,
+                    'label' => $v->variation_name,
+                    'price' => (float) ($v->selling_price ?? $v->price ?? 0),
+                ])->values()->all();
+
+                return [
+                    'id' => $product->id,
+                    'name' => $product->product_name,
+                    'category' => strtoupper($catName),
+                    'categorySlug' => $catSlug,
+                    'slug' => Str::slug($product->product_name),
+                    'badge' => 'BEST SELLER',
+                    'description' => $product->product_description,
+                    'image' => $image,
+                    'price' => $price,
+                    'rating' => (float) ($product->rating ?? 4.9),
+                    'ratingCount' => (int) ($product->rating_count ?? 12),
+                    'variations' => $variations,
+                ];
+            });
+
+        $categories = Category::orderBy('category_name')
+            ->get()
+            ->map(fn (Category $cat) => [
+                'id' => $cat->id,
+                'name' => $cat->category_name,
+                'slug' => $cat->category_slug ?? Str::slug($cat->category_name),
+                'image' => $cat->category_image,
+                'description' => $cat->category_description,
+            ]);
+
         return Inertia::render('Welcome', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'laravelVersion' => Application::VERSION,
             'phpVersion' => PHP_VERSION,
+            'products' => $products,
+            'categories' => $categories,
         ]);
     }
 

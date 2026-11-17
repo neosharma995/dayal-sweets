@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -144,5 +145,15 @@ class Outlet extends Model
                 return Storage::disk('public')->url($this->image);
             }
         );
+    }
+
+    /**
+     * Relationship: Outlet offers many Products.
+     */
+    public function products(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'outlet_products', 'outlet_id', 'product_id')
+            ->withPivot(['is_available', 'stock_qty'])
+            ->withTimestamps();
     }
 }

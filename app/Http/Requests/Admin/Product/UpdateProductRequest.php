@@ -58,6 +58,13 @@ class UpdateProductRequest extends FormRequest
             }
         }
 
+        if (is_string($this->input('outlet_ids'))) {
+            $decoded = json_decode($this->input('outlet_ids'), true);
+            if (is_array($decoded)) {
+                $mergeData['outlet_ids'] = $decoded;
+            }
+        }
+
         foreach (['category_id', 'seasonal_mithai_id', 'occasion_id', 'diet_preference_id', 'product_tag_id', 'tax_rate_id'] as $idField) {
             if ($this->has($idField) && ($this->input($idField) === '' || $this->input($idField) === 'null')) {
                 $mergeData[$idField] = null;
@@ -86,6 +93,8 @@ class UpdateProductRequest extends FormRequest
             'tax_status' => ['nullable', 'string', 'in:taxable,none,shipping'],
             'tag_ids' => ['nullable', 'array'],
             'tag_ids.*' => ['integer', 'exists:product_tags,id'],
+            'outlet_ids' => ['nullable', 'array'],
+            'outlet_ids.*' => ['integer', 'exists:outlets,id'],
             'product_name' => ['sometimes', 'required', 'string', 'max:255'],
             'product_description' => ['nullable', 'string'],
             'product_price' => ['sometimes', 'required', 'numeric', 'min:0'],

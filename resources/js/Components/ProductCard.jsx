@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from '@inertiajs/react';
+import { useCart } from '@/Context/CartContext';
 
 /**
  * Reusable Product Card Component
@@ -9,6 +10,7 @@ export default function ProductCard({ product, onAddToCart }) {
     const hasVariations = product.variations && product.variations.length > 0;
     const [selectedVarIndex, setSelectedVarIndex] = useState(hasVariations ? 0 : null);
     const [qty, setQty] = useState(1);
+    const [isAdded, setIsAdded] = useState(false);
 
     const pillsRef = useRef(null);
     const isDraggingRef = useRef(false);
@@ -103,12 +105,19 @@ export default function ProductCard({ product, onAddToCart }) {
         }
     }
 
+    const cartContext = useCart();
+    const fallbackAddToCart = cartContext?.addToCart;
+
     const handleAddToCart = (e) => {
         e.preventDefault();
         e.stopPropagation();
         if (onAddToCart) {
             onAddToCart(product, qty, activeVariation);
+        } else if (fallbackAddToCart) {
+            fallbackAddToCart(product, qty, activeVariation);
         }
+        setIsAdded(true);
+        setTimeout(() => setIsAdded(false), 1200);
     };
 
     const productHref = product.slug ? `/product/${product.slug}/` : '/shop';
@@ -218,26 +227,42 @@ export default function ProductCard({ product, onAddToCart }) {
 
                         <button
                             type="button"
-                            className="product-card__add-btn dayal-add-circle-btn dayal-add-btn"
-                            title="Add to Cart"
+                            className={`product-card__add-btn dayal-add-circle-btn dayal-add-btn ${isAdded ? 'is-added' : ''}`}
+                            title={isAdded ? 'Added to Cart!' : 'Add to Cart'}
                             aria-label={`Add ${product.name} to Cart`}
                             onClick={handleAddToCart}
                         >
-                            <svg
-                                width="16"
-                                height="16"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                aria-hidden="true"
-                            >
-                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                                <line x1="3" y1="6" x2="21" y2="6" />
-                                <path d="M16 10a4 4 0 0 1-8 0" />
-                            </svg>
+                            {isAdded ? (
+                                <svg
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="3"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    aria-hidden="true"
+                                >
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                            ) : (
+                                <svg
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2.5"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    aria-hidden="true"
+                                >
+                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                                    <line x1="3" y1="6" x2="21" y2="6" />
+                                    <path d="M16 10a4 4 0 0 1-8 0" />
+                                </svg>
+                            )}
                         </button>
                     </div>
                 </div>

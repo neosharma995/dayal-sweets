@@ -11,6 +11,7 @@ export default function WooCommerceProductForm({
     tags = [],
     attributes = [],
     taxRates = [],
+    outlets = [],
     isEdit = false,
     product = null,
     onSubmit,
@@ -34,6 +35,12 @@ export default function WooCommerceProductForm({
             ? initialData.tag_ids.map(Number)
             : (initialData.product_tag_id ? [Number(initialData.product_tag_id)] : [])
     );
+    const [selectedOutletIds, setSelectedOutletIds] = useState(() => {
+        if (Array.isArray(initialData.outlet_ids) && initialData.outlet_ids.length > 0) {
+            return initialData.outlet_ids.map(Number);
+        }
+        return [];
+    });
     const [regularPrice, setRegularPrice] = useState(initialData.product_price || '');
     const [salePrice, setSalePrice] = useState(initialData.product_selling_price || '');
     const [stockQty, setStockQty] = useState(initialData.product_qty ?? 1);
@@ -356,6 +363,21 @@ export default function WooCommerceProductForm({
         );
     };
 
+    const handleOutletToggle = (outletId) => {
+        const idNum = Number(outletId);
+        setSelectedOutletIds((prev) =>
+            prev.includes(idNum) ? prev.filter((id) => id !== idNum) : [...prev, idNum]
+        );
+    };
+
+    const selectAllOutlets = () => {
+        setSelectedOutletIds(outlets.map((o) => Number(o.id)));
+    };
+
+    const selectNoneOutlets = () => {
+        setSelectedOutletIds([]);
+    };
+
     // Form Submission
     const handleFormSubmit = (e) => {
         e.preventDefault();
@@ -384,6 +406,7 @@ export default function WooCommerceProductForm({
             tax_rate_id: taxRateId ? Number(taxRateId) : null,
             tax_status: taxStatus,
             tag_ids: selectedTagIds,
+            outlet_ids: selectedOutletIds,
             product_name: title,
             product_description: description,
             product_price: finalRegularPrice,
@@ -1772,6 +1795,91 @@ export default function WooCommerceProductForm({
                                     {processing ? 'Saving...' : isEdit ? 'Update Product' : 'Publish Product'}
                                 </button>
                             </div>
+                        </div>
+                    </div>
+
+                    {/* Meta Box: Outlets / Locations */}
+                    <div className="dayal-wc-meta-box">
+                        <div className="dayal-wc-meta-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                                <svg width="15" height="15" fill="none" stroke="#B88E4B" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <span>Outlets / Locations</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                                <button
+                                    type="button"
+                                    onClick={selectAllOutlets}
+                                    style={{ fontSize: '0.7rem', color: '#B88E4B', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontWeight: 600 }}
+                                >
+                                    Select All
+                                </button>
+                                <span style={{ fontSize: '0.7rem', color: '#CBD5E1' }}>|</span>
+                                <button
+                                    type="button"
+                                    onClick={selectNoneOutlets}
+                                    style={{ fontSize: '0.7rem', color: '#64748B', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                                >
+                                    None
+                                </button>
+                            </div>
+                        </div>
+                        <div className="dayal-wc-meta-body">
+                            <p style={{ fontSize: '0.75rem', color: '#64748B', margin: '0 0 0.65rem 0', lineHeight: 1.4 }}>
+                                Choose which outlets offer this sweet ({selectedOutletIds.length} of {outlets.length} selected):
+                            </p>
+                            <div style={{ maxHeight: '200px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                                {outlets.length === 0 ? (
+                                    <span style={{ fontSize: '0.8125rem', color: '#94A3B8' }}>No outlets found.</span>
+                                ) : (
+                                    outlets.map((o) => {
+                                        const isChecked = selectedOutletIds.includes(Number(o.id));
+                                        return (
+                                            <label
+                                                key={o.id}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between',
+                                                    gap: '0.5rem',
+                                                    fontSize: '0.8125rem',
+                                                    color: '#0F172A',
+                                                    cursor: 'pointer',
+                                                    padding: '0.35rem 0.5rem',
+                                                    borderRadius: '0.375rem',
+                                                    border: isChecked ? '1px solid #E6D2B5' : '1px solid #F1F5F9',
+                                                    background: isChecked ? '#FDF8F0' : '#FAFAFA',
+                                                    transition: 'all 0.15s ease',
+                                                }}
+                                            >
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={isChecked}
+                                                        onChange={() => handleOutletToggle(o.id)}
+                                                        style={{ accentColor: '#B88E4B' }}
+                                                    />
+                                                    <span style={{ fontWeight: isChecked ? 600 : 400 }}>
+                                                        {o.name}
+                                                    </span>
+                                                </div>
+                                                {o.city && (
+                                                    <span style={{ fontSize: '0.7rem', color: isChecked ? '#8C6226' : '#94A3B8', fontWeight: 500 }}>
+                                                        {o.city}
+                                                    </span>
+                                                )}
+                                            </label>
+                                        );
+                                    })
+                                )}
+                            </div>
+                            {errors.outlet_ids && (
+                                <p style={{ color: '#E11D48', fontSize: '0.75rem', marginTop: '0.5rem' }}>
+                                    {errors.outlet_ids}
+                                </p>
+                            )}
                         </div>
                     </div>
 

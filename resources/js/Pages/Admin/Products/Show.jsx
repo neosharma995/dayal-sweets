@@ -304,6 +304,44 @@ export default function Show({ product }) {
                             </p>
                         </div>
 
+                        {/* Outlets Availability Card */}
+                        <div className="dayal-admin-card">
+                            <div className="dayal-admin-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <h3 style={{ margin: 0, fontSize: '1rem', color: '#0F172A' }}>Available at Outlets</h3>
+                                <span style={{ fontSize: '0.75rem', color: '#8C6226', fontWeight: 600 }}>
+                                    {Array.isArray(product.outlets) ? product.outlets.length : 0} Outlets
+                                </span>
+                            </div>
+                            {!Array.isArray(product.outlets) || product.outlets.length === 0 ? (
+                                <p style={{ color: '#64748B', fontSize: '0.8125rem', margin: 0 }}>This product is not linked to any outlets yet.</p>
+                            ) : (
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                                    {product.outlets.map((outlet) => (
+                                        <Link
+                                            key={outlet.id}
+                                            href={route('admin.outlets.show', outlet.id)}
+                                            style={{
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '0.35rem',
+                                                padding: '0.35rem 0.65rem',
+                                                borderRadius: '0.375rem',
+                                                background: '#FDF8F0',
+                                                border: '1px solid #E6D2B5',
+                                                color: '#8C6226',
+                                                fontSize: '0.8125rem',
+                                                fontWeight: 600,
+                                                textDecoration: 'none',
+                                            }}
+                                        >
+                                            <span>{outlet.name}</span>
+                                            {outlet.city && <span style={{ color: '#94A3B8', fontWeight: 400 }}>({outlet.city})</span>}
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
                         {/* Specifications List Card */}
                         <div className="dayal-admin-card">
                             <div className="dayal-admin-card-header">

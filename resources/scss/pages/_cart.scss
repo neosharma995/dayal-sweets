@@ -355,18 +355,41 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: background 0.15s, opacity 0.15s;
 
-            &:hover {
+            &:hover:not(:disabled) {
                 background: #f4ecdf;
+            }
+
+            &:disabled {
+                opacity: 0.35;
+                cursor: not-allowed;
             }
         }
 
-        .qty-number {
-            min-width: 28px;
+        .qty-number,
+        .qty-input {
+            width: 38px;
+            height: 28px;
+            border: none;
+            background: transparent;
             text-align: center;
             font-size: 13px;
             font-weight: 600;
             color: #1b1514;
+            padding: 0;
+            outline: none;
+            -moz-appearance: textfield;
+
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            &:focus {
+                background: #fdf8f0;
+            }
         }
     }
 

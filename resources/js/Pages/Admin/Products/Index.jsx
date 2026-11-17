@@ -194,12 +194,11 @@ export default function Index({ products = [], filters = {} }) {
                                     <tr>
                                         <th>Product</th>
                                         <th>Category</th>
+                                        <th>Outlets</th>
                                         <th>Regular Price</th>
                                         <th>Selling Price</th>
                                         <th>Stock Qty</th>
                                         <th>Variations</th>
-                                        <th>Galleries</th>
-                                        <th>Details</th>
                                         <th style={{ textAlign: 'right' }}>Actions</th>
                                     </tr>
                                 </thead>
@@ -278,6 +277,69 @@ export default function Index({ products = [], filters = {} }) {
                                                     )}
                                                 </td>
                                                 <td>
+                                                    {Array.isArray(product.outlets) && product.outlets.length > 0 ? (
+                                                        product.outlets.length >= 4 ? (
+                                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', maxWidth: '220px' }}>
+                                                                <span
+                                                                    style={{
+                                                                        display: 'inline-flex',
+                                                                        alignItems: 'center',
+                                                                        padding: '0.2rem 0.6rem',
+                                                                        borderRadius: '9999px',
+                                                                        fontSize: '0.72rem',
+                                                                        fontWeight: 700,
+                                                                        background: '#ECFDF5',
+                                                                        color: '#065F46',
+                                                                        border: '1px solid #A7F3D0',
+                                                                        width: 'fit-content',
+                                                                    }}
+                                                                >
+                                                                    All Outlets ({product.outlets.length})
+                                                                </span>
+                                                                <span style={{ fontSize: '0.72rem', color: '#64748B', lineHeight: 1.3 }}>
+                                                                    {product.outlets.map((o) => o.name).join(', ')}
+                                                                </span>
+                                                            </div>
+                                                        ) : (
+                                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem', maxWidth: '220px' }}>
+                                                                {product.outlets.map((o) => (
+                                                                    <span
+                                                                        key={o.id}
+                                                                        style={{
+                                                                            display: 'inline-block',
+                                                                            fontSize: '0.75rem',
+                                                                            fontWeight: 600,
+                                                                            background: '#FDF8F0',
+                                                                            color: '#8C6226',
+                                                                            padding: '0.2rem 0.55rem',
+                                                                            borderRadius: '0.375rem',
+                                                                            border: '1px solid #E6D2B5',
+                                                                            whiteSpace: 'nowrap',
+                                                                        }}
+                                                                    >
+                                                                        {o.name}
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        )
+                                                    ) : (
+                                                        <span
+                                                            style={{
+                                                                display: 'inline-block',
+                                                                fontSize: '0.72rem',
+                                                                color: '#94A3B8',
+                                                                background: '#F8FAFC',
+                                                                padding: '0.15rem 0.45rem',
+                                                                borderRadius: '0.25rem',
+                                                                border: '1px solid #E2E8F0',
+                                                                fontStyle: 'italic',
+                                                            }}
+                                                        >
+                                                            Unassigned
+                                                        </span>
+                                                    )}
+                                                </td>
+                                                <td>
                                                     <span style={{ color: '#64748B', textDecoration: discount > 0 ? 'line-through' : 'none' }}>
                                                         ₹{regularPrice.toFixed(2)}
                                                     </span>
@@ -351,16 +413,6 @@ export default function Index({ products = [], filters = {} }) {
                                                     >
                                                         {Array.isArray(product.variations) ? product.variations.length : 0} pack size{Array.isArray(product.variations) && product.variations.length === 1 ? '' : 's'}
                                                     </Link>
-                                                </td>
-                                                <td>
-                                                    <span style={{ fontSize: '0.75rem', color: '#64748B' }}>
-                                                        {Array.isArray(product.product_gallaries) ? product.product_gallaries.length : 0} photos
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <span style={{ fontSize: '0.75rem', color: '#64748B' }}>
-                                                        {Array.isArray(product.product_details) ? product.product_details.length : 0} items
-                                                    </span>
                                                 </td>
                                                 <td style={{ textAlign: 'right' }}>
                                                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>

@@ -4,6 +4,7 @@ import ProductCard from '../ProductCard';
 import Testimonials from '../Testimonials';
 import Outlets from '../Outlets';
 import Opportunities from '../Opportunities';
+import { useCart } from '@/Context/CartContext';
 
 const trustItems = [
     ['SINCE 1962', '60+ Years of Tradition', 'Frame-34.svg'],
@@ -27,7 +28,10 @@ const productCategories = [
     { name: 'Desserts', slug: 'desserts', description: 'Sweet Treats, Pure Happiness', image: '/uploads/2026/09/310f8065-fcb6-4b1f-ad85-2d3ec7b64a70.png' },
 ];
 
-function CategorySlider() {
+function CategorySlider({ categories = [] }) {
+    const activeCategories = categories && categories.length > 0 && categories.some((c) => c.image)
+        ? categories
+        : productCategories;
     const viewportRef = useRef(null);
     const trackRef = useRef(null);
     const progressTrackRef = useRef(null);
@@ -153,7 +157,7 @@ function CategorySlider() {
                         onMouseLeave={stopMouseDrag}
                     >
                         <div className="dayal-category-track" ref={trackRef}>
-                            {productCategories.map((category) => (
+                            {activeCategories.map((category) => (
                                 <article className="dayal-category-card" key={category.slug}>
                                     <Link className="dayal-category-image" href={`/shop?cats=${category.slug}`}>
                                         <img src={category.image} alt={category.name} loading="lazy" draggable="false" />
@@ -457,15 +461,40 @@ function SectionHeading({ eyebrow, children }) {
     return <header className="dayal-home-section-heading"><p>{eyebrow}</p><h2>{children}</h2></header>;
 }
 
-function BestSellers() {
-    const filters = ['All', 'Bakery', 'Best Seller', 'Beverages', 'Chinese', 'Combo', 'Desserts', 'Gift hampers', 'Himachali Special', 'Namkeen', 'North Indian', 'Snacks', 'South Indian', 'Sweets'];
+function BestSellers({ products = [], categories = [] }) {
+    const { addToCart } = useCart();
+
+    const fallbackFilters = [
+        'All', 'Bakery', 'Best Seller', 'Beverages', 'Chinese', 'Combo', 'Desserts',
+        'Gift hampers', 'Himachali Special', 'Namkeen', 'North Indian', 'Snacks',
+        'South Indian', 'Sweets'
+    ];
+
+    const filters = categories && categories.length > 0
+        ? ['All', ...categories.map((c) => c.name)]
+        : fallbackFilters;
+
     const [selected, setSelected] = useState('All');
-    const visibleProducts = selected === 'All' || selected === 'Best Seller'
-        ? bestSellers
-        : bestSellers.filter((product) =>
-            product.category.toLowerCase() === selected.toLowerCase() ||
-            product.categorySlug.toLowerCase() === selected.toLowerCase()
-        );
+
+    const displayProducts = products && products.length > 0 ? products : bestSellers;
+
+    const filteredProducts = selected === 'All'
+        ? displayProducts
+        : selected.toLowerCase() === 'best seller'
+            ? displayProducts.filter((p) => (p.badge && p.badge.toUpperCase() === 'BEST SELLER') || (p.category && p.category.toLowerCase().includes('best seller')))
+            : displayProducts.filter((product) => {
+                const cat = (product.category || '').toLowerCase();
+                const slug = (product.categorySlug || '').toLowerCase();
+                const sel = selected.toLowerCase();
+                return cat === sel || slug === sel || cat.includes(sel) || sel.includes(cat);
+            });
+
+    const visibleProducts = filteredProducts.slice(0, 10);
+
+    const handleAddToCart = (product, qty, variation) => {
+        // Add to cart with openDrawer = false: only add item, do not show the cart drawer
+        addToCart(product, qty, variation, false);
+    };
 
     return (
         <section className="dayal-home-bestsellers dayal-best-sellers-section">
@@ -494,7 +523,11 @@ function BestSellers() {
                 <div className="dayal-products-grid dayal-grid-cols-5 dayal-best-sellers-grid">
                     {visibleProducts.length > 0 ? (
                         visibleProducts.map((product) => (
-                            <ProductCard key={product.id || product.name} product={product} />
+                            <ProductCard
+                                key={product.id || product.name}
+                                product={product}
+                                onAddToCart={handleAddToCart}
+                            />
                         ))
                     ) : (
                         <div className="dayal-bs-filter-no-products" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px 15px', color: '#7A6355' }}>
@@ -890,12 +923,12 @@ function LaunchBanners() {
     );
 }
 
-export default function HomeSections() {
+export default function HomeSections({ products = [], categories = [] }) {
     return (
         <div className="dayal-home-sections">
-            <CategorySlider />
+            <CategorySlider categories={categories} />
             <LaunchBanners />
-            <BestSellers />
+            <BestSellers products={products} categories={categories} />
             <section className="dayal-home-trust" aria-label="Dayal Sweets commitments">
                 <div className="dayal-home-trust-inner dayal-home-trust-grid">
                     {trustItems.map(([title, description, icon]) => (

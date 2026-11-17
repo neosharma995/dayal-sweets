@@ -86,9 +86,6 @@ export default function ProductShow({ product: propProduct, slug: propSlug, auth
 
         setIsAdded(true);
         setTimeout(() => setIsAdded(false), 2000);
-        if (openCart) {
-            openCart();
-        }
     };
 
     const handleBuyNow = () => {
@@ -453,7 +450,6 @@ export default function ProductShow({ product: propProduct, slug: propSlug, auth
                                             },
                                             qty
                                         );
-                                        if (openCart) openCart();
                                     }}
                                 />
                             ))}

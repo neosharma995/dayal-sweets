@@ -13,15 +13,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('shipping_zones', function (Blueprint $table) {
-            if (! Schema::hasColumn('shipping_zones', 'outlet_id')) {
+        if (Schema::hasTable('shipping_zones') && !Schema::hasColumn('shipping_zones', 'outlet_id')) {
+            Schema::table('shipping_zones', function (Blueprint $table) {
                 $table->foreignId('outlet_id')
                     ->nullable()
                     ->after('id')
                     ->constrained('outlets')
-                    ->nullOnDelete();
-            }
-        });
+                    ->cascadeOnDelete();
+
+                // Drop unique constraint on zone_slug so different outlets can have identical zone slugs (e.g. 'local-delivery')
+                $table->dropUnique(['zone_slug']);
+                $table->index('zone_slug');
+                $table->index('outlet_id');
+            });
+        }
     }
 
     /**
@@ -29,12 +34,13 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('shipping_zones', function (Blueprint $table) {
-            if (Schema::hasColumn('shipping_zones', 'outlet_id')) {
+        if (Schema::hasTable('shipping_zones') && Schema::hasColumn('shipping_zones', 'outlet_id')) {
+            Schema::table('shipping_zones', function (Blueprint $table) {
                 $table->dropForeign(['outlet_id']);
                 $table->dropColumn('outlet_id');
-            }
-        });
+                $table->dropIndex(['zone_slug']);
+                $table->unique('zone_slug');
+            });
+        }
     }
 };
-

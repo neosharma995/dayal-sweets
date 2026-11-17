@@ -3,6 +3,7 @@ import { Link } from '@inertiajs/react';
 const quickLinks = [
     ['Home', '/'],
     ['About us', '/about-us'],
+    ['Testimonials', '/testimonials'],
     ['Contact Us', '/contact-us'],
     ['Privacy Policy', '/privacy-policy'],
     ['Return Policy', '/refund-returns'],

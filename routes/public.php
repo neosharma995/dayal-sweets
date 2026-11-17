@@ -9,6 +9,7 @@ use App\Http\Controllers\Public\CheckoutController;
 use App\Http\Controllers\Public\DashboardController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\ProductReviewController;
+use App\Http\Controllers\Public\TestimonialController;
 use Illuminate\Support\Facades\Route;
 
 // Public Storefront
@@ -36,6 +37,11 @@ Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('p
 Route::get('/refund-returns', [HomeController::class, 'refundReturns'])->name('refund-returns');
 Route::get('/refund-and-returns-policy', [HomeController::class, 'refundReturns'])->name('refund-returns.alias');
 Route::get('/franchise', [HomeController::class, 'franchise'])->name('franchise');
+Route::get('/testimonials', [TestimonialController::class, 'index'])->name('testimonials');
+Route::get('/testimonials/', [TestimonialController::class, 'index'])->name('testimonials.slash');
+Route::get('/reviews', [TestimonialController::class, 'index'])->name('reviews');
+Route::get('/reviews/', [TestimonialController::class, 'index'])->name('reviews.slash');
+Route::post('/testimonials', [TestimonialController::class, 'store'])->middleware('auth')->name('testimonials.store');
 Route::get('/product/{slug?}', [HomeController::class, 'product'])->name('product.show');
 Route::get('/api/outlets', function () {
     return response()->json([

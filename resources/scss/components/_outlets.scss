@@ -25,6 +25,7 @@
         opacity: 0.78;
         pointer-events: none;
         z-index: 0;
+
     }
 
     @media (max-width: 900px) {
@@ -261,6 +262,7 @@
         // Palampur Coming Soon Card Variant
         &.dayal-outlet-card-coming-soon,
         &.oto-coming-soon-card {
+
             .dayal-outlet-card-ribbon,
             .oto-coming-soon-ribbon {
                 position: absolute;

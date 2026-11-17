@@ -180,7 +180,7 @@ Route::middleware(['auth', 'verified', 'role:'.UserRole::Admin->value])->prefix(
         Route::delete('/{tax}', [TaxRateController::class, 'destroy'])->name('destroy');
     });
 
-    // Outlet Management Web Routes (CRUD & Status Workflow)
+    // Outlet Management Web Routes (CRUD, Status & Outlet Shipping Zones)
     Route::prefix('outlets')->name('outlets.')->group(function () {
         Route::get('/', [OutletController::class, 'index'])->name('index');
         Route::get('/get-all', [OutletController::class, 'index'])->name('getAll');
@@ -197,6 +197,20 @@ Route::middleware(['auth', 'verified', 'role:'.UserRole::Admin->value])->prefix(
         Route::patch('/{outlet}/toggle', [OutletController::class, 'toggleActive'])->name('toggle');
         Route::delete('/delete/{outlet}', [OutletController::class, 'destroy'])->name('deleteAlias');
         Route::delete('/{outlet}', [OutletController::class, 'destroy'])->name('destroy');
+
+        // Shipping Zones managed inside each Outlet
+        Route::prefix('{outlet}/shipping-zones')->name('shipping-zones.')->group(function () {
+            Route::get('/', [ShippingZoneController::class, 'index'])->name('index');
+            Route::get('/create', [ShippingZoneController::class, 'create'])->name('create');
+            Route::post('/', [ShippingZoneController::class, 'store'])->name('store');
+            Route::get('/{shippingZone}/edit', [ShippingZoneController::class, 'edit'])->name('edit');
+            Route::get('/{shippingZone}', [ShippingZoneController::class, 'show'])->name('show');
+            Route::match(['put', 'patch', 'post'], '/update/{shippingZone}', [ShippingZoneController::class, 'update'])->name('updateAlias');
+            Route::match(['put', 'patch'], '/{shippingZone}', [ShippingZoneController::class, 'update'])->name('update');
+            Route::patch('/{shippingZone}/toggle', [ShippingZoneController::class, 'toggleActive'])->name('toggle');
+            Route::delete('/delete/{shippingZone}', [ShippingZoneController::class, 'destroy'])->name('deleteAlias');
+            Route::delete('/{shippingZone}', [ShippingZoneController::class, 'destroy'])->name('destroy');
+        });
     });
 
     // Dynamic Pages Management Web Routes

@@ -169,6 +169,28 @@
         text-transform: uppercase;
     }
 
+    &__rating,
+    .dayal-product-card-rating {
+        display: inline-flex;
+        align-items: center;
+        gap: 3.5px;
+        line-height: 1;
+
+        .dayal-product-rating-star {
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0;
+            display: block;
+        }
+
+        .dayal-product-rating-num {
+            font-size: 11.5px;
+            font-weight: 500;
+            color: #8A8A8A;
+            line-height: 1;
+        }
+    }
+
     &__title-link,
     .dayal-product-title-link {
         text-decoration: none;
@@ -188,9 +210,9 @@
         color: #5C1520;
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-weight: 600;
-        font-size: 20px;
-        line-height: 28px;
-        letter-spacing: 0.5px;
+        font-size: 18px;
+        line-height: 24px;
+        letter-spacing: 0.3px;
         text-transform: capitalize;
         margin: 0 0 6px 0;
         transition: color 0.2s ease;
@@ -200,9 +222,9 @@
     .dayal-product-desc {
         color: #7A6355;
         font-family: 'Inter', sans-serif;
-        font-weight: 300;
-        line-height: 22px;
-        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        font-size: 13px;
         margin-bottom: 12px;
         min-height: 64px;
         display: -webkit-box;
@@ -216,48 +238,17 @@
     &__variations,
     .dayal-variation-pills-row {
         display: flex;
+        align-items: center;
         gap: 8px;
         margin: auto 0 10px 0;
-        overflow-x: auto;
-        overflow-y: hidden;
-        white-space: nowrap;
-        padding-bottom: 6px;
-        padding-top: 2px;
-        scroll-behavior: smooth;
-        -webkit-overflow-scrolling: touch;
-        touch-action: pan-x;
-        cursor: grab;
-
-        &:active {
-            cursor: grabbing;
-        }
-
-        /* Sleek luxury custom scrollbar */
-        scrollbar-width: thin;
-        scrollbar-color: rgba(123, 28, 46, 0.35) rgba(235, 228, 216, 0.4);
-
-        &::-webkit-scrollbar {
-            height: 4px;
-        }
-
-        &::-webkit-scrollbar-track {
-            background: rgba(235, 228, 216, 0.4);
-            border-radius: 999px;
-        }
-
-        &::-webkit-scrollbar-thumb {
-            background: rgba(123, 28, 46, 0.35);
-            border-radius: 999px;
-            transition: background 0.2s ease;
-        }
-
-        &:hover::-webkit-scrollbar-thumb {
-            background: #7B1C2E;
-        }
+        flex-wrap: nowrap;
     }
 
     &__var-pill,
     .dayal-var-pill-mini {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
         border: 1px solid rgba(44, 24, 16, 0.15);
         border-radius: 50px;
         padding: 5px 12px;
@@ -269,7 +260,19 @@
         background: #ffffff;
         cursor: pointer;
         transition: all 0.2s ease;
-        flex-shrink: 0;
+        max-width: 175px;
+
+        > span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .dayal-var-pill-chevron {
+            flex-shrink: 0;
+            color: #7B1C2E;
+            transition: transform 0.2s ease;
+        }
 
         &:hover {
             border-color: #7B1C2E;
@@ -285,8 +288,36 @@
             font-weight: 600;
 
             &:hover {
-                background: rgba(123, 28, 46, 0.15);
+                background: rgba(123, 28, 46, 0.14);
             }
+        }
+    }
+
+    &__var-more-pill,
+    .dayal-var-more-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px dashed rgba(123, 28, 46, 0.45);
+        border-radius: 50px;
+        padding: 5px 10px;
+        font-size: 11px;
+        line-height: 16px;
+        color: #7B1C2E;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 600;
+        background: rgba(123, 28, 46, 0.04);
+        cursor: pointer;
+        white-space: nowrap;
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: #7B1C2E;
+            color: #ffffff;
+            border-color: #7B1C2E;
+            border-style: solid;
+            box-shadow: 0 2px 8px rgba(123, 28, 46, 0.2);
         }
     }
 
@@ -505,13 +536,16 @@
         &__variations,
         .dayal-variation-pills-row {
             margin-bottom: 6px;
+            gap: 6px;
         }
 
         &__var-pill,
-        .dayal-var-pill-mini {
+        .dayal-var-pill-mini,
+        &__var-more-pill,
+        .dayal-var-more-pill {
             font-size: 10px;
             padding: 4px 8px;
-            line-height: normal;
+            line-height: 14px;
         }
 
         &__footer,
@@ -588,10 +622,202 @@
             padding: 10px;
         }
 
+        &__variations,
+        .dayal-variation-pills-row {
+            gap: 4px;
+        }
+
+        &__var-pill,
+        .dayal-var-pill-mini,
+        &__var-more-pill,
+        .dayal-var-more-pill {
+            font-size: 9.5px;
+            padding: 3px 6px;
+            line-height: 13px;
+        }
+
         &__footer,
         .dayal-product-footer {
             flex-wrap: wrap;
             gap: 6px;
         }
+    }
+}
+
+/* ==========================================================================
+   Variations Selection Popup Modal
+   ========================================================================== */
+.dayal-var-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100003;
+    background: rgba(28, 16, 8, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    animation: dayal-modal-fade-in 0.2s ease-out;
+}
+
+.dayal-var-modal-card {
+    width: 100%;
+    max-width: 420px;
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px -8px rgba(28, 16, 8, 0.25);
+    border: 1px solid rgba(201, 169, 110, 0.3);
+    overflow: hidden;
+    animation: dayal-modal-scale-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dayal-var-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 18px 20px 14px;
+    background: #FAF7F2;
+    border-bottom: 1px solid rgba(201, 169, 110, 0.25);
+
+    .dayal-var-modal-badge {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #7B1C2E;
+        margin-bottom: 4px;
+    }
+
+    .dayal-var-modal-title {
+        margin: 0;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: #1C1008;
+        line-height: 1.3;
+    }
+
+    .dayal-var-modal-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 1px solid rgba(28, 16, 8, 0.12);
+        background: #ffffff;
+        color: #7A6B55;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        padding: 0;
+        flex-shrink: 0;
+        margin-left: 12px;
+
+        &:hover {
+            background: #7B1C2E;
+            color: #ffffff;
+            border-color: #7B1C2E;
+        }
+    }
+}
+
+.dayal-var-modal-body {
+    padding: 16px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.dayal-var-modal-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1.5px solid #EAE3D8;
+    background: #FAF7F2;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: left;
+    font-family: inherit;
+
+    &:hover {
+        border-color: #7B1C2E;
+        background: rgba(123, 28, 46, 0.04);
+    }
+
+    &.is-selected {
+        border-color: #7B1C2E;
+        background: rgba(123, 28, 46, 0.08);
+
+        .dayal-var-modal-radio {
+            border-color: #7B1C2E;
+        }
+
+        .dayal-var-modal-label {
+            color: #7B1C2E;
+            font-weight: 700;
+        }
+
+        .dayal-var-modal-price {
+            color: #7B1C2E;
+            font-weight: 700;
+        }
+    }
+
+    .dayal-var-modal-radio {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2px solid #C4B5A5;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-right: 12px;
+        background: #ffffff;
+        transition: border-color 0.15s ease;
+
+        .dayal-var-modal-radio-inner {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #7B1C2E;
+        }
+    }
+
+    .dayal-var-modal-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #1C1008;
+        flex: 1;
+    }
+
+    .dayal-var-modal-price {
+        font-size: 14px;
+        font-weight: 600;
+        color: #7B1C2E;
+        margin-left: 12px;
+        white-space: nowrap;
+    }
+}
+
+@keyframes dayal-modal-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes dayal-modal-scale-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }

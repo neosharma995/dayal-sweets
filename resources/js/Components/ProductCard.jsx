@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from '@inertiajs/react';
 import { useCart } from '@/Context/CartContext';
 
@@ -7,71 +8,23 @@ import { useCart } from '@/Context/CartContext';
  * Shared across "Our Best Sellers" (homepage) and the Shop catalog page.
  */
 export default function ProductCard({ product, onAddToCart }) {
-    const hasVariations = product.variations && product.variations.length > 0;
+    const hasVariations = Boolean(product?.variations && product.variations.length > 0);
     const [selectedVarIndex, setSelectedVarIndex] = useState(hasVariations ? 0 : null);
+    const [showVariationsModal, setShowVariationsModal] = useState(false);
     const [qty, setQty] = useState(1);
     const [isAdded, setIsAdded] = useState(false);
 
-    const pillsRef = useRef(null);
-    const isDraggingRef = useRef(false);
-    const startXRef = useRef(0);
-    const scrollLeftRef = useRef(0);
-    const hasDraggedRef = useRef(false);
-
-    // Mouse wheel horizontal scrolling listener
+    // Close modal on Escape key
     useEffect(() => {
-        const el = pillsRef.current;
-        if (!el || !hasVariations) return;
-
-        const onWheel = (e) => {
-            if (e.deltaY !== 0) {
-                const maxScrollLeft = el.scrollWidth - el.clientWidth;
-                if (maxScrollLeft > 0) {
-                    const canScrollRight = e.deltaY > 0 && el.scrollLeft < maxScrollLeft - 1;
-                    const canScrollLeft = e.deltaY < 0 && el.scrollLeft > 1;
-
-                    if (canScrollRight || canScrollLeft) {
-                        e.preventDefault();
-                        el.scrollLeft += e.deltaY;
-                    }
-                }
+        if (!showVariationsModal) return;
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                setShowVariationsModal(false);
             }
         };
-
-        el.addEventListener('wheel', onWheel, { passive: false });
-        return () => el.removeEventListener('wheel', onWheel);
-    }, [hasVariations]);
-
-    // Keep active pill scrolled into visible area
-    useEffect(() => {
-        if (pillsRef.current && selectedVarIndex !== null && pillsRef.current.children[selectedVarIndex]) {
-            const activePill = pillsRef.current.children[selectedVarIndex];
-            activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-        }
-    }, [selectedVarIndex]);
-
-    // Click & Drag-to-scroll handlers
-    const handleMouseDown = (e) => {
-        if (!pillsRef.current) return;
-        isDraggingRef.current = true;
-        hasDraggedRef.current = false;
-        startXRef.current = e.pageX - pillsRef.current.offsetLeft;
-        scrollLeftRef.current = pillsRef.current.scrollLeft;
-    };
-
-    const handleMouseMove = (e) => {
-        if (!isDraggingRef.current || !pillsRef.current) return;
-        const x = e.pageX - pillsRef.current.offsetLeft;
-        const walk = x - startXRef.current;
-        if (Math.abs(walk) > 4) {
-            hasDraggedRef.current = true;
-        }
-        pillsRef.current.scrollLeft = scrollLeftRef.current - walk;
-    };
-
-    const handleMouseUp = () => {
-        isDraggingRef.current = false;
-    };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [showVariationsModal]);
 
     const activeVariation = hasVariations && selectedVarIndex !== null ? product.variations[selectedVarIndex] : null;
 
@@ -145,6 +98,23 @@ export default function ProductCard({ product, onAddToCart }) {
                     <span className="product-card__category dayal-product-category">
                         {product.category}
                     </span>
+                    <div className="product-card__rating dayal-product-card-rating">
+                        <svg
+                            className="dayal-product-rating-star"
+                            viewBox="0 0 24 24"
+                            fill="#E5A600"
+                            width="12"
+                            height="12"
+                            aria-hidden="true"
+                        >
+                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                        </svg>
+                        <span className="dayal-product-rating-num">
+                            {product.rating !== undefined && product.rating !== null && !isNaN(product.rating)
+                                ? Number(product.rating).toFixed(1)
+                                : '0.0'}
+                        </span>
+                    </div>
                 </div>
 
                 <Link href={productHref} className="product-card__title-link dayal-product-title-link">
@@ -159,33 +129,43 @@ export default function ProductCard({ product, onAddToCart }) {
 
                 {hasVariations && (
                     <div
-                        ref={pillsRef}
                         className="product-card__variations dayal-variation-pills-row"
-                        role="radiogroup"
+                        role="group"
                         aria-label="Product variations"
-                        onMouseDown={handleMouseDown}
-                        onMouseMove={handleMouseMove}
-                        onMouseUp={handleMouseUp}
-                        onMouseLeave={handleMouseUp}
                     >
-                        {product.variations.map((v, i) => (
+                        <button
+                            type="button"
+                            className="product-card__var-pill dayal-var-pill-mini active"
+                            onClick={() => product.variations.length > 1 && setShowVariationsModal(true)}
+                            aria-haspopup={product.variations.length > 1 ? 'dialog' : undefined}
+                            title={product.variations.length > 1 ? 'Click to change variation' : undefined}
+                        >
+                            <span>{activeVariation?.label || product.variations[0]?.label}</span>
+                            {product.variations.length > 1 && (
+                                <svg
+                                    className="dayal-var-pill-chevron"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                    width="12"
+                                    height="12"
+                                    aria-hidden="true"
+                                >
+                                    <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                                </svg>
+                            )}
+                        </button>
+
+                        {product.variations.length > 1 && (
                             <button
-                                key={v.label}
                                 type="button"
-                                className={`product-card__var-pill dayal-var-pill-mini ${selectedVarIndex === i ? 'active' : ''}`}
-                                role="radio"
-                                aria-checked={selectedVarIndex === i}
-                                onClick={(e) => {
-                                    if (hasDraggedRef.current) {
-                                        e.preventDefault();
-                                        return;
-                                    }
-                                    setSelectedVarIndex(i);
-                                }}
+                                className="product-card__var-more-pill dayal-var-more-pill"
+                                onClick={() => setShowVariationsModal(true)}
+                                aria-haspopup="dialog"
+                                title={`View all ${product.variations.length} variations`}
                             >
-                                {v.label}
+                                +{product.variations.length - 1} more
                             </button>
-                        ))}
+                        )}
                     </div>
                 )}
 
@@ -267,6 +247,66 @@ export default function ProductCard({ product, onAddToCart }) {
                     </div>
                 </div>
             </div>
+            {showVariationsModal && typeof document !== 'undefined' && createPortal(
+                <div
+                    className="dayal-var-modal-overlay"
+                    onClick={() => setShowVariationsModal(false)}
+                    role="presentation"
+                >
+                    <div
+                        className="dayal-var-modal-card"
+                        onClick={(e) => e.stopPropagation()}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby={`var-title-${product.id || product.name}`}
+                    >
+                        <div className="dayal-var-modal-header">
+                            <div>
+                                <span className="dayal-var-modal-badge">Available Options</span>
+                                <h3 id={`var-title-${product.id || product.name}`} className="dayal-var-modal-title">
+                                    {product.name}
+                                </h3>
+                            </div>
+                            <button
+                                type="button"
+                                className="dayal-var-modal-close"
+                                onClick={() => setShowVariationsModal(false)}
+                                aria-label="Close dialog"
+                            >
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div className="dayal-var-modal-body">
+                            {product.variations.map((v, i) => {
+                                const isSelected = selectedVarIndex === i;
+                                const priceFormatted = typeof v.price === 'number' ? v.price.toFixed(2) : v.price;
+                                return (
+                                    <button
+                                        key={v.label}
+                                        type="button"
+                                        className={`dayal-var-modal-item ${isSelected ? 'is-selected' : ''}`}
+                                        onClick={() => {
+                                            setSelectedVarIndex(i);
+                                            setShowVariationsModal(false);
+                                        }}
+                                    >
+                                        <span className="dayal-var-modal-radio">
+                                            {isSelected && <span className="dayal-var-modal-radio-inner" />}
+                                        </span>
+                                        <span className="dayal-var-modal-label">{v.label}</span>
+                                        <span className="dayal-var-modal-price">&#8377;{priceFormatted}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>,
+                document.body
+            )}
         </article>
     );
 }

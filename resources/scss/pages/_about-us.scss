@@ -1,9 +1,9 @@
-/* ==========================================================================
-   DAYAL SWEETS — ABOUT US PAGE STYLESHEET
-   100% Faithful Source of Truth Duplication of D:\dayal-sweets-old (Post 61)
-   CSS Unit Strict Requirements: Strictly PX units throughout (no rem, no em)
-   Strict File & CSS Isolation scoped under .about-page-root
-   ========================================================================== */
+// ==========================================================================
+// DAYAL SWEETS — ABOUT US PAGE STYLESHEET
+// 100% Faithful Source of Truth Duplication of D:\dayal-sweets-old (Post 61)
+// Strictly PX units throughout (no rem, no em)
+// Strict File & CSS Isolation scoped under .about-page-root
+// ==========================================================================
 
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
 
@@ -13,17 +13,17 @@
   position: relative;
   width: 100%;
 
-  /* --------------------------------------------------------------------------
-     GLOBAL SPAN COLOR FROM ORIGINAL THEME (Post 13 / rt_style.css)
-     -------------------------------------------------------------------------- */
+  // --------------------------------------------------------------------------
+  // 1. GLOBAL HIGHLIGHT COLOR
+  // --------------------------------------------------------------------------
   .rt-span-color {
     color: #7B1022 !important;
     font-weight: 600 !important;
   }
 
-  /* ==========================================================================
-     SECTION B: ABOUT DAYAL – OUR STORY
-     ========================================================================== */
+  // ==========================================================================
+  // 2. SECTION B: ABOUT DAYAL – OUR STORY
+  // ==========================================================================
   .about-story-section {
     background-color: #FDFBF7;
     padding-top: 80px;
@@ -69,7 +69,7 @@
     }
   }
 
-  /* Left Column: Video / Image Card */
+  // Left Column: Video / Image Card
   .about-story-media-wrap {
     position: relative;
     border-radius: 16px;
@@ -131,7 +131,7 @@
       right: 20px;
       bottom: 20px;
       background-color: #FAF5F0;
-      font-family: "Roboto", Sans-serif;
+      font-family: "Roboto", sans-serif;
       font-size: 12px;
       font-weight: 400;
       gap: 10px;
@@ -140,10 +140,8 @@
       line-height: 34px;
       fill: #000000;
       color: #000000;
-      border-style: solid;
-      border-width: 1px 1px 1px 1px;
-      border-color: #C9A15B;
-      border-radius: 44px 44px 44px 44px;
+      border: 1px solid #C9A15B;
+      border-radius: 44px;
       padding: 7px 15px 7px 8px;
     }
   }
@@ -191,7 +189,7 @@
     border-radius: 20px;
   }
 
-  /* Right Column: Copy */
+  // Right Column: Story Copy
   .about-story-copy {
     box-sizing: border-box;
   }
@@ -274,9 +272,9 @@
     margin-bottom: 0px;
   }
 
-  /* ==========================================================================
-     SECTION C: FOUNDER'S MESSAGE AND COMMITMENTS
-     ========================================================================== */
+  // ==========================================================================
+  // 3. SECTION C: FOUNDER'S MESSAGE AND COMMITMENTS
+  // ==========================================================================
   .about-founder-section {
     background-color: #FDFBF7;
     padding-top: 0px;
@@ -324,7 +322,7 @@
     }
   }
 
-  /* Column 1: Founder's Message */
+  // Column 1: Founder's Message
   .about-founder-col1 {
     width: 36%;
     padding: 45px 40px 0px 0px;
@@ -350,7 +348,7 @@
   }
 
   .about-founder-title {
-    font-family: "Plus Jakarta Sans", Sans-serif;
+    font-family: "Plus Jakarta Sans", sans-serif;
     font-size: 65px;
     font-weight: 400;
     line-height: 82px;
@@ -377,7 +375,7 @@
     }
   }
 
-  /* Column 2: Founder Photograph */
+  // Column 2: Founder Photograph
   .about-founder-col2 {
     width: 36%;
     display: flex;
@@ -472,7 +470,7 @@
     }
   }
 
-  /* Column 3: Our Commitments */
+  // Column 3: Our Commitments
   .about-founder-col3 {
     width: 30%;
     padding: 45px 0px 0px 40px;
@@ -489,7 +487,7 @@
   }
 
   .about-commitments-heading {
-    font-family: "Plus Jakarta Sans", Sans-serif;
+    font-family: "Plus Jakarta Sans", sans-serif;
     font-size: 13px;
     font-weight: 400;
     text-transform: uppercase;
@@ -510,7 +508,6 @@
     grid-template-columns: 1fr 1fr;
 
     @media (max-width: 1560px) {
-      display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 20px;
     }
@@ -523,15 +520,13 @@
 
   .about-commitment-card {
     display: flex;
-    flex-direction: row;
     flex-direction: column;
     gap: 10px;
-    background-color: white;
+    background-color: #FFFFFF;
     align-items: flex-start;
     padding: 22px 20px 21px 20px;
     border-radius: 20px;
     border: 1px solid #E9DCCB;
-
   }
 
   .about-commitment-icon {
@@ -551,7 +546,7 @@
   }
 
   .about-commitment-desc {
-    font-family: "Inter", Sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 14px;
     font-weight: 300;
     line-height: 20px;
@@ -576,7 +571,7 @@
 
   .about-commitments-stamp-text {
     text-align: center;
-    font-family: "Poppins", Sans-serif;
+    font-family: "Poppins", sans-serif;
     font-size: 10.5px;
     font-weight: 400;
     text-transform: uppercase;
@@ -585,9 +580,9 @@
     color: #7A6B55;
   }
 
-  /* ==========================================================================
-     SECTION D: OUR JOURNEY – TIMELINE
-     ========================================================================== */
+  // ==========================================================================
+  // 4. SECTION D: OUR JOURNEY – TIMELINE
+  // ==========================================================================
   .about-timeline-section {
     background-color: #FAF5F0;
     padding-top: 100px;
@@ -651,7 +646,7 @@
     }
   }
 
-  /* Timeline Outer Wrapper with Flower graphics */
+  // Timeline Outer Wrapper with Flower graphics
   .about-timeline-wrapper {
     position: relative;
     overflow: hidden;
@@ -690,7 +685,7 @@
     }
   }
 
-  /* Connecting Horizontal Line */
+  // Connecting Horizontal Line
   .about-timeline-line {
     position: relative;
     display: flex;
@@ -720,7 +715,7 @@
     }
   }
 
-  /* Milestone Item */
+  // Milestone Item
   .about-timeline-item {
     position: relative;
     z-index: 2;
@@ -731,7 +726,7 @@
     text-align: center;
     box-sizing: border-box;
 
-    /* Diamond connector */
+    // Diamond connector
     &::after {
       content: "";
       position: absolute;
@@ -810,9 +805,9 @@
     }
   }
 
-  /* ==========================================================================
-     SECTION E: THE SIGNATURE COLLECTION
-     ========================================================================== */
+  // ==========================================================================
+  // 5. SECTION E: THE SIGNATURE COLLECTION
+  // ==========================================================================
   .about-collection-section {
     background-color: #FAF7F2;
     border-top: 1px solid rgba(201, 169, 110, 0.4);
@@ -877,7 +872,7 @@
     }
   }
 
-  /* Two Column Layout: Left Media + Right Grid */
+  // Two Column Layout: Left Media + Right Grid
   .about-collection-layout {
     margin-top: 50px;
     display: flex;
@@ -1019,9 +1014,9 @@
     text-align: left;
   }
 
-  /* ==========================================================================
-     SECTION F: NUMBERS THAT MATTERS
-     ========================================================================== */
+  // ==========================================================================
+  // 6. SECTION F: NUMBERS THAT MATTER
+  // ==========================================================================
   .about-stats-section {
     background-color: #5C1520;
     padding-top: 48px;
@@ -1076,10 +1071,10 @@
   .about-stats-grid {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     margin-top: 36px;
-    gap: 20px;
+    gap: 45px;
     box-sizing: border-box;
 
     @media (max-width: 992px) {
@@ -1108,7 +1103,7 @@
     font-weight: 500;
     line-height: 50px;
     color: #FFFFFF;
-    margin-bottom: 8px;
+    margin-bottom: 15px;
 
     @media (max-width: 992px) {
       font-size: 35px;

@@ -3,7 +3,8 @@ import { franchiseTimeline } from '@/data/franchiseData';
 
 /**
  * Section D: How It Works?
- * 6-step horizontal timeline with connecting line & milestone nodes
+ * 6-step horizontal timeline with golden connecting line, diamond separators,
+ * and decorative floral elements matching the reference design.
  */
 export default function FranchiseTimeline() {
     return (
@@ -14,13 +15,11 @@ export default function FranchiseTimeline() {
                 </h2>
 
                 <div className="franchise-timeline-wrapper">
-                    {/* Continuous horizontal connection line */}
-                    <div className="franchise-timeline-track-line" aria-hidden="true" />
-
-                    <div className="franchise-timeline-grid">
-                        {franchiseTimeline.map((item, index) => (
+                    {/* Connecting line with 6 milestone steps and diamond separators */}
+                    <div className="franchise-timeline-line">
+                        {franchiseTimeline.map((item) => (
                             <div key={item.step} className="franchise-timeline-item">
-                                {/* Circular Icon Wrap */}
+                                {/* Circular Maroon Icon */}
                                 <div className="franchise-timeline-icon-wrap">
                                     <img
                                         src={item.icon}
@@ -28,13 +27,9 @@ export default function FranchiseTimeline() {
                                         className="franchise-timeline-icon"
                                         loading="lazy"
                                     />
-                                    {/* Connector diamond between items (desktop only, not after last) */}
-                                    {index < franchiseTimeline.length - 1 && (
-                                        <span className="franchise-timeline-diamond" aria-hidden="true" />
-                                    )}
                                 </div>
 
-                                {/* Step Number & Title */}
+                                {/* Step Content: 01, Title, Description */}
                                 <div className="franchise-timeline-content">
                                     <span className="franchise-timeline-step-num">{item.step}</span>
                                     <h3 className="franchise-timeline-step-title">{item.title}</h3>

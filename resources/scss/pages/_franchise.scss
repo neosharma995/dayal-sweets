@@ -150,12 +150,13 @@
 
     .franchise-benefits-desc {
         font-family: 'Inter', sans-serif;
-        font-size: 15px;
+        font-size: 16px;
         font-weight: 400;
         line-height: 23px;
         color: #7A6B55;
         margin: 0;
         flex-grow: 1;
+        display: block;
 
         @media (max-width: 640px) {
             font-size: 14px;
@@ -327,10 +328,8 @@
 
     .franchise-enquiry-card {
         background-color: #FFFFFF;
-        border: 1px solid #EFE4D6;
         border-radius: 16px;
-        padding: 40px;
-        box-shadow: 0 4px 24px rgba(123, 28, 46, 0.06);
+        padding: 30px 40px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -345,9 +344,9 @@
     }
 
     .franchise-enquiry-card-title {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 26px;
-        font-weight: 600;
+        font-family: "Plus Jakarta Sans", Sans-serif;
+        font-size: 32px;
+        font-weight: 400;
         color: #1C1008;
         margin: 0 0 24px 0;
 
@@ -360,8 +359,8 @@
     .franchise-form-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 16px;
-        margin-bottom: 16px;
+        gap: 30px;
+        margin-bottom: 30px;
 
         @media (max-width: 640px) {
             grid-template-columns: 1fr;
@@ -378,22 +377,21 @@
             box-sizing: border-box;
             background-color: #FAF7F2;
             border: 1px solid #E6D8C8;
-            border-radius: 8px;
+            border-radius: 0px;
             padding: 14px 16px;
             font-family: 'Inter', sans-serif;
             font-size: 14px;
             color: #1C1008;
+            height: 48px;
             outline: none;
             transition: border-color 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
 
             &:focus {
                 border-color: #7B1C2E;
-                box-shadow: 0 0 0 2px rgba(123, 28, 46, 0.12);
-                background-color: #FFFFFF;
             }
 
             &::placeholder {
-                color: #9D8A78;
+                color: #222;
                 font-weight: 400;
             }
         }
@@ -407,7 +405,7 @@
             box-sizing: border-box;
             background-color: #FAF7F2;
             border: 1px solid #E6D8C8;
-            border-radius: 8px;
+            border-radius: 0px;
             padding: 14px 16px;
             font-family: 'Inter', sans-serif;
             font-size: 14px;
@@ -419,12 +417,10 @@
 
             &:focus {
                 border-color: #7B1C2E;
-                box-shadow: 0 0 0 2px rgba(123, 28, 46, 0.12);
-                background-color: #FFFFFF;
             }
 
             &::placeholder {
-                color: #9D8A78;
+                color: #222;
                 font-weight: 400;
             }
         }
@@ -440,22 +436,26 @@
     }
 
     .franchise-form-submit-btn {
-        background-color: #7B1C2E;
-        color: #FFFFFF;
+        font-family: Inter;
+        width: 308px;
+        height: 50px;
+        padding: 0 20px;
         border: none;
-        border-radius: 6px;
-        padding: 14px 34px;
-        font-family: 'Inter', sans-serif;
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 1px;
-        text-transform: uppercase;
+        border-radius: 0;
+        background: #8B1028;
+        color: #fff;
+        font-weight: 500;
         cursor: pointer;
-        transition: background-color 250ms ease, transform 150ms ease;
+        transition: all .3s ease;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 18px;
+        letter-spacing: 0.3px;
+        margin-top: 20px;
+        text-transform: uppercase;
 
         &:hover {
             background-color: #5C1520;
-            transform: translateY(-1px);
         }
 
         @media (max-width: 640px) {
@@ -497,15 +497,19 @@
 
     // ==========================================================================
     // Section D: How It Works? (Timeline)
+    // 100% Exact Duplication of Reference Screenshot & Elementor our-journey
     // ==========================================================================
     .franchise-timeline-section {
-        background-color: #FAF5F0;
-        padding: 100px 0;
-        border-bottom: 1px solid rgba(201, 169, 110, 0.2);
+        background-color: #FAF7F2;
+        padding: 90px 0 100px 0;
         position: relative;
+        width: 100%;
+        border-bottom: 1px solid #00000033;
+
+        box-sizing: border-box;
 
         @media (max-width: 1024px) {
-            padding: 50px 0;
+            padding: 60px 0;
         }
 
         @media (max-width: 640px) {
@@ -513,114 +517,203 @@
         }
     }
 
+    .franchise-timeline-container {
+        width: 90%;
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+
     .franchise-timeline-heading {
         font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 65px;
+        font-size: 55px;
         font-weight: 500;
         color: #4A2E1F;
-        line-height: 82px;
+        line-height: 1.25;
         text-align: center;
-        margin: 0 0 60px 0;
+        margin: 0 0 70px 0;
 
         .rt-span-color {
-            font-weight: 500;
+            color: #7B1022 !important;
+            font-weight: 600 !important;
         }
 
         @media (max-width: 1024px) {
             font-size: 38px;
-            line-height: 52px;
-            margin-bottom: 35px;
+            margin-bottom: 45px;
         }
 
         @media (max-width: 640px) {
             font-size: 28px;
-            line-height: 40px;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
     }
 
     .franchise-timeline-wrapper {
         position: relative;
         width: 100%;
-    }
+        padding: 0 45px;
+        box-sizing: border-box;
 
-    .franchise-timeline-track-line {
-        position: absolute;
-        top: 30px;
-        left: 5%;
-        right: 5%;
-        height: 2px;
-        background: linear-gradient(90deg, #E2CEB5 0%, #C9A96E 50%, #E2CEB5 100%);
-        z-index: 1;
-
-        @media (max-width: 1024px) {
-            display: none;
+        // Decorative golden floral elements at both ends of the timeline
+        &::before,
+        &::after {
+            content: "";
+            position: absolute;
+            top: 30px;
+            transform: translateY(-50%);
+            width: 34px;
+            height: 31px;
+            background: url('/uploads/2026/08/flower.png') center/contain no-repeat;
+            z-index: 1;
+            pointer-events: none;
         }
-    }
 
-    .franchise-timeline-grid {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 16px;
-        position: relative;
-        z-index: 2;
+        &::before {
+            left: -30px;
+        }
+
+        &::after {
+            right: -30px;
+        }
 
         @media (max-width: 1024px) {
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px 16px;
+            padding: 0 15px;
+
+            &::before,
+            &::after {
+                display: none;
+            }
         }
 
         @media (max-width: 640px) {
-            grid-template-columns: 1fr;
-            gap: 24px;
+            padding: 0 10px;
+        }
+    }
+
+    .franchise-timeline-line {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        width: 100%;
+        box-sizing: border-box;
+        gap: 20px;
+
+        // Thin golden horizontal connecting line passing through all 6 circular icons
+        &::before {
+            content: "";
+            position: absolute;
+            top: 30px;
+            left: -45px;
+            right: -45px;
+            height: 1px;
+            background-color: #D8AE67;
+            z-index: 0;
+        }
+
+        @media (max-width: 1024px) {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px 20px;
+
+            &::before {
+                display: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            position: relative;
+
+            // Clean vertical connecting line for mobile
+            &::before {
+                content: "";
+                position: absolute;
+                top: 30px;
+                bottom: 30px;
+                left: 30px;
+                width: 1px;
+                height: auto;
+                right: auto;
+                background-color: #D8AE67;
+                display: block;
+            }
         }
     }
 
     .franchise-timeline-item {
+        position: relative;
+        z-index: 2;
+        flex: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
-        position: relative;
+        box-sizing: border-box;
+
+        // Small golden diamond separator midway between each step on the connecting line
+        &::after {
+            content: "";
+            position: absolute;
+            left: 100%;
+            top: 30px;
+            transform: translate(-50%, -50%) rotate(45deg);
+            width: 8px;
+            height: 8px;
+            background-color: #D8AE67;
+            z-index: 2;
+        }
+
+        &:last-child::after {
+            display: none;
+        }
+
+        @media (max-width: 1024px) {
+            &::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            flex-direction: row;
+            align-items: flex-start;
+            text-align: left;
+            gap: 20px;
+            width: 100%;
+
+            &::after {
+                display: none;
+            }
+        }
     }
 
     .franchise-timeline-icon-wrap {
         position: relative;
+        z-index: 2;
         width: 60px;
         height: 60px;
+        border-radius: 50%;
+        background-color: #FAF7F2;
         display: flex;
         align-items: center;
         justify-content: center;
         margin-bottom: 16px;
-        background-color: #FAF5F0;
-        border-radius: 50%;
+        flex-shrink: 0;
+
+        @media (max-width: 640px) {
+            margin-bottom: 0;
+        }
     }
 
     .franchise-timeline-icon {
         width: 60px;
         height: 60px;
+        border-radius: 50%;
         object-fit: contain;
         display: block;
-    }
-
-    .franchise-timeline-diamond {
-        position: absolute;
-        top: 50%;
-        left: calc(50% + 55px);
-        transform: translateY(-50%) rotate(45deg);
-        width: 8px;
-        height: 8px;
-        background-color: #C9A96E;
-        z-index: 2;
-        pointer-events: none;
-
-        @media (max-width: 1280px) {
-            left: calc(50% + 40px);
-        }
-
-        @media (max-width: 1024px) {
-            display: none;
-        }
     }
 
     .franchise-timeline-content {
@@ -628,36 +721,64 @@
         flex-direction: column;
         align-items: center;
         text-align: center;
-        gap: 6px;
+        box-sizing: border-box;
+        gap: 8px;
+        margin-top: 10px;
+
+        @media (max-width: 640px) {
+            align-items: flex-start;
+            text-align: left;
+        }
     }
 
     .franchise-timeline-step-num {
         font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 16px;
-        font-weight: 700;
+        font-size: 28px;
+        font-weight: 600;
         color: #5C1520;
+        line-height: 1;
+        margin-bottom: 8px;
+        display: block;
+
+        @media (max-width: 640px) {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
     }
 
     .franchise-timeline-step-title {
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 18px;
         font-weight: 600;
-        color: #000000;
-        margin: 0;
-        line-height: 24px;
+        color: #1C1008;
+        line-height: 22px;
+        margin: 0 0 6px 0;
+        text-align: center;
 
         @media (max-width: 640px) {
             font-size: 16px;
+            text-align: left;
         }
     }
 
     .franchise-timeline-step-desc {
         font-family: 'Inter', sans-serif;
-        font-size: 14px;
-        font-weight: 400;
+        font-size: 16px;
+        line-height: 20px;
+        margin: 0 auto;
+        text-align: center;
+        font-weight: 300;
         color: #7A6B55;
-        line-height: 21px;
-        margin: 0;
+
+        @media (max-width: 1024px) {
+            max-width: 220px;
+        }
+
+        @media (max-width: 640px) {
+            max-width: 100%;
+            text-align: left;
+            margin: 0;
+        }
     }
 
     // ==========================================================================

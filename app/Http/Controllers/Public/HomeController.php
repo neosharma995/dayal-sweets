@@ -393,11 +393,27 @@ class HomeController extends Controller
             $basePrice = (float) ($found->product_selling_price ?: $found->product_price ?: ($variations[0]['price'] ?? 150));
             $originalPrice = $found->product_price && (float) $found->product_price > $basePrice ? (float) $found->product_price : null;
 
+            $catName = $found->category?->category_name;
+            if (! $catName || strcasecmp($catName, 'uncategorized') === 0) {
+                if (stripos($found->product_name, 'hamper') !== false) {
+                    $catName = 'Gift hampers';
+                } elseif (stripos($found->product_name, 'namkeen') !== false || stripos($found->product_name, 'mixture') !== false) {
+                    $catName = 'Namkeen';
+                } elseif (stripos($found->product_name, 'brownie') !== false || stripos($found->product_name, 'cake') !== false) {
+                    $catName = 'Bakery';
+                } elseif (stripos($found->product_name, 'combo') !== false) {
+                    $catName = 'Combo';
+                } else {
+                    $catName = 'Sweets';
+                }
+            }
+            $catSlug = $found->category?->category_slug ?? Str::slug($catName);
+
             $dbProduct = [
                 'id' => $found->id,
                 'name' => $found->product_name,
-                'category' => strtoupper($found->category?->category_name ?? 'UNCATEGORIZED'),
-                'categorySlug' => $found->category?->category_slug ?? 'uncategorized',
+                'category' => strtoupper($catName),
+                'categorySlug' => $catSlug,
                 'slug' => $cleanSlug,
                 'description' => $found->product_description,
                 'fullDescription' => $found->product_description,

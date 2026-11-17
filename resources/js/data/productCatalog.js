@@ -7,7 +7,7 @@ export const allProducts = [
     {
         id: 8558,
         name: 'Office Tea Combo',
-        category: 'UNCATEGORIZED',
+        category: 'COMBO',
         categorySlug: 'combo',
         slug: 'office-tea-combo',
         badge: 'COMBO',

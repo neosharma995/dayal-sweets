@@ -6,6 +6,8 @@
 
 .franchise-page-root {
     width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
     background-color: #FAF7F2;
 
     // Enforce 90% container rule across all inner sections & imported components
@@ -18,6 +20,15 @@
         max-width: 100%;
         margin-left: auto;
         margin-right: auto;
+        box-sizing: border-box;
+
+        @media (max-width: 468px) {
+            width: 92%;
+        }
+
+        @media (max-width: 360px) {
+            width: 94%;
+        }
     }
 
     // Highlighting Maroon Span
@@ -32,13 +43,18 @@
         background-color: #FAF7F2;
         padding: 80px 0 75px 0;
         border-bottom: 1px solid rgba(201, 169, 110, 0.2);
+        box-sizing: border-box;
 
         @media (max-width: 1024px) {
             padding: 50px 0;
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
             padding: 40px 0;
+        }
+
+        @media (max-width: 468px) {
+            padding: 32px 0;
         }
     }
 
@@ -56,15 +72,27 @@
         }
 
         @media (max-width: 1024px) {
-            font-size: 35px;
-            line-height: 54px;
-            margin-bottom: 30px;
+            font-size: 36px;
+            line-height: 50px;
+            margin-bottom: 32px;
         }
 
-        @media (max-width: 640px) {
-            font-size: 25px;
-            line-height: 44px;
-            margin-bottom: 25px;
+        @media (max-width: 768px) {
+            font-size: 30px;
+            line-height: 40px;
+            margin-bottom: 26px;
+        }
+
+        @media (max-width: 468px) {
+            font-size: 24px;
+            line-height: 32px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 360px) {
+            font-size: 22px;
+            line-height: 30px;
+            margin-bottom: 18px;
         }
     }
 
@@ -83,9 +111,9 @@
             gap: 16px;
         }
 
-        @media (max-width: 540px) {
+        @media (max-width: 468px) {
             grid-template-columns: 1fr;
-            gap: 15px;
+            gap: 16px;
         }
     }
 
@@ -102,6 +130,7 @@
         justify-content: flex-start;
         text-align: center;
         gap: 10px;
+        box-sizing: border-box;
         transition: transform 300ms ease, box-shadow 300ms ease;
 
         &:hover {
@@ -113,6 +142,21 @@
             min-height: 300px;
             padding: 20px 12px;
         }
+
+        @media (max-width: 768px) {
+            min-height: auto;
+            padding: 22px 16px;
+        }
+
+        @media (max-width: 468px) {
+            min-height: auto;
+            padding: 20px 16px;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 360px) {
+            padding: 18px 14px;
+        }
     }
 
     .franchise-benefits-icon-wrap {
@@ -122,12 +166,22 @@
         align-items: center;
         justify-content: center;
         margin-bottom: 4px;
+
+        @media (max-width: 468px) {
+            width: 70px;
+            height: 70px;
+        }
     }
 
     .franchise-benefits-icon {
         width: 82px;
         height: 82px;
         object-fit: contain;
+
+        @media (max-width: 468px) {
+            width: 70px;
+            height: 70px;
+        }
     }
 
     .franchise-benefits-card-title {
@@ -139,6 +193,10 @@
         line-height: 22px;
         letter-spacing: 0.5px;
         margin: 0;
+
+        @media (max-width: 468px) {
+            font-size: 17px;
+        }
     }
 
     .franchise-benefits-divider {
@@ -158,9 +216,14 @@
         flex-grow: 1;
         display: block;
 
-        @media (max-width: 640px) {
-            font-size: 14px;
+        @media (max-width: 768px) {
+            font-size: 15px;
             line-height: 22px;
+        }
+
+        @media (max-width: 468px) {
+            font-size: 14px;
+            line-height: 21px;
         }
     }
 
@@ -180,20 +243,25 @@
         padding: 80px 0 75px 0;
         border-bottom: 1px solid rgba(201, 169, 110, 0.2);
         overflow: hidden;
+        box-sizing: border-box;
 
         @media (max-width: 1024px) {
             padding: 50px 0;
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
             padding: 40px 0;
+        }
+
+        @media (max-width: 468px) {
+            padding: 32px 0;
         }
     }
 
     .franchise-enquiry-decor-saffron {
         position: absolute;
         top: 10px;
-        right: -14px;
+        right: 0;
         width: 140px;
         pointer-events: none;
         z-index: 1;
@@ -201,8 +269,12 @@
 
         @media (max-width: 768px) {
             width: 90px;
-            right: -20px;
             top: 5px;
+            right: 0;
+        }
+
+        @media (max-width: 468px) {
+            width: 70px;
         }
     }
 
@@ -219,6 +291,12 @@
             width: 70px;
             right: 15px;
             top: 60px;
+        }
+
+        @media (max-width: 468px) {
+            width: 55px;
+            right: 10px;
+            top: 50px;
         }
     }
 
@@ -245,8 +323,16 @@
         text-align: center;
         margin-bottom: 48px;
 
+        @media (max-width: 1024px) {
+            margin-bottom: 36px;
+        }
+
         @media (max-width: 768px) {
-            margin-bottom: 30px;
+            margin-bottom: 28px;
+        }
+
+        @media (max-width: 468px) {
+            margin-bottom: 24px;
         }
     }
 
@@ -273,9 +359,14 @@
         letter-spacing: 4.8px;
         color: #1C1008;
 
-        @media (max-width: 640px) {
-            font-size: 12px;
+        @media (max-width: 768px) {
+            font-size: 13px;
             letter-spacing: 3px;
+        }
+
+        @media (max-width: 468px) {
+            font-size: 11.5px;
+            letter-spacing: 2px;
         }
     }
 
@@ -296,9 +387,19 @@
             line-height: 48px;
         }
 
-        @media (max-width: 640px) {
-            font-size: 26px;
-            line-height: 36px;
+        @media (max-width: 768px) {
+            font-size: 30px;
+            line-height: 40px;
+        }
+
+        @media (max-width: 468px) {
+            font-size: 24px;
+            line-height: 32px;
+        }
+
+        @media (max-width: 360px) {
+            font-size: 22px;
+            line-height: 30px;
         }
     }
 
@@ -309,8 +410,13 @@
         color: #6E5A4D;
         margin: 0;
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+            font-size: 15px;
+        }
+
+        @media (max-width: 468px) {
             font-size: 14px;
+            line-height: 20px;
         }
     }
 
@@ -324,6 +430,14 @@
             grid-template-columns: 1fr;
             gap: 30px;
         }
+
+        @media (max-width: 768px) {
+            gap: 24px;
+        }
+
+        @media (max-width: 468px) {
+            gap: 20px;
+        }
     }
 
     .franchise-enquiry-card {
@@ -333,13 +447,23 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        box-sizing: border-box;
 
         @media (max-width: 1024px) {
             padding: 30px;
         }
 
-        @media (max-width: 640px) {
-            padding: 22px 16px;
+        @media (max-width: 768px) {
+            padding: 26px 20px;
+        }
+
+        @media (max-width: 468px) {
+            padding: 20px 16px;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 360px) {
+            padding: 18px 12px;
         }
     }
 
@@ -350,9 +474,14 @@
         color: #1C1008;
         margin: 0 0 24px 0;
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+            font-size: 26px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 468px) {
             font-size: 22px;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
     }
 
@@ -362,10 +491,10 @@
         gap: 30px;
         margin-bottom: 30px;
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
             grid-template-columns: 1fr;
-            gap: 12px;
-            margin-bottom: 12px;
+            gap: 14px;
+            margin-bottom: 14px;
         }
     }
 
@@ -394,11 +523,20 @@
                 color: #222;
                 font-weight: 400;
             }
+
+            @media (max-width: 468px) {
+                height: 44px;
+                padding: 12px 14px;
+            }
         }
     }
 
     .franchise-form-field-full {
         margin-bottom: 20px;
+
+        @media (max-width: 768px) {
+            margin-bottom: 14px;
+        }
 
         textarea {
             width: 100%;
@@ -423,6 +561,11 @@
                 color: #222;
                 font-weight: 400;
             }
+
+            @media (max-width: 468px) {
+                min-height: 90px;
+                padding: 12px 14px;
+            }
         }
     }
 
@@ -436,7 +579,7 @@
     }
 
     .franchise-form-submit-btn {
-        font-family: Inter;
+        font-family: 'Inter', sans-serif;
         width: 308px;
         height: 50px;
         padding: 0 20px;
@@ -444,7 +587,6 @@
         border-radius: 0;
         background: #8B1028;
         color: #fff;
-        font-weight: 500;
         cursor: pointer;
         transition: all .3s ease;
         font-weight: 600;
@@ -453,13 +595,22 @@
         letter-spacing: 0.3px;
         margin-top: 20px;
         text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
 
         &:hover {
             background-color: #5C1520;
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+            margin-top: 16px;
+        }
+
+        @media (max-width: 468px) {
             width: 100%;
+            height: 46px;
+            font-size: 15px;
             text-align: center;
         }
     }
@@ -474,8 +625,19 @@
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 
         @media (max-width: 1024px) {
-            min-height: 360px;
-            max-height: 480px;
+            min-height: 340px;
+            max-height: 460px;
+        }
+
+        @media (max-width: 768px) {
+            min-height: 280px;
+            max-height: 380px;
+        }
+
+        @media (max-width: 468px) {
+            min-height: 220px;
+            max-height: 280px;
+            border-radius: 12px;
         }
     }
 
@@ -485,6 +647,10 @@
         object-fit: cover;
         display: block;
         border-radius: 16px;
+
+        @media (max-width: 468px) {
+            border-radius: 12px;
+        }
     }
 
     // ==========================================================================
@@ -492,7 +658,20 @@
     // ==========================================================================
     .franchise-outlets-wrapper {
         width: 100%;
+        max-width: 100%;
+        overflow: hidden;
         background-color: #FAF5F0;
+
+        .dayal-outlets-section {
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .dayal-outlets-slider-wrapper,
+        .dayal-outlets-track-container {
+            max-width: 100%;
+            overflow: hidden;
+        }
     }
 
     // ==========================================================================
@@ -504,23 +683,35 @@
         padding: 90px 0 100px 0;
         position: relative;
         width: 100%;
-        border-bottom: 1px solid #00000033;
-
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
         box-sizing: border-box;
 
         @media (max-width: 1024px) {
             padding: 60px 0;
         }
 
-        @media (max-width: 640px) {
-            padding: 40px 0;
+        @media (max-width: 768px) {
+            padding: 48px 0;
+        }
+
+        @media (max-width: 468px) {
+            padding: 36px 0;
         }
     }
 
     .franchise-timeline-container {
         width: 90%;
+        max-width: 100%;
         margin: 0 auto;
         box-sizing: border-box;
+
+        @media (max-width: 468px) {
+            width: 92%;
+        }
+
+        @media (max-width: 360px) {
+            width: 94%;
+        }
     }
 
     .franchise-timeline-heading {
@@ -542,9 +733,21 @@
             margin-bottom: 45px;
         }
 
-        @media (max-width: 640px) {
-            font-size: 28px;
-            margin-bottom: 30px;
+        @media (max-width: 768px) {
+            font-size: 32px;
+            margin-bottom: 36px;
+        }
+
+        @media (max-width: 468px) {
+            font-size: 26px;
+            margin-bottom: 28px;
+            line-height: 1.3;
+        }
+
+        @media (max-width: 360px) {
+            font-size: 22px;
+            margin-bottom: 24px;
+            line-height: 1.3;
         }
     }
 
@@ -577,16 +780,12 @@
         }
 
         @media (max-width: 1024px) {
-            padding: 0 15px;
+            padding: 0;
 
             &::before,
             &::after {
                 display: none;
             }
-        }
-
-        @media (max-width: 640px) {
-            padding: 0 10px;
         }
     }
 
@@ -615,18 +814,28 @@
         @media (max-width: 1024px) {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 40px 20px;
+            gap: 40px 24px;
 
             &::before {
                 display: none;
             }
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 36px 20px;
+
+            &::before {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
             display: flex;
             flex-direction: column;
             gap: 28px;
             position: relative;
+            padding-left: 8px;
 
             // Clean vertical connecting line for mobile
             &::before {
@@ -634,12 +843,13 @@
                 position: absolute;
                 top: 30px;
                 bottom: 30px;
-                left: 30px;
+                left: 38px;
                 width: 1px;
                 height: auto;
                 right: auto;
                 background-color: #D8AE67;
                 display: block;
+                z-index: 0;
             }
         }
     }
@@ -677,11 +887,11 @@
             }
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 600px) {
             flex-direction: row;
             align-items: flex-start;
             text-align: left;
-            gap: 20px;
+            gap: 16px;
             width: 100%;
 
             &::after {
@@ -703,7 +913,7 @@
         margin-bottom: 16px;
         flex-shrink: 0;
 
-        @media (max-width: 640px) {
+        @media (max-width: 600px) {
             margin-bottom: 0;
         }
     }
@@ -725,9 +935,13 @@
         gap: 8px;
         margin-top: 10px;
 
-        @media (max-width: 640px) {
+        @media (max-width: 600px) {
             align-items: flex-start;
             text-align: left;
+            margin-top: 2px;
+            gap: 4px;
+            flex: 1;
+            min-width: 0;
         }
     }
 
@@ -740,9 +954,14 @@
         margin-bottom: 8px;
         display: block;
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+
+        @media (max-width: 600px) {
             font-size: 20px;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
     }
 
@@ -755,9 +974,10 @@
         margin: 0 0 6px 0;
         text-align: center;
 
-        @media (max-width: 640px) {
+        @media (max-width: 600px) {
             font-size: 16px;
             text-align: left;
+            margin-bottom: 4px;
         }
     }
 
@@ -771,10 +991,18 @@
         color: #7A6B55;
 
         @media (max-width: 1024px) {
-            max-width: 220px;
+            font-size: 15px;
+            max-width: 240px;
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+            font-size: 15px;
+            max-width: 280px;
+        }
+
+        @media (max-width: 600px) {
+            font-size: 14px;
+            line-height: 20px;
             max-width: 100%;
             text-align: left;
             margin: 0;
@@ -786,6 +1014,8 @@
     // ==========================================================================
     .franchise-testimonials-wrapper {
         width: 100%;
+        max-width: 100%;
+        overflow: hidden;
         background-color: #FAF7F2;
     }
 }

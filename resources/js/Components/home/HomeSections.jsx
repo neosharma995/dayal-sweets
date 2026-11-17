@@ -322,7 +322,7 @@ const bestSellers = [
     {
         id: 3,
         name: 'Office Tea Combo',
-        category: 'UNCATEGORIZED',
+        category: 'COMBO',
         categorySlug: 'combo',
         slug: 'office-tea-combo',
         badge: 'BEST SELLER',
@@ -933,7 +933,7 @@ export default function HomeSections({ products = [], categories = [] }) {
                 <div className="dayal-home-trust-inner dayal-home-trust-grid">
                     {trustItems.map(([title, description, icon]) => (
                         <article className="dayal-home-trust-item" key={title}>
-                            <img src={`/uploads/2026/07/${icon}`} alt="" />
+                            <img src={`/uploads/2026/07/${icon}`} alt={title} width="80" height="80" />
                             <div><strong>{title}</strong><span>{description}</span></div>
                         </article>
                     ))}

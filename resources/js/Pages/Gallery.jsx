@@ -19,16 +19,19 @@ import '../../scss/pages/_gallery.scss';
  * 4. Section C: Signature Food Collection (6 Cards & View Full Menu Button)
  * 5. Section D & E: Promotional CTA & Global Footer
  */
-export default function Gallery({ auth }) {
+export default function Gallery({ auth, page }) {
+    const sections = page?.sections || {};
+
+    const topBarHeading = sections.top_bar_Heading ?? 'OUR GALLERY';
+    const topBarSubHeading = sections.top_bar_sub_heading ?? 'Every Picture Tells a Sweet Story';
+    const topBarDescription = sections.top_bar_description ?? 'Enjoy authentic Indian, Himachali, Chinese, South Indian, and Fast Food prepared fresh every day by our experienced chefs.';
+
+    const categories = sections.categories;
+    const images = sections.images;
+
     return (
         <div className="gallery-page-root">
-            <Head>
-                <title>Our Gallery | Dayal Sweets</title>
-                <meta
-                    name="description"
-                    content="Explore Dayal Sweets moments - Authentic Indian, Himachali, Chinese, South Indian, and fresh sweets crafted with love."
-                />
-            </Head>
+            <Head title={`${topBarHeading || 'Our Gallery'} | Dayal Sweets`} />
 
             {/* Existing Header Component */}
             <Header auth={auth} />
@@ -38,15 +41,15 @@ export default function Gallery({ auth }) {
                 <ContactHero
                     breadcrumbs={[
                         { label: 'HOME', url: '/' },
-                        { label: 'GALLERY', url: null },
+                        { label: topBarHeading, url: null },
                     ]}
-                    title="OUR GALLERY"
-                    subtitle="Every Picture Tells a Sweet Story"
-                    description="Enjoy authentic Indian, Himachali, Chinese, South Indian, and Fast Food prepared fresh every day by our experienced chefs."
+                    title={topBarHeading}
+                    subtitle={topBarSubHeading}
+                    description={topBarDescription}
                 />
 
                 {/* Section B: Explore Our Moments (Photo Gallery Grid & Lightbox) */}
-                <GalleryGrid />
+                <GalleryGrid categories={categories} images={images} />
 
                 {/* Section C: Signature Food Collection */}
                 <FoodCollection />

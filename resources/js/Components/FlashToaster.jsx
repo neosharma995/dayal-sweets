@@ -138,8 +138,6 @@ export default function FlashToaster() {
                         border: 'none',
                         color: '#64748B',
                         cursor: 'pointer',
-                        fontSize: '1.25rem',
-                        lineHeight: 1,
                         padding: 0,
                         transition: 'all 0.15s ease',
                         flexShrink: 0,
@@ -154,7 +152,10 @@ export default function FlashToaster() {
                     }}
                     title="Dismiss notification"
                 >
-                    &times;
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
                 </button>
 
                 {/* 4500ms Animated Countdown Progress Bar */}

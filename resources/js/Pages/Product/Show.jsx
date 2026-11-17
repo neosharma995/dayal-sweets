@@ -149,11 +149,13 @@ export default function ProductShow({ product: propProduct, slug: propSlug, auth
                     />
 
                     <div className="dayal-product-hero-inner">
-                        {/* Breadcrumbs matching image: HOME > UNCATEGORIZED > OFFICE TEA COMBO */}
+                        {/* Breadcrumbs: HOME > CATEGORY > PRODUCT */}
                         <nav className="dayal-product-breadcrumb" aria-label="Breadcrumb">
                             <Link href="/">HOME</Link>
                             <span className="breadcrumb-sep">&gt;</span>
-                            <Link href="/shop">{product.category || 'UNCATEGORIZED'}</Link>
+                            <Link href={product.categorySlug ? `/shop?category=${product.categorySlug}` : '/shop'}>
+                                {product.category || 'SWEETS'}
+                            </Link>
                             <span className="breadcrumb-sep">&gt;</span>
                             <span className="breadcrumb-current">{product.name.toUpperCase()}</span>
                         </nav>
@@ -201,7 +203,7 @@ export default function ProductShow({ product: propProduct, slug: propSlug, auth
                             {/* Right Column: Product Information & Purchase Controls */}
                             <div className="dayal-product-details-column">
                                 <div className="product-category-eyebrow">
-                                    {product.category || 'UNCATEGORIZED'}
+                                    {product.category || 'SWEETS'}
                                 </div>
 
                                 <h2 className="product-single-title">{product.name}</h2>

@@ -30,27 +30,18 @@
 
     // 02. Main Shop Layout
     .dayal-shop-layout {
+        @include dayal-container;
         display: flex;
         align-items: flex-start;
         gap: 36px;
-        max-width: 90%;
-        width: 100%;
-        margin: 0 auto;
 
         @media (max-width: 1200px) {
-            max-width: 95%;
             gap: 24px;
         }
 
         @media (max-width: 1024px) {
             flex-direction: column;
-            max-width: 100%;
-            padding: 0 16px;
             gap: 20px;
-        }
-
-        @media (max-width: 768px) {
-            padding: 0 12px;
         }
     }
 
@@ -734,18 +725,7 @@
 
     // 06. Sections Header (Curated Combos & Sweetest Deals)
     .dayal-shop-section-container {
-        max-width: 90%;
-        width: 100%;
-        margin: 0 auto;
-
-        @media (max-width: 1200px) {
-            max-width: 95%;
-        }
-
-        @media (max-width: 1024px) {
-            max-width: 100%;
-            padding: 0 16px;
-        }
+        @include dayal-container;
     }
 
     .dayal-shop-section-header {
@@ -929,6 +909,16 @@
                         line-height: 62px;
                         color: #FFFFFF;
                     }
+
+                    @media (max-width: 640px) {
+                        font-size: 24px;
+                        line-height: 1.2;
+
+                        .big-num {
+                            font-size: 56px;
+                            line-height: 1.2;
+                        }
+                    }
                 }
 
                 .dayal-deal-category-label {
@@ -953,7 +943,7 @@
                 .dayal-deal-btn-link.is-gold {
                     background-color: #DFC08A;
                     color: #5C1520;
-                    border: none;
+                    border: 1px solid #DFC08A;
                     border-radius: 0 !important;
                     padding: 8px 15px;
                     font-family: 'Inter', sans-serif;
@@ -972,8 +962,9 @@
                     transition: all 0.25s ease;
 
                     &:hover {
-                        background-color: #C9A96E;
-                        color: #3A0C14;
+                        background-color: transparent;
+                        color: #DFC08A;
+                        border-color: #DFC08A;
 
                         .deal-btn-arrow {
                             transform: translateX(3px);
@@ -1010,14 +1001,6 @@
 
                 @media (max-width: 640px) {
                     min-height: 260px;
-
-                    .dayal-deal-btn-link.is-gold {
-                        width: 100%;
-                        justify-content: center;
-                        padding: 10px;
-                        font-size: 15px;
-                        box-sizing: border-box;
-                    }
                 }
             }
 
@@ -1084,13 +1067,22 @@
                     font-size: 30px;
                     font-weight: 700;
                     line-height: 62px;
-                    color: #1C1008;
+                    color: #7C1F2E;
                     margin: 10px 0 0;
 
                     .deal-strong {
                         font-size: 45px;
                         font-weight: 700;
-                        color: #1C1008;
+                        color: #7C1F2E;
+                    }
+
+                    @media (max-width: 640px) {
+                        font-size: 24px;
+                        line-height: 1.2;
+
+                        .deal-strong {
+                            font-size: 36px;
+                        }
                     }
                 }
 
@@ -1100,7 +1092,12 @@
                     font-weight: 600;
                     line-height: 35px;
                     text-transform: uppercase;
-                    color: #1C1008;
+                    color: #7C1F2E;
+
+                    @media (max-width: 640px) {
+                        font-size: 24px;
+                        line-height: 30px;
+                    }
                 }
 
                 &.is-free-delivery .dayal-deal-title {
@@ -1109,7 +1106,12 @@
                     font-weight: 600;
                     line-height: 35px;
                     text-transform: uppercase;
-                    color: #1C1008;
+                    color: #7C1F2E;
+
+                    @media (max-width: 640px) {
+                        font-size: 22px;
+                        line-height: 28px;
+                    }
                 }
 
                 .dayal-deal-sub {
@@ -1155,8 +1157,13 @@
                     font-size: 40px;
                     font-weight: 700;
                     line-height: 62px;
-                    color: #1C1008;
+                    color: #7C1F2E;
                     margin: 10px 0 0;
+
+                    @media (max-width: 640px) {
+                        font-size: 32px;
+                        line-height: 1.2;
+                    }
                 }
 
                 .dayal-deal-action-btn {
@@ -1184,9 +1191,9 @@
                     transition: all 0.25s ease;
 
                     &:hover {
-                        background-color: #5C1520;
-                        border-color: #5C1520;
-                        color: #FFFFFF;
+                        background-color: transparent;
+                        border-color: #7C1F2E;
+                        color: #7C1F2E;
 
                         .deal-btn-arrow {
                             transform: translateX(3px);
@@ -1249,8 +1256,13 @@
                     font-weight: 700;
                     line-height: 48px;
                     text-transform: uppercase;
-                    color: #1C1008;
+                    color: #7C1F2E;
                     margin: 0;
+
+                    @media (max-width: 640px) {
+                        font-size: 28px;
+                        line-height: 36px;
+                    }
                 }
 
                 .dayal-deal-action-btn.is-outlined {
@@ -1290,8 +1302,8 @@
         position: relative;
         display: flex;
         align-items: center;
-        width: 100%;
-        max-width: 90%;
+        width: calc(100% - 40px);
+        max-width: 1720px;
         margin: 50px auto;
         padding: 30px 90px 30px 30px;
         gap: 45px;
@@ -1300,6 +1312,12 @@
         background: linear-gradient(135deg, rgba(255, 250, 242, 0.98), rgba(250, 245, 238, 0.96));
         box-sizing: border-box;
         overflow: hidden;
+
+        @media (max-width: 1024px) {
+            width: calc(100% - 32px);
+            padding: 24px 20px;
+            margin: 30px auto;
+        }
 
         .decorative-img {
             position: absolute;
@@ -1329,7 +1347,7 @@
                 display: inline-block;
                 margin-bottom: 10px;
                 padding: 6px 15px;
-                border-radius: 20px;
+                border-radius: 0 !important;
                 background: #7c1f2e;
                 color: #ffffff;
                 font-size: 12px;
@@ -1452,18 +1470,36 @@
                 font-weight: 600;
                 line-height: 1.4;
                 text-decoration: none;
-                border-radius: 4px;
+                border: 1px solid #7c1f2e;
+                border-radius: 0 !important;
                 box-sizing: border-box;
-                transition: background 0.25s ease;
+                transition: all 0.25s ease;
 
                 &:hover {
-                    background: #5f1724;
+                    background: transparent;
+                    color: #7c1f2e;
+                    border-color: #7c1f2e;
                 }
 
-                .oto-whatsapp-icon img {
+                .oto-whatsapp-icon {
+                    display: inline-block;
                     width: 18px;
                     height: 18px;
-                    display: block;
+                    flex: 0 0 18px;
+                    background-color: currentColor;
+                    mask-image: url('/uploads/2026/07/WhatsAppIcon.svg');
+                    -webkit-mask-image: url('/uploads/2026/07/WhatsAppIcon.svg');
+                    mask-position: center;
+                    -webkit-mask-position: center;
+                    mask-repeat: no-repeat;
+                    -webkit-mask-repeat: no-repeat;
+                    mask-size: contain;
+                    -webkit-mask-size: contain;
+                    transition: background-color 0.25s ease;
+
+                    img {
+                        display: none;
+                    }
                 }
             }
 

@@ -1969,7 +1969,7 @@
 .dayal-home-trust {
     width: 100%;
     margin: 0;
-    padding: 24px 0;
+    padding: 10px 0;
     background: #5C1520;
     position: relative;
     overflow: hidden;
@@ -1980,9 +1980,8 @@
         position: absolute;
         left: 0;
         bottom: 0;
-        width: 110px;
-        height: 100%;
-        max-height: 140px;
+        width: 132px;
+        height: 170px;
         background: url('/uploads/2026/07/image-87.png') no-repeat bottom left;
         background-size: contain;
         pointer-events: none;
@@ -1995,9 +1994,8 @@
         position: absolute;
         right: 0;
         bottom: 0;
-        width: 110px;
-        height: 100%;
-        max-height: 140px;
+        width: 136px;
+        height: 170px;
         background: url('/uploads/2026/07/image-88.png') no-repeat bottom right;
         background-size: contain;
         pointer-events: none;
@@ -2023,7 +2021,7 @@
         align-items: center;
         text-align: center;
         gap: 12px;
-        padding: 0 16px;
+        padding: 22px 16px;
         position: relative;
         color: #ffffff;
 
@@ -2035,22 +2033,18 @@
             top: 50%;
             transform: translateY(-50%);
             width: 8px;
-            height: 52px;
+            height: 147px;
             background: url('/uploads/2026/07/Group-6.png') no-repeat center center;
-            background-size: contain;
+            background-size: 8px 147px;
             pointer-events: none;
+            z-index: 3;
         }
 
         img {
             display: block;
-            width: 72px;
-            height: 72px;
+            width: 80px;
+            height: 80px;
             object-fit: contain;
-            transition: transform 0.3s ease;
-        }
-
-        &:hover img {
-            transform: scale(1.06);
         }
 
         div {
@@ -2058,7 +2052,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 6px;
+            gap: 8px;
         }
 
         strong {
@@ -2082,10 +2076,29 @@
     }
 
     @media (max-width: 1024px) {
+        padding: 10px 0;
+
+        &::before {
+            width: 90px;
+            height: 120px;
+        }
+
+        &::after {
+            width: 90px;
+            height: 120px;
+        }
+
         &-item {
+            padding: 18px 8px;
+
+            &:not(:last-child)::after {
+                height: 120px;
+                background-size: 8px 120px;
+            }
+
             img {
-                width: 60px;
-                height: 60px;
+                width: 70px;
+                height: 70px;
             }
 
             strong {
@@ -3562,7 +3575,7 @@
     // 04. Trust Strip
     .dayal-home-trust {
         width: 100%;
-        padding: 36px 0;
+        padding: 40px 12px;
         background: #5C1520;
 
         &::before,
@@ -3584,8 +3597,8 @@
             }
 
             img {
-                width: 52px;
-                height: 52px;
+                width: 60px;
+                height: 60px;
             }
 
             strong {

@@ -365,6 +365,17 @@ export default function Shop({
     const itemsPerPage = paginationLimit;
 
     useEffect(() => {
+        if (mobileSidebarOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [mobileSidebarOpen]);
+
+    useEffect(() => {
         try {
             const searchParams = new URL(url, 'http://localhost').searchParams;
             const catsParam = searchParams.get('cats') || searchParams.get('category');
@@ -787,6 +798,7 @@ export default function Shop({
                                     step="50"
                                     value={minPrice}
                                     className="oto-range-input oto-range-min"
+                                    style={{ zIndex: minPrice > 2500 ? 5 : 3 }}
                                     onChange={(e) => {
                                         const val = Math.min(Number(e.target.value), maxPrice - 50);
                                         setMinPrice(val);
@@ -800,6 +812,7 @@ export default function Shop({
                                     step="50"
                                     value={maxPrice}
                                     className="oto-range-input oto-range-max"
+                                    style={{ zIndex: minPrice > 2500 ? 3 : 4 }}
                                     onChange={(e) => {
                                         const val = Math.max(Number(e.target.value), minPrice + 50);
                                         setMaxPrice(val);
@@ -929,36 +942,39 @@ export default function Shop({
                             </span>
                         </div>
                         <div className={`dayal-shop-filter-content oto-filter-content ${collapsed.rating ? 'is-collapsed' : ''}`}>
-                            <div className="dayal-shop-filter-options">
-                                {[5, 4, 3].map((stars) => (
-                                    <label key={stars} className="oto-filter-option">
-                                        <input
-                                            type="radio"
-                                            name="ratingFilter"
-                                            checked={minRating === stars}
-                                            onChange={() => {
-                                                setMinRating(minRating === stars ? 0 : stars);
+                            <div className="dayal-shop-rating-list">
+                                {[5, 4, 3].map((stars) => {
+                                    const isSelected = minRating === stars;
+                                    return (
+                                        <div
+                                            key={stars}
+                                            className={`dayal-shop-rating-item ${isSelected ? 'is-active' : ''}`}
+                                            onClick={() => {
+                                                setMinRating(isSelected ? 0 : stars);
                                                 setCurrentPage(1);
                                             }}
-                                        />
-                                        <span className="dayal-shop-stars oto-stars">
-                                            {[1, 2, 3, 4, 5].map((s) => (
-                                                <svg
-                                                    key={s}
-                                                    viewBox="0 0 24 24"
-                                                    fill={s <= stars ? '#F59E0B' : '#D1D5DB'}
-                                                    stroke="none"
-                                                    width="14"
-                                                    height="14"
-                                                    aria-hidden="true"
-                                                >
-                                                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                                                </svg>
-                                            ))}
-                                        </span>
-                                        {stars < 5 && <span className="dayal-shop-rating-label">&amp; above</span>}
-                                    </label>
-                                ))}
+                                            role="button"
+                                            tabIndex={0}
+                                        >
+                                            <div className="dayal-shop-stars-row">
+                                                {[1, 2, 3, 4, 5].map((s) => (
+                                                    <svg
+                                                        key={s}
+                                                        viewBox="0 0 24 24"
+                                                        fill={s <= stars ? '#FFA800' : '#D8D2C9'}
+                                                        stroke="none"
+                                                        width="15"
+                                                        height="15"
+                                                        aria-hidden="true"
+                                                    >
+                                                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                                                    </svg>
+                                                ))}
+                                            </div>
+                                            {stars < 5 && <span className="dayal-shop-rating-text">&amp; above</span>}
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                     </div>
@@ -1055,95 +1071,105 @@ export default function Shop({
                     <div className="dayal-shop-deals-grid">
                         {/* Deal 1: 20% OFF Flash Deal */}
                         <div className="dayal-shop-deal-card is-flash-deal">
-                            <div className="dayal-deal-card-content">
-                                <div className="dayal-deal-flash-badge">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                                        <path d="M5.97203 1.22726C5.7941 1.04929 5.55277 0.949272 5.30112 0.949219H1.89817C1.64649 0.949219 1.40512 1.0492 1.22716 1.22716C1.0492 1.40512 0.949219 1.64649 0.949219 1.89817V5.30112C0.949272 5.55277 1.04929 5.7941 1.22726 5.97203L5.3571 10.1019C5.57276 10.3162 5.86444 10.4364 6.16846 10.4364C6.47248 10.4364 6.76416 10.3162 6.97981 10.1019L10.1019 6.97981C10.3162 6.76416 10.4364 6.47248 10.4364 6.16846C10.4364 5.86444 10.3162 5.57276 10.1019 5.3571L5.97203 1.22726Z" stroke="#FEDD7D" strokeWidth="0.95" strokeLinecap="round" strokeLinejoin="round" />
-                                        <circle cx="3.56" cy="3.56" r="1" fill="#3A1A1A" stroke="#FEDD7D" strokeWidth="0.95" />
-                                    </svg>
-                                    <span>FLASH DEAL</span>
+                            <div className="dayal-deal-flash-inner">
+                                <div className="dayal-deal-card-content">
+                                    <div className="dayal-deal-flash-badge">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                                            <path d="M5.97203 1.22726C5.7941 1.04929 5.55277 0.949272 5.30112 0.949219H1.89817C1.64649 0.949219 1.40512 1.0492 1.22716 1.22716C1.0492 1.40512 0.949219 1.64649 0.949219 1.89817V5.30112C0.949272 5.55277 1.04929 5.7941 1.22726 5.97203L5.3571 10.1019C5.57276 10.3162 5.86444 10.4364 6.16846 10.4364C6.47248 10.4364 6.76416 10.3162 6.97981 10.1019L10.1019 6.97981C10.3162 6.76416 10.4364 6.47248 10.4364 6.16846C10.4364 5.86444 10.3162 5.57276 10.1019 5.3571L5.97203 1.22726Z" stroke="#FEDD7D" strokeWidth="0.95" strokeLinecap="round" strokeLinejoin="round" />
+                                            <circle cx="3.56" cy="3.56" r="1" fill="#3A1A1A" stroke="#FEDD7D" strokeWidth="0.95" />
+                                        </svg>
+                                        <span>FLASH DEAL</span>
+                                    </div>
+                                    <h3 className="dayal-deal-big-heading">
+                                        <span className="big-num">20</span>% OFF
+                                    </h3>
+                                    <p className="dayal-deal-category-label">ON SELECTED SWEETS</p>
+                                    <img
+                                        src="/uploads/2026/09/Group-2.png"
+                                        alt=""
+                                        className="dayal-deal-divider"
+                                        aria-hidden="true"
+                                        width="181"
+                                        height="9"
+                                    />
+                                    <Link href="/shop?category=sweets" className="dayal-deal-btn-link is-gold">
+                                        <span>Shop Now</span>
+                                        <span className="deal-btn-arrow" aria-hidden="true">→</span>
+                                    </Link>
                                 </div>
-                                <h3 className="dayal-deal-big-heading">
-                                    <span className="big-num">20%</span> OFF
-                                </h3>
-                                <p className="dayal-deal-category-label">ON SELECTED SWEETS</p>
-                                <img
-                                    src="/uploads/2026/09/Group-2.png"
-                                    alt=""
-                                    className="dayal-deal-divider"
-                                    aria-hidden="true"
-                                />
-                                <Link href="/shop?category=sweets" className="dayal-deal-btn-link is-light">
-                                    <span>Shop Now</span>
-                                    <span aria-hidden="true">→</span>
-                                </Link>
-                            </div>
-                            <div className="dayal-deal-card-image">
-                                <img
-                                    src="/uploads/2026/09/20277557511ebef6fe8151f59a459df7ce4dbdb9-e1789540195108.png"
-                                    alt="Selected sweets platter"
-                                    loading="lazy"
-                                />
+                                <div className="dayal-deal-card-image">
+                                    <img
+                                        src="/uploads/2026/09/20277557511ebef6fe8151f59a459df7ce4dbdb9-e1789540195108.png"
+                                        alt="Selected sweets platter"
+                                        loading="lazy"
+                                    />
+                                </div>
                             </div>
                         </div>
 
                         {/* Deal 2: 10% OFF First Order */}
                         <div className="dayal-shop-deal-card is-coupon-card">
-                            <div className="dayal-deal-icon">
-                                <img src="/uploads/2026/09/Frame-130.svg" alt="" aria-hidden="true" />
-                            </div>
-                            <p className="dayal-deal-eyebrow">FIRST ORDER OFFER</p>
-                            <h3 className="dayal-deal-title"><span className="deal-strong">10%</span> OFF</h3>
-                            <p className="dayal-deal-sub">On Your First Order</p>
-                            <div className="dayal-deal-coupon-box">
-                                <span className="dayal-deal-coupon-label">USE CODE</span>
-                                <strong className="dayal-deal-coupon-code">DAYAL10</strong>
+                            <div className="dayal-deal-top">
+                                <div className="dayal-deal-icon">
+                                    <img src="/uploads/2026/09/Frame-130.svg" alt="" aria-hidden="true" width="40" height="40" />
+                                </div>
+                                <p className="dayal-deal-eyebrow">FIRST ORDER OFFER</p>
+                                <h3 className="dayal-deal-title"><span className="deal-strong">10% </span>OFF</h3>
+                                <p className="dayal-deal-sub">On Your First Order</p>
+                                <div className="dayal-deal-coupon-box">
+                                    <span className="dayal-deal-coupon-label">USE CODE</span>
+                                    <strong className="dayal-deal-coupon-code">DAYAL10</strong>
+                                </div>
                             </div>
                             <button
                                 type="button"
                                 className="dayal-deal-action-btn"
                                 onClick={handleCopyCode}
                             >
-                                {copiedCode ? '✓ Copied!' : 'Copy Code'}
+                                <span>{copiedCode ? '✓ Copied!' : 'Copy Code'}</span>
+                                <span className="deal-btn-arrow" aria-hidden="true">→</span>
                             </button>
                         </div>
 
                         {/* Deal 3: Buy 2 Get 1 Free */}
-                        <div className="dayal-shop-deal-card is-coupon-card">
-                            <div className="dayal-deal-icon">
-                                <img src="/uploads/2026/09/Frame-130-1.svg" alt="" aria-hidden="true" />
+                        <div className="dayal-shop-deal-card is-coupon-card is-combo-deal">
+                            <div className="dayal-deal-top">
+                                <div className="dayal-deal-icon">
+                                    <img src="/uploads/2026/09/Frame-130-3.svg" alt="" aria-hidden="true" width="40" height="40" />
+                                </div>
+                                <p className="dayal-deal-eyebrow">COMBO OFFER</p>
+                                <h3 className="dayal-deal-title">Buy 2<br />Get 1 Free</h3>
+                                <p className="dayal-deal-sub">On Your First Order</p>
                             </div>
-                            <p className="dayal-deal-eyebrow">COMBO OFFER</p>
-                            <h3 className="dayal-deal-title">Buy 2<br />Get 1 Free</h3>
-                            <p className="dayal-deal-sub">On Your First Order</p>
                             <Link href="/shop?category=combo" className="dayal-deal-action-btn">
                                 <span>Explore Combos</span>
-                                <span aria-hidden="true">→</span>
+                                <span className="deal-btn-arrow" aria-hidden="true">→</span>
                             </Link>
                         </div>
 
                         {/* Deal 4: Free Delivery */}
-                        <div className="dayal-shop-deal-card is-coupon-card">
-                            <div className="dayal-deal-icon">
-                                <img src="/uploads/2026/09/Frame-130-2.svg" alt="" aria-hidden="true" />
+                        <div className="dayal-shop-deal-card is-coupon-card is-free-delivery">
+                            <div className="dayal-deal-top">
+                                <div className="dayal-deal-icon">
+                                    <img src="/uploads/2026/09/Frame-130-2.svg" alt="" aria-hidden="true" width="40" height="40" />
+                                </div>
+                                <p className="dayal-deal-eyebrow">GET ON YOUR DOOR</p>
+                                <h3 className="dayal-deal-title">Free delivery</h3>
+                                <p className="dayal-deal-sub">On Order Above</p>
+                                <div className="dayal-deal-highlight-val">&#8377; 999</div>
                             </div>
-                            <p className="dayal-deal-eyebrow">GET ON YOUR DOOR</p>
-                            <h3 className="dayal-deal-title">Free delivery</h3>
-                            <p className="dayal-deal-sub">On Order Above</p>
-                            <div className="dayal-deal-highlight-val">&#8377; 999</div>
                             <Link href="/shop" className="dayal-deal-action-btn">
-                                <span>Order now</span>
-                                <span aria-hidden="true">→</span>
+                                <span>Oder now</span>
+                                <span className="deal-btn-arrow" aria-hidden="true">→</span>
                             </Link>
                         </div>
 
                         {/* Deal 5: Coming Soon */}
                         <div className="dayal-shop-deal-card is-coming-soon">
-                            <div className="dayal-deal-icon">
-                                <img src="/uploads/2026/09/Frame-130-3.svg" alt="" aria-hidden="true" />
+                            <div className="dayal-deal-top">
+                                <p className="dayal-deal-eyebrow is-festival">Festival Sale</p>
+                                <h3 className="dayal-deal-title is-coming-soon-title">Coming<br />Soon</h3>
                             </div>
-                            <p className="dayal-deal-eyebrow">Festival Sale</p>
-                            <h3 className="dayal-deal-title">Coming Soon</h3>
                             <button type="button" className="dayal-deal-action-btn is-outlined">
                                 Stay Tuned
                             </button>

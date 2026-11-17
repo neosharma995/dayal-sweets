@@ -10,6 +10,7 @@ use App\Http\Requests\Admin\Product\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\DietPreference;
 use App\Models\Occasion;
+use App\Models\Outlet;
 use App\Models\Product;
 use App\Models\ProductAttribute;
 use App\Models\ProductTag;
@@ -31,7 +32,7 @@ class ProductController extends Controller
      */
     public function index(Request $request): Response|JsonResponse
     {
-        $query = Product::query()->with(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'taxRate', 'variations'])->latest('id');
+        $query = Product::query()->with(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'taxRate', 'variations', 'outlets'])->latest('id');
 
         // Optional search filter by product name or description
         if ($request->filled('search')) {
@@ -72,6 +73,7 @@ class ProductController extends Controller
             'tags' => ProductTag::orderBy('product_tag_name')->get(['id', 'product_tag_name']),
             'attributes' => ProductAttribute::with('values')->orderBy('name')->get(),
             'taxRates' => TaxRate::where('is_active', true)->orderBy('rate')->get(['id', 'name', 'code', 'rate', 'type', 'tax_class']),
+            'outlets' => Outlet::where('status', '!=', 'inactive')->orderBy('sort_order')->orderBy('name')->get(['id', 'name', 'slug', 'city', 'status']),
         ]);
     }
 
@@ -81,7 +83,7 @@ class ProductController extends Controller
     public function edit(Product|int|string $product): Response
     {
         $productModel = $product instanceof Product ? $product : Product::findOrFail($product);
-        $productModel->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'taxRate', 'variations.attributeValue.attribute']);
+        $productModel->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'taxRate', 'variations.attributeValue.attribute', 'outlets']);
 
         return Inertia::render('Admin/Products/Edit', [
             'product' => $productModel,
@@ -92,6 +94,7 @@ class ProductController extends Controller
             'tags' => ProductTag::orderBy('product_tag_name')->get(['id', 'product_tag_name']),
             'attributes' => ProductAttribute::with('values')->orderBy('name')->get(),
             'taxRates' => TaxRate::where('is_active', true)->orderBy('rate')->get(['id', 'name', 'code', 'rate', 'type', 'tax_class']),
+            'outlets' => Outlet::where('status', '!=', 'inactive')->orderBy('sort_order')->orderBy('name')->get(['id', 'name', 'slug', 'city', 'status']),
         ]);
     }
 
@@ -101,7 +104,7 @@ class ProductController extends Controller
     public function show(Request $request, Product|int|string $product): Response|JsonResponse
     {
         $productModel = $product instanceof Product ? $product : Product::findOrFail($product);
-        $productModel->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'taxRate', 'variations.attributeValue.attribute']);
+        $productModel->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'taxRate', 'variations.attributeValue.attribute', 'outlets']);
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -171,11 +174,14 @@ class ProductController extends Controller
         $tagIds = $data['tag_ids'] ?? null;
         unset($data['tag_ids']);
 
+        $outletIds = $data['outlet_ids'] ?? null;
+        unset($data['outlet_ids']);
+
         if (empty($data['product_tag_id']) && is_array($tagIds) && ! empty($tagIds)) {
             $data['product_tag_id'] = $tagIds[0];
         }
 
-        $createdProduct = DB::transaction(function () use ($data, $variationsData, $tagIds) {
+        $createdProduct = DB::transaction(function () use ($data, $variationsData, $tagIds, $outletIds) {
             $product = Product::create($data);
 
             if (is_array($variationsData) && ! empty($variationsData)) {
@@ -188,6 +194,10 @@ class ProductController extends Controller
                 $product->tags()->sync([$product->product_tag_id]);
             }
 
+            if (is_array($outletIds)) {
+                $product->outlets()->sync($outletIds);
+            }
+
             return $product;
         });
 
@@ -195,7 +205,7 @@ class ProductController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Product created successfully.',
-                'data' => $createdProduct->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'taxRate', 'variations'])->fresh(),
+                'data' => $createdProduct->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'taxRate', 'variations', 'outlets'])->fresh(),
             ], 201);
         }
 
@@ -259,11 +269,14 @@ class ProductController extends Controller
         $tagIds = $data['tag_ids'] ?? null;
         unset($data['tag_ids']);
 
+        $outletIds = $data['outlet_ids'] ?? null;
+        unset($data['outlet_ids']);
+
         if (empty($data['product_tag_id']) && is_array($tagIds) && ! empty($tagIds)) {
             $data['product_tag_id'] = $tagIds[0];
         }
 
-        DB::transaction(function () use ($productModel, $data, $variationsData, $tagIds) {
+        DB::transaction(function () use ($productModel, $data, $variationsData, $tagIds, $outletIds) {
             $productModel->update($data);
 
             if (is_array($variationsData)) {
@@ -275,13 +288,17 @@ class ProductController extends Controller
             } elseif (! empty($productModel->product_tag_id)) {
                 $productModel->tags()->sync([$productModel->product_tag_id]);
             }
+
+            if (is_array($outletIds)) {
+                $productModel->outlets()->sync($outletIds);
+            }
         });
 
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Product updated successfully.',
-                'data' => $productModel->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'variations'])->fresh(),
+                'data' => $productModel->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'taxRate', 'variations', 'outlets'])->fresh(),
             ]);
         }
 

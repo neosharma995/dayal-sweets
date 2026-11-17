@@ -21,7 +21,7 @@ export default function Show({ outlet }) {
         <AdminLayout header={`Outlet: ${outlet.name}`}>
             <Head title={`${outlet.name} - Outlet Details - Dayal Sweets Admin`} />
 
-            <div className="dayal-container" style={{ maxWidth: '900px', margin: '0 auto', width: '100%' }}>
+            <div className="dayal-container" style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
                 {/* Header breadcrumb & navigation */}
                 <div
                     className="dayal-admin-view-header"
@@ -301,6 +301,202 @@ export default function Show({ outlet }) {
                             </div>
                         </div>
                     </div>
+                </div>
+
+                {/* Available Products Section */}
+                <div
+                    style={{
+                        marginTop: '2rem',
+                        background: '#FFFFFF',
+                        border: '1px solid #E2E8F0',
+                        borderRadius: '0.5rem',
+                        padding: '1.5rem',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                    }}
+                >
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            flexWrap: 'wrap',
+                            gap: '1rem',
+                            marginBottom: '1.25rem',
+                            borderBottom: '1px solid #F1F5F9',
+                            paddingBottom: '0.75rem',
+                        }}
+                    >
+                        <div>
+                            <h3 style={{ margin: 0, fontSize: '1.125rem', fontWeight: 700, color: '#0F172A' }}>
+                                Products Available at {outlet.name}
+                            </h3>
+                            <p style={{ margin: '0.25rem 0 0', fontSize: '0.8125rem', color: '#64748B' }}>
+                                Total {outlet.products?.length || outlet.products_count || 0} catalog item(s) mapped to this outlet location
+                            </p>
+                        </div>
+                        <Link
+                            href={route('admin.products.create')}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                padding: '0.45rem 1rem',
+                                borderRadius: '0.375rem',
+                                background: '#B88E4B',
+                                color: '#FFFFFF',
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
+                                textDecoration: 'none',
+                            }}
+                        >
+                            + Create &amp; Assign Product
+                        </Link>
+                    </div>
+
+                    {!outlet.products || outlet.products.length === 0 ? (
+                        <div style={{ textAlign: 'center', padding: '2rem 1rem', color: '#64748B' }}>
+                            <p style={{ margin: 0, fontWeight: 600, color: '#334155' }}>No products assigned to this outlet yet.</p>
+                            <p style={{ margin: '0.25rem 0 1rem', fontSize: '0.8125rem', color: '#94A3B8' }}>
+                                Edit existing products or create a new product to assign it to this outlet.
+                            </p>
+                            <Link
+                                href={route('admin.products.index')}
+                                style={{
+                                    fontSize: '0.8125rem',
+                                    color: '#B88E4B',
+                                    fontWeight: 600,
+                                    textDecoration: 'none',
+                                }}
+                            >
+                                Browse All Products &rarr;
+                            </Link>
+                        </div>
+                    ) : (
+                        <div style={{ overflowX: 'auto' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.875rem' }}>
+                                <thead>
+                                    <tr style={{ borderBottom: '1px solid #E2E8F0', background: '#F8FAFC' }}>
+                                        <th style={{ padding: '0.65rem 0.75rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase' }}>
+                                            Product
+                                        </th>
+                                        <th style={{ padding: '0.65rem 0.75rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase' }}>
+                                            Category
+                                        </th>
+                                        <th style={{ padding: '0.65rem 0.75rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase' }}>
+                                            Selling Price
+                                        </th>
+                                        <th style={{ padding: '0.65rem 0.75rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase' }}>
+                                            Variations
+                                        </th>
+                                        <th style={{ padding: '0.65rem 0.75rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', textAlign: 'right' }}>
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {outlet.products.map((product) => (
+                                        <tr key={product.id} style={{ borderBottom: '1px solid #F1F5F9' }}>
+                                            <td style={{ padding: '0.75rem', verticalAlign: 'middle' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                                    <div
+                                                        style={{
+                                                            width: '40px',
+                                                            height: '40px',
+                                                            borderRadius: '0.375rem',
+                                                            background: '#F1F5F9',
+                                                            border: '1px solid #E2E8F0',
+                                                            overflow: 'hidden',
+                                                            flexShrink: 0,
+                                                        }}
+                                                    >
+                                                        {product.product_image_url || product.product_image ? (
+                                                            <img
+                                                                src={product.product_image_url || product.product_image}
+                                                                alt={product.product_name}
+                                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                                                            />
+                                                        ) : (
+                                                            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#B88E4B', fontSize: '0.85rem' }}>
+                                                                🍬
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div>
+                                                        <Link
+                                                            href={route('admin.products.show', product.id)}
+                                                            style={{ fontWeight: 600, color: '#0F172A', textDecoration: 'none' }}
+                                                        >
+                                                            {product.product_name}
+                                                        </Link>
+                                                        {product.product_description && (
+                                                            <div style={{ fontSize: '0.75rem', color: '#64748B', maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                                {product.product_description}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td style={{ padding: '0.75rem', verticalAlign: 'middle' }}>
+                                                {product.category ? (
+                                                    <span style={{ fontSize: '0.75rem', background: '#F5EBD7', color: '#8C6226', padding: '0.15rem 0.5rem', borderRadius: '999px', fontWeight: 600 }}>
+                                                        {product.category.category_name}
+                                                    </span>
+                                                ) : (
+                                                    <span style={{ color: '#94A3B8', fontSize: '0.75rem' }}>—</span>
+                                                )}
+                                            </td>
+                                            <td style={{ padding: '0.75rem', verticalAlign: 'middle', fontWeight: 700, color: '#0F172A' }}>
+                                                ₹{Number(product.product_selling_price || product.product_price || 0).toFixed(2)}
+                                            </td>
+                                            <td style={{ padding: '0.75rem', verticalAlign: 'middle' }}>
+                                                {Array.isArray(product.variations) && product.variations.length > 0 ? (
+                                                    <span style={{ fontSize: '0.75rem', color: '#475569' }}>
+                                                        {product.variations.length} sizes ({product.variations.map((v) => v.variation_name).join(', ')})
+                                                    </span>
+                                                ) : (
+                                                    <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>Standard</span>
+                                                )}
+                                            </td>
+                                            <td style={{ padding: '0.75rem', verticalAlign: 'middle', textAlign: 'right' }}>
+                                                <div style={{ display: 'inline-flex', gap: '0.5rem' }}>
+                                                    <Link
+                                                        href={route('admin.products.edit', product.id)}
+                                                        style={{
+                                                            padding: '0.25rem 0.55rem',
+                                                            borderRadius: '0.25rem',
+                                                            background: '#F1F5F9',
+                                                            border: '1px solid #CBD5E1',
+                                                            color: '#0F172A',
+                                                            fontSize: '0.75rem',
+                                                            fontWeight: 600,
+                                                            textDecoration: 'none',
+                                                        }}
+                                                    >
+                                                        Edit
+                                                    </Link>
+                                                    <Link
+                                                        href={route('admin.products.show', product.id)}
+                                                        style={{
+                                                            padding: '0.25rem 0.55rem',
+                                                            borderRadius: '0.25rem',
+                                                            background: '#B88E4B',
+                                                            color: '#FFFFFF',
+                                                            fontSize: '0.75rem',
+                                                            fontWeight: 600,
+                                                            textDecoration: 'none',
+                                                        }}
+                                                    >
+                                                        View
+                                                    </Link>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
                 </div>
             </div>
 

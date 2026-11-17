@@ -3,7 +3,7 @@ import { Head, Link } from '@inertiajs/react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import { useCart } from '@/Context/CartContext';
-import { Trash2, ShoppingBag, ArrowLeft, CheckCircle2, ShieldCheck, Truck, Sparkles } from 'lucide-react';
+import { X, Trash2, ShoppingBag, ArrowLeft, CheckCircle2, ShieldCheck, Truck, Sparkles } from 'lucide-react';
 
 export default function Cart() {
     const { cart, updateQuantity, removeFromCart, clearCart, cartSubtotal, cartCount } = useCart();
@@ -155,11 +155,36 @@ export default function Cart() {
                                                                         type="button"
                                                                         className="qty-btn"
                                                                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                                                        disabled={item.quantity <= 1}
                                                                         aria-label="Decrease quantity"
+                                                                        style={item.quantity <= 1 ? { opacity: 0.35, cursor: 'not-allowed' } : {}}
                                                                     >
                                                                         −
                                                                     </button>
-                                                                    <span className="qty-number">{item.quantity}</span>
+                                                                    <input
+                                                                        type="number"
+                                                                        min="1"
+                                                                        max="999"
+                                                                        value={item.quantity}
+                                                                        onChange={(e) => {
+                                                                            const val = e.target.value;
+                                                                            if (val === '') {
+                                                                                updateQuantity(item.id, 1);
+                                                                            } else {
+                                                                                const num = parseInt(val, 10);
+                                                                                if (!isNaN(num)) {
+                                                                                    updateQuantity(item.id, Math.max(1, Math.min(999, num)));
+                                                                                }
+                                                                            }
+                                                                        }}
+                                                                        onKeyDown={(e) => {
+                                                                            if (e.key === '-' || e.key === 'e' || e.key === '+' || e.key === '.') {
+                                                                                e.preventDefault();
+                                                                            }
+                                                                        }}
+                                                                        className="qty-number qty-input"
+                                                                        aria-label={`Quantity for ${item.name}`}
+                                                                    />
                                                                     <button
                                                                         type="button"
                                                                         className="qty-btn"
@@ -178,10 +203,10 @@ export default function Cart() {
                                                                     type="button"
                                                                     className="cart-remove-btn"
                                                                     onClick={() => removeFromCart(item.id)}
-                                                                    title="Remove from cart"
-                                                                    aria-label={`Remove ${item.name}`}
+                                                                    title="Delete item from cart"
+                                                                    aria-label={`Delete ${item.name} from cart`}
                                                                 >
-                                                                    <Trash2 size={16} />
+                                                                    <X size={18} strokeWidth={2.5} />
                                                                 </button>
                                                             </td>
                                                         </tr>

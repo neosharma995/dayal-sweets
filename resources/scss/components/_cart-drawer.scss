@@ -207,20 +207,41 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    transition: background 0.15s;
+                    transition: background 0.15s, opacity 0.15s;
 
-                    &:hover {
+                    &:hover:not(:disabled) {
                         background: #f7f1e7;
+                    }
+
+                    &:disabled {
+                        opacity: 0.35;
+                        cursor: not-allowed;
                     }
                 }
 
+                .dayal-cart-qty-input,
                 .dayal-cart-qty-value {
-                    min-width: 26px;
+                    width: 36px;
+                    height: 28px;
+                    border: none;
+                    background: transparent;
                     text-align: center;
                     font-size: 13px;
                     font-weight: 600;
                     color: #1b1514;
-                    padding: 0 4px;
+                    padding: 0 2px;
+                    outline: none;
+                    -moz-appearance: textfield;
+
+                    &::-webkit-outer-spin-button,
+                    &::-webkit-inner-spin-button {
+                        -webkit-appearance: none;
+                        margin: 0;
+                    }
+
+                    &:focus {
+                        background: #fdf8f0;
+                    }
                 }
             }
 
@@ -241,6 +262,41 @@
                     background: $color-maroon-hover;
                     transform: scale(1.06);
                 }
+            }
+        }
+
+        .dayal-cart-item-right-col {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 12px;
+            flex-shrink: 0;
+
+            .dayal-cart-remove-x-btn {
+                background: transparent;
+                border: none;
+                color: #a89f91;
+                cursor: pointer;
+                padding: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 4px;
+                transition: color 0.15s, background 0.15s, transform 0.15s;
+
+                &:hover {
+                    color: $color-maroon;
+                    background: #f7f1e7;
+                    transform: scale(1.12);
+                }
+            }
+
+            .dayal-cart-item-total {
+                font-size: 14px;
+                font-weight: 700;
+                color: #1b1514;
+                white-space: nowrap;
             }
         }
 

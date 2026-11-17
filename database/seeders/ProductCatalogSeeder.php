@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Outlet;
 use App\Models\Product;
 use App\Models\ProductAttribute;
 use App\Models\ProductAttributeValue;
@@ -20,38 +21,86 @@ class ProductCatalogSeeder extends Seeder
     public function run(): void
     {
         // ---------------------------------------------------------------------
-        // 1. Five Product Categories
+        // 1. Thirteen Product Categories
         // ---------------------------------------------------------------------
         $categoriesData = [
             [
-                'category_name' => 'Sweets & Mithai',
-                'category_slug' => 'sweets-mithai',
-                'category_image' => '/uploads/2026/07/kaaju-katli.png',
-                'category_description' => 'Handcrafted traditional Indian sweets made with 100% pure desi ghee, saffron, and premium dry fruits.',
+                'category_name' => 'Bakery',
+                'category_slug' => 'bakery',
+                'category_image' => '/uploads/2026/07/image-59.png',
+                'category_description' => 'Freshly baked delights for every mood',
             ],
             [
-                'category_name' => 'Namkeen & Snacks',
-                'category_slug' => 'namkeen-snacks',
-                'category_image' => '/uploads/2026/07/Image-Namkeen.png',
+                'category_name' => 'Best Seller',
+                'category_slug' => 'best-seller',
+                'category_image' => '/uploads/woocommerce-placeholder.webp',
+                'category_description' => 'Customer favorites loved for their exceptional taste and quality.',
+            ],
+            [
+                'category_name' => 'Beverages',
+                'category_slug' => 'beverages',
+                'category_image' => '/uploads/2026/07/images__1_-removebg-preview.png',
+                'category_description' => 'Refreshing drinks crafted to quench your thirst and complement every meal.',
+            ],
+            [
+                'category_name' => 'Chinese',
+                'category_slug' => 'chinese',
+                'category_image' => '/uploads/2026/09/a4a43e59-a217-42d7-8117-5f654e1660fd.png',
+                'category_description' => 'Delicious Flavors, Asian-Inspired Delights',
+            ],
+            [
+                'category_name' => 'Combo',
+                'category_slug' => 'combo',
+                'category_image' => '/uploads/2026/09/Office-Tea-Combo-600x450.png',
+                'category_description' => 'Curated value combos and celebration packs.',
+            ],
+            [
+                'category_name' => 'Desserts',
+                'category_slug' => 'desserts',
+                'category_image' => '/uploads/2026/09/310f8065-fcb6-4b1f-ad85-2d3ec7b64a70.png',
+                'category_description' => 'Sweet Treats, Pure Happiness',
+            ],
+            [
+                'category_name' => 'Gift hampers',
+                'category_slug' => 'gift-hampers',
+                'category_image' => '/uploads/2026/08/Gift-Hamper-img.png',
+                'category_description' => 'Thoughtfully Curated Gifts for Every Occasion',
+            ],
+            [
+                'category_name' => 'Himachali Special',
+                'category_slug' => 'himachali-special',
+                'category_image' => '/uploads/2026/09/c18eaaf3-39b9-4392-9f9a-0c9f0dafec86.png',
+                'category_description' => 'Authentic Himachali Flavors, Made with Love',
+            ],
+            [
+                'category_name' => 'Namkeen',
+                'category_slug' => 'namkeen',
+                'category_image' => '/uploads/2026/07/d9d5fb317e661ab4dd3c92f437cdeafd61cbe426.webp',
                 'category_description' => 'Crispy, crunchy savouries made with authentic spices and roasted to perfection.',
             ],
             [
-                'category_name' => 'Bakery & Confectionery',
-                'category_slug' => 'bakery-confectionery',
-                'category_image' => '/uploads/2026/07/Cakes.jpg',
-                'category_description' => 'Freshly baked cookies, eggless cakes, artisan pastries, and crunchy rusks.',
+                'category_name' => 'North Indian',
+                'category_slug' => 'north-indian',
+                'category_image' => '/uploads/2026/09/40acb6a2-6bfe-4f5f-b741-4fa56207df16.png',
+                'category_description' => 'Rich Flavors, Timeless Traditions',
             ],
             [
-                'category_name' => 'Beverages & Shakes',
-                'category_slug' => 'beverages-shakes',
-                'category_image' => '/uploads/2026/07/bubble-tea-01.png',
-                'category_description' => 'Traditional chilled thandai, kesar badam milk, fresh fruit shakes, and masala chaas.',
+                'category_name' => 'Snacks',
+                'category_slug' => 'snacks',
+                'category_image' => '/uploads/2026/07/image-58.png',
+                'category_description' => 'Hot, crispy and perfect to satisfy cravings',
             ],
             [
-                'category_name' => 'Festive Gift Hampers',
-                'category_slug' => 'festive-gift-hampers',
-                'category_image' => '/uploads/2026/07/sweets-box.png',
-                'category_description' => 'Curated celebration packs and royal tin boxes designed for festivals and corporate gifting.',
+                'category_name' => 'South Indian',
+                'category_slug' => 'south-indian',
+                'category_image' => '/uploads/2026/09/39de7fca-c160-4487-91ff-d2fe87b868cb.png',
+                'category_description' => 'Authentic Flavors, Southern Culinary Delights',
+            ],
+            [
+                'category_name' => 'Sweets',
+                'category_slug' => 'sweets',
+                'category_image' => '/uploads/2026/07/kaaju-katli.png',
+                'category_description' => 'Handcrafted traditional Indian sweets made with 100% pure desi ghee, saffron, and premium dry fruits.',
             ],
         ];
 
@@ -513,6 +562,12 @@ class ProductCatalogSeeder extends Seeder
                         'attribute_value_id' => $attrValueId,
                     ])
                 );
+            }
+
+            // Sync product to all active outlets
+            $activeOutletIds = Outlet::where('status', 'active')->pluck('id')->all();
+            if (! empty($activeOutletIds)) {
+                $product->outlets()->syncWithoutDetaching($activeOutletIds);
             }
         }
     }

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from '@inertiajs/react';
 import { useCart } from '@/Context/CartContext';
-import { X, Trash2 } from 'lucide-react';
+import { X } from 'lucide-react';
 
 export default function CartDrawer() {
     const {
@@ -119,11 +119,36 @@ export default function CartDrawer() {
                                                         type="button"
                                                         className="dayal-cart-qty-btn"
                                                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                                        disabled={item.quantity <= 1}
                                                         aria-label="Decrease quantity"
+                                                        style={item.quantity <= 1 ? { opacity: 0.35, cursor: 'not-allowed' } : {}}
                                                     >
                                                         −
                                                     </button>
-                                                    <span className="dayal-cart-qty-value">{item.quantity}</span>
+                                                    <input
+                                                        type="number"
+                                                        min="1"
+                                                        max="999"
+                                                        value={item.quantity}
+                                                        onChange={(e) => {
+                                                            const val = e.target.value;
+                                                            if (val === '') {
+                                                                updateQuantity(item.id, 1);
+                                                            } else {
+                                                                const num = parseInt(val, 10);
+                                                                if (!isNaN(num)) {
+                                                                    updateQuantity(item.id, Math.max(1, Math.min(999, num)));
+                                                                }
+                                                            }
+                                                        }}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === '-' || e.key === 'e' || e.key === '+' || e.key === '.') {
+                                                                e.preventDefault();
+                                                            }
+                                                        }}
+                                                        className="dayal-cart-qty-input"
+                                                        aria-label={`Quantity for ${item.name}`}
+                                                    />
                                                     <button
                                                         type="button"
                                                         className="dayal-cart-qty-btn"
@@ -133,22 +158,24 @@ export default function CartDrawer() {
                                                         +
                                                     </button>
                                                 </div>
-
-                                                {/* Trash delete button (maroon circle) */}
-                                                <button
-                                                    type="button"
-                                                    className="dayal-cart-delete-btn"
-                                                    onClick={() => removeFromCart(item.id)}
-                                                    title="Remove item"
-                                                    aria-label={`Remove ${item.name}`}
-                                                >
-                                                    <Trash2 size={14} />
-                                                </button>
                                             </div>
                                         </div>
 
-                                        <div className="dayal-cart-item-total">
-                                            &#8377;{lineTotal}
+                                        <div className="dayal-cart-item-right-col">
+                                            {/* X button to delete item from cart */}
+                                            <button
+                                                type="button"
+                                                className="dayal-cart-remove-x-btn"
+                                                onClick={() => removeFromCart(item.id)}
+                                                title="Delete item from cart"
+                                                aria-label={`Delete ${item.name} from cart`}
+                                            >
+                                                <X size={16} strokeWidth={2.2} />
+                                            </button>
+
+                                            <div className="dayal-cart-item-total">
+                                                &#8377;{lineTotal}
+                                            </div>
                                         </div>
                                     </li>
                                 );

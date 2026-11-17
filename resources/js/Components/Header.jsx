@@ -3,6 +3,7 @@ import { ChevronDown, LayoutDashboard, LogOut, MapPin, Menu, Package, Search, Sh
 import { Link, router, usePage } from '@inertiajs/react';
 import { useCart } from '@/Context/CartContext';
 import CartDrawer from '@/Components/CartDrawer';
+import CartToaster from '@/Components/CartToaster';
 import Modal from '@/Components/Modal';
 
 const navItems = [
@@ -401,6 +402,9 @@ export default function Header({ auth }) {
 
             {/* Slide-over Cart Drawer */}
             <CartDrawer />
+
+            {/* Global Cart Toast Notification */}
+            <CartToaster />
 
             {/* Logout Confirmation Modal */}
             <Modal show={logoutModalOpen} onClose={() => !loggingOut && setLogoutModalOpen(false)}>

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
 
 const CartContext = createContext(null);
 
@@ -43,6 +43,38 @@ export function CartProvider({ children }) {
     });
 
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [toast, setToast] = useState(null);
+    const [isToastExiting, setIsToastExiting] = useState(false);
+    const toastTimerRef = useRef(null);
+    const toastExitTimerRef = useRef(null);
+
+    const dismissToast = useCallback(() => {
+        if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+        setIsToastExiting(true);
+        toastExitTimerRef.current = setTimeout(() => {
+            setToast(null);
+            setIsToastExiting(false);
+        }, 250);
+    }, []);
+
+    const showToast = useCallback((toastData) => {
+        if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+        if (toastExitTimerRef.current) clearTimeout(toastExitTimerRef.current);
+
+        setIsToastExiting(false);
+        setToast(toastData);
+
+        toastTimerRef.current = setTimeout(() => {
+            dismissToast();
+        }, 4000);
+    }, [dismissToast]);
+
+    useEffect(() => {
+        return () => {
+            if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+            if (toastExitTimerRef.current) clearTimeout(toastExitTimerRef.current);
+        };
+    }, []);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -58,7 +90,7 @@ export function CartProvider({ children }) {
     const closeCart = () => setIsCartOpen(false);
     const toggleCart = () => setIsCartOpen((prev) => !prev);
 
-    const addToCart = (product, quantity = 1, variation = null) => {
+    const addToCart = (product, quantity = 1, variation = null, openDrawer = false) => {
         const qty = Math.max(1, parseInt(quantity, 10) || 1);
         const varLabel = variation ? (variation.label.toLowerCase().includes('piece') ? `pack-size: ${variation.label}` : `weight: ${variation.label}`) : null;
         const itemId = `${product.id}-${variation ? variation.label : 'default'}`;
@@ -75,6 +107,8 @@ export function CartProvider({ children }) {
         const displayName = variation
             ? (product.name.includes(variation.label) ? product.name : `${product.name} - ${variation.label}`)
             : product.name;
+
+        const itemImage = product.image || '/uploads/2026/07/kaaju-katli.png';
 
         setCart((prevCart) => {
             const existingIndex = prevCart.findIndex((item) => item.id === itemId);
@@ -94,7 +128,7 @@ export function CartProvider({ children }) {
                     productId: product.id,
                     name: displayName,
                     slug: product.slug || '',
-                    image: product.image || '/uploads/2026/07/kaaju-katli.png',
+                    image: itemImage,
                     price: unitPrice,
                     quantity: qty,
                     variation: variation,
@@ -103,16 +137,28 @@ export function CartProvider({ children }) {
             ];
         });
 
-        // Automatically open cart sidebar on add
-        setIsCartOpen(true);
+        // Trigger toaster notification
+        showToast({
+            id: Date.now(),
+            itemId: itemId,
+            name: displayName,
+            image: itemImage,
+            price: unitPrice,
+            quantity: qty,
+            variation: varLabel,
+            message: `${qty > 1 ? `${qty}× ` : ''}${displayName} added to your cart!`,
+        });
+
+        // Automatically open cart sidebar on add ONLY when openDrawer is explicitly true
+        if (openDrawer) {
+            setIsCartOpen(true);
+        }
     };
 
     const updateQuantity = (itemId, newQuantity) => {
-        const qty = parseInt(newQuantity, 10);
-        if (qty <= 0) {
-            removeFromCart(itemId);
-            return;
-        }
+        const parsed = parseInt(newQuantity, 10);
+        // Minimum quantity is always 1, prevent auto-deletion on decrement
+        const qty = isNaN(parsed) || parsed < 1 ? 1 : Math.min(999, parsed);
 
         setCart((prevCart) =>
             prevCart.map((item) =>
@@ -146,6 +192,10 @@ export function CartProvider({ children }) {
                 clearCart,
                 cartCount,
                 cartSubtotal,
+                toast,
+                isToastExiting,
+                showToast,
+                dismissToast,
             }}
         >
             {children}

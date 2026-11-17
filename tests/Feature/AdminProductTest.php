@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Enums\UserRole;
+use App\Models\Outlet;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -456,5 +457,55 @@ class AdminProductTest extends TestCase
         $this->assertDatabaseMissing('product_variations', [
             'id' => $vToDelete->id,
         ]);
+    }
+
+    /**
+     * Admin can create and update product with assigned outlets.
+     */
+    public function test_admin_can_create_and_sync_product_outlets(): void
+    {
+        $outlet1 = Outlet::create([
+            'name' => 'Outlet Alpha',
+            'slug' => 'outlet-alpha',
+            'address' => 'Alpha Address',
+            'status' => 'active',
+        ]);
+        $outlet2 = Outlet::create([
+            'name' => 'Outlet Beta',
+            'slug' => 'outlet-beta',
+            'address' => 'Beta Address',
+            'status' => 'active',
+        ]);
+
+        $payload = [
+            'product_name' => 'Kaju Katli Special',
+            'product_price' => 500.00,
+            'product_selling_price' => 450.00,
+            'outlet_ids' => [$outlet1->id, $outlet2->id],
+        ];
+
+        $response = $this->actingAs($this->adminUser)->postJson('/admin/products', $payload);
+        $response->assertStatus(201);
+
+        $productId = $response->json('data.id');
+        $product = Product::with('outlets')->findOrFail($productId);
+        $this->assertCount(2, $product->outlets);
+        $this->assertTrue($product->outlets->contains('id', $outlet1->id));
+        $this->assertTrue($product->outlets->contains('id', $outlet2->id));
+
+        // Test update can sync outlets
+        $updatePayload = [
+            'product_name' => 'Kaju Katli Special Updated',
+            'product_price' => 500.00,
+            'product_selling_price' => 450.00,
+            'outlet_ids' => [$outlet1->id], // Remove outlet2
+        ];
+        $updateResponse = $this->actingAs($this->adminUser)->putJson("/admin/products/{$product->id}", $updatePayload);
+        $updateResponse->assertStatus(200);
+
+        $product->refresh();
+        $this->assertCount(1, $product->outlets);
+        $this->assertTrue($product->outlets->contains('id', $outlet1->id));
+        $this->assertFalse($product->outlets->contains('id', $outlet2->id));
     }
 }

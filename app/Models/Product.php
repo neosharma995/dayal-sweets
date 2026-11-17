@@ -149,6 +149,16 @@ class Product extends Model
     }
 
     /**
+     * Relationship: Product is available at many Outlets.
+     */
+    public function outlets(): BelongsToMany
+    {
+        return $this->belongsToMany(Outlet::class, 'outlet_products', 'product_id', 'outlet_id')
+            ->withPivot(['is_available', 'stock_qty'])
+            ->withTimestamps();
+    }
+
+    /**
      * Relationship: Product belongs to a Tax Rate.
      */
     public function taxRate(): BelongsTo

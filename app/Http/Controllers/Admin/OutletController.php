@@ -21,7 +21,7 @@ class OutletController extends Controller
      */
     public function index(Request $request): Response|JsonResponse
     {
-        $query = Outlet::query()->orderBy('sort_order')->orderBy('id');
+        $query = Outlet::query()->withCount('products')->orderBy('sort_order')->orderBy('id');
 
         if ($request->filled('search')) {
             $search = (string) $request->input('search');
@@ -145,6 +145,11 @@ class OutletController extends Controller
      */
     public function show(Outlet $outlet): Response|JsonResponse
     {
+        $outlet->loadCount('products');
+        $outlet->load(['products' => function ($q) {
+            $q->with(['category', 'variations'])->latest('products.id');
+        }]);
+
         if (request()->wantsJson()) {
             return response()->json([
                 'success' => true,

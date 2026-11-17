@@ -434,10 +434,10 @@ const bestSellers = [
 ];
 
 const serviceCards = [
-    { title: 'Festival Gifting', description: 'Luxury sweet hampers, festive gift boxes, and curated collections crafted to make every celebration memorable.', points: ['Premium Gift Hampers', 'Corporate Gifting', 'Custom Packaging', 'Bulk Festival Orders'], action: 'Explore Collection', href: '/shop', image: '85febe95b2f68483bbe3d2740da348076827bcea.png', background: '1-1.png', icon: 'gift' },
-    { title: 'Catering', description: 'From intimate family functions to grand celebrations, enjoy authentic flavours and impeccable service.', points: ['Live Food Counters', 'Wedding Catering', 'Corporate Events', 'Customized Menus'], action: 'Request Quote', href: '/contact-us', image: 'cafbdb05b860e369184358b6c53ff29ec6bd4ef1.png', background: '2.png', icon: 'serving' },
-    { title: 'Wedding', description: 'Beautifully curated mithai collections, luxury packaging, and bespoke wedding gifting solutions.', points: ['Premium Wedding Sweets', 'Luxury Packaging', 'Bulk Orders', 'Timely Delivery'], action: 'Request Quote', href: '/contact-us', image: '1e042ce16b4adfb2ec672c88677de25f8e161238.png', background: '3.png', icon: 'wedding' },
-    { title: 'Birthday', description: 'Designer cakes, party desserts, and handcrafted treats made to make birthdays unforgettable.', points: ['Custom Celebration Cakes', 'Theme-Based Desserts', 'Fresh Daily Preparation', 'Doorstep Delivery'], action: 'Order Cakes', href: '/shop', image: '1208e29127df94840c76deb4a669846d282b099a.png', background: '4.png', icon: 'cake' },
+    { title: 'Festival Gifting', description: 'Luxury sweet hampers, festive gift boxes, and curated collections crafted to make every celebration memorable.', points: ['Premium Gift Hampers', 'Corporate Gifting', 'Custom Packaging', 'Bulk Festival Orders'], action: 'Explore Collection', href: '/shop', image: '85febe95b2f68483bbe3d2740da348076827bcea.png', background: '1-1.png', icon: 'gift-2.png' },
+    { title: 'Catering', description: 'From intimate family functions to grand celebrations, enjoy authentic flavours and impeccable service.', points: ['Live Food Counters', 'Wedding Catering', 'Corporate Events', 'Customized Menus'], action: 'Request Quote', href: '/contact-us', image: 'cafbdb05b860e369184358b6c53ff29ec6bd4ef1.png', background: '2.png', icon: 'dish-01.png' },
+    { title: 'Wedding', description: 'Beautifully curated mithai collections, luxury packaging, and bespoke wedding gifting solutions.', points: ['Premium Wedding Sweets', 'Luxury Packaging', 'Bulk Orders', 'Timely Delivery'], action: 'Request Quote', href: '/contact-us', image: '1e042ce16b4adfb2ec672c88677de25f8e161238.png', background: '3.png', icon: 'wedding.png' },
+    { title: 'Birthday', description: 'Designer cakes, party desserts, and handcrafted treats made to make birthdays unforgettable.', points: ['Custom Celebration Cakes', 'Theme-Based Desserts', 'Fresh Daily Preparation', 'Doorstep Delivery'], action: 'Order Cakes', href: '/shop', image: '1208e29127df94840c76deb4a669846d282b099a.png', background: '4.png', icon: 'elements.png' },
 ];
 
 const videos = [
@@ -518,12 +518,12 @@ function BestSellers() {
 
 function SpecialServices() {
     return (
-        <section className="rt-service-section dayal-home-services" aria-label="Our Support - Special Services">
+        <section className="dayal-home-services" aria-label="Our Support - Special Services">
             {/* Left Decorative Image (bg221.png) */}
             <img
                 src="/uploads/2026/09/bg221.png"
                 alt=""
-                className="rt-service-decor-left"
+                className="dayal-home-services-decor-left"
                 aria-hidden="true"
                 loading="lazy"
             />
@@ -532,59 +532,61 @@ function SpecialServices() {
             <img
                 src="/uploads/2026/09/ChatGPT-Image-Sep-7-2026-07_03_53-PM-e1788788084617.png"
                 alt=""
-                className="rt-service-decor-right"
+                className="dayal-home-services-decor-right"
                 aria-hidden="true"
                 loading="lazy"
             />
 
-            <div className="rt-service-container dayal-home-services-inner">
+            <div className="dayal-home-services-inner">
                 {/* Section Header */}
-                <header className="rt-service-header">
-                    <div className="rt-service-eyebrow-wrap">
-                        <span className="rt-service-divider" aria-hidden="true" />
-                        <p className="rt-service-eyebrow">OUR SUPPORT</p>
-                        <span className="rt-service-divider" aria-hidden="true" />
+                <header className="dayal-home-services-header">
+                    <div className="dayal-home-services-eyebrow-wrap">
+                        <span className="dayal-home-services-divider" aria-hidden="true" />
+                        <p className="dayal-home-services-eyebrow">OUR SUPPORT</p>
+                        <span className="dayal-home-services-divider" aria-hidden="true" />
                     </div>
-                    <h2 className="rt-service-heading">
-                        Special <span className="rt-span-color">Services</span>
+                    <h2 className="dayal-home-services-heading">
+                        Special <span className="dayal-highlight">Services</span>
                     </h2>
-                    <p className="rt-service-desc">
+                    <p className="dayal-home-services-desc">
                         Every celebration deserves something extraordinary. Discover our signature services, crafted with timeless recipes, premium ingredients, and generations of sweet-making excellence.
                     </p>
                 </header>
 
                 {/* Service Cards Slider / Grid */}
-                <div className="rt-service-slider-wrapper dayal-home-services-grid">
+                <div className="dayal-home-services-grid">
                     {serviceCards.map((service, index) => (
                         <article
                             key={service.title}
-                            className={`rt-service-slide dayal-home-service-card ${index === 0 ? 'is-first-slide is-featured' : ''}`}
+                            className={`dayal-home-service-card ${index === 0 ? 'is-first-slide is-featured' : ''}`}
                             style={{ backgroundImage: `url('/uploads/2026/07/${service.background}')` }}
                         >
-                            <div className="rt-service-slide-content">
-                                <div className="rt-service-main">
-                                    <h3 className="rt-service-title">{service.title}</h3>
+                            <div className="dayal-home-service-card-content">
+                                <div className="dayal-home-service-card-main">
+                                    {service.icon && (
+                                        <div className="dayal-home-service-card-icon">
+                                            <img
+                                                src={`/uploads/2026/07/${service.icon}`}
+                                                alt=""
+                                                aria-hidden="true"
+                                                loading="lazy"
+                                            />
+                                        </div>
+                                    )}
+                                    <h3 className="dayal-home-service-card-title">{service.title}</h3>
                                 </div>
 
-                                <div className="rt-service-description">
+                                <div className="dayal-home-service-card-desc">
                                     <p>{service.description}</p>
                                 </div>
 
-                                <ul className="rt-service-points">
+                                <ul className="dayal-home-service-card-points">
                                     {service.points.map((point) => (
                                         <li key={point}>{point}</li>
                                     ))}
                                 </ul>
 
-                                <div className="rt-service-product-image">
-                                    <img
-                                        src={`/uploads/2026/07/${service.image}`}
-                                        alt={`${service.title} Product`}
-                                        loading="lazy"
-                                    />
-                                </div>
-
-                                <Link className="rt-service-btn" href={service.href}>
+                                <Link className="dayal-home-service-card-btn" href={service.href}>
                                     <span>{service.action}</span>
                                     <img
                                         src="/uploads/2026/07/Icon.svg"
@@ -592,6 +594,14 @@ function SpecialServices() {
                                         aria-hidden="true"
                                     />
                                 </Link>
+                            </div>
+
+                            <div className="dayal-home-service-card-product">
+                                <img
+                                    src={`/uploads/2026/07/${service.image}`}
+                                    alt={`${service.title} Product`}
+                                    loading="lazy"
+                                />
                             </div>
                         </article>
                     ))}
@@ -694,7 +704,7 @@ function VideoGallery() {
                         <span className="dsg-video-divider" aria-hidden="true" />
                     </div>
                     <h2 className="dsg-video-heading">
-                        The Art Behind <span className="rt-span-color">Every Sweet Bite</span>
+                        The Art Behind <span className="dayal-highlight">Every Sweet Bite</span>
                     </h2>
                     <p className="dsg-video-desc-top">
                         From selecting the finest ingredients to handcrafted preparation and slow cooking, witness the journey that makes every Dayal sweet truly special.

@@ -263,9 +263,16 @@ class CheckoutController extends Controller
                 $itemQty = (int) $item['quantity'];
                 $itemTotal = $itemPrice * $itemQty;
 
-                $productId = is_numeric($item['id'] ?? null) ? (int) $item['id'] : null;
+                $rawProdId = $item['productId'] ?? $item['product_id'] ?? (is_numeric($item['id'] ?? null) ? (int) $item['id'] : null);
+                $productId = is_numeric($rawProdId) ? (int) $rawProdId : null;
                 if ($productId && !Product::where('id', $productId)->exists()) {
                     $productId = null;
+                }
+                if (!$productId && !empty($item['name'])) {
+                    $cleanName = explode(' - ', $item['name'])[0];
+                    $productId = Product::where('product_name', $item['name'])
+                        ->orWhere('product_name', 'like', $cleanName . '%')
+                        ->value('id');
                 }
 
                 $variationId = is_numeric($item['variationId'] ?? null) ? (int) $item['variationId'] : null;
@@ -369,9 +376,16 @@ class CheckoutController extends Controller
                     $itemQty = (int) $item['quantity'];
                     $itemTotal = $itemPrice * $itemQty;
 
-                    $productId = is_numeric($item['id'] ?? null) ? (int) $item['id'] : null;
+                    $rawProdId = $item['productId'] ?? $item['product_id'] ?? (is_numeric($item['id'] ?? null) ? (int) $item['id'] : null);
+                    $productId = is_numeric($rawProdId) ? (int) $rawProdId : null;
                     if ($productId && !Product::where('id', $productId)->exists()) {
                         $productId = null;
+                    }
+                    if (!$productId && !empty($item['name'])) {
+                        $cleanName = explode(' - ', $item['name'])[0];
+                        $productId = Product::where('product_name', $item['name'])
+                            ->orWhere('product_name', 'like', $cleanName . '%')
+                            ->value('id');
                     }
 
                     $variationId = is_numeric($item['variationId'] ?? null) ? (int) $item['variationId'] : null;

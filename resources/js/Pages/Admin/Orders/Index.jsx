@@ -66,7 +66,9 @@ export default function Index({ orders, counts, filters }) {
             case 'pending':
                 return { bg: '#FEF3C7', text: '#92400E', border: '#FDE68A', label: 'Pending Prep' };
             case 'shipping':
-                return { bg: '#E0E7FF', text: '#3730A3', border: '#C7D2FE', label: 'In Transit / Shipping' };
+                return { bg: '#E0E7FF', text: '#3730A3', border: '#C7D2FE', label: 'Shipping / In Transit' };
+            case 'out_for_delivery':
+                return { bg: '#F3E8FF', text: '#6B21A8', border: '#E9D5FF', label: 'Out for Delivery' };
             case 'delivered':
                 return { bg: '#DCFCE7', text: '#15803D', border: '#BBF7D0', label: 'Delivered' };
             case 'cancelled':
@@ -156,7 +158,7 @@ export default function Index({ orders, counts, filters }) {
                     }}
                 >
                     <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#4F46E5', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        Out for Delivery / Shipping
+                        Shipping / In Transit
                     </div>
                     <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#3730A3', marginTop: '0.35rem' }}>
                         {counts?.shipping || 0}
@@ -221,6 +223,7 @@ export default function Index({ orders, counts, filters }) {
                             { key: 'all', label: 'All Orders', count: counts?.total },
                             { key: 'pending', label: 'Pending', count: counts?.pending },
                             { key: 'shipping', label: 'Shipping', count: counts?.shipping },
+                            { key: 'out_for_delivery', label: 'Out for Delivery', count: counts?.out_for_delivery },
                             { key: 'delivered', label: 'Delivered', count: counts?.delivered },
                             { key: 'cancelled', label: 'Cancelled', count: counts?.cancelled },
                         ].map((tab) => (
@@ -486,7 +489,8 @@ export default function Index({ orders, counts, filters }) {
                                                         title="Quick change delivery status"
                                                     >
                                                         <option value="pending">Pending</option>
-                                                        <option value="shipping">Shipping</option>
+                                                        <option value="shipping">Shipping (In Transit)</option>
+                                                        <option value="out_for_delivery">Out for Delivery</option>
                                                         <option value="delivered">Delivered</option>
                                                         <option value="cancelled">Cancelled</option>
                                                     </select>

@@ -6,9 +6,6 @@ import {
     ShoppingBag,
     MapPin,
     ArrowRight,
-    Clock,
-    Truck,
-    CheckCircle2,
 } from 'lucide-react';
 
 export default function CustomerDashboard({
@@ -34,7 +31,9 @@ export default function CustomerDashboard({
             case 'pending':
                 return { bg: '#FEF3C7', text: '#92400E', border: '#FDE68A', label: 'Pending' };
             case 'shipping':
-                return { bg: '#E0E7FF', text: '#3730A3', border: '#C7D2FE', label: 'In Transit / Shipping' };
+                return { bg: '#E0E7FF', text: '#3730A3', border: '#C7D2FE', label: 'In Transit' };
+            case 'out_for_delivery':
+                return { bg: '#F3E8FF', text: '#6B21A8', border: '#E9D5FF', label: 'Out for Delivery' };
             case 'delivered':
                 return { bg: '#DCFCE7', text: '#15803D', border: '#BBF7D0', label: 'Delivered' };
             case 'cancelled':
@@ -169,96 +168,6 @@ export default function CustomerDashboard({
                         </div>
                     </Link>
                 </div>
-
-                {/* Active Order In-Progress Tracker (if any) */}
-                {activeOrder && (
-                    <div
-                        style={{
-                            border: '1.5px solid #E2D9CC',
-                            borderLeft: '4px solid #631826',
-                            borderRadius: '8px',
-                            padding: '24px',
-                            background: '#FFFFFF',
-                            marginBottom: '32px',
-                        }}
-                    >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '16px' }}>
-                            <div>
-                                <span style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', color: '#631826', letterSpacing: '0.05em' }}>
-                                    Active Order In-Progress
-                                </span>
-                                <h3 style={{ margin: '4px 0 0', fontFamily: 'Cormorant Garamond, serif', fontSize: '24px', color: '#0F172A' }}>
-                                    Order #{activeOrder.order_id}
-                                </h3>
-                            </div>
-                            <span
-                                style={{
-                                    padding: '4px 12px',
-                                    borderRadius: '999px',
-                                    fontSize: '12px',
-                                    fontWeight: 700,
-                                    background: '#FEF3C7',
-                                    color: '#92400E',
-                                }}
-                            >
-                                {activeOrder.status === 'Kitchen Prep' ? 'Pending' : activeOrder.status}
-                            </span>
-                        </div>
-
-                        {/* Stepper */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', margin: '20px 0 16px 0', textAlign: 'center' }}>
-                            {[
-                                { step: 1, title: 'Confirmed' },
-                                { step: 2, title: 'Pending' },
-                                { step: 3, title: 'In Transit' },
-                                { step: 4, title: 'Delivered' },
-                            ].map((s) => (
-                                <div
-                                    key={s.step}
-                                    style={{
-                                        padding: '8px 4px',
-                                        borderRadius: '6px',
-                                        background: activeOrder.current_step >= s.step ? 'rgba(99, 24, 38, 0.08)' : '#F8FAFC',
-                                        border: activeOrder.current_step >= s.step ? '1px solid #631826' : '1px solid #E2E8F0',
-                                    }}
-                                >
-                                    <div
-                                        style={{
-                                            fontSize: '11px',
-                                            fontWeight: 800,
-                                            color: activeOrder.current_step >= s.step ? '#631826' : '#94A3B8',
-                                        }}
-                                    >
-                                        Step {s.step}
-                                    </div>
-                                    <div
-                                        style={{
-                                            fontSize: '12px',
-                                            fontWeight: 700,
-                                            color: activeOrder.current_step >= s.step ? '#0F172A' : '#94A3B8',
-                                            marginTop: '2px',
-                                        }}
-                                    >
-                                        {s.title}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        <p style={{ margin: '0 0 16px 0', fontSize: '13px', color: '#64748B' }}>
-                            {activeOrder.estimated_delivery}
-                        </p>
-
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #F1E9DF', paddingTop: '14px', flexWrap: 'wrap', gap: '10px' }}>
-                            <div style={{ fontSize: '13px', color: '#475569' }}>
-                                Total: <strong>₹{Number(activeOrder.total_amount).toFixed(2)}</strong> via {activeOrder.payment_mode}
-                            </div>
-                            <Link href="/customer/orders" className="dayal-btn dayal-btn--outline dayal-btn--sm" style={{ padding: '6px 14px', fontSize: '12px' }}>
-                                View Order Details →
-                            </Link>
-                        </div>
-                    </div>
-                )}
 
                 {/* Recent Orders Overview */}
                 <div style={{ background: '#FFFFFF', border: '1px solid #EBE4D8', borderRadius: '8px', padding: '24px' }}>

@@ -8,6 +8,7 @@ use App\Http\Controllers\Public\AccountController;
 use App\Http\Controllers\Public\CheckoutController;
 use App\Http\Controllers\Public\DashboardController;
 use App\Http\Controllers\Public\HomeController;
+use App\Http\Controllers\Public\ProductReviewController;
 use Illuminate\Support\Facades\Route;
 
 // Public Storefront
@@ -36,6 +37,12 @@ Route::get('/refund-returns', [HomeController::class, 'refundReturns'])->name('r
 Route::get('/refund-and-returns-policy', [HomeController::class, 'refundReturns'])->name('refund-returns.alias');
 Route::get('/franchise', [HomeController::class, 'franchise'])->name('franchise');
 Route::get('/product/{slug?}', [HomeController::class, 'product'])->name('product.show');
+Route::get('/api/outlets', function () {
+    return response()->json([
+        'success' => true,
+        'data' => \App\Models\Outlet::where('is_active', true)->orderBy('sort_order')->orderBy('id')->get(),
+    ]);
+})->name('api.outlets');
 
 // Authenticated Smart Role Dispatchers
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -54,6 +61,7 @@ Route::middleware(['auth', 'verified', 'role:'.UserRole::Customer->value])->pref
     Route::get('/account', [AccountController::class, 'index'])->name('account');
     Route::patch('/account/profile', [AccountController::class, 'updateProfile'])->name('account.profile');
     Route::put('/account/password', [AccountController::class, 'updatePassword'])->name('account.password');
+    Route::post('/reviews', [ProductReviewController::class, 'store'])->name('reviews.store');
 });
 
 // General Profile Management (Fallback / Shared)

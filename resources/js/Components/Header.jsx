@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, LayoutDashboard, LogOut, Menu, Package, Search, ShoppingBag, UserRound, X } from 'lucide-react';
+import { ChevronDown, LayoutDashboard, LogOut, MapPin, Menu, Package, Search, ShoppingBag, UserRound, X } from 'lucide-react';
 import { Link, router, usePage } from '@inertiajs/react';
 import { useCart } from '@/Context/CartContext';
 import CartDrawer from '@/Components/CartDrawer';
@@ -298,6 +298,22 @@ export default function Header({ auth }) {
                                                     </div>
                                                 </Link>
 
+                                                {!isAdmin && (
+                                                    <Link
+                                                        href="/customer/addresses"
+                                                        className="dayal-dropdown-item"
+                                                        onClick={() => setUserMenuOpen(false)}
+                                                    >
+                                                        <span className="dayal-dropdown-icon-box">
+                                                            <MapPin size={15} />
+                                                        </span>
+                                                        <div className="dayal-dropdown-item-content">
+                                                            <span className="dayal-dropdown-item-title">Saved Addresses</span>
+                                                            <span className="dayal-dropdown-item-desc">Shipping & billing details</span>
+                                                        </div>
+                                                    </Link>
+                                                )}
+
                                                 <Link
                                                     href={accountUrl}
                                                     className="dayal-dropdown-item"
@@ -308,7 +324,9 @@ export default function Header({ auth }) {
                                                     </span>
                                                     <div className="dayal-dropdown-item-content">
                                                         <span className="dayal-dropdown-item-title">Account Details</span>
-                                                        <span className="dayal-dropdown-item-desc">Profile, password & addresses</span>
+                                                        <span className="dayal-dropdown-item-desc">
+                                                            {isAdmin ? 'Store profile & security' : 'Profile & password settings'}
+                                                        </span>
                                                     </div>
                                                 </Link>
 

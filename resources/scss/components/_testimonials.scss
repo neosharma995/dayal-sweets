@@ -28,7 +28,7 @@
     .dayal-testimonials-layout {
         display: flex;
         align-items: flex-end;
-        gap: 20px;
+        gap: 0;
         position: relative;
 
         @media (max-width: 1100px) {
@@ -40,26 +40,30 @@
         /* Mascot Column */
         .dayal-testimonials-mascot-col {
             flex-shrink: 0;
-            width: 260px;
+            width: auto;
             display: flex;
             align-items: flex-end;
-            justify-content: center;
+            justify-content: flex-start;
             margin-bottom: 0;
-
-            @media (max-width: 1280px) {
-                width: 220px;
-            }
 
             @media (max-width: 1100px) {
                 display: none; // Hides mascot on tablet & mobile, exactly matching rt_style.css line 452
             }
 
             .dayal-testimonials-mascot-img {
-                width: 100%;
+                width: auto;
                 height: auto;
-                max-height: 450px;
+                max-height: 475px;
                 object-fit: contain;
                 display: block;
+
+                @media (max-width: 1400px) {
+                    max-height: 440px;
+                }
+
+                @media (max-width: 1280px) {
+                    max-height: 410px;
+                }
             }
         }
 
@@ -69,7 +73,7 @@
             min-width: 0;
             display: flex;
             flex-direction: column;
-            gap: 36px;
+            gap: 32px;
 
             @media (max-width: 768px) {
                 gap: 24px;
@@ -78,18 +82,16 @@
     }
 
     /* Top Row: Eyebrow + Heading (Left) and 4.9 Rating Badge (Right) */
-    /* padding-left: 64px mathematically aligns Title with the Active Card (40px arrow + 24px gap = 64px) */
-    /* padding-right: 64px aligns Rating Badge with the 3 Stacked Cards */
     .dayal-testimonials-top-row {
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
-        padding-left: 64px;
-        padding-right: 64px;
+        padding-left: 56px;
+        padding-right: 56px;
 
         @media (max-width: 1280px) {
-            padding-left: 54px;
-            padding-right: 54px;
+            padding-left: 48px;
+            padding-right: 48px;
         }
 
         @media (max-width: 768px) {
@@ -178,17 +180,17 @@
             }
 
             .dayal-rating-google-img {
-                width: 116px;
-                height: 20px;
+                width: 92px;
+                height: 30px;
                 object-fit: contain;
                 margin: 4px 0 2px 0;
             }
 
             .dayal-rating-stars-img {
-                width: 102px;
-                height: 35px;
+                width: 108px;
+                height: 18px;
                 object-fit: contain;
-                margin: 0;
+                margin: 2px 0 4px 0;
             }
 
             .dayal-rating-text {
@@ -212,6 +214,7 @@
 
         @media (max-width: 900px) {
             gap: 14px;
+            align-items: center;
         }
 
         @media (max-width: 600px) {
@@ -238,9 +241,10 @@
             transition: all 0.2s ease;
 
             img {
-                width: 14px;
-                height: auto;
+                width: 8px;
+                height: 14px;
                 object-fit: contain;
+                display: block;
             }
 
             &:hover {
@@ -253,6 +257,11 @@
                 width: 32px;
                 height: 32px;
                 order: 2;
+
+                img {
+                    width: 7px;
+                    height: 12px;
+                }
             }
         }
 
@@ -276,7 +285,7 @@
     /* Active Featured Card */
     .ts-active-card {
         position: relative;
-        flex: 1.6;
+        flex: 1.85;
         background: #FFFFFF;
         border: 1px solid rgba(201, 169, 110, 0.4);
         border-radius: 16px;
@@ -298,14 +307,22 @@
             transform: scale(1);
         }
 
+        @media (max-width: 1024px) {
+            flex: 1 1 100% !important;
+            width: 100% !important;
+        }
+
         @media (max-width: 900px) {
-            padding: 40px 32px 32px 32px;
+            padding: 36px 28px 28px 28px;
             min-height: auto;
+            height: auto;
         }
 
         @media (max-width: 600px) {
-            padding: 28px 20px 24px 20px;
+            padding: 24px 18px 20px 18px;
             border-radius: 14px;
+            min-height: auto;
+            height: auto;
         }
 
         .ts-quote-icon {
@@ -314,15 +331,27 @@
             align-items: flex-start;
 
             .ts-quote-img {
-                width: 36px;
-                height: 36px;
+                width: 50px;
+                height: 50px;
                 object-fit: contain;
+
+                @media (max-width: 600px) {
+                    width: 36px;
+                    height: 36px;
+                }
             }
 
             .google-img-test {
-                width: 24px;
-                height: 24px;
+                width: 72px;
+                height: 36px;
                 object-fit: contain;
+                margin-right: -16px;
+
+                @media (max-width: 600px) {
+                    width: 50px;
+                    height: 25px;
+                    margin-right: -10px;
+                }
             }
         }
 
@@ -428,18 +457,13 @@
     /* Side Column: 3 Stacked Cards */
     .ts-side-column {
         flex: 1;
+        min-width: 0;
         display: flex;
         flex-direction: column;
         gap: 16px;
 
-        @media (max-width: 900px) {
-            flex-direction: row;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        @media (max-width: 600px) {
-            flex-direction: column;
+        @media (max-width: 1024px) {
+            display: none !important;
         }
 
         .ts-side-card {
@@ -449,6 +473,8 @@
             cursor: pointer;
             border: 1px solid #EFEBE5;
             transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+            height: auto;
+            min-height: auto;
 
             &.ts-is-next {
                 border: 1px solid rgba(201, 168, 76, 0.4);
@@ -467,11 +493,15 @@
             @media (max-width: 900px) {
                 flex: 1 1 calc(50% - 6px);
                 padding: 16px;
+                height: auto;
+                min-height: auto;
             }
 
             @media (max-width: 600px) {
                 flex: 1 1 100%;
                 padding: 14px;
+                height: auto;
+                min-height: auto;
             }
 
             .ts-side-header {

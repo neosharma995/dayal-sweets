@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from '@inertiajs/react';
 
 /**
@@ -9,6 +9,67 @@ export default function ProductCard({ product, onAddToCart }) {
     const hasVariations = product.variations && product.variations.length > 0;
     const [selectedVarIndex, setSelectedVarIndex] = useState(hasVariations ? 0 : null);
     const [qty, setQty] = useState(1);
+
+    const pillsRef = useRef(null);
+    const isDraggingRef = useRef(false);
+    const startXRef = useRef(0);
+    const scrollLeftRef = useRef(0);
+    const hasDraggedRef = useRef(false);
+
+    // Mouse wheel horizontal scrolling listener
+    useEffect(() => {
+        const el = pillsRef.current;
+        if (!el || !hasVariations) return;
+
+        const onWheel = (e) => {
+            if (e.deltaY !== 0) {
+                const maxScrollLeft = el.scrollWidth - el.clientWidth;
+                if (maxScrollLeft > 0) {
+                    const canScrollRight = e.deltaY > 0 && el.scrollLeft < maxScrollLeft - 1;
+                    const canScrollLeft = e.deltaY < 0 && el.scrollLeft > 1;
+
+                    if (canScrollRight || canScrollLeft) {
+                        e.preventDefault();
+                        el.scrollLeft += e.deltaY;
+                    }
+                }
+            }
+        };
+
+        el.addEventListener('wheel', onWheel, { passive: false });
+        return () => el.removeEventListener('wheel', onWheel);
+    }, [hasVariations]);
+
+    // Keep active pill scrolled into visible area
+    useEffect(() => {
+        if (pillsRef.current && selectedVarIndex !== null && pillsRef.current.children[selectedVarIndex]) {
+            const activePill = pillsRef.current.children[selectedVarIndex];
+            activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+        }
+    }, [selectedVarIndex]);
+
+    // Click & Drag-to-scroll handlers
+    const handleMouseDown = (e) => {
+        if (!pillsRef.current) return;
+        isDraggingRef.current = true;
+        hasDraggedRef.current = false;
+        startXRef.current = e.pageX - pillsRef.current.offsetLeft;
+        scrollLeftRef.current = pillsRef.current.scrollLeft;
+    };
+
+    const handleMouseMove = (e) => {
+        if (!isDraggingRef.current || !pillsRef.current) return;
+        const x = e.pageX - pillsRef.current.offsetLeft;
+        const walk = x - startXRef.current;
+        if (Math.abs(walk) > 4) {
+            hasDraggedRef.current = true;
+        }
+        pillsRef.current.scrollLeft = scrollLeftRef.current - walk;
+    };
+
+    const handleMouseUp = () => {
+        isDraggingRef.current = false;
+    };
 
     const activeVariation = hasVariations && selectedVarIndex !== null ? product.variations[selectedVarIndex] : null;
 
@@ -88,7 +149,16 @@ export default function ProductCard({ product, onAddToCart }) {
                 )}
 
                 {hasVariations && (
-                    <div className="product-card__variations dayal-variation-pills-row" role="radiogroup" aria-label="Product variations">
+                    <div
+                        ref={pillsRef}
+                        className="product-card__variations dayal-variation-pills-row"
+                        role="radiogroup"
+                        aria-label="Product variations"
+                        onMouseDown={handleMouseDown}
+                        onMouseMove={handleMouseMove}
+                        onMouseUp={handleMouseUp}
+                        onMouseLeave={handleMouseUp}
+                    >
                         {product.variations.map((v, i) => (
                             <button
                                 key={v.label}
@@ -96,7 +166,13 @@ export default function ProductCard({ product, onAddToCart }) {
                                 className={`product-card__var-pill dayal-var-pill-mini ${selectedVarIndex === i ? 'active' : ''}`}
                                 role="radio"
                                 aria-checked={selectedVarIndex === i}
-                                onClick={() => setSelectedVarIndex(i)}
+                                onClick={(e) => {
+                                    if (hasDraggedRef.current) {
+                                        e.preventDefault();
+                                        return;
+                                    }
+                                    setSelectedVarIndex(i);
+                                }}
                             >
                                 {v.label}
                             </button>

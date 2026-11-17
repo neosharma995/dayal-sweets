@@ -44,6 +44,8 @@ class Product extends Model
         'product_image',
         'product_gallaries',
         'product_details',
+        'rating',
+        'rating_count',
     ];
 
     /**
@@ -93,6 +95,8 @@ class Product extends Model
             'product_qty' => 'integer',
             'product_gallaries' => 'array',
             'product_details' => 'array',
+            'rating' => 'decimal:2',
+            'rating_count' => 'integer',
         ];
     }
 
@@ -204,6 +208,14 @@ class Product extends Model
     public function variations(): HasMany
     {
         return $this->hasMany(ProductVariation::class, 'product_id')->orderBy('price');
+    }
+
+    /**
+     * Relationship: Product has many Reviews.
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ProductReview::class, 'product_id')->latest();
     }
 
     /**

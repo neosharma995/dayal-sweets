@@ -90,16 +90,19 @@
     }
 
     // Outlets Slider / Grid
+    .dayal-outlets-slider-wrapper,
     .oto-outlets-slider-wrapper {
         position: relative;
         width: 100%;
     }
 
+    .dayal-outlets-track-container,
     .oto-outlets-track-container {
         position: relative;
         width: 100%;
     }
 
+    .dayal-outlets-track,
     .oto-outlets-track {
         display: grid;
         grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -124,6 +127,7 @@
     }
 
     // Outlet Card
+    .dayal-outlet-card,
     .oto-outlet-card {
         position: relative;
         flex: 0 0 300px;
@@ -149,6 +153,7 @@
             box-shadow: 0 14px 30px rgba(73, 38, 20, 0.16);
         }
 
+        .dayal-outlet-card-img-wrap,
         .oto-outlet-card-img-wrap {
             width: 100%;
             height: 200px;
@@ -156,6 +161,7 @@
             background: #FAF7F2;
             position: relative;
 
+            .dayal-outlet-card-img,
             .oto-outlet-card-img {
                 width: 100%;
                 height: 100%;
@@ -164,16 +170,19 @@
             }
         }
 
+        &:hover .dayal-outlet-card-img,
         &:hover .oto-outlet-card-img {
             transform: scale(1.04);
         }
 
+        .dayal-outlet-card-content,
         .oto-outlet-card-content {
             padding: 20px 18px 18px;
             display: flex;
             flex-direction: column;
             flex: 1;
 
+            .dayal-outlet-card-title,
             .oto-outlet-card-title {
                 font-family: 'Plus Jakarta Sans', sans-serif;
                 font-size: 24px;
@@ -184,6 +193,7 @@
                 line-height: 38.4px;
             }
 
+            .dayal-outlet-card-row,
             .oto-outlet-card-row {
                 font-family: "Inter", sans-serif;
                 display: flex;
@@ -195,15 +205,15 @@
                 line-height: 1.4;
                 margin-bottom: 9px;
 
+                .dayal-outlet-card-icon,
                 .oto-card-icon {
                     flex-shrink: 0;
                     margin-top: 2px;
                     display: flex;
                     align-items: center;
-
-
                 }
 
+                .dayal-outlet-card-link,
                 .oto-card-link {
                     color: #5A4A42;
                     text-decoration: none;
@@ -216,11 +226,13 @@
                 }
             }
 
+            .dayal-outlet-card-map-action,
             .oto-outlet-card-map-action {
                 margin-top: auto;
                 padding-top: 14px;
                 text-align: center;
 
+                .dayal-outlet-view-map-link,
                 .oto-view-map-link {
                     font-family: 'Inter', sans-serif;
                     font-size: 13.5px;
@@ -237,6 +249,7 @@
                         text-decoration: underline;
                     }
 
+                    .dayal-outlet-arrow-icon,
                     .oto-arrow-icon {
                         font-size: 14px;
                         line-height: 1;
@@ -246,7 +259,9 @@
         }
 
         // Palampur Coming Soon Card Variant
+        &.dayal-outlet-card-coming-soon,
         &.oto-coming-soon-card {
+            .dayal-outlet-card-ribbon,
             .oto-coming-soon-ribbon {
                 position: absolute;
                 top: 16px;
@@ -267,6 +282,7 @@
                 box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
             }
 
+            .dayal-outlet-card-img::after,
             .oto-outlet-card-img::after {
                 content: "";
                 position: absolute;
@@ -275,22 +291,26 @@
                 pointer-events: none;
             }
 
+            .dayal-outlet-card-img,
             .oto-outlet-card-img {
                 filter: grayscale(0.55) sepia(0.35) opacity(0.6);
                 opacity: 0.3;
                 background-color: #f3e8d8;
             }
 
+            .dayal-outlet-card-title,
             .oto-outlet-card-title {
                 margin: 0px;
             }
 
+            .dayal-outlet-card-body-coming-soon,
             .oto-coming-soon-body {
                 text-align: center;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
 
+                .dayal-outlet-card-opening-soon,
                 .oto-opening-soon-text {
                     color: #98652f;
                     font-family: 'Playfair Display', serif;
@@ -300,6 +320,7 @@
                     letter-spacing: 0.5px;
                 }
 
+                .dayal-outlet-laurel-badge,
                 .oto-laurel-badge {
                     display: flex;
                     align-items: center;
@@ -307,6 +328,7 @@
                     gap: 8px;
                     margin: 16px;
 
+                    .dayal-outlet-laurel-leaf,
                     .oto-laurel-leaf {
                         width: 28px;
                         height: 56px;
@@ -314,12 +336,14 @@
                         opacity: 0.85;
                     }
 
+                    .dayal-outlet-laurel-text,
                     .oto-laurel-text {
                         display: flex;
                         flex-direction: column;
                         align-items: center;
                         text-align: center;
 
+                        .dayal-outlet-laurel-label,
                         .oto-laurel-label {
                             color: #8a7a6c;
                             font-family: 'Inter', sans-serif;
@@ -328,6 +352,7 @@
                             text-transform: capitalize;
                         }
 
+                        .dayal-outlet-laurel-val,
                         .oto-laurel-val {
                             color: #1c1008;
                             font-family: 'Inter', sans-serif;
@@ -338,9 +363,11 @@
                     }
                 }
 
+                .dayal-outlet-card-notify-action,
                 .oto-outlet-card-notify-action {
                     margin-top: auto;
 
+                    .dayal-outlet-notify-btn,
                     .oto-notify-btn {
                         background: #7B1C2E;
                         color: #FFFFFF;
@@ -372,6 +399,7 @@
                 }
             }
 
+            .dayal-outlet-card-title,
             .oto-outlet-card-title {
                 font-size: 30px;
             }
@@ -380,6 +408,7 @@
     }
 
     // Dots for mobile/tablet slider
+    .dayal-outlets-dots-wrapper,
     .oto-outlets-dots-wrapper {
         display: none;
         align-items: center;
@@ -391,6 +420,7 @@
             display: flex;
         }
 
+        .dayal-outlet-dot,
         .oto-outlet-dot {
             width: 10px;
             height: 10px;

@@ -12,8 +12,8 @@
     &-cta-inner {
         @include dayal-container;
         position: relative;
-        height: 550px;
-        min-height: 550px;
+        height: 490px;
+        min-height: 490px;
     }
 
     &-cta-content {
@@ -21,12 +21,12 @@
         z-index: 1;
         display: flex;
         width: 56%;
-        min-height: 550px;
+        min-height: 490px;
         min-width: 0;
         align-items: flex-start;
         flex-direction: column;
         gap: 20px;
-        padding: 35px 0 48px 30px;
+        padding: 35px 0 48px 0px;
         box-sizing: border-box;
     }
 
@@ -93,20 +93,21 @@
     }
 
     &-cta-actions a {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        border: 1px solid transparent;
-        border-radius: 0;
-        padding: 15px 40px;
-        color: #FFFFFF;
-        font: 500 16px/18px $ds-font-body;
+        background-color: #7B1022;
+        font-family: "Inter", Sans-serif;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 18px;
         letter-spacing: 0.3px;
-        text-align: center;
-        text-decoration: none;
-        white-space: nowrap;
-        transition: background-color 300ms, color 300ms, border-color 300ms;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: white;
+        border: 1px solid #7B1022;
+        height: 50px;
+        border-color: rgba(0, 0, 0, 0);
+        border-radius: 0px 0px 0px 0px;
+        padding: 15.5px 81.58px 15.5px 81.5px;
     }
 
     &-cta-actions a:first-child {
@@ -165,7 +166,7 @@
         bottom: 0;
         left: 56%;
         width: calc(44% + max(0px, (100vw - 1720px) / 2));
-        height: calc(100% - 0px);
+        height: 100%;
         object-fit: cover;
         object-position: center center;
     }

@@ -1,144 +1,230 @@
-/**
- * Privacy Policy Page Scoped Styles - Dayal Sweets
- * 100% Faithful to Dayal Sweets Design System & Source of Truth (Post 3)
- *
- * STRICT RULES:
- * - Units: STRICTLY px (no rem, no em).
- * - Container: width: 90%; max-width: 100%; margin-left: auto; margin-right: auto;
- * - No fixed pixel max-width on page containers.
- * - Scoped under .privacy-policy-page-root
- */
+// ==========================================================================
+// DAYAL SWEETS — PRIVACY POLICY PAGE STYLESHEET
+// 100% Faithful to Dayal Sweets Design System & Source of Truth (Post 3)
+// Strictly PX units throughout (no rem, no em)
+// Fully Responsive: Desktop (>1024px), Tablet (1024px), Small Tablet (768px), Mobile (<=468px)
+// Container: width: 90% and max-width: 100% (No restrictive fixed max-width)
+// Scoped under .privacy-policy-page-root
+// ==========================================================================
 
 .privacy-policy-page-root {
+  width: 100%;
+  max-width: 100%;
+  background-color: #FFFDFA;
+  color: #1C1008;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+
+  // --------------------------------------------------------------------------
+  // 1. PAGE MAIN CONTAINER
+  // --------------------------------------------------------------------------
+  .privacy-policy-page-main {
+    flex: 1;
     width: 100%;
     background-color: #FFFDFA;
+    box-sizing: border-box;
+
+    @media (max-width: 1024px) {
+      padding-bottom: 50px;
+    }
+
+    @media (max-width: 768px) {
+      padding-bottom: 40px;
+    }
+
+    @media (max-width: 468px) {
+      padding-bottom: 30px;
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // 2. 90% FULL-WIDTH PAGE CONTAINER
+  // Follows website full-width standard: width: 90% / max-width: 100%
+  // --------------------------------------------------------------------------
+  .privacy-policy-page-container {
+    width: 90%;
+    max-width: 1140px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 50px 0px;
+    box-sizing: border-box;
+
+    @media (max-width: 1024px) {
+      width: 90%;
+      padding: 40px 0px;
+    }
+
+    @media (max-width: 768px) {
+      width: 90%;
+      padding: 30px 0px;
+    }
+
+    @media (max-width: 468px) {
+      width: 92%;
+      padding: 20px 0px;
+    }
+
+    @media (max-width: 360px) {
+      width: 94%;
+      padding: 16px 0px;
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // 3. CONTENT CARD BOX
+  // --------------------------------------------------------------------------
+  .privacy-policy-content-card {
+    background: #FFFFFF;
+    border: 1px solid #E9DCCB;
+    border-radius: 16px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.03);
+    padding: 50px 60px;
+    box-sizing: border-box;
+
+    @media (max-width: 1024px) {
+      padding: 40px 45px;
+      border-radius: 14px;
+    }
+
+    @media (max-width: 768px) {
+      padding: 30px 28px;
+      border-radius: 12px;
+    }
+
+    @media (max-width: 468px) {
+      padding: 22px 18px;
+      border-radius: 12px;
+    }
+
+    @media (max-width: 360px) {
+      padding: 18px 14px;
+      border-radius: 10px;
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // 4. SECTION BLOCK & DIVIDERS
+  // --------------------------------------------------------------------------
+  .privacy-policy-section-block {
+    margin-bottom: 35px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #F5E8D8;
+
+    &:last-child {
+      margin-bottom: 0px;
+      padding-bottom: 0px;
+      border-bottom: none;
+    }
+
+    @media (max-width: 1024px) {
+      margin-bottom: 30px;
+      padding-bottom: 25px;
+    }
+
+    @media (max-width: 768px) {
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+    }
+
+    @media (max-width: 468px) {
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // 5. SECTION HEADINGS (H2)
+  // --------------------------------------------------------------------------
+  .privacy-policy-section-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 32px;
+    color: #5C1520;
+    margin-top: 0px;
+    margin-bottom: 16px;
+
+    @media (max-width: 1024px) {
+      font-size: 22px;
+      line-height: 30px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 20px;
+      line-height: 28px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 468px) {
+      font-size: 18px;
+      line-height: 25px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 360px) {
+      font-size: 17px;
+      line-height: 24px;
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // 6. SECTION PARAGRAPH TEXT & HIGHLIGHTS
+  // --------------------------------------------------------------------------
+  .privacy-policy-content-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 26px;
+    color: #4A3E3D;
+    margin-top: 0px;
+    margin-bottom: 14px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+
+    &:last-child {
+      margin-bottom: 0px;
+    }
+
+    @media (max-width: 1024px) {
+      font-size: 15px;
+      line-height: 25px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 14.5px;
+      line-height: 24px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 468px) {
+      font-size: 14px;
+      line-height: 23px;
+      margin-bottom: 12px;
+    }
+  }
+
+  .privacy-policy-content-highlight {
+    font-weight: 600;
     color: #1C1008;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+  }
 
-    /* Page Main Container */
-    .privacy-policy-page-main {
-        flex: 1;
-        width: 100%;
-        background-color: #FFFDFA;
-        padding-top: 60px;
+  // --------------------------------------------------------------------------
+  // 7. IN-TEXT LINKS
+  // --------------------------------------------------------------------------
+  .privacy-policy-content-link {
+    color: #8B1028;
+    text-decoration: underline;
+    word-break: break-all;
+    overflow-wrap: anywhere;
+    transition: color 0.2s ease;
 
-        @media (max-width: 1024px) {
-            padding-top: 45px;
-            padding-bottom: 60px;
-        }
-
-        @media (max-width: 768px) {
-            padding-top: 30px;
-            padding-bottom: 45px;
-        }
+    &:hover {
+      color: #5C1520;
     }
-
-    /* 90% Strict Width Container */
-    .privacy-policy-page-container {
-        width: 90%;
-        max-width: 1400px;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 50px 20px;
-    }
-
-    /* Content Card Box */
-    .privacy-policy-content-card {
-        background: #FFFFFF;
-        border: 1px solid #E9DCCB;
-        border-radius: 16px;
-        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.03);
-        padding: 50px 60px;
-
-        @media (max-width: 1024px) {
-            padding: 35px 35px;
-            border-radius: 14px;
-        }
-
-        @media (max-width: 768px) {
-            padding: 25px 18px;
-            border-radius: 10px;
-        }
-    }
-
-    /* Section Block */
-    .privacy-policy-section-block {
-        margin-bottom: 35px;
-        padding-bottom: 30px;
-        border-bottom: 1px solid #F5E8D8;
-
-        &:last-child {
-            margin-bottom: 0px;
-            padding-bottom: 0px;
-            border-bottom: none;
-        }
-
-        @media (max-width: 768px) {
-            margin-bottom: 25px;
-            padding-bottom: 22px;
-        }
-    }
-
-    /* Section Headings */
-    .privacy-policy-section-title {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 24px;
-        font-weight: 700;
-        line-height: 32px;
-        color: #5C1520;
-        margin-top: 0px;
-        margin-bottom: 16px;
-
-        @media (max-width: 1024px) {
-            font-size: 22px;
-            line-height: 30px;
-        }
-
-        @media (max-width: 768px) {
-            font-size: 19px;
-            line-height: 26px;
-            margin-bottom: 12px;
-        }
-    }
-
-    /* Section Paragraph Text */
-    .privacy-policy-content-text {
-        font-family: 'Inter', sans-serif;
-        font-size: 15px;
-        font-weight: 400;
-        line-height: 26px;
-        color: #4A3E3D;
-        margin-top: 0px;
-        margin-bottom: 14px;
-
-        &:last-child {
-            margin-bottom: 0px;
-        }
-
-        @media (max-width: 768px) {
-            font-size: 14px;
-            line-height: 23px;
-            margin-bottom: 12px;
-        }
-    }
-
-    /* Highlighted Prefix / Label */
-    .privacy-policy-content-highlight {
-        font-weight: 600;
-        color: #1C1008;
-    }
-
-    /* In-text Links */
-    .privacy-policy-content-link {
-        color: #8B1028;
-        text-decoration: underline;
-        word-break: break-all;
-        transition: color 0.2s ease;
-
-        &:hover {
-            color: #5C1520;
-        }
-    }
+  }
 }

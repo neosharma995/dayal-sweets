@@ -19,34 +19,38 @@
         align-items: center;
         justify-content: center;
         gap: 12px;
-        margin-bottom: 8px;
 
         .gifting-eyebrow-divider {
             display: inline-block;
             width: 40px;
             height: 1px;
-            background-color: #DAAE68;
+            background-color: #1C1008;
         }
 
         .gifting-eyebrow-text {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: "Inter", Sans-serif;
             font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: #DAAE68;
+            font-weight: 400;
             text-transform: uppercase;
+            line-height: 16px;
+            letter-spacing: 4.8px;
+            color: #1C1008;
         }
     }
 
     /* Common Section Heading */
     .gifting-section-heading {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 38px;
-        font-weight: 700;
-        line-height: 48px;
-        color: #5C1520;
+        font-family: "Plus Jakarta Sans", Sans-serif;
+        font-size: 55px;
+        font-weight: 400;
+        max-width: 755px;
+        margin: auto;
+        line-height: 82px;
+        color: #4A2E1F;
         text-align: center;
-        margin: 0 0 12px 0;
+        margin-bottom: 20px;
+
+
 
         .rt-span-color {
             color: #C9A96E;
@@ -55,13 +59,15 @@
 
     /* Common Section Subtitle */
     .gifting-section-subtitle {
-        font-family: 'Inter', sans-serif;
-        font-size: 16px;
-        line-height: 24px;
-        color: #7A6B55;
+        font-family: "Inter", Sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 32.2px;
+        color: #1C1008;
         text-align: center;
-        margin: 0 0 35px 0;
+        margin-bottom: 50px;
     }
+
 
     /* Hero Banner Right Visual (Gifting Art) */
     .contact-hero-decor-right-visual {
@@ -85,7 +91,8 @@
        ======================================================== */
     .gifting-occasion-section {
         padding: 80px 0;
-        background-color: #FFFDFA;
+        background-color: #FAF7F2;
+        border-bottom: 1px solid #C9A96E4D;
 
         @media (max-width: 1024px) {
             padding: 50px 0;
@@ -209,7 +216,7 @@
        ======================================================== */
     .gifting-collections-section {
         padding: 80px 0;
-        background-color: #FFFDFA;
+        background-color: #FAF7F2;
 
         @media (max-width: 1024px) {
             padding: 50px 0;
@@ -238,12 +245,11 @@
 
         .gifting-collection-card {
             flex: 1;
-            min-height: 480px;
             border-radius: 10px;
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
-            padding: 35px;
+            padding: 20px 35px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -264,7 +270,7 @@
                 display: flex;
                 align-items: center;
                 gap: 12px;
-                margin-bottom: 8px;
+                margin-bottom: 20px;
 
                 .gifting-collection-icon {
                     width: 35px;
@@ -308,12 +314,12 @@
                 margin: 0 0 24px 0;
                 display: flex;
                 flex-direction: column;
-                gap: 4px;
+                gap: 2px;
 
                 .gifting-collection-feature-item {
                     display: flex;
                     align-items: center;
-                    gap: 10px;
+                    gap: 15px;
                     font-family: 'Inter', sans-serif;
                     font-size: 16px;
                     font-weight: 400;
@@ -321,8 +327,8 @@
 
                     .gifting-collection-bullet {
                         display: inline-block;
-                        width: 8px;
-                        height: 8px;
+                        width: 7px;
+                        height: 7px;
                         border-radius: 50%;
                         flex-shrink: 0;
                     }
@@ -367,10 +373,10 @@
                 }
 
                 .gifting-collection-feature-item {
-                    color: #DAAE68;
+                    color: #ECE3DE;
 
                     .gifting-collection-bullet {
-                        background-color: #DAAE68;
+                        background-color: #ffffff;
                     }
                 }
 
@@ -404,6 +410,19 @@
                 .gifting-collection-link {
                     color: #000000;
                 }
+
+                .gifting-collection-header {
+                    .gifting-collection-title {
+                        color: #5C1520;
+                    }
+
+                    .gifting-collection-icon {
+                        color: #5C1520;
+
+                    }
+
+
+                }
             }
         }
     }
@@ -434,7 +453,7 @@
             display: grid;
             grid-template-columns: repeat(8, 1fr);
             gap: 27px;
-            margin-top: 30px;
+            margin-top: 45px;
 
             @media (max-width: 1200px) {
                 gap: 15px;
@@ -517,7 +536,7 @@
        ======================================================== */
     .gifting-benefits-section {
         padding: 80px 0;
-        background-color: #FFFDFA;
+        background-color: #FCF3E7;
 
         @media (max-width: 1024px) {
             padding: 50px 0;
@@ -563,7 +582,7 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            gap: 10px;
+            gap: 15px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
 
             &:hover {

@@ -256,8 +256,11 @@
 
     @media (max-width: 767px) {
         &-main-inner {
-            gap: 35px 20px;
-            padding: 30px 12px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 32px 16px;
+            padding: 30px 16px 20px;
         }
 
         &-brand {
@@ -270,9 +273,15 @@
             font-size: 14px;
         }
 
-        &-links-column {
-            width: calc(50% - 10px);
-            flex-basis: calc(50% - 10px);
+        &-links-column,
+        &-links-column:nth-of-type(1),
+        &-links-column:nth-of-type(2),
+        &-links-column:nth-of-type(3),
+        &-links-column:nth-of-type(n) {
+            width: calc(50% - 10px) !important;
+            flex-basis: calc(50% - 10px) !important;
+            max-width: calc(50% - 10px) !important;
+            flex: 0 0 calc(50% - 10px) !important;
         }
 
         &-gallery {

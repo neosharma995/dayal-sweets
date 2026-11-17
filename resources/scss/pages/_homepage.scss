@@ -87,9 +87,8 @@
 
     &-cta-actions {
         display: flex;
-        width: 89.58%;
         align-items: center;
-        gap: 40px;
+        gap: 20px;
         margin: 20px 0;
     }
 
@@ -100,7 +99,7 @@
         gap: 12px;
         border: 1px solid transparent;
         border-radius: 0;
-        padding: 15.5px 81.5px;
+        padding: 15px 40px;
         color: #FFFFFF;
         font: 500 16px/18px $ds-font-body;
         letter-spacing: 0.3px;
@@ -113,7 +112,6 @@
     &-cta-actions a:first-child {
         background: #7B1022;
         border-color: #7B1022;
-        padding-right: 81.58px;
     }
 
     &-cta-actions a:last-child {
@@ -221,43 +219,50 @@
 
     @media (max-width: 1024px) {
         &-cta-inner {
+            display: flex;
+            flex-direction: column;
             width: 100%;
             max-width: none;
             height: auto;
             min-height: 0;
-            padding: 30px 15px 0;
+            padding: 0;
         }
 
         &-cta-content {
+            order: 1;
             width: 100%;
             min-height: 0;
-            padding: 0 0 40px;
+            padding: 30px 20px 20px;
         }
 
         &-cta-image {
+            order: 2;
             position: relative;
+            left: 0;
             top: auto;
             right: auto;
             bottom: auto;
-            width: 100%;
-            height: 400px;
-            min-height: 400px;
-            margin-top: 0;
+            width: calc(100% - 10px);
+            max-width: calc(100% - 10px);
+            height: 280px;
+            min-height: 280px;
+            margin: 0 auto 5px;
             object-fit: cover;
+            border-radius: 0;
         }
 
         &-cta-benefits {
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px 20px;
+            width: 100%;
         }
 
         &-cta-benefit {
-            width: 40%;
-            max-width: 40%;
-            flex: 0 0 40%;
-        }
-
-        &-cta-benefits {
-            gap: 12px;
+            width: 100%;
+            max-width: none;
+            flex: unset;
+            padding-right: 0;
         }
 
         &-cta-heading h2 {
@@ -270,19 +275,46 @@
         }
 
         &-cta-actions {
-            gap: 30px;
+            width: 100%;
+            max-width: 440px;
+            gap: 16px;
             margin-top: 15px;
-            margin-bottom: 0;
+            margin-bottom: 20px;
+        }
+
+        &-cta-actions a {
+            flex: 1 1 0;
+            padding: 14px 20px;
         }
     }
 
     @media (max-width: 767px) {
         &-cta-inner {
-            padding: 20px 15px 0;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            width: 100%;
         }
 
         &-cta-content {
-            padding-bottom: 20px;
+            order: 1;
+            padding: 24px 16px 20px;
+        }
+
+        &-cta-image {
+            order: 2;
+            position: relative;
+            left: 0;
+            top: auto;
+            right: auto;
+            bottom: auto;
+            width: calc(100% - 10px);
+            max-width: calc(100% - 10px);
+            height: 220px;
+            min-height: 220px;
+            margin: 0 auto 5px;
+            object-fit: cover;
+            border-radius: 0;
         }
 
         &-eyebrow {
@@ -291,26 +323,45 @@
         }
 
         &-cta-heading h2 {
-            font-size: 25px;
+            font-size: 26px;
+        }
+
+        &-cta-description {
+            font-size: 14px;
+            line-height: 22px;
         }
 
         &-cta-actions {
-            gap: 10px;
-            margin-top: 12px;
+            width: 100%;
+            gap: 12px;
+            margin-top: 14px;
+            margin-bottom: 20px;
         }
 
         &-cta-actions a {
-            width: 150px;
-            max-width: 150px;
-            flex-grow: 1;
-            padding: 12px 20px;
-            font-size: 12px;
-            letter-spacing: 1px;
+            width: auto;
+            max-width: none;
+            flex: 1 1 0;
+            padding: 12px 14px;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            gap: 8px;
+            box-sizing: border-box;
         }
 
-        &-cta-image {
-            height: 250px;
-            min-height: 250px;
+        &-cta-benefits {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px 10px;
+            width: 100%;
+        }
+
+        &-cta-benefit {
+            width: 100%;
+            max-width: none;
+            flex: unset;
+            padding-right: 0;
+            gap: 10px;
         }
     }
 }
@@ -1550,7 +1601,7 @@
 
     &-desktop-image {
         display: flex;
-        justify-content: flex-end;
+        justify-content: center;
         align-self: flex-end;
 
         img {
@@ -1591,7 +1642,7 @@
     }
 
     @media (max-width: 1024px) {
-        padding: 50px 20px;
+        padding: 50px 0px;
 
         &::before {
             background-position: 0% 0px;
@@ -1621,23 +1672,25 @@
     }
 
     @media (max-width: 767px) {
-        padding: 30px 12px;
+        padding: 30px 0px;
 
         &::before {
             background-position: 0% 0px;
         }
 
         &-inner {
-            gap: 30px;
+            gap: 24px;
         }
 
         &-eyebrow {
-            font-size: 12px;
-            letter-spacing: 1px;
+            font-size: 11px;
+            letter-spacing: 2px;
         }
 
         &-title {
-            font-size: 25px;
+            font-size: 26px;
+            font-weight: 600;
+            line-height: 1.2;
         }
 
         &-grid {
@@ -1655,9 +1708,10 @@
             background-position: center right;
             background-repeat: no-repeat;
             background-size: cover;
+            padding: 16px;
 
             &-blue-bottle {
-                padding: 20px;
+                padding: 16px;
 
                 .dayal-home-launch-card-content {
                     width: 100%;
@@ -1665,7 +1719,7 @@
             }
 
             &-blueberry-cake {
-                padding: 20px;
+                padding: 16px;
 
                 .dayal-home-launch-card-content {
                     width: 100%;
@@ -1677,20 +1731,31 @@
         &-card-content {
             width: 100%;
             gap: 6px;
+            position: relative;
+        }
+
+        &-tag {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 2;
+            padding: 3.5px 10px;
+            font-size: 10.5px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
         }
 
         &-mobile-image {
             display: block;
             width: 100%;
-            padding: 6px 0 10px;
+            padding: 0 0 10px;
             text-align: start;
 
             img {
                 width: 100%;
                 height: auto;
                 max-height: none;
-                border-radius: 10px;
-                object-fit: contain;
+                border-radius: 8px;
+                object-fit: cover;
                 display: block;
             }
         }
@@ -1700,43 +1765,48 @@
         }
 
         &-product-title {
-            font-size: 30px;
-            margin: 0 0 6px;
+            font-size: 26px;
+            font-weight: 600;
+            line-height: 1.15;
+            margin: 0 0 4px;
         }
 
         &-product-subtitle {
-            font-size: 16px;
-            line-height: 24px;
+            font-size: 13px;
+            line-height: 18px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            text-transform: uppercase;
             margin: 0 0 6px;
         }
 
         &-frame-divider {
-            width: 160px;
-            margin: 4px 0 10px;
+            width: 130px;
+            margin: 4px 0 8px;
             display: block;
         }
 
         &-description {
-            font-size: 15px;
-            line-height: 24px;
-            margin: 0 0 12px;
+            font-size: 13.5px;
+            line-height: 20px;
+            margin: 0 0 10px;
         }
 
         &-card-blueberry-cake &-description {
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         &-bullet-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin: 0 0 16px;
+            gap: 7px;
+            margin: 0 0 12px;
 
             li {
                 display: flex;
                 align-items: center;
                 gap: 8px;
-                font: 600 13px/1 Inter, sans-serif;
+                font: 600 12px/1.3 Inter, sans-serif;
                 letter-spacing: 0.3px;
                 text-transform: uppercase;
                 color: #132b59;
@@ -1750,18 +1820,20 @@
         }
 
         &-features {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px 24px;
-            justify-content: flex-start;
-            align-items: flex-start;
-            padding: 10px 0 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px 12px;
+            align-items: start;
+            padding: 10px 0 16px;
+            width: 100%;
         }
 
         &-feature-group {
             display: flex;
             align-items: center;
-            width: 100px;
+            justify-content: center;
+            width: 100%;
+            max-width: none;
             gap: 0;
         }
 
@@ -1774,19 +1846,20 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            width: 100px;
+            width: 100%;
             gap: 6px;
         }
 
         &-feature-icon {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
         }
 
         &-feature-text {
-            font: 600 12px/16px 'Plus Jakarta Sans', sans-serif;
+            font: 600 11.5px/15px 'Plus Jakarta Sans', sans-serif;
             text-align: center;
-            white-space: pre-line;
+            white-space: normal;
+            word-break: normal;
         }
 
         &-actions {
@@ -1796,13 +1869,36 @@
             justify-content: flex-start;
             gap: 12px;
             flex-wrap: wrap;
-            margin-top: 10px;
+            margin-top: 4px;
         }
 
         &-btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             width: auto;
-            padding: 12px 28px;
+            padding: 10px 22px;
+            font: 500 13.5px/1 Inter, sans-serif;
             border-radius: 0;
+            white-space: nowrap;
+        }
+
+        &-btn-arrow {
+            width: 13px;
+            height: 13px;
+        }
+
+        &-btn-outlet {
+            font: italic 500 11px/15px 'Plus Jakarta Sans', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: #132b59;
+            white-space: nowrap;
+        }
+
+        &-card-blueberry-cake &-btn-outlet {
+            color: #48224a;
         }
     }
 
@@ -1813,25 +1909,25 @@
 
         &-card-blue-bottle,
         &-card-blueberry-cake {
-            padding: 20px 16px;
+            padding: 16px;
         }
 
         &-product-title {
-            font-size: 28px;
+            font-size: 24px;
         }
 
         &-product-subtitle {
-            font-size: 15px;
-            line-height: 24px;
+            font-size: 12.5px;
+            line-height: 17px;
         }
 
         &-features {
-            gap: 20px 16px;
+            gap: 14px 10px;
         }
 
         &-feature-group {
-            width: calc(50% - 10px);
-            max-width: 120px;
+            width: 100%;
+            max-width: none;
         }
 
         &-feature-item {
@@ -2106,7 +2202,7 @@
             margin-top: 30px;
         }
 
-        @media (max-width: 680px) {
+        @media (max-width: 767px) {
             grid-template-columns: 1fr;
             gap: 32px;
             margin-top: 24px;
@@ -2490,8 +2586,7 @@
     }
 }
 
-// 07. Our Support — Special Services (Matches Original Code Exactly)
-.rt-service-section,
+// 07. Our Support — Special Services
 .dayal-home-services {
     position: relative;
     background-color: #FAF7F2;
@@ -2507,12 +2602,16 @@
         padding: 50px 20px 50px 20px;
     }
 
-    @media (max-width: 600px) {
-        padding: 30px 12px 30px 12px;
+    @media (max-width: 767px) {
+        padding: 36px 0 20px;
+    }
+
+    @media (max-width: 480px) {
+        padding: 28px 0 16px;
     }
 
     // Left Decorative Background Image (bg221.png)
-    .rt-service-decor-left {
+    .dayal-home-services-decor-left {
         position: absolute;
         bottom: 0;
         left: -1px;
@@ -2532,7 +2631,7 @@
     }
 
     // Right Decorative Background Image (ChatGPT-Image-Sep-7-2026...)
-    .rt-service-decor-right {
+    .dayal-home-services-decor-right {
         position: absolute;
         bottom: 0;
         right: 0;
@@ -2551,27 +2650,26 @@
         }
     }
 
-    .rt-service-container,
     .dayal-home-services-inner {
         @include dayal-container;
         position: relative;
         z-index: 1;
     }
 
-    // Header matching original Elementor structure
-    .rt-service-header {
+    // Header structure
+    .dayal-home-services-header {
         text-align: center;
         max-width: 100%;
         margin: 0 auto;
 
-        .rt-service-eyebrow-wrap {
+        .dayal-home-services-eyebrow-wrap {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             margin-bottom: 0;
 
-            .rt-service-divider {
+            .dayal-home-services-divider {
                 width: 21px;
                 height: 1px;
                 background-color: #1C1008;
@@ -2579,7 +2677,7 @@
                 display: inline-block;
             }
 
-            .rt-service-eyebrow {
+            .dayal-home-services-eyebrow {
                 font-family: 'Inter', sans-serif;
                 font-size: 14px;
                 font-weight: 400;
@@ -2596,7 +2694,7 @@
             }
         }
 
-        .rt-service-heading {
+        .dayal-home-services-heading {
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 65px;
             font-weight: 400;
@@ -2605,7 +2703,7 @@
             margin: 12px 0 0;
             text-align: center;
 
-            .rt-span-color {
+            .dayal-highlight {
                 color: #7B1C2E;
                 font-weight: 500;
             }
@@ -2620,7 +2718,7 @@
             }
         }
 
-        .rt-service-desc {
+        .dayal-home-services-desc {
             font-family: 'Inter', sans-serif;
             font-size: 18px;
             font-weight: 400;
@@ -2644,8 +2742,7 @@
         }
     }
 
-    // Service Cards Slider / Grid (rt-service-slider-wrapper)
-    .rt-service-slider-wrapper,
+    // Service Cards Slider / Grid
     .dayal-home-services-grid {
         display: flex;
         flex-wrap: wrap;
@@ -2655,21 +2752,29 @@
         position: relative;
         z-index: 1;
 
-        @media (max-width: 1024px) {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            gap: 24px !important;
-            margin: 32px 0 0;
+        @media (max-width: 1400px) {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
         }
 
-        @media (max-width: 768px) {
-            grid-template-columns: 1fr !important;
-            gap: 18px !important;
-            margin: 28px 0 0;
+        @media (max-width: 1024px) {
+            gap: 18px;
+            margin: 32px 0;
+        }
+
+        @media (max-width: 767px) {
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin: 20px 0 0;
+        }
+
+        @media (max-width: 480px) {
+            gap: 14px;
+            margin: 16px 0 0;
         }
     }
 
-    .rt-service-slide,
     .dayal-home-service-card {
         position: relative;
         flex: 1 1 calc(25% - 18px);
@@ -2690,58 +2795,78 @@
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(28, 16, 8, 0.08);
 
-            .rt-service-product-image img,
-            .dayal-home-service-product {
+            .dayal-home-service-card-product img {
                 transform: scale(1.05);
             }
         }
 
-        @media (max-width: 1024px) {
+        @media (max-width: 1400px) {
             flex: unset;
             max-width: 100%;
+        }
+
+        @media (max-width: 1024px) {
             min-height: 320px;
             padding: 24px;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 767px) {
             flex: 0 0 100%;
             max-width: 100%;
-            min-height: 280px;
-            padding: 20px;
+            min-height: auto;
+            padding: 18px 16px 18px 16px;
+            border-radius: 12px;
         }
 
         @media (max-width: 480px) {
-            min-height: 240px;
-            padding: 16px 16px 45px 16px;
+            min-height: auto;
+            padding: 16px 16px 16px 16px;
             border-radius: 10px;
         }
     }
 
-    .rt-service-slide-content,
-    .dayal-home-service-copy {
+    .dayal-home-service-card-content {
         width: 100%;
         height: 100%;
         display: flex;
         flex-direction: column;
         font-family: 'Inter', sans-serif;
         position: relative;
-        z-index: 1;
+        z-index: 2;
     }
 
-    .rt-service-main {
+    .dayal-home-service-card-main {
         display: flex;
         align-items: center;
         margin-bottom: 15px;
-        gap: 15px;
+        gap: 12px;
 
-        @media (max-width: 768px) {
+        .dayal-home-service-card-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            img {
+                width: 32px;
+                height: 32px;
+                object-fit: contain;
+                display: block;
+
+                @media (max-width: 767px) {
+                    width: 26px;
+                    height: 26px;
+                }
+            }
+        }
+
+        @media (max-width: 767px) {
             gap: 10px;
             margin-bottom: 12px;
         }
     }
 
-    .rt-service-title,
-    .dayal-home-service-copy h3 {
+    .dayal-home-service-card-title {
         font-family: 'Plus Jakarta Sans', sans-serif;
         margin: 0;
         font-size: 28px;
@@ -2753,7 +2878,7 @@
             font-size: 24px;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 767px) {
             font-size: 22px;
         }
 
@@ -2762,14 +2887,12 @@
         }
     }
 
-    .rt-service-slide.is-first-slide .rt-service-title,
-    .rt-service-slide:first-child .rt-service-title,
-    .dayal-home-service-card.is-featured h3 {
-        color: #DAAE68 !important;
+    .dayal-home-service-card.is-first-slide .dayal-home-service-card-title,
+    .dayal-home-service-card.is-featured .dayal-home-service-card-title {
+        color: #DAAE68;
     }
 
-    .rt-service-description,
-    .dayal-home-service-copy p {
+    .dayal-home-service-card-desc {
         font-size: 15px;
         font-weight: 400;
         line-height: 22px;
@@ -2787,31 +2910,32 @@
             margin-bottom: 14px;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 767px) {
             font-size: 13.5px;
             line-height: 20px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+            max-width: 100%;
         }
 
         @media (max-width: 480px) {
             font-size: 12.5px;
             line-height: 18px;
+            margin-bottom: 8px;
+            max-width: 100%;
         }
     }
 
-    .rt-service-slide.is-first-slide .rt-service-description,
-    .rt-service-slide:first-child .rt-service-description,
-    .dayal-home-service-card.is-featured .dayal-home-service-copy p {
+    .dayal-home-service-card.is-first-slide .dayal-home-service-card-desc,
+    .dayal-home-service-card.is-featured .dayal-home-service-card-desc {
         color: #F8DFB6;
     }
 
-    .rt-service-points,
-    .dayal-home-service-copy ul {
+    .dayal-home-service-card-points {
         padding-left: 20px;
-        margin: 0 0 35px 0;
+        margin: 0 0 45px 0;
         z-index: 2;
         position: relative;
-        max-width: 65%;
+        max-width: 52%;
 
         li {
             font-weight: 300;
@@ -2824,7 +2948,7 @@
                 line-height: 20px;
             }
 
-            @media (max-width: 768px) {
+            @media (max-width: 767px) {
                 font-size: 12.5px;
                 line-height: 19px;
             }
@@ -2835,45 +2959,77 @@
             }
         }
 
-        @media (max-width: 768px) {
-            padding-left: 16px;
-        }
-    }
-
-    .rt-service-slide.is-first-slide .rt-service-points li,
-    .rt-service-slide:first-child .rt-service-points li,
-    .dayal-home-service-card.is-featured ul li {
-        color: #ECE3DE;
-    }
-
-    .rt-service-product-image img,
-    .dayal-home-service-product {
-        filter: none !important;
-        position: absolute !important;
-        width: 230px !important;
-        bottom: 0px !important;
-        right: 0px !important;
-        object-fit: contain !important;
-        pointer-events: none;
-        transition: transform 0.3s ease;
-
         @media (max-width: 1024px) {
-            width: 190px !important;
+            max-width: 55%;
+            margin-bottom: 40px;
         }
 
-        @media (max-width: 768px) {
-            width: 175px !important;
+        @media (max-width: 767px) {
+            padding-left: 16px;
+            max-width: 58%;
+            margin-bottom: 14px;
         }
 
         @media (max-width: 480px) {
-            width: 140px !important;
+            max-width: 58%;
+            margin-bottom: 12px;
         }
     }
 
-    .rt-service-btn,
-    .dayal-home-service-copy a {
+    .dayal-home-service-card.is-first-slide .dayal-home-service-card-points li,
+    .dayal-home-service-card.is-featured .dayal-home-service-card-points li {
+        color: #ECE3DE;
+    }
+
+    .dayal-home-service-card-product img {
+        filter: none;
         position: absolute;
-        bottom: 15px;
+        right: 0px;
+        bottom: 0px;
+        width: 210px;
+        max-width: 48%;
+        max-height: 165px;
+        object-fit: contain;
+        object-position: right bottom;
+        pointer-events: none;
+        transition: transform 0.3s ease;
+        transform-origin: right bottom;
+        z-index: 1;
+
+        @media (max-width: 1600px) {
+            width: 175px;
+        }
+
+        @media (max-width: 1400px) {
+            width: 140px;
+        }
+
+        @media (max-width: 1024px) {
+            width: 250px;
+            max-width: none;
+            max-height: none;
+        }
+
+        @media (max-width: 767px) {
+            width: 175px;
+            max-width: none;
+            max-height: none;
+            right: 0;
+            bottom: 0;
+        }
+
+        @media (max-width: 480px) {
+            width: 155px;
+            max-width: none;
+            max-height: none;
+            right: 0;
+            bottom: 0;
+        }
+    }
+
+    .dayal-home-service-card-btn {
+        position: absolute;
+        bottom: 18px;
         left: 0;
         display: inline-flex;
         align-items: center;
@@ -2907,22 +3063,27 @@
             font-size: 14px;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 767px) {
+            position: relative;
+            bottom: auto;
+            left: auto;
+            margin-top: 2px;
             font-size: 13.5px;
             gap: 6px;
-            bottom: 15px;
         }
 
         @media (max-width: 480px) {
+            position: relative;
+            bottom: auto;
+            left: auto;
+            margin-top: 2px;
             font-size: 12.5px;
-            bottom: 12px;
         }
     }
 
-    .rt-service-slide.is-first-slide .rt-service-btn,
-    .rt-service-slide:first-child .rt-service-btn,
-    .dayal-home-service-card.is-featured a {
-        color: #DAAE68 !important;
+    .dayal-home-service-card.is-first-slide .dayal-home-service-card-btn,
+    .dayal-home-service-card.is-featured .dayal-home-service-card-btn {
+        color: #DAAE68;
 
         img {
             filter: brightness(0) saturate(100%) invert(72%) sepia(31%) saturate(640%) hue-rotate(359deg) brightness(89%) contrast(85%);
@@ -3094,11 +3255,6 @@
         background: #000;
         box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.08);
         cursor: pointer;
-        transition: transform 0.25s ease;
-
-        &:hover {
-            transform: translateY(-4px);
-        }
 
         @media (max-width: 600px) {
             width: 160px;
@@ -3118,12 +3274,12 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 46px !important;
-        height: 46px !important;
-        border-radius: 50% !important;
-        background: rgba(255, 255, 255, 0.25) !important;
-        border: 2px solid #fff !important;
-        color: #fff !important;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.25);
+        border: 2px solid #fff;
+        color: #fff;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -3133,16 +3289,16 @@
         z-index: 2;
 
         &.is-playing {
-            opacity: 0 !important;
+            opacity: 0;
         }
 
         .dsg-video-item:hover &.is-playing {
-            opacity: 1 !important;
+            opacity: 1;
         }
     }
 
     .dsg-play-icon {
-        font-size: 16px !important;
+        font-size: 16px;
         line-height: 1;
         display: inline-block;
     }
@@ -3181,7 +3337,7 @@
         height: 6.77px;
         background: #F3EDE7;
         margin: 38px 30px 0;
-        border-radius: 4px;
+        border-radius: 0;
         cursor: pointer;
         max-width: calc(100% - 60px);
 
@@ -3202,7 +3358,7 @@
         left: 0;
         height: 100%;
         background: #D5B37B;
-        border-radius: 4px;
+        border-radius: 0;
         cursor: grab;
         transition: background-color 0.2s ease;
 
@@ -3220,27 +3376,9 @@
     .dayal-home-product-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
-
-    .dayal-home-services-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
 }
 
 @media (max-width: 600px) {
-
-    // 07. Signature Services
-    .dayal-home-services {
-        padding: 42px 0;
-    }
-
-    .dayal-home-services-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .dayal-home-service-card {
-        min-height: 270px;
-    }
-
     // 08. Video Showcase
     .dayal-home-video {
         padding: 42px 0;
@@ -3280,11 +3418,6 @@
     .dayal-home-hero-line {
         flex-wrap: wrap;
         justify-content: center;
-    }
-
-    .dayal-home-process-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        row-gap: 34px;
     }
 }
 

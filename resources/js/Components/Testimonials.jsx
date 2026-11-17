@@ -17,7 +17,7 @@ export default function Testimonials({
     rating = '4.9',
     ratingCountText = 'Based on 3,200+ reviews',
     testimonials = defaultTestimonials,
-    mascot = '/uploads/2026/07/image-149.png',
+    mascot = '/uploads/2026/07/image-149-e1789633262291.png',
 }) {
     const list = testimonials && testimonials.length > 0 ? testimonials : defaultTestimonials;
     const [activeIndex, setActiveIndex] = useState(0);
@@ -101,12 +101,12 @@ export default function Testimonials({
                             <div className="dayal-testimonials-rating-badge">
                                 <h3 className="dayal-rating-number">{rating}</h3>
                                 <img
-                                    src="/uploads/2026/07/Container-13.png"
+                                    src="/uploads/2026/07/image-126.png"
                                     alt="Google"
                                     className="dayal-rating-google-img"
                                 />
                                 <img
-                                    src="/uploads/2026/07/image-126.png"
+                                    src="/uploads/2026/07/Container-13.png"
                                     alt="5 Stars"
                                     className="dayal-rating-stars-img"
                                 />

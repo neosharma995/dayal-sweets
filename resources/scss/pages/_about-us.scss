@@ -123,27 +123,47 @@
     &:hover {
       background: rgba(0, 0, 0, 0.35);
     }
+
+    .about-story-play-wrapper {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      background-color: #FAF5F0;
+      font-family: "Roboto", Sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      gap: 10px;
+      text-transform: uppercase;
+      text-decoration: none;
+      line-height: 34px;
+      fill: #000000;
+      color: #000000;
+      border-style: solid;
+      border-width: 1px 1px 1px 1px;
+      border-color: #C9A15B;
+      border-radius: 44px 44px 44px 44px;
+      padding: 7px 15px 7px 8px;
+    }
   }
 
   .about-story-play-btn {
-    width: 70px;
-    height: 70px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     background-color: #7B1022;
     color: #FFFFFF;
-    border: 3px solid rgba(255, 255, 255, 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
     transition: transform 0.2s ease, background-color 0.2s ease;
 
     svg {
       width: 28px;
       height: 28px;
       fill: #FFFFFF;
-      margin-left: 4px;
     }
 
     &:hover {
@@ -164,15 +184,11 @@
 
   .about-story-play-label {
     font-family: 'Roboto', sans-serif;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
-    color: #FFFFFF;
+    color: #000000;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    background-color: rgba(28, 16, 8, 0.6);
-    padding: 6px 16px;
     border-radius: 20px;
-    backdrop-filter: blur(4px);
   }
 
   /* Right Column: Copy */
@@ -206,7 +222,6 @@
     line-height: 16px;
     letter-spacing: 4.8px;
     color: #1C1008;
-    text-transform: uppercase;
 
     @media (max-width: 600px) {
       font-size: 13px;
@@ -335,13 +350,12 @@
   }
 
   .about-founder-title {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 38px;
-    font-weight: 500;
-    line-height: 50px;
-    color: #2C1810;
-    margin-top: 10px;
-    margin-bottom: 24px;
+    font-family: "Plus Jakarta Sans", Sans-serif;
+    font-size: 65px;
+    font-weight: 400;
+    line-height: 82px;
+    color: #4A2E1F;
+    margin-bottom: 45px;
 
     @media (max-width: 992px) {
       font-size: 28px;
@@ -352,10 +366,10 @@
 
   .about-founder-desc {
     font-family: 'Inter', sans-serif;
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 400;
-    line-height: 26px;
-    color: #5C4A3E;
+    line-height: 32px;
+    color: #1C1008;
     margin: 0px 0px 16px 0px;
 
     &:last-child {
@@ -365,7 +379,7 @@
 
   /* Column 2: Founder Photograph */
   .about-founder-col2 {
-    width: 28%;
+    width: 36%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -388,7 +402,6 @@
     position: relative;
     display: inline-block;
     width: 100%;
-    max-width: 280px;
     margin: 0 auto;
     text-align: center;
   }
@@ -461,7 +474,7 @@
 
   /* Column 3: Our Commitments */
   .about-founder-col3 {
-    width: 36%;
+    width: 30%;
     padding: 45px 0px 0px 40px;
     box-sizing: border-box;
 
@@ -476,25 +489,25 @@
   }
 
   .about-commitments-heading {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 20px;
-    font-weight: 600;
-    letter-spacing: 2px;
+    font-family: "Plus Jakarta Sans", Sans-serif;
+    font-size: 13px;
+    font-weight: 400;
     text-transform: uppercase;
-    color: #2C1810;
-    margin-top: 0px;
+    line-height: 20px;
+    letter-spacing: 1.95px;
+    color: #C8A56A;
     margin-bottom: 24px;
 
     @media (max-width: 600px) {
-      font-size: 18px;
+      font-size: 14px;
       margin-bottom: 18px;
     }
   }
 
   .about-commitments-grid {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: 18px;
+    grid-template-columns: 1fr 1fr;
 
     @media (max-width: 1560px) {
       display: grid;
@@ -511,8 +524,14 @@
   .about-commitment-card {
     display: flex;
     flex-direction: row;
-    gap: 16px;
+    flex-direction: column;
+    gap: 10px;
+    background-color: white;
     align-items: flex-start;
+    padding: 22px 20px 21px 20px;
+    border-radius: 20px;
+    border: 1px solid #E9DCCB;
+
   }
 
   .about-commitment-icon {
@@ -523,21 +542,20 @@
   }
 
   .about-commitment-title {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 16px;
-    font-weight: 600;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
     line-height: 22px;
-    color: #2C1810;
+    color: #7C1F2E;
     margin: 0px 0px 4px 0px;
   }
 
   .about-commitment-desc {
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 400;
+    font-family: "Inter", Sans-serif;
+    font-size: 14px;
+    font-weight: 300;
     line-height: 20px;
-    color: #6E5A4D;
-    margin: 0px;
+    color: #7A6B55;
   }
 
   .about-commitments-stamp {
@@ -551,20 +569,20 @@
   }
 
   .about-commitments-stamp-icon {
-    width: 32px;
-    height: 32px;
+    width: 25px;
+    height: 25px;
     object-fit: contain;
   }
 
   .about-commitments-stamp-text {
-    font-family: 'Poppins', sans-serif;
-    font-size: 11px;
+    text-align: center;
+    font-family: "Poppins", Sans-serif;
+    font-size: 10.5px;
     font-weight: 400;
-    line-height: 16px;
-    letter-spacing: 1.26px;
     text-transform: uppercase;
+    line-height: 15.75px;
+    letter-spacing: 1.26px;
     color: #7A6B55;
-    margin: 0px;
   }
 
   /* ==========================================================================

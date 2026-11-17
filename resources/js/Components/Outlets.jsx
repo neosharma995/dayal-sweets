@@ -1,20 +1,81 @@
-import React, { useState, useRef } from 'react';
-import { outletsList as defaultOutlets } from '@/data/outletsData';
+import React, { useState, useEffect, useRef } from 'react';
+import { usePage } from '@inertiajs/react';
 
 /**
  * Reusable Outlets & Stores Section Component ("Premium Outlets")
- * Matches Dayal Sweets 1720px Design System & Reference Layout
+ * Fetches dynamic outlets from seeded database / Inertia shared props
  */
+function normalizeOutlet(item) {
+    if (!item) return null;
+    const isComingSoon = Boolean(
+        item.is_coming_soon ||
+        item.isComingSoon ||
+        item.status === 'coming_soon'
+    );
+    return {
+        id: item.id || item.slug || item.name,
+        slug: item.slug,
+        name: item.name,
+        subtitle: item.subtitle,
+        address: item.address,
+        city: item.city,
+        state: item.state,
+        pincode: item.pincode,
+        phone: item.phone,
+        phoneRaw: item.phone_raw || item.phoneRaw || item.phone?.replace(/\s+/g, ''),
+        whatsapp: item.whatsapp,
+        whatsappRaw: item.whatsapp_raw || item.whatsappRaw || '918062757395',
+        timings: item.timings,
+        image: item.image_url || item.image,
+        mapUrl: item.map_url || item.mapUrl || item.map,
+        isComingSoon,
+        expected: item.expected || 'Expected Opening',
+        expectedSub: item.expectedSub || (item.expected_opening
+            ? item.expected_opening.replace(/Expected Opening\s*/i, '')
+            : 'Coming Soon'),
+    };
+}
+
 export default function Outlets({
     eyebrow = 'VIEW OUR STORES',
     title = 'Premium',
     highlightTitle = 'Outlets',
     subtitle = 'Visit our premium outlets across Himachal Pradesh and experience the authentic taste of tradition, craftsmanship, and celebration.',
-    outlets = defaultOutlets,
+    outlets: initialOutlets = null,
 }) {
-    const list = outlets && outlets.length > 0 ? outlets : defaultOutlets;
+    const pageProps = usePage()?.props || {};
+    const sharedOutlets = pageProps.outlets || null;
+
+    const [fetchedOutlets, setFetchedOutlets] = useState(null);
     const [activeDot, setActiveDot] = useState(0);
     const trackRef = useRef(null);
+
+    // Determine current raw outlets source
+    const rawList = (initialOutlets && initialOutlets.length > 0)
+        ? initialOutlets
+        : (sharedOutlets && sharedOutlets.length > 0)
+            ? sharedOutlets
+            : (fetchedOutlets && fetchedOutlets.length > 0)
+                ? fetchedOutlets
+                : [];
+
+    // Fetch dynamic outlets from public API if not provided in props
+    useEffect(() => {
+        if ((!initialOutlets || initialOutlets.length === 0) && (!sharedOutlets || sharedOutlets.length === 0)) {
+            fetch('/api/outlets', { headers: { Accept: 'application/json' } })
+                .then((res) => (res.ok ? res.json() : null))
+                .then((json) => {
+                    if (json?.data && Array.isArray(json.data)) {
+                        setFetchedOutlets(json.data);
+                    }
+                })
+                .catch((err) => {
+                    console.error('Failed to fetch dynamic outlets:', err);
+                });
+        }
+    }, [initialOutlets, sharedOutlets]);
+
+    const list = rawList.map(normalizeOutlet).filter(Boolean);
 
     const handleScroll = () => {
         if (!trackRef.current) return;
@@ -46,16 +107,16 @@ export default function Outlets({
                 <header className="dayal-outlets-header">
                     <span className="dayal-outlets-tag">{eyebrow}</span>
                     <h2 className="dayal-outlets-title">
-                        {title} <span className="rt-span-color">{highlightTitle}</span>
+                        {title} <span className="dayal-highlight">{highlightTitle}</span>
                     </h2>
                     {subtitle && <p className="dayal-outlets-subtitle">{subtitle}</p>}
                 </header>
 
                 {/* Outlets Slider / Grid Wrapper */}
-                <div className="oto-outlets-slider-wrapper">
-                    <div className="oto-outlets-track-container">
+                <div className="dayal-outlets-slider-wrapper">
+                    <div className="dayal-outlets-track-container">
                         <div
-                            className="oto-outlets-track"
+                            className="dayal-outlets-track"
                             ref={trackRef}
                             onScroll={handleScroll}
                         >
@@ -64,56 +125,56 @@ export default function Outlets({
                                     return (
                                         <article
                                             key={outlet.id || outlet.name}
-                                            className="oto-outlet-card oto-coming-soon-card"
+                                            className="dayal-outlet-card dayal-outlet-card-coming-soon"
                                         >
-                                            <div className="oto-outlet-card-img-wrap oto-coming-soon-media">
-                                                <div className="oto-coming-soon-ribbon">
+                                            <div className="dayal-outlet-card-img-wrap dayal-outlet-card-media-coming-soon">
+                                                <div className="dayal-outlet-card-ribbon">
                                                     Coming Soon
                                                 </div>
                                                 <img
                                                     src={outlet.image}
                                                     alt={`${outlet.name} Storefront Architectural Rendering`}
-                                                    className="oto-outlet-card-img"
+                                                    className="dayal-outlet-card-img"
                                                     loading="lazy"
                                                 />
                                             </div>
 
-                                            <div className="oto-outlet-card-content oto-coming-soon-body">
-                                                <h3 className="oto-outlet-card-title">
+                                            <div className="dayal-outlet-card-content dayal-outlet-card-body-coming-soon">
+                                                <h3 className="dayal-outlet-card-title">
                                                     {outlet.name}
                                                 </h3>
-                                                <div className="oto-opening-soon-text">
+                                                <div className="dayal-outlet-card-opening-soon">
                                                     {outlet.subtitle || 'Opening Soon'}
                                                 </div>
 
                                                 {/* Laurel Wreath Badge */}
-                                                <div className="oto-laurel-badge">
+                                                <div className="dayal-outlet-laurel-badge">
                                                     <img
                                                         src="/uploads/2026/09/Group-14.png"
                                                         alt=""
-                                                        className="oto-laurel-leaf oto-laurel-left"
+                                                        className="dayal-outlet-laurel-leaf dayal-outlet-laurel-left"
                                                         aria-hidden="true"
                                                     />
-                                                    <div className="oto-laurel-text">
-                                                        <span className="oto-laurel-label">
+                                                    <div className="dayal-outlet-laurel-text">
+                                                        <span className="dayal-outlet-laurel-label">
                                                             {outlet.expected || 'Expected Opening'}
                                                         </span>
-                                                        <strong className="oto-laurel-val">
+                                                        <strong className="dayal-outlet-laurel-val">
                                                             {outlet.expectedSub || 'Coming Soon'}
                                                         </strong>
                                                     </div>
                                                     <img
                                                         src="/uploads/2026/09/Group-15.png"
                                                         alt=""
-                                                        className="oto-laurel-leaf oto-laurel-right"
+                                                        className="dayal-outlet-laurel-leaf dayal-outlet-laurel-right"
                                                         aria-hidden="true"
                                                     />
                                                 </div>
 
-                                                <div className="oto-outlet-card-notify-action">
+                                                <div className="dayal-outlet-card-notify-action">
                                                     <button
                                                         type="button"
-                                                        className="oto-notify-btn"
+                                                        className="dayal-outlet-notify-btn"
                                                         onClick={() => handleNotifyMe(outlet.name)}
                                                         aria-label={`Notify me when ${outlet.name} outlet opens`}
                                                     >
@@ -142,29 +203,29 @@ export default function Outlets({
                                 return (
                                     <article
                                         key={outlet.id || outlet.name}
-                                        className="oto-outlet-card"
+                                        className="dayal-outlet-card"
                                     >
-                                        <div className="oto-outlet-card-img-wrap">
+                                        <div className="dayal-outlet-card-img-wrap">
                                             <img
                                                 src={outlet.image}
                                                 alt={`Dayal Sweets ${outlet.name} Storefront`}
-                                                className="oto-outlet-card-img"
+                                                className="dayal-outlet-card-img"
                                                 loading="lazy"
                                             />
                                         </div>
 
-                                        <div className="oto-outlet-card-content">
-                                            <h3 className="oto-outlet-card-title">{outlet.name}</h3>
+                                        <div className="dayal-outlet-card-content">
+                                            <h3 className="dayal-outlet-card-title">{outlet.name}</h3>
 
                                             {outlet.address && (
-                                                <div className="oto-outlet-card-row">
-                                                    <span className="oto-card-icon" aria-hidden="true">
+                                                <div className="dayal-outlet-card-row">
+                                                    <span className="dayal-outlet-card-icon" aria-hidden="true">
                                                         <svg
                                                             width="15"
                                                             height="15"
                                                             viewBox="0 0 24 24"
                                                             fill="none"
-                                                            stroke="#5A4A42"
+                                                            stroke="#7B1C2E"
                                                             strokeWidth="2"
                                                             strokeLinecap="round"
                                                             strokeLinejoin="round"
@@ -178,14 +239,14 @@ export default function Outlets({
                                             )}
 
                                             {outlet.phone && (
-                                                <div className="oto-outlet-card-row">
-                                                    <span className="oto-card-icon" aria-hidden="true">
+                                                <div className="dayal-outlet-card-row">
+                                                    <span className="dayal-outlet-card-icon" aria-hidden="true">
                                                         <svg
                                                             width="15"
                                                             height="15"
                                                             viewBox="0 0 24 24"
                                                             fill="none"
-                                                            stroke="#5A4A42"
+                                                            stroke="#7B1C2E"
                                                             strokeWidth="2"
                                                             strokeLinecap="round"
                                                             strokeLinejoin="round"
@@ -195,7 +256,7 @@ export default function Outlets({
                                                     </span>
                                                     <a
                                                         href={`tel:${outlet.phoneRaw || outlet.phone.replace(/\s+/g, '')}`}
-                                                        className="oto-card-link"
+                                                        className="dayal-outlet-card-link"
                                                     >
                                                         {outlet.phone}
                                                     </a>
@@ -203,17 +264,17 @@ export default function Outlets({
                                             )}
 
                                             {outlet.whatsapp && (
-                                                <div className="oto-outlet-card-row">
-                                                    <span className="oto-card-icon" aria-hidden="true">
+                                                <div className="dayal-outlet-card-row">
+                                                    <span className="dayal-outlet-card-icon" aria-hidden="true">
                                                         <svg width="15" height="15" viewBox="0 0 24 24" fill="#25D366">
-                                                            <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm5.78 14.07c-.24.68-1.39 1.3-1.92 1.38-.5.08-1.15.11-3.72-.95-3.28-1.36-5.4-4.69-5.56-4.91-.16-.22-1.33-1.77-1.33-3.38 0-1.61.84-2.4 1.14-2.73.3-.33.65-.41.87-.41.22 0 .43 0 .62.01.2.01.47-.08.73.55.27.65.92 2.25 1 2.42.08.16.13.36.03.57-.11.22-.16.36-.32.55-.16.19-.34.42-.48.56-.16.16-.33.33-.14.65.19.33.84 1.39 1.81 2.25 1.25 1.11 2.3 1.45 2.63 1.61.33.16.52.14.71-.08.19-.22.82-.95 1.04-1.28.22-.33.43-.27.73-.16.3.11 1.91.9 2.24 1.06.33.16.55.24.63.38.08.14.08.82-.16 1.5z"/>
+                                                            <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm5.78 14.07c-.24.68-1.39 1.3-1.92 1.38-.5.08-1.15.11-3.72-.95-3.28-1.36-5.4-4.69-5.56-4.91-.16-.22-1.33-1.77-1.33-3.38 0-1.61.84-2.4 1.14-2.73.3-.33.65-.41.87-.41.22 0 .43 0 .62.01.2.01.47-.08.73.55.27.65.92 2.25 1 2.42.08.16.13.36.03.57-.11.22-.16.36-.32.55-.16.19-.34.42-.48.56-.16.16-.33.33-.14.65.19.33.84 1.39 1.81 2.25 1.25 1.11 2.3 1.45 2.63 1.61.33.16.52.14.71-.08.19-.22.82-.95 1.04-1.28.22-.33.43-.27.73-.16.3.11 1.91.9 2.24 1.06.33.16.55.24.63.38.08.14.08.82-.16 1.5z" />
                                                         </svg>
                                                     </span>
                                                     <a
                                                         href={`https://wa.me/${outlet.whatsappRaw || '918062757395'}`}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="oto-card-link"
+                                                        className="dayal-outlet-card-link"
                                                     >
                                                         {outlet.whatsapp}
                                                     </a>
@@ -221,15 +282,15 @@ export default function Outlets({
                                             )}
 
                                             {(outlet.map || outlet.mapUrl) && (
-                                                <div className="oto-outlet-card-map-action">
+                                                <div className="dayal-outlet-card-map-action">
                                                     <a
                                                         href={outlet.map || outlet.mapUrl}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="oto-view-map-link"
+                                                        className="dayal-outlet-view-map-link"
                                                     >
                                                         <span>View Map</span>
-                                                        <span className="oto-arrow-icon" aria-hidden="true">
+                                                        <span className="dayal-outlet-arrow-icon" aria-hidden="true">
                                                             ↗
                                                         </span>
                                                     </a>
@@ -243,12 +304,12 @@ export default function Outlets({
                     </div>
 
                     {/* Dot navigation for mobile */}
-                    <div className="oto-outlets-dots-wrapper" role="tablist" aria-label="Outlet pagination">
+                    <div className="dayal-outlets-dots-wrapper" role="tablist" aria-label="Outlet pagination">
                         {list.map((_, i) => (
                             <button
                                 key={i}
                                 type="button"
-                                className={`oto-outlet-dot ${activeDot === i ? 'active' : ''}`}
+                                className={`dayal-outlet-dot ${activeDot === i ? 'active' : ''}`}
                                 onClick={() => scrollToCard(i)}
                                 aria-label={`Go to outlet ${i + 1}`}
                             />

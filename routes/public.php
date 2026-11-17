@@ -37,6 +37,12 @@ Route::get('/refund-returns', [HomeController::class, 'refundReturns'])->name('r
 Route::get('/refund-and-returns-policy', [HomeController::class, 'refundReturns'])->name('refund-returns.alias');
 Route::get('/franchise', [HomeController::class, 'franchise'])->name('franchise');
 Route::get('/product/{slug?}', [HomeController::class, 'product'])->name('product.show');
+Route::get('/api/outlets', function () {
+    return response()->json([
+        'success' => true,
+        'data' => \App\Models\Outlet::where('is_active', true)->orderBy('sort_order')->orderBy('id')->get(),
+    ]);
+})->name('api.outlets');
 
 // Authenticated Smart Role Dispatchers
 Route::middleware(['auth', 'verified'])->group(function () {

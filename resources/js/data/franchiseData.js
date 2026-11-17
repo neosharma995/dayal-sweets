@@ -75,7 +75,7 @@ export const franchiseTimeline = [
     },
     {
         step: '04',
-        title: 'Agreement & Onboarding',
+        title: 'Agreement & On boarding',
         description: 'Finalize the terms and complete the onboarding process.',
         icon: '/uploads/2026/08/Agreement-On-boarding.png',
     },

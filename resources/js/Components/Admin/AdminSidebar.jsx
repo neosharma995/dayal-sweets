@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
-import { StoreIcon, BoxIcon, UserIcon, ShieldCheckIcon, LogOutIcon, TruckIcon } from '@/Components/Icons';
+import { StoreIcon, BoxIcon, UserIcon, ShieldCheckIcon, LogOutIcon, TruckIcon, MapPinIcon } from '@/Components/Icons';
 
 export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLogout }) {
     const { auth } = usePage().props;
@@ -181,6 +181,15 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
                         >
                             <TruckIcon width="18" height="18" />
                             <span>Shipping Zones</span>
+                        </Link>
+
+                        {/* Outlets Management */}
+                        <Link
+                            href={route('admin.outlets.index')}
+                            className={`dayal-sidebar-link ${route().current('admin.outlets.*') ? 'active' : ''}`}
+                        >
+                            <MapPinIcon width="18" height="18" />
+                            <span>Outlets</span>
                         </Link>
 
                         {/* Tax Rates */}

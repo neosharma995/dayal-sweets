@@ -55,6 +55,7 @@ export default function Header({ auth }) {
     const [loggingOut, setLoggingOut] = useState(false);
     const [openShopCategory, setOpenShopCategory] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const [isSticky, setIsSticky] = useState(false);
     const shopNavigationRef = useRef(null);
     const userMenuRef = useRef(null);
 
@@ -62,6 +63,17 @@ export default function Header({ auth }) {
     const openShopMenu = () => {
         setShopOpen(true);
     };
+
+    useEffect(() => {
+        if (mobileOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [mobileOpen]);
     const toggleShopMenu = () => {
         setShopOpen((open) => !open);
     };
@@ -129,8 +141,17 @@ export default function Header({ auth }) {
         };
     }, [shopOpen]);
 
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsSticky(window.scrollY > 20);
+        };
+        handleScroll();
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
-        <header className="dayal-header">
+        <header className={`dayal-header${isSticky ? ' is-sticky' : ''}`}>
             <div className="dayal-header-top">
                 <div className="dayal-header-container dayal-header-top-inner">
                     <p>FREE DELIVERY ON ORDERS ABOVE <strong>&#8377;999</strong></p>

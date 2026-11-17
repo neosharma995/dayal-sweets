@@ -14,7 +14,6 @@ html {
   font-size: 16px;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
-  overflow-x: clip;
 }
 
 body.dayal-body {
@@ -25,6 +24,17 @@ body.dayal-body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
+}
+
+// Contain horizontal overflow without breaking position: sticky on html/body
+.dayal-site {
+  max-width: 100%;
+}
+
+.dayal-main-content,
+.dayal-site > main {
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 ::selection {

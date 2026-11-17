@@ -15,6 +15,7 @@ export default function ProductCard({ product, onAddToCart }) {
     const startXRef = useRef(0);
     const scrollLeftRef = useRef(0);
     const hasDraggedRef = useRef(false);
+    const isFirstMount = useRef(true);
 
     // Mouse wheel horizontal scrolling listener
     useEffect(() => {
@@ -40,11 +41,24 @@ export default function ProductCard({ product, onAddToCart }) {
         return () => el.removeEventListener('wheel', onWheel);
     }, [hasVariations]);
 
-    // Keep active pill scrolled into visible area
+    // Keep active pill scrolled into visible area inside its container (never scroll the window)
     useEffect(() => {
+        if (isFirstMount.current) {
+            isFirstMount.current = false;
+            return;
+        }
         if (pillsRef.current && selectedVarIndex !== null && pillsRef.current.children[selectedVarIndex]) {
-            const activePill = pillsRef.current.children[selectedVarIndex];
-            activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+            const container = pillsRef.current;
+            const activePill = container.children[selectedVarIndex];
+            const pillLeft = activePill.offsetLeft;
+            const pillWidth = activePill.offsetWidth;
+            const containerWidth = container.clientWidth;
+
+            if (pillLeft < container.scrollLeft) {
+                container.scrollTo({ left: pillLeft, behavior: 'smooth' });
+            } else if (pillLeft + pillWidth > container.scrollLeft + containerWidth) {
+                container.scrollTo({ left: pillLeft + pillWidth - containerWidth, behavior: 'smooth' });
+            }
         }
     }, [selectedVarIndex]);
 

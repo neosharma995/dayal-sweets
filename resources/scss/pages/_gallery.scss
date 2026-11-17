@@ -1,9 +1,9 @@
-/* ==========================================================================
-   DAYAL SWEETS — GALLERY PAGE STYLESHEET
-   100% Faithful Source of Truth Duplication of D:\dayal-sweets-old (Post 66 & dsg-gallery)
-   CSS Unit Strict Requirements: Strictly PX units throughout (no rem, no em)
-   Strict File & CSS Isolation scoped under .gallery-page-root
-   ========================================================================== */
+// ==========================================================================
+// DAYAL SWEETS — GALLERY PAGE STYLESHEET
+// 100% Faithful Source of Truth Duplication (Post 66 & dsg-gallery)
+// Strictly PX units throughout (no rem, no em)
+// Scoped under .gallery-page-root
+// ==========================================================================
 
 .gallery-page-root {
   background-color: #FAF7F2;
@@ -11,17 +11,17 @@
   position: relative;
   width: 100%;
 
-  /* --------------------------------------------------------------------------
-     GLOBAL SPAN COLOR FROM ORIGINAL THEME (Post 13 / rt_style.css)
-     -------------------------------------------------------------------------- */
+  // --------------------------------------------------------------------------
+  // 1. GLOBAL HIGHLIGHT COLOR
+  // --------------------------------------------------------------------------
   .rt-span-color {
     color: #7B1022 !important;
     font-weight: 600 !important;
   }
 
-  /* ==========================================================================
-     SECTION B: EXPLORE OUR MOMENTS (Photo Gallery)
-     ========================================================================== */
+  // ==========================================================================
+  // 2. SECTION B: EXPLORE OUR MOMENTS (Photo Gallery)
+  // ==========================================================================
   .gallery-moments-section {
     background-color: #FAF7F2;
     padding-top: 80px;
@@ -79,9 +79,9 @@
     }
   }
 
-  /* --------------------------------------------------------------------------
-     FILTER TABS (Original .dsg-tabs & .dsg-tab)
-     -------------------------------------------------------------------------- */
+  // --------------------------------------------------------------------------
+  // Category Filter Tabs
+  // --------------------------------------------------------------------------
   .gallery-tabs {
     display: flex;
     flex-wrap: wrap;
@@ -153,10 +153,10 @@
     }
   }
 
-  /* --------------------------------------------------------------------------
-     GALLERY GRID (Original .dsg-grid & .dsg-grid-item)
-     Desktop: Row 1 = 4 cards, subsequent rows = 5 cards
-     -------------------------------------------------------------------------- */
+  // --------------------------------------------------------------------------
+  // Dynamic Photo Grid
+  // Desktop: Row 1 = 4 cards, subsequent rows = 5 cards
+  // --------------------------------------------------------------------------
   .gallery-grid {
     display: flex;
     flex-wrap: wrap;
@@ -176,11 +176,11 @@
   }
 
   .gallery-grid-item {
-    /* First row: 4 items (25% minus gap adjustment) */
+    // First row: 4 items (25% minus gap adjustment)
     width: calc(25% - 19.5px);
     box-sizing: border-box;
 
-    /* Items 5 onwards: 5 items per row (20% minus gap adjustment) */
+    // Items 5 onwards: 5 items per row (20% minus gap adjustment)
     &:nth-child(n+5) {
       width: calc(20% - 20.8px);
 
@@ -258,9 +258,9 @@
     text-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3);
   }
 
-  /* --------------------------------------------------------------------------
-     LOAD MORE / SHOW LESS BUTTONS (Original .dsg-load-more-btn)
-     -------------------------------------------------------------------------- */
+  // --------------------------------------------------------------------------
+  // Load More / Show Less Controls & Empty State
+  // --------------------------------------------------------------------------
   .gallery-load-more-wrap {
     text-align: center;
     margin-top: 10px;
@@ -295,7 +295,6 @@
     }
   }
 
-  /* Empty state message when a category has 0 items */
   .gallery-no-items {
     width: 100%;
     text-align: center;
@@ -305,9 +304,9 @@
     font-family: 'Plus Jakarta Sans', sans-serif;
   }
 
-  /* ==========================================================================
-     SECTION C: SIGNATURE FOOD COLLECTION
-     ========================================================================== */
+  // ==========================================================================
+  // 3. SECTION C: SIGNATURE FOOD COLLECTION
+  // ==========================================================================
   .gallery-food-section {
     background-color: #FDFBF7;
     padding-top: 80px;
@@ -341,7 +340,7 @@
     }
   }
 
-  /* Eyebrow: — FOOD COLLECTION — */
+  // Eyebrow Decorator: — FOOD COLLECTION —
   .gallery-food-eyebrow {
     display: flex;
     flex-direction: row;
@@ -377,7 +376,7 @@
     }
   }
 
-  /* Title: Signature Food Collection */
+  // Section Typography
   .gallery-food-title {
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-size: 55px;
@@ -401,11 +400,10 @@
     }
   }
 
-  /* Subtitle */
   .gallery-food-subtitle {
     margin-top: 12px;
     margin-bottom: 45px;
-    font-family: "Inter", Sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 18px;
     font-weight: 400;
     line-height: 32.2px;
@@ -422,7 +420,7 @@
     }
   }
 
-  /* 6 Cards Grid: 6 cols desktop, 3 cols tablet, 2 cols mobile */
+  // 6-Card Grid: 6 cols desktop, 3 cols tablet, 2 cols mobile
   .gallery-food-grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -443,7 +441,6 @@
     }
   }
 
-  /* Card Item */
   .gallery-food-card {
     background-color: #FFFFFF;
     border: 1px solid rgba(201, 169, 110, 0.3);
@@ -502,7 +499,7 @@
     }
   }
 
-  /* View Full Menu Button */
+  // Full Menu Action Button
   .gallery-food-btn-wrap {
     text-align: center;
   }
@@ -536,10 +533,11 @@
   }
 }
 
-/* ==========================================================================
-   GLOBAL / ROOT LIGHTBOX PREVIEW MODAL (.dsg-preview-modal)
-   Rendered outside or inside page root
-   ========================================================================== */
+// ==========================================================================
+// 4. GLOBAL / ROOT LIGHTBOX PREVIEW MODAL
+// Rendered at root level for seamless full-screen zoom preview
+// ==========================================================================
+
 body.gallery-modal-open {
   overflow: hidden;
 }

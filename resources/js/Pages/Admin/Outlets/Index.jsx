@@ -324,6 +324,9 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                                         Timings / Notes
                                     </th>
                                     <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                        Products
+                                    </th>
+                                    <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                                         Status
                                     </th>
                                     <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right' }}>
@@ -334,7 +337,7 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                             <tbody>
                                 {filteredOutlets.length === 0 ? (
                                     <tr>
-                                        <td colSpan="6" style={{ padding: '3rem 1rem', textAlign: 'center', color: '#64748B' }}>
+                                        <td colSpan="7" style={{ padding: '3rem 1rem', textAlign: 'center', color: '#64748B' }}>
                                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem' }}>
                                                 <MapPinIcon width="40" height="40" style={{ color: '#CBD5E1' }} />
                                                 <div>
@@ -476,6 +479,28 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                                                         {outlet.expected_opening}
                                                     </span>
                                                 )}
+                                            </td>
+
+                                            {/* Products Count */}
+                                            <td style={{ padding: '0.875rem 1rem', verticalAlign: 'top' }}>
+                                                <Link
+                                                    href={route('admin.outlets.show', outlet.id)}
+                                                    style={{
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.35rem',
+                                                        padding: '0.25rem 0.65rem',
+                                                        borderRadius: '9999px',
+                                                        fontSize: '0.75rem',
+                                                        fontWeight: 600,
+                                                        background: '#FDF8F0',
+                                                        color: '#8C6226',
+                                                        border: '1px solid #E6D2B5',
+                                                        textDecoration: 'none',
+                                                    }}
+                                                >
+                                                    <span>{outlet.products_count ?? 0} Products</span>
+                                                </Link>
                                             </td>
 
                                             {/* Status */}

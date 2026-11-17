@@ -11,6 +11,7 @@ export default function Create({
     tags = [],
     attributes = [],
     taxRates = [],
+    outlets = [],
 }) {
     const [processing, setProcessing] = useState(false);
     const [errors, setErrors] = useState({});
@@ -41,6 +42,7 @@ export default function Create({
                     tags={tags}
                     attributes={attributes}
                     taxRates={taxRates}
+                    outlets={outlets}
                     isEdit={false}
                     onSubmit={handleSubmit}
                     processing={processing}

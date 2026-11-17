@@ -14,6 +14,11 @@ class ExampleTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+            ->assertInertia(fn ($page) => $page
+                ->component('Welcome')
+                ->has('products')
+                ->has('categories')
+            );
     }
 }

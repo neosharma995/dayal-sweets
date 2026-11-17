@@ -12,6 +12,7 @@ export default function Edit({
     tags = [],
     attributes = [],
     taxRates = [],
+    outlets = [],
 }) {
     const [processing, setProcessing] = useState(false);
     const [errors, setErrors] = useState({});
@@ -24,6 +25,9 @@ export default function Edit({
         product_tag_id: product.product_tag_id || '',
         tax_rate_id: product.tax_rate_id || '',
         tax_status: product.tax_status || 'taxable',
+        outlet_ids: Array.isArray(product.outlets) && product.outlets.length > 0
+            ? product.outlets.map((o) => o.id)
+            : [],
         tag_ids: Array.isArray(product.tags) && product.tags.length > 0
             ? product.tags.map((t) => t.id)
             : (product.product_tag_id ? [product.product_tag_id] : []),
@@ -88,6 +92,7 @@ export default function Edit({
                     tags={tags}
                     attributes={attributes}
                     taxRates={taxRates}
+                    outlets={outlets}
                     isEdit={true}
                     onSubmit={handleSubmit}
                     processing={processing}

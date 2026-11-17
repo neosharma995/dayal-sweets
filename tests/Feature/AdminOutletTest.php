@@ -6,6 +6,7 @@ namespace Tests\Feature;
 
 use App\Enums\UserRole;
 use App\Models\Outlet;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -148,5 +149,25 @@ class AdminOutletTest extends TestCase
         $this->assertDatabaseMissing('outlets', [
             'id' => $outlet->id,
         ]);
+    }
+
+    public function test_admin_can_view_outlet_show_with_products(): void
+    {
+        $outlet = Outlet::where('slug', 'amb')->firstOrFail();
+        $product = Product::create([
+            'product_name' => 'Outlet Test Laddu',
+            'product_price' => 300.00,
+            'product_selling_price' => 280.00,
+        ]);
+        $outlet->products()->attach($product->id);
+
+        $response = $this->actingAs($this->admin)->get("/admin/outlets/{$outlet->id}");
+        $response->assertOk();
+
+        // Also test JSON show endpoint
+        $jsonResponse = $this->actingAs($this->admin)->getJson("/admin/outlets/{$outlet->id}");
+        $jsonResponse->assertOk()
+            ->assertJsonPath('data.name', 'Amb')
+            ->assertJsonPath('data.products_count', $outlet->products()->count());
     }
 }

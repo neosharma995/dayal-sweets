@@ -224,6 +224,16 @@
   animation: dayalToastSlideOut 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+.dayal-cart-toaster {
+  @media (max-width: 640px) {
+    top: 16px !important;
+    right: 16px !important;
+    left: 16px !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+}
+
 .dayal-alert {
   padding: 1rem 1.25rem;
   border-radius: $radius-lg;

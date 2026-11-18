@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactQueryController;
+use App\Http\Controllers\Admin\CouponController;
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DietPreferenceController;
 use App\Http\Controllers\Admin\DiningQueryController;
@@ -18,9 +20,11 @@ use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductTagController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SeasonalMithaiController;
 use App\Http\Controllers\Admin\ShippingZoneController;
 use App\Http\Controllers\Admin\TaxRateController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Admin Guest Authentication Routes
@@ -30,7 +34,7 @@ Route::middleware('guest')->prefix('admin')->name('admin.')->group(function () {
 });
 
 // Admin Protected Portal Routes
-Route::middleware(['auth', 'verified', 'role:'.UserRole::Admin->value])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'verified', 'staff'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/account', [AccountController::class, 'index'])->name('account');
     Route::patch('/account/profile', [AccountController::class, 'updateProfile'])->name('account.profile');
@@ -38,7 +42,7 @@ Route::middleware(['auth', 'verified', 'role:'.UserRole::Admin->value])->prefix(
     Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
 
     // Order Management Web Routes (CRUD, Tracking & Status Workflow)
-    Route::prefix('orders')->name('orders.')->group(function () {
+    Route::middleware('role_or_permission:admin|manage orders')->prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::get('/create', [OrderController::class, 'create'])->name('create');
         Route::post('/', [OrderController::class, 'store'])->name('store');
@@ -255,5 +259,27 @@ Route::middleware(['auth', 'verified', 'role:'.UserRole::Admin->value])->prefix(
         Route::get('/{query}', [DiningQueryController::class, 'show'])->name('show');
         Route::patch('/{query}/status', [DiningQueryController::class, 'updateStatus'])->name('update-status');
         Route::delete('/{query}', [DiningQueryController::class, 'destroy'])->name('destroy');
+    });
+
+    // Discount Coupons & Outlet Rules Web Routes
+    Route::middleware('role_or_permission:admin|manage coupons')->group(function () {
+        Route::post('coupons/bulk-action', [CouponController::class, 'bulkAction'])->name('coupons.bulk-action');
+        Route::post('coupons/generate-bulk', [CouponController::class, 'generateBulk'])->name('coupons.generate-bulk');
+        Route::patch('coupons/{coupon}/toggle-status', [CouponController::class, 'toggleStatus'])->name('coupons.toggle-status');
+        Route::resource('coupons', CouponController::class);
+    });
+
+    // Roles & Granular Permissions Management Web Routes
+    Route::middleware('role_or_permission:admin|manage roles')->resource('roles', RoleController::class)->except(['show']);
+
+    // Registered Customers Directory Web Routes
+    Route::middleware('role_or_permission:admin|manage customers')->resource('customers', CustomerController::class)->only(['index']);
+
+    // Staff Members & Direct Creation Web Routes
+    Route::middleware('role_or_permission:admin|manage staff')->prefix('users')->name('users.')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::post('/', [UserController::class, 'store'])->name('store');
+        Route::put('/{user}/role', [UserController::class, 'updateRole'])->name('update-role');
+        Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
     });
 });

@@ -3,15 +3,26 @@ import { usePage, router } from '@inertiajs/react';
 import AdminHeader from '@/Components/Admin/AdminHeader';
 import AdminSidebar from '@/Components/Admin/AdminSidebar';
 import AdminFooter from '@/Components/Admin/AdminFooter';
+import EditorLayout from '@/Layouts/EditorLayout';
 import FlashToaster from '@/Components/FlashToaster';
 import { AlertIcon, CheckCircleIcon, LogOutIcon } from '@/Components/Icons';
 import Modal from '@/Components/Modal';
 
 export default function AdminLayout({ header, children }) {
-    const { flash } = usePage().props;
+    const { flash, auth } = usePage().props;
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [logoutModalOpen, setLogoutModalOpen] = useState(false);
     const [loggingOut, setLoggingOut] = useState(false);
+
+    // If logged in as editor or inside editor route, delegate directly to the dedicated EditorLayout
+    const isEditor = auth?.user?.role === 'editor' || (typeof route !== 'undefined' && route().current && route().current('editor.*'));
+    if (isEditor) {
+        return (
+            <EditorLayout header={header}>
+                {children}
+            </EditorLayout>
+        );
+    }
 
     const handleConfirmLogout = () => {
         setLoggingOut(true);

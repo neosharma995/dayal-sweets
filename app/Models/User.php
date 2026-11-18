@@ -63,18 +63,38 @@ class User extends Authenticatable
         return $this->hasRole(UserRole::Customer->value);
     }
 
-    public function dashboardRoute(): string
+    public function isEditor(): bool
+    {
+        return $this->hasRole(UserRole::Editor->value);
+    }
+
+    public function isStaff(): bool
     {
         return $this->isAdmin()
-            ? UserRole::Admin->dashboardRoute()
-            : UserRole::Customer->dashboardRoute();
+            || $this->isEditor()
+            || $this->roles()->where('name', '!=', UserRole::Customer->value)->exists();
+    }
+
+    public function dashboardRoute(): string
+    {
+        if ($this->isAdmin()) {
+            return UserRole::Admin->dashboardRoute();
+        }
+        if ($this->isEditor()) {
+            return UserRole::Editor->dashboardRoute();
+        }
+        if ($this->isStaff()) {
+            return UserRole::Admin->dashboardRoute();
+        }
+        return UserRole::Customer->dashboardRoute();
     }
 
     public function accountRoute(): string
     {
-        return $this->isAdmin()
-            ? UserRole::Admin->accountRoute()
-            : UserRole::Customer->accountRoute();
+        if ($this->isAdmin() || $this->isEditor() || $this->isStaff()) {
+            return UserRole::Admin->accountRoute();
+        }
+        return UserRole::Customer->accountRoute();
     }
 
     /**

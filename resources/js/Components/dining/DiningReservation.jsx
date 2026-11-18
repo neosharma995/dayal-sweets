@@ -160,7 +160,7 @@ export default function DiningReservation() {
 
         const hasErrors = Object.values(newErrors).some((err) => !!err);
         if (hasErrors) {
-            showError('Please fix the errors highlighted below.');
+            // Field errors are already displayed directly under the input fields
             return;
         }
 
@@ -200,7 +200,7 @@ export default function DiningReservation() {
                     formatted[key] = Array.isArray(serverErrors[key]) ? serverErrors[key][0] : serverErrors[key];
                 }
                 setErrors((prev) => ({ ...prev, ...formatted }));
-                showError(err.response.data.message || 'Please correct the invalid fields.');
+                // Server validation errors are mapped directly to fields, no top toaster needed
             } else {
                 const msg =
                     err.response?.data?.message ||

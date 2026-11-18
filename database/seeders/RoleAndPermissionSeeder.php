@@ -32,6 +32,9 @@ class RoleAndPermissionSeeder extends Seeder
         $adminRole = Role::firstOrCreate(['name' => UserRole::Admin->value, 'guard_name' => 'web']);
         $adminRole->syncPermissions(UserPermission::adminPermissions());
 
+        $editorRole = Role::firstOrCreate(['name' => UserRole::Editor->value, 'guard_name' => 'web']);
+        $editorRole->syncPermissions(UserPermission::editorPermissions());
+
         $customerRole = Role::firstOrCreate(['name' => UserRole::Customer->value, 'guard_name' => 'web']);
         $customerRole->syncPermissions(UserPermission::customerPermissions());
 
@@ -45,6 +48,17 @@ class RoleAndPermissionSeeder extends Seeder
             ]
         );
         $adminUser->syncRoles([$adminRole]);
+
+        // 4. Create default Editor user
+        $editorUser = User::updateOrCreate(
+            ['email' => 'editor@dayalsweets.com'],
+            [
+                'name' => 'Dayal Sweets Editor',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+            ]
+        );
+        $editorUser->syncRoles([$editorRole]);
 
         // 4. Create default Customer user
         $customerUser = User::updateOrCreate(

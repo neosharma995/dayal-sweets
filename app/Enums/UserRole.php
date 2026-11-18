@@ -7,12 +7,14 @@ namespace App\Enums;
 enum UserRole: string
 {
     case Admin = 'admin';
+    case Editor = 'editor';
     case Customer = 'customer';
 
     public function label(): string
     {
         return match ($this) {
             self::Admin => 'Administrator',
+            self::Editor => 'Content Editor',
             self::Customer => 'Customer',
         };
     }
@@ -21,6 +23,7 @@ enum UserRole: string
     {
         return match ($this) {
             self::Admin => 'admin.dashboard',
+            self::Editor => 'editor.dashboard',
             self::Customer => 'customer.dashboard',
         };
     }
@@ -29,6 +32,7 @@ enum UserRole: string
     {
         return match ($this) {
             self::Admin => 'admin.account',
+            self::Editor => 'admin.account',
             self::Customer => 'customer.account',
         };
     }

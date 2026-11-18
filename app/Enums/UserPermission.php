@@ -6,15 +6,23 @@ namespace App\Enums;
 
 enum UserPermission: string
 {
-    // Admin permissions
-    case ManageProducts = 'manage products';
+    // Administrative Staff Permissions
     case ManageOrders = 'manage orders';
-    case ManageCategories = 'manage categories';
+    case ManageProducts = 'manage products';
     case ManageCustomers = 'manage customers';
-    case ViewSalesReports = 'view sales reports';
+    case ManageCoupons = 'manage coupons';
+    case ManageOutlets = 'manage outlets';
+    case ManageTaxes = 'manage taxes';
+    case ManageQueries = 'manage queries';
+    case ManageStaff = 'manage staff';
+    case ManageRoles = 'manage roles';
     case ManageStoreSettings = 'manage store settings';
 
-    // Customer permissions
+    // Website & Branding Permissions (Editor & Admin)
+    case ManagePages = 'manage pages';
+    case ManageHeaderFooter = 'manage header footer';
+
+    // Customer Frontend Capabilities (Non-Administrative)
     case ViewProducts = 'view products';
     case PlaceOrders = 'place orders';
     case ManageProfile = 'manage profile';
@@ -25,7 +33,35 @@ enum UserPermission: string
      */
     public static function adminPermissions(): array
     {
-        return self::values();
+        return [
+            self::ManageOrders->value,
+            self::ManageProducts->value,
+            self::ManageCustomers->value,
+            self::ManageCoupons->value,
+            self::ManageOutlets->value,
+            self::ManageTaxes->value,
+            self::ManageQueries->value,
+            self::ManageStaff->value,
+            self::ManageRoles->value,
+            self::ManageStoreSettings->value,
+            self::ManagePages->value,
+            self::ManageHeaderFooter->value,
+            self::ViewProducts->value,
+            self::PlaceOrders->value,
+            self::ManageProfile->value,
+            self::ViewOwnOrders->value,
+        ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function editorPermissions(): array
+    {
+        return [
+            self::ManagePages->value,
+            self::ManageHeaderFooter->value,
+        ];
     }
 
     /**
@@ -38,6 +74,27 @@ enum UserPermission: string
             self::PlaceOrders->value,
             self::ManageProfile->value,
             self::ViewOwnOrders->value,
+        ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function staffPermissions(): array
+    {
+        return [
+            self::ManageOrders->value,
+            self::ManageProducts->value,
+            self::ManageCustomers->value,
+            self::ManageCoupons->value,
+            self::ManageOutlets->value,
+            self::ManageTaxes->value,
+            self::ManageQueries->value,
+            self::ManageStaff->value,
+            self::ManageRoles->value,
+            self::ManageStoreSettings->value,
+            self::ManagePages->value,
+            self::ManageHeaderFooter->value,
         ];
     }
 

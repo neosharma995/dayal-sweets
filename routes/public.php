@@ -92,3 +92,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// Coupon Code Validation API
+Route::post('/api/coupon/apply', [\App\Http\Controllers\Public\CouponApiController::class, 'apply'])->name('api.coupon.apply');

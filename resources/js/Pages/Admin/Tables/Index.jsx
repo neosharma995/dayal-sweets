@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import Modal from '@/Components/Modal';
@@ -13,20 +13,49 @@ export default function Index({
     filters = {},
 }) {
     const [search, setSearch] = useState(filters.search || '');
-    const [outletFilter, setOutletFilter] = useState(filters.outlet_id || 'all');
+    const [outletFilter, setOutletFilter] = useState(String(filters.outlet_id || 'all'));
     const [locationFilter, setLocationFilter] = useState(filters.location || 'all');
     const [statusFilter, setStatusFilter] = useState(filters.status || 'all');
+
+    // Sync local filter state when server props change (e.g. from sidebar or header outlet switcher)
+    useEffect(() => {
+        setOutletFilter(String(filters.outlet_id || 'all'));
+    }, [filters.outlet_id]);
+
+    // Instant client-side + server-synced filtering
+    const filteredTables = useMemo(() => {
+        return tables.filter((t) => {
+            if (outletFilter !== 'all' && Number(t.outlet_id) !== Number(outletFilter)) {
+                return false;
+            }
+            if (locationFilter !== 'all' && t.location !== locationFilter) {
+                return false;
+            }
+            if (statusFilter !== 'all' && t.status !== statusFilter) {
+                return false;
+            }
+            if (search.trim()) {
+                const q = search.toLowerCase();
+                const matchNum = t.table_number?.toLowerCase().includes(q);
+                const matchName = t.name?.toLowerCase().includes(q);
+                const matchLoc = t.location?.toLowerCase().includes(q);
+                const matchOutlet = t.outlet?.name?.toLowerCase().includes(q);
+                if (!matchNum && !matchName && !matchLoc && !matchOutlet) return false;
+            }
+            return true;
+        });
+    }, [tables, outletFilter, locationFilter, statusFilter, search]);
 
     // Pagination State
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(8);
 
-    const totalPages = Math.ceil(tables.length / itemsPerPage) || 1;
+    const totalPages = Math.ceil(filteredTables.length / itemsPerPage) || 1;
     const paginatedTables = useMemo(() => {
         const safePage = Math.min(currentPage, totalPages);
         const start = (safePage - 1) * itemsPerPage;
-        return tables.slice(start, start + itemsPerPage);
-    }, [tables, currentPage, itemsPerPage, totalPages]);
+        return filteredTables.slice(start, start + itemsPerPage);
+    }, [filteredTables, currentPage, itemsPerPage, totalPages]);
 
     // QR Scanner Preview Modal
     const [activeQrTable, setActiveQrTable] = useState(null);
@@ -191,14 +220,18 @@ export default function Index({
                     <select
                         value={outletFilter}
                         onChange={(e) => {
-                            setOutletFilter(e.target.value);
-                            applyFilters({ outlet_id: e.target.value });
+                            const val = e.target.value;
+                            setOutletFilter(val);
+                            setCurrentPage(1);
+                            applyFilters({ outlet_id: val });
                         }}
-                        style={{ padding: '0.5rem 0.75rem', borderRadius: '0.5rem', border: '1px solid #CBD5E1', fontSize: '0.85rem', fontWeight: 600 }}
+                        style={{ padding: '0.5rem 0.75rem', borderRadius: '0.5rem', border: '1px solid #B88E4B', background: '#FDF8F0', color: '#5A1E1E', fontSize: '0.85rem', fontWeight: 700 }}
                     >
-                        <option value="all">All Outlets</option>
+                        <option value="all">All Outlets ({outlets.reduce((acc, o) => acc + (o.tables_count || 0), 0) || tables.length} Tables)</option>
                         {outlets.map((o) => (
-                            <option key={o.id} value={o.id}>{o.name} ({o.city})</option>
+                            <option key={o.id} value={String(o.id)}>
+                                {o.name} ({o.city}){typeof o.tables_count === 'number' ? ` — ${o.tables_count} Tables` : ''}
+                            </option>
                         ))}
                     </select>
 
@@ -414,7 +447,7 @@ export default function Index({
                         </table>
 
                         {/* Pagination Footer */}
-                        {tables.length > 0 && (
+                        {filteredTables.length > 0 && (
                             <div style={{ padding: '1rem 1.25rem', borderTop: '1px solid #E2E8F0', background: '#FAFAFA', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.82rem', color: '#475569' }}>
                                     <span>Rows per page:</span>
@@ -437,7 +470,7 @@ export default function Index({
                                     <Pagination
                                         currentPage={Math.min(currentPage, totalPages)}
                                         totalPages={totalPages}
-                                        totalItems={tables.length}
+                                        totalItems={filteredTables.length}
                                         itemsPerPage={itemsPerPage}
                                         onPageChange={(page) => setCurrentPage(page)}
                                     />

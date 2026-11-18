@@ -29,7 +29,18 @@ class OutletTableController extends Controller
      */
     public function index(Request $request): Response|JsonResponse
     {
-        $outletId = $request->input('outlet_id') ?? $request->session()->get('active_outlet_id');
+        if ($request->filled('outlet_id')) {
+            $reqOutlet = $request->input('outlet_id');
+            if ($reqOutlet === 'all') {
+                $request->session()->forget('active_outlet_id');
+                $outletId = 'all';
+            } else {
+                $outletId = (int) $reqOutlet;
+                $request->session()->put('active_outlet_id', $outletId);
+            }
+        } else {
+            $outletId = $request->session()->get('active_outlet_id', 'all');
+        }
         $location = $request->input('location', 'all');
         $status = $request->input('status', 'all');
         $search = $request->input('search');
@@ -328,7 +339,18 @@ class OutletTableController extends Controller
      */
     public function scanners(Request $request): Response
     {
-        $outletId = $request->input('outlet_id') ?? $request->session()->get('active_outlet_id');
+        if ($request->filled('outlet_id')) {
+            $reqOutlet = $request->input('outlet_id');
+            if ($reqOutlet === 'all') {
+                $request->session()->forget('active_outlet_id');
+                $outletId = 'all';
+            } else {
+                $outletId = (int) $reqOutlet;
+                $request->session()->put('active_outlet_id', $outletId);
+            }
+        } else {
+            $outletId = $request->session()->get('active_outlet_id', 'all');
+        }
         $location = $request->input('location', 'all');
 
         $query = OutletTable::query()

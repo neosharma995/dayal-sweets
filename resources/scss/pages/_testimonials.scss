@@ -1,9 +1,11 @@
 // ==========================================================================
 // DAYAL SWEETS — TESTIMONIALS PAGE STYLESHEET
 // 100% Faithful Duplication of Reference Design & rt-reviews (Post 4249)
-// Strictly PX units throughout (no rem, no em)
+// Strictly PX units throughout (no rem, no em) - Fixed 1720px Container
 // Scoped under .testimonials-page-root
 // ==========================================================================
+
+@import '../abstracts/storefront-variables';
 
 .testimonials-page-root {
   background-color: #FDFBF7;
@@ -48,18 +50,7 @@
   }
 
   .testimonials-container {
-    width: 90%;
-    max-width: 100%;
-    margin: 0 auto;
-    box-sizing: border-box;
-
-    @media (max-width: 468px) {
-      width: 92%;
-    }
-
-    @media (max-width: 360px) {
-      width: 94%;
-    }
+    @include dayal-container;
   }
 
   // --------------------------------------------------------------------------

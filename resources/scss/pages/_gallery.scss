@@ -1,10 +1,12 @@
 // ==========================================================================
 // DAYAL SWEETS — GALLERY PAGE STYLESHEET
 // 100% Faithful Source of Truth Duplication (Post 66 & dsg-gallery)
-// Strictly PX units throughout (no rem, no em)
+// Strictly PX units throughout (no rem, no em) - Fixed 1720px Container
 // Fully Responsive: Desktop (>1024px), Tablet (1024px), Small Tablet (768px), Mobile (<=468px)
 // Scoped under .gallery-page-root
 // ==========================================================================
+
+@import '../abstracts/storefront-variables';
 
 .gallery-page-root {
   background-color: #FAF7F2;
@@ -55,24 +57,7 @@
   }
 
   .gallery-moments-container {
-    width: 90%;
-    margin: 0 auto;
-    box-sizing: border-box;
-
-    @media (max-width: 1024px) {
-      width: 100%;
-      max-width: 920px;
-    }
-
-    @media (max-width: 768px) {
-      width: 100%;
-      max-width: 720px;
-    }
-
-    @media (max-width: 468px) {
-      width: 100%;
-      max-width: 100%;
-    }
+    @include dayal-container;
   }
 
   .gallery-moments-title {
@@ -458,26 +443,8 @@
   }
 
   .gallery-food-container {
-    width: 90%;
-    max-width: 1320px;
-    margin: 0 auto;
+    @include dayal-container;
     text-align: center;
-    box-sizing: border-box;
-
-    @media (max-width: 1024px) {
-      width: 100%;
-      max-width: 920px;
-    }
-
-    @media (max-width: 768px) {
-      width: 100%;
-      max-width: 720px;
-    }
-
-    @media (max-width: 468px) {
-      width: 100%;
-      max-width: 100%;
-    }
   }
 
   // Eyebrow Decorator: — FOOD COLLECTION —

@@ -1,10 +1,12 @@
 // ==========================================================================
 // DAYAL SWEETS — GIFTING PAGE STYLESHEET
 // 100% Faithful Duplication of D:\Dayal Sweets Old (Post 65 & Post 4570)
-// Strictly PX units throughout (no rem, no em)
+// Strictly PX units throughout (no rem, no em) - Fixed 1720px Container
 // Fully Responsive: Desktop (>1024px), Tablet (1024px), Small Tablet (768px), Mobile (<=468px)
 // Strict File & CSS Isolation scoped under .gifting-page-root
 // ==========================================================================
+
+@import '../abstracts/storefront-variables';
 
 .gifting-page-root {
   width: 100%;
@@ -189,15 +191,7 @@
   }
 
   .gifting-occasion-container {
-    width: 90%;
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    box-sizing: border-box;
-
-    @media (max-width: 468px) {
-      width: 92%;
-    }
+    @include dayal-container;
   }
 
   .gifting-occasion-grid {
@@ -358,15 +352,7 @@
   }
 
   .gifting-collections-container {
-    width: 90%;
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    box-sizing: border-box;
-
-    @media (max-width: 468px) {
-      width: 92%;
-    }
+    @include dayal-container;
   }
 
   .gifting-collections-row {
@@ -687,15 +673,7 @@
   }
 
   .gifting-festival-container {
-    width: 90%;
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    box-sizing: border-box;
-
-    @media (max-width: 468px) {
-      width: 92%;
-    }
+    @include dayal-container;
   }
 
   .gifting-festival-grid {
@@ -849,15 +827,7 @@
   }
 
   .gifting-benefits-container {
-    width: 90%;
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    box-sizing: border-box;
-
-    @media (max-width: 468px) {
-      width: 92%;
-    }
+    @include dayal-container;
   }
 
   .gifting-benefits-grid {
@@ -1057,15 +1027,7 @@
   }
 
   .gifting-steps-container {
-    width: 90%;
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    box-sizing: border-box;
-
-    @media (max-width: 468px) {
-      width: 92%;
-    }
+    @include dayal-container;
   }
 
   .gifting-steps-row {
@@ -1241,15 +1203,11 @@
   }
 
   .gifting-quote-container {
-    width: 90%;
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
+    @include dayal-container;
     display: flex;
     flex-direction: row;
     align-items: stretch;
     gap: 50px;
-    box-sizing: border-box;
 
     @media (max-width: 1024px) {
       flex-direction: column;
@@ -1261,7 +1219,6 @@
     }
 
     @media (max-width: 468px) {
-      width: 92%;
       gap: 18px;
     }
   }

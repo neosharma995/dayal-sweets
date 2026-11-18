@@ -11,7 +11,8 @@ import { founderCommitments } from '@/data/aboutData';
 export default function FounderSection() {
     return (
         <section className="about-founder-section">
-            <div className="about-founder-box">
+            <div className="about-founder-container">
+                <div className="about-founder-box">
                 {/* Column 1 – Founder's Message */}
                 <div className="about-founder-col1">
                     <div className="about-founder-eyebrow" aria-hidden="true">
@@ -105,6 +106,7 @@ export default function FounderSection() {
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
     );
 }

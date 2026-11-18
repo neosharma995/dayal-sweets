@@ -1,9 +1,12 @@
 // ==========================================================================
 // DAYAL SWEETS — CONTACT US & COMMON HERO PAGE STYLESHEET
 // 100% Faithful Duplication of Original Design & Architecture (Post 72)
+// Strictly PX units throughout (no rem, no em) - Fixed 1720px Container
 // Fully Responsive: Desktop (>1024px), Tablet (1024px), Small Tablet (768px), Mobile (<=468px)
 // Component prefixes: .contact-page-*, .contact-hero-*, .contact-form-*, .contact-info-*
 // ==========================================================================
+
+@import '../abstracts/storefront-variables';
 
 // --------------------------------------------------------------------------
 // 1. GLOBAL HELPERS & PAGE WRAPPER
@@ -449,30 +452,24 @@
 }
 
 .contact-page-container {
-  width: 90%;
-  margin: 0 auto;
+  @include dayal-container;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   gap: 30px;
   position: relative;
   z-index: 2;
-  box-sizing: border-box;
 
   @media (max-width: 1024px) {
-    width: 100%;
-    max-width: 860px;
     flex-direction: column;
     gap: 32px;
   }
 
   @media (max-width: 768px) {
-    max-width: 600px;
     gap: 24px;
   }
 
   @media (max-width: 468px) {
-    max-width: 100%;
     gap: 16px;
   }
 }

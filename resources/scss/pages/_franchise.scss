@@ -1,8 +1,10 @@
 // ==========================================================================
 // Franchise Page Styles - Dayal Sweets
-// Strictly 'px' units - Container width: 90%, max-width: 100%
+// Strictly 'px' units - Fixed 1720px container ($ds-container-width)
 // Scoped under .franchise-page-root
 // ==========================================================================
+
+@import '../abstracts/storefront-variables';
 
 .franchise-page-root {
     width: 100%;
@@ -10,25 +12,13 @@
     overflow-x: clip;
     background-color: #FAF7F2;
 
-    // Enforce 90% container rule across all inner sections & imported components
+    // Enforce standard 1720px dayal container rule across all inner sections & imported components
     .dayal-outlets-container,
     .dayal-testimonials-container,
     .franchise-benefits-container,
     .franchise-enquiry-container,
     .franchise-timeline-container {
-        width: 90%;
-        max-width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-        box-sizing: border-box;
-
-        @media (max-width: 468px) {
-            width: 92%;
-        }
-
-        @media (max-width: 360px) {
-            width: 94%;
-        }
+        @include dayal-container;
     }
 
     // Highlighting Maroon Span
@@ -700,18 +690,7 @@
     }
 
     .franchise-timeline-container {
-        width: 90%;
-        max-width: 100%;
-        margin: 0 auto;
-        box-sizing: border-box;
-
-        @media (max-width: 468px) {
-            width: 92%;
-        }
-
-        @media (max-width: 360px) {
-            width: 94%;
-        }
+        @include dayal-container;
     }
 
     .franchise-timeline-heading {

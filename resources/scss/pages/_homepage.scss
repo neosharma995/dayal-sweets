@@ -2175,12 +2175,6 @@
 
     &-inner {
         @include dayal-container;
-        width: 90%;
-        max-width: $ds-container-width;
-
-        @media (max-width: 1024px) {
-            width: 100%;
-        }
     }
 
     &-header {

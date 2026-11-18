@@ -43,6 +43,14 @@ class ProductController extends Controller
             });
         }
 
+        // Filter by outlet if specified in query or active session
+        $outletId = $request->input('outlet_id') ?? $request->session()->get('active_outlet_id');
+        if ($outletId && $outletId !== 'all') {
+            $query->whereHas('outlets', function ($q) use ($outletId) {
+                $q->where('outlets.id', (int) $outletId);
+            });
+        }
+
         $products = $query->get();
 
         if ($request->wantsJson()) {
@@ -56,7 +64,7 @@ class ProductController extends Controller
 
         return Inertia::render('Admin/Products/Index', [
             'products' => $products,
-            'filters' => $request->only(['search']),
+            'filters' => array_merge($request->only(['search']), ['outlet_id' => $outletId]),
         ]);
     }
 

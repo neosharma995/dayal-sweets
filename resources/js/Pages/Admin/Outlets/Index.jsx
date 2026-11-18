@@ -1,15 +1,39 @@
 import React, { useState } from 'react';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import Modal from '@/Components/Modal';
-import { MapPinIcon, PhoneIcon, AlertIcon, TruckIcon } from '@/Components/Icons';
+import { MapPinIcon, PhoneIcon, AlertIcon, TruckIcon, ClockIcon, BoxIcon, CartIcon } from '@/Components/Icons';
 
 export default function Index({ outlets = [], filters = {}, stats = {} }) {
+    const { activeOutletId } = usePage().props;
     const [search, setSearch] = useState(filters.search || '');
     const [selectedStatus, setSelectedStatus] = useState(filters.status || 'all');
-    const [viewMode, setViewMode] = useState('cards'); // 'cards' (default 4x4) or 'table'
+    const [viewMode, setViewMode] = useState('table'); // Default to table format as requested
+    const [expandedOutletIds, setExpandedOutletIds] = useState([]);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [outletToDelete, setOutletToDelete] = useState(null);
+
+    const toggleExpand = (outletId) => {
+        setExpandedOutletIds((prev) =>
+            prev.includes(outletId) ? prev.filter((id) => id !== outletId) : [...prev, outletId]
+        );
+    };
+
+    const handleSwitchContext = (outletId) => {
+        router.post(
+            route('admin.outlets.switch-context'),
+            { outlet_id: outletId },
+            { preserveScroll: true }
+        );
+    };
+
+    const handleClearContext = () => {
+        router.post(
+            route('admin.outlets.clear-context'),
+            {},
+            { preserveScroll: true }
+        );
+    };
 
     const filteredOutlets = outlets.filter((item) => {
         const matchesStatus =
@@ -30,6 +54,16 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
             item.phone?.toLowerCase().includes(q)
         );
     });
+
+    const isAllExpanded = filteredOutlets.length > 0 && filteredOutlets.every((o) => expandedOutletIds.includes(o.id));
+
+    const toggleExpandAll = () => {
+        if (isAllExpanded) {
+            setExpandedOutletIds([]);
+        } else {
+            setExpandedOutletIds(filteredOutlets.map((o) => o.id));
+        }
+    };
 
     const handleDeleteClick = (outlet) => {
         setOutletToDelete(outlet);
@@ -59,15 +93,18 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                     style={{
                         display: 'inline-flex',
                         alignItems: 'center',
-                        padding: '0.2rem 0.65rem',
+                        gap: '0.35rem',
+                        padding: '0.25rem 0.65rem',
                         borderRadius: '9999px',
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        background: '#F1F5F9',
-                        color: '#64748B',
-                        border: '1px solid #CBD5E1',
+                        fontSize: '0.725rem',
+                        fontWeight: 700,
+                        background: 'rgba(241, 245, 249, 0.95)',
+                        color: '#475569',
+                        backdropFilter: 'blur(8px)',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                     }}
                 >
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#94A3B8' }} />
                     Inactive
                 </span>
             );
@@ -79,15 +116,18 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                     style={{
                         display: 'inline-flex',
                         alignItems: 'center',
-                        padding: '0.2rem 0.65rem',
+                        gap: '0.35rem',
+                        padding: '0.25rem 0.65rem',
                         borderRadius: '9999px',
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        background: '#FEF3C7',
+                        fontSize: '0.725rem',
+                        fontWeight: 700,
+                        background: 'rgba(254, 243, 199, 0.95)',
                         color: '#92400E',
-                        border: '1px solid #FDE68A',
+                        backdropFilter: 'blur(8px)',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                     }}
                 >
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#D97706' }} />
                     Coming Soon
                 </span>
             );
@@ -98,15 +138,26 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                 style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    padding: '0.2rem 0.65rem',
+                    gap: '0.35rem',
+                    padding: '0.25rem 0.65rem',
                     borderRadius: '9999px',
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    background: '#ECFDF5',
+                    fontSize: '0.725rem',
+                    fontWeight: 700,
+                    background: 'rgba(236, 253, 245, 0.95)',
                     color: '#065F46',
-                    border: '1px solid #A7F3D0',
+                    backdropFilter: 'blur(8px)',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                 }}
             >
+                <span
+                    style={{
+                        width: '6px',
+                        height: '6px',
+                        borderRadius: '50%',
+                        background: '#059669',
+                        boxShadow: '0 0 0 2px rgba(16, 185, 129, 0.35)',
+                    }}
+                />
                 Active
             </span>
         );
@@ -308,7 +359,7 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                                 )}
                             </div>
 
-                            {/* View Switcher: Cards vs Table */}
+                            {/* View Switcher: Table (default) vs Cards */}
                             <div
                                 style={{
                                     display: 'inline-flex',
@@ -321,32 +372,8 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                             >
                                 <button
                                     type="button"
-                                    onClick={() => setViewMode('cards')}
-                                    title="Modern 4x4 Cards View"
-                                    style={{
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '0.35rem',
-                                        padding: '0.35rem 0.65rem',
-                                        borderRadius: '0.25rem',
-                                        fontSize: '0.75rem',
-                                        fontWeight: 600,
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        background: viewMode === 'cards' ? '#FFFFFF' : 'transparent',
-                                        color: viewMode === 'cards' ? '#B88E4B' : '#64748B',
-                                        boxShadow: viewMode === 'cards' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
-                                    }}
-                                >
-                                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zm-11 11h7v7H3v-7zm11 0h7v7h-7v-7z" />
-                                    </svg>
-                                    <span>Cards (4x4)</span>
-                                </button>
-                                <button
-                                    type="button"
                                     onClick={() => setViewMode('table')}
-                                    title="Table View"
+                                    title="Table View (with Expandable Rows)"
                                     style={{
                                         display: 'inline-flex',
                                         alignItems: 'center',
@@ -367,7 +394,51 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                                     </svg>
                                     <span>Table</span>
                                 </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setViewMode('cards')}
+                                    title="Modern Cards View"
+                                    style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '0.35rem',
+                                        padding: '0.35rem 0.65rem',
+                                        borderRadius: '0.25rem',
+                                        fontSize: '0.75rem',
+                                        fontWeight: 600,
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        background: viewMode === 'cards' ? '#FFFFFF' : 'transparent',
+                                        color: viewMode === 'cards' ? '#B88E4B' : '#64748B',
+                                        boxShadow: viewMode === 'cards' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                                    }}
+                                >
+                                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zm-11 11h7v7H3v-7zm11 0h7v7h-7v-7z" />
+                                    </svg>
+                                    <span>Cards</span>
+                                </button>
                             </div>
+
+                            {/* Expand / Collapse All (when in table mode) */}
+                            {viewMode === 'table' && filteredOutlets.length > 0 && (
+                                <button
+                                    type="button"
+                                    onClick={toggleExpandAll}
+                                    style={{
+                                        padding: '0.35rem 0.65rem',
+                                        borderRadius: '0.375rem',
+                                        background: '#FFFFFF',
+                                        border: '1px solid #CBD5E1',
+                                        color: '#334155',
+                                        fontSize: '0.75rem',
+                                        fontWeight: 600,
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    {isAllExpanded ? 'Collapse All ▲' : 'Expand All ▼'}
+                                </button>
+                            )}
 
                             <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 500 }}>
                                 Showing <strong>{filteredOutlets.length}</strong> of {outlets.length}
@@ -377,81 +448,48 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
 
                     {/* Responsive Grid & Modern Card Styles */}
                     <style>{`
-                        .dayal-outlets-4-grid {
+                        .dayal-outlets-modern-grid {
                             display: grid;
-                            grid-template-columns: repeat(4, minmax(0, 1fr));
-                            gap: 1.25rem;
-                            padding: 1.25rem;
+                            grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+                            gap: 1.5rem;
+                            padding: 1.25rem 0;
                             box-sizing: border-box;
                         }
-                        @media (max-width: 1400px) {
-                            .dayal-outlets-4-grid {
-                                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-                                gap: 1rem !important;
-                                padding: 1rem !important;
-                            }
-                        }
-                        @media (max-width: 1024px) {
-                            .dayal-outlets-4-grid {
-                                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-                            }
-                        }
                         @media (max-width: 640px) {
-                            .dayal-outlets-4-grid {
+                            .dayal-outlets-modern-grid {
                                 grid-template-columns: 1fr !important;
-                                padding: 0.75rem !important;
+                                gap: 1rem !important;
                             }
                         }
                         .dayal-outlet-modern-card {
                             background: #FFFFFF;
-                            border-radius: 0.875rem;
+                            border-radius: 1rem;
                             border: 1px solid #E2E8F0;
                             overflow: hidden;
                             display: flex;
                             flex-direction: column;
-                            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
-                            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+                            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+                            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
                             position: relative;
                         }
                         .dayal-outlet-modern-card:hover {
-                            transform: translateY(-4px);
-                            box-shadow: 0 16px 28px -6px rgba(15, 23, 42, 0.1), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+                            transform: translateY(-5px);
+                            box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
                             border-color: #CBD5E1;
                         }
-                        .dayal-outlet-modern-card:hover .dayal-card-zoom-img {
-                            transform: scale(1.06);
+                        .dayal-outlet-modern-card--active-context {
+                            border-color: #10B981 !important;
+                            background-color: #ECFDF5 !important;
+                            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25), 0 16px 24px -4px rgba(16, 185, 129, 0.12) !important;
                         }
                         .dayal-card-zoom-img {
-                            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
                             width: 100%;
                             height: 100%;
                             object-fit: cover;
                         }
-                        .dayal-card-action-btn {
-                            display: inline-flex;
-                            align-items: center;
-                            justify-content: center;
-                            gap: 0.25rem;
-                            padding: 0.35rem 0.65rem;
-                            border-radius: 0.375rem;
-                            font-size: 0.75rem;
-                            font-weight: 600;
-                            text-decoration: none;
-                            transition: all 0.15s ease;
-                            border: 1px solid #CBD5E1;
-                            background: #FFFFFF;
-                            color: #334155;
-                            cursor: pointer;
-                        }
-                        .dayal-card-action-btn:hover {
-                            background: #F8FAFC;
-                            border-color: #94A3B8;
-                            color: #0F172A;
-                        }
-                        .dayal-card-action-delete:hover {
-                            background: #FEF2F2 !important;
-                            border-color: #FCA5A5 !important;
-                            color: #DC2626 !important;
+                        .dayal-outlet-modern-card:hover .dayal-card-zoom-img {
+                            transform: scale(1.05);
                         }
                     `}</style>
 
@@ -485,464 +523,144 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                             </div>
                         </div>
                     ) : viewMode === 'cards' ? (
-                        /* Modern 4 4 4 Cards Grid */
-                        <div className="dayal-outlets-4-grid">
-                            {filteredOutlets.map((outlet) => (
-                                <div key={outlet.id} className="dayal-outlet-modern-card">
-                                    {/* Card Visual Header / Image Banner */}
+                        /* Modern Spacious Outlet Cards Grid */
+                        <div className="dayal-outlets-modern-grid">
+                            {filteredOutlets.map((outlet) => {
+                                const isActiveContext = Number(activeOutletId) === Number(outlet.id);
+
+                                return (
                                     <div
-                                        style={{
-                                            position: 'relative',
-                                            height: '155px',
-                                            background: 'linear-gradient(135deg, #FAF7F2 0%, #F5EADB 100%)',
-                                            overflow: 'hidden',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                        }}
+                                        key={outlet.id}
+                                        className={`dayal-outlet-modern-card ${isActiveContext ? 'dayal-outlet-modern-card--active-context' : ''}`}
                                     >
-                                        {outlet.image_url || outlet.image ? (
-                                            <img
-                                                src={outlet.image_url || outlet.image}
-                                                alt={outlet.name}
-                                                className="dayal-card-zoom-img"
-                                                onError={(e) => {
-                                                    e.target.style.display = 'none';
-                                                }}
-                                            />
-                                        ) : (
-                                            <div style={{ textAlign: 'center', color: '#B88E4B' }}>
-                                                <MapPinIcon width="40" height="40" style={{ opacity: 0.75 }} />
-                                                <div style={{ fontSize: '0.725rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginTop: '0.25rem', opacity: 0.85 }}>
-                                                    Dayal Sweets
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* Subtle Dark Gradient Overlay at Bottom */}
+                                        {/* Card Visual Header / Image Banner (185px) */}
                                         <div
                                             style={{
-                                                position: 'absolute',
-                                                inset: 0,
-                                                background: 'linear-gradient(to top, rgba(15, 23, 42, 0.55) 0%, rgba(15, 23, 42, 0) 50%, rgba(15, 23, 42, 0.25) 100%)',
-                                                pointerEvents: 'none',
-                                            }}
-                                        />
-
-                                        {/* Top Badges Overlay */}
-                                        <div
-                                            style={{
-                                                position: 'absolute',
-                                                top: '0.65rem',
-                                                left: '0.65rem',
-                                                right: '0.65rem',
+                                                position: 'relative',
+                                                height: '185px',
+                                                background: 'linear-gradient(135deg, #FBF6EE 0%, #F5E8D3 100%)',
+                                                overflow: 'hidden',
                                                 display: 'flex',
-                                                justifyContent: 'space-between',
                                                 alignItems: 'center',
-                                                pointerEvents: 'none',
-                                                zIndex: 2,
+                                                justifyContent: 'center',
                                             }}
                                         >
-                                            {/* ID & Flagship Badge */}
-                                            <div style={{ display: 'flex', gap: '0.35rem', pointerEvents: 'auto' }}>
-                                                <span
-                                                    style={{
-                                                        background: 'rgba(15, 23, 42, 0.75)',
-                                                        color: '#FFFFFF',
-                                                        padding: '0.2rem 0.5rem',
-                                                        borderRadius: '0.375rem',
-                                                        fontSize: '0.6875rem',
-                                                        fontWeight: 700,
-                                                        letterSpacing: '0.04em',
-                                                        backdropFilter: 'blur(6px)',
-                                                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                                            {outlet.image_url || outlet.image ? (
+                                                <img
+                                                    src={outlet.image_url || outlet.image}
+                                                    alt={outlet.name}
+                                                    className="dayal-card-zoom-img"
+                                                    onError={(e) => {
+                                                        e.target.style.display = 'none';
                                                     }}
-                                                >
-                                                    #{outlet.id}
-                                                </span>
-                                                {outlet.is_flagship && (
-                                                    <span
-                                                        style={{
-                                                            background: 'linear-gradient(135deg, #B88E4B 0%, #D4AF37 100%)',
-                                                            color: '#FFFFFF',
-                                                            padding: '0.2rem 0.55rem',
-                                                            borderRadius: '0.375rem',
-                                                            fontSize: '0.6875rem',
-                                                            fontWeight: 700,
-                                                            letterSpacing: '0.02em',
-                                                            boxShadow: '0 2px 6px rgba(184, 142, 75, 0.4)',
-                                                        }}
-                                                    >
-                                                        ★ Flagship
-                                                    </span>
-                                                )}
-                                            </div>
+                                                />
+                                            ) : (
+                                                <div style={{ textAlign: 'center', color: '#B88E4B' }}>
+                                                    <MapPinIcon width="44" height="44" style={{ opacity: 0.75 }} />
+                                                    <div style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginTop: '0.35rem', opacity: 0.85 }}>
+                                                        Dayal Sweets
+                                                    </div>
+                                                </div>
+                                            )}
 
-                                            {/* Status Badge */}
-                                            <div style={{ pointerEvents: 'auto' }}>
-                                                {getStatusBadge(outlet)}
-                                            </div>
-                                        </div>
-
-                                        {/* Bottom Overlay Pill: City */}
-                                        {outlet.city && (
+                                            {/* Gradient Scrim for crisp text readability */}
                                             <div
                                                 style={{
                                                     position: 'absolute',
-                                                    bottom: '0.6rem',
-                                                    left: '0.65rem',
-                                                    display: 'inline-flex',
-                                                    alignItems: 'center',
-                                                    gap: '0.3rem',
-                                                    background: 'rgba(15, 23, 42, 0.75)',
-                                                    backdropFilter: 'blur(6px)',
-                                                    color: '#FFFFFF',
-                                                    padding: '0.2rem 0.55rem',
-                                                    borderRadius: '0.375rem',
-                                                    fontSize: '0.7rem',
-                                                    fontWeight: 600,
-                                                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                                                    inset: 0,
+                                                    background: 'linear-gradient(to top, rgba(15, 23, 42, 0.65) 0%, rgba(15, 23, 42, 0) 50%, rgba(15, 23, 42, 0.3) 100%)',
+                                                    pointerEvents: 'none',
+                                                }}
+                                            />
+
+                                            {/* Top Badges Overlay */}
+                                            <div
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: '0.75rem',
+                                                    left: '0.75rem',
                                                     zIndex: 2,
                                                 }}
                                             >
-                                                <MapPinIcon width="11" height="11" style={{ color: '#FCD34D' }} />
-                                                <span>{outlet.city}{outlet.state ? `, ${outlet.state}` : ''}</span>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Card Content Body */}
-                                    <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', flex: 1, gap: '0.65rem' }}>
-                                        {/* Title & Subtitle */}
-                                        <div>
-                                            <h3
-                                                style={{
-                                                    margin: 0,
-                                                    fontSize: '1.025rem',
-                                                    fontWeight: 700,
-                                                    color: '#0F172A',
-                                                    lineHeight: 1.35,
-                                                }}
-                                            >
-                                                {outlet.name}
-                                            </h3>
-                                            {outlet.subtitle && (
-                                                <p style={{ margin: '0.15rem 0 0 0', fontSize: '0.75rem', color: '#64748B', fontWeight: 500 }}>
-                                                    {outlet.subtitle}
-                                                </p>
-                                            )}
-                                        </div>
-
-                                        {/* Address & Direct Map Link */}
-                                        <div style={{ fontSize: '0.8125rem', color: '#334155', lineHeight: 1.45 }}>
-                                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.4rem' }}>
-                                                <MapPinIcon width="14" height="14" style={{ color: '#B88E4B', marginTop: '2px', flexShrink: 0 }} />
-                                                <span style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', flex: 1 }}>
-                                                    {outlet.address || 'Address not configured'}
-                                                </span>
-                                            </div>
-                                            <div style={{ marginTop: '0.35rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.4rem', flexWrap: 'wrap' }}>
-                                                {outlet.pincode && (
-                                                    <span style={{ fontSize: '0.7rem', color: '#64748B', background: '#F1F5F9', padding: '0.1rem 0.4rem', borderRadius: '0.25rem', fontWeight: 600 }}>
-                                                        PIN: {outlet.pincode}
-                                                    </span>
-                                                )}
-                                                {outlet.map_url && (
-                                                    <a
-                                                        href={outlet.map_url}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        style={{
-                                                            fontSize: '0.72rem',
-                                                            color: '#B88E4B',
-                                                            fontWeight: 600,
-                                                            textDecoration: 'none',
-                                                            display: 'inline-flex',
-                                                            alignItems: 'center',
-                                                            gap: '0.2rem',
-                                                            marginLeft: 'auto',
-                                                        }}
-                                                    >
-                                                        <span>View Map</span>
-                                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                                                            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
-                                                        </svg>
-                                                    </a>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        {/* Contact & Hours Info Strip */}
-                                        <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.3rem', fontSize: '0.75rem', color: '#475569' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                                {outlet.phone && (
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                                                        <PhoneIcon width="12" height="12" style={{ color: '#64748B' }} />
-                                                        <a href={`tel:${outlet.phone}`} style={{ color: '#0F172A', textDecoration: 'none', fontWeight: 600, fontSize: '0.75rem' }}>
-                                                            {outlet.phone}
-                                                        </a>
-                                                    </div>
-                                                )}
-                                                {outlet.whatsapp && (
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#059669', fontSize: '0.72rem', fontWeight: 600 }}>
-                                                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#059669' }} />
-                                                        <span>WA: {outlet.whatsapp}</span>
-                                                    </div>
-                                                )}
-                                            </div>
-
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#64748B' }}>
-                                                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <circle cx="12" cy="12" r="10" strokeWidth="2" />
-                                                    <path strokeLinecap="round" strokeWidth="2" d="M12 6v6l4 2" />
-                                                </svg>
-                                                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.72rem' }}>
-                                                    {outlet.timings || (outlet.is_coming_soon ? 'Opening Soon' : 'Standard store hours')}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        {/* Micro-Metrics Segmented Bar (Products & Shipping Zones) */}
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.45rem', marginTop: 'auto', paddingTop: '0.5rem' }}>
-                                            <Link
-                                                href={route('admin.outlets.show', outlet.id)}
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    gap: '0.35rem',
-                                                    padding: '0.45rem 0.5rem',
-                                                    borderRadius: '0.375rem',
-                                                    fontSize: '0.725rem',
-                                                    fontWeight: 600,
-                                                    background: '#FDF8F0',
-                                                    color: '#8C6226',
-                                                    border: '1px solid #E6D2B5',
-                                                    textDecoration: 'none',
-                                                    transition: 'all 0.15s ease',
-                                                }}
-                                                title={`View ${outlet.name} details & products`}
-                                            >
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                                                    <line x1="12" y1="22.08" x2="12" y2="12" />
-                                                </svg>
-                                                <span>{outlet.products_count ?? 0} Products</span>
-                                            </Link>
-
-                                            <Link
-                                                href={route('admin.outlets.shipping-zones.index', outlet.id)}
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    gap: '0.35rem',
-                                                    padding: '0.45rem 0.5rem',
-                                                    borderRadius: '0.375rem',
-                                                    fontSize: '0.725rem',
-                                                    fontWeight: 600,
-                                                    background: '#EFF6FF',
-                                                    color: '#1D4ED8',
-                                                    border: '1px solid #BFDBFE',
-                                                    textDecoration: 'none',
-                                                    transition: 'all 0.15s ease',
-                                                }}
-                                                title={`Manage delivery zones for ${outlet.name}`}
-                                            >
-                                                <TruckIcon width="12" height="12" />
-                                                <span>{outlet.shipping_zones_count ?? 0} Zones</span>
-                                            </Link>
-                                        </div>
-                                    </div>
-
-                                    {/* Card Footer Actions */}
-                                    <div
-                                        style={{
-                                            padding: '0.65rem 0.85rem',
-                                            background: '#F8FAFC',
-                                            borderTop: '1px solid #E2E8F0',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'space-between',
-                                            gap: '0.4rem',
-                                        }}
-                                    >
-                                        {/* Quick Active Toggle */}
-                                        <button
-                                            type="button"
-                                            onClick={() => toggleStatus(outlet.id)}
-                                            title={outlet.is_active ? 'Click to deactivate outlet' : 'Click to activate outlet'}
-                                            style={{
-                                                padding: '0.3rem 0.6rem',
-                                                borderRadius: '0.375rem',
-                                                fontSize: '0.7rem',
-                                                fontWeight: 600,
-                                                cursor: 'pointer',
-                                                border: outlet.is_active ? '1px solid #A7F3D0' : '1px solid #CBD5E1',
-                                                background: outlet.is_active ? '#ECFDF5' : '#FFFFFF',
-                                                color: outlet.is_active ? '#065F46' : '#64748B',
-                                                display: 'inline-flex',
-                                                alignItems: 'center',
-                                                gap: '0.3rem',
-                                            }}
-                                        >
-                                            <span
-                                                style={{
-                                                    width: '6px',
-                                                    height: '6px',
-                                                    borderRadius: '50%',
-                                                    background: outlet.is_active ? '#059669' : '#94A3B8',
-                                                }}
-                                            />
-                                            <span>{outlet.is_active ? 'Active' : 'Inactive'}</span>
-                                        </button>
-
-                                        {/* Action buttons (View, Edit, Delete) */}
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                                            <Link
-                                                href={route('admin.outlets.show', outlet.id)}
-                                                className="dayal-card-action-btn"
-                                                title="View Details"
-                                            >
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                                    <circle cx="12" cy="12" r="3" />
-                                                </svg>
-                                                <span>View</span>
-                                            </Link>
-
-                                            <Link
-                                                href={route('admin.outlets.edit', outlet.id)}
-                                                className="dayal-card-action-btn"
-                                                title="Edit Outlet"
-                                            >
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                                                </svg>
-                                                <span>Edit</span>
-                                            </Link>
-
-                                            <button
-                                                type="button"
-                                                onClick={() => handleDeleteClick(outlet)}
-                                                className="dayal-card-action-btn dayal-card-action-delete"
-                                                title="Delete Outlet"
-                                                style={{ color: '#DC2626', borderColor: '#FECACA', background: '#FEF2F2' }}
-                                            >
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                    <polyline points="3 6 5 6 21 6" />
-                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        /* Table View */
-                        <div style={{ overflowX: 'auto' }}>
-                            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.875rem' }}>
-                                <thead>
-                                    <tr style={{ borderBottom: '1px solid #E2E8F0', background: '#F8FAFC' }}>
-                                        <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                            Outlet
-                                        </th>
-                                        <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                            Address &amp; Location
-                                        </th>
-                                        <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                            Contact Info
-                                        </th>
-                                        <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                            Timings / Notes
-                                        </th>
-                                        <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                            Products
-                                        </th>
-                                        <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                            Shipping Zones
-                                        </th>
-                                        <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                            Status
-                                        </th>
-                                        <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right' }}>
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filteredOutlets.map((outlet) => (
-                                        <tr
-                                            key={outlet.id}
-                                            style={{
-                                                borderBottom: '1px solid #F1F5F9',
-                                                transition: 'background-color 0.15s ease',
-                                            }}
-                                            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#F8FAFC')}
-                                            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-                                        >
-                                            {/* Outlet Info */}
-                                            <td style={{ padding: '0.875rem 1rem', verticalAlign: 'top' }}>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
-                                                    <div
-                                                        style={{
-                                                            width: '56px',
-                                                            height: '42px',
-                                                            borderRadius: '0.375rem',
-                                                            overflow: 'hidden',
-                                                            background: '#F1F5F9',
-                                                            border: '1px solid #E2E8F0',
-                                                            flexShrink: 0,
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                        }}
-                                                    >
-                                                        {outlet.image_url || outlet.image ? (
-                                                            <img
-                                                                src={outlet.image_url || outlet.image}
-                                                                alt={outlet.name}
-                                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                                                onError={(e) => {
-                                                                    e.target.style.display = 'none';
-                                                                }}
-                                                            />
-                                                        ) : (
-                                                            <MapPinIcon width="20" height="20" style={{ color: '#94A3B8' }} />
-                                                        )}
-                                                    </div>
-                                                    <div>
-                                                        <div style={{ fontWeight: 700, color: '#0F172A', fontSize: '0.9375rem' }}>
-                                                            {outlet.name}
-                                                        </div>
-                                                        {outlet.subtitle && (
-                                                            <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 500 }}>
-                                                                {outlet.subtitle}
-                                                            </span>
-                                                        )}
-                                                        <div style={{ fontSize: '0.6875rem', color: '#94A3B8' }}>
-                                                            Slug: {outlet.slug}
-                                                        </div>
-                                                    </div>
+                                                {/* Status Badge */}
+                                                <div>
+                                                    {getStatusBadge(outlet)}
                                                 </div>
-                                            </td>
+                                            </div>
 
-                                            {/* Address & Location */}
-                                            <td style={{ padding: '0.875rem 1rem', verticalAlign: 'top', maxWidth: '300px' }}>
-                                                <p style={{ margin: 0, fontSize: '0.8125rem', color: '#334155', lineHeight: 1.4 }}>
-                                                    {outlet.address}
-                                                </p>
-                                                <div style={{ marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                                    {outlet.city && (
-                                                        <span style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 600 }}>
-                                                            {outlet.city}
-                                                        </span>
-                                                    )}
+                                            {/* Bottom Overlay Pill: City & State */}
+                                            <div
+                                                style={{
+                                                    position: 'absolute',
+                                                    bottom: '0.75rem',
+                                                    left: '0.75rem',
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    gap: '0.35rem',
+                                                    background: 'rgba(15, 23, 42, 0.75)',
+                                                    backdropFilter: 'blur(8px)',
+                                                    color: '#FFFFFF',
+                                                    padding: '0.25rem 0.65rem',
+                                                    borderRadius: '9999px',
+                                                    fontSize: '0.725rem',
+                                                    fontWeight: 600,
+                                                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                                                    zIndex: 2,
+                                                }}
+                                            >
+                                                <MapPinIcon width="12" height="12" style={{ color: '#FCD34D' }} />
+                                                <span>{outlet.city || 'Himachal'}{outlet.state ? `, ${outlet.state}` : ''}</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Card Body */}
+                                        <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', flex: 1, gap: '0.85rem' }}>
+                                            {/* Title & Subtitle */}
+                                            <div>
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+                                                    <Link
+                                                        href={route('admin.outlets.show', outlet.id)}
+                                                        style={{
+                                                            margin: 0,
+                                                            fontSize: '1.15rem',
+                                                            fontWeight: 700,
+                                                            color: '#0F172A',
+                                                            lineHeight: 1.3,
+                                                            textDecoration: 'none',
+                                                        }}
+                                                    >
+                                                        {outlet.name}
+                                                    </Link>
+                                                </div>
+                                                {outlet.subtitle && !outlet.subtitle.toLowerCase().includes('storefront') && (
+                                                    <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.8125rem', color: '#B88E4B', fontStyle: 'italic', fontWeight: 500 }}>
+                                                        {outlet.subtitle}
+                                                    </p>
+                                                )}
+                                            </div>
+
+                                            {/* Location Info Box */}
+                                            <div
+                                                style={{
+                                                    background: '#F8FAFC',
+                                                    border: '1px solid #F1F5F9',
+                                                    borderRadius: '0.625rem',
+                                                    padding: '0.75rem',
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    gap: '0.4rem',
+                                                }}
+                                            >
+                                                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.45rem', fontSize: '0.8125rem', color: '#334155', lineHeight: 1.45 }}>
+                                                    <MapPinIcon width="14" height="14" style={{ color: '#B88E4B', marginTop: '2px', flexShrink: 0 }} />
+                                                    <span style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', flex: 1 }}>
+                                                        {outlet.address || 'Address not configured'}
+                                                    </span>
+                                                </div>
+
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap', paddingTop: '0.25rem' }}>
                                                     {outlet.pincode && (
-                                                        <span style={{ fontSize: '0.75rem', color: '#64748B' }}>
+                                                        <span style={{ fontSize: '0.6875rem', color: '#64748B', background: '#FFFFFF', padding: '0.15rem 0.45rem', borderRadius: '0.25rem', border: '1px solid #E2E8F0', fontWeight: 600 }}>
                                                             PIN: {outlet.pincode}
                                                         </span>
                                                     )}
@@ -951,194 +669,654 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                                                             href={outlet.map_url}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            style={{ fontSize: '0.75rem', color: '#B88E4B', fontWeight: 600, textDecoration: 'none' }}
+                                                            style={{
+                                                                fontSize: '0.75rem',
+                                                                color: '#B88E4B',
+                                                                fontWeight: 600,
+                                                                textDecoration: 'none',
+                                                                display: 'inline-flex',
+                                                                alignItems: 'center',
+                                                                gap: '0.25rem',
+                                                                marginLeft: 'auto',
+                                                            }}
                                                         >
-                                                            Map &rarr;
+                                                            <span>View Map</span>
+                                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                                                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
+                                                            </svg>
                                                         </a>
                                                     )}
                                                 </div>
-                                            </td>
+                                            </div>
 
-                                            {/* Contact Info */}
-                                            <td style={{ padding: '0.875rem 1rem', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+                                            {/* Contact & Hours Quick Strip */}
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', fontSize: '0.75rem' }}>
                                                 {outlet.phone && (
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8125rem', color: '#334155' }}>
-                                                        <PhoneIcon width="14" height="14" style={{ color: '#64748B' }} />
+                                                    <a
+                                                        href={`tel:${outlet.phone}`}
+                                                        style={{
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '0.3rem',
+                                                            padding: '0.25rem 0.55rem',
+                                                            borderRadius: '0.375rem',
+                                                            background: '#F1F5F9',
+                                                            color: '#334155',
+                                                            textDecoration: 'none',
+                                                            fontWeight: 600,
+                                                            fontSize: '0.75rem',
+                                                        }}
+                                                    >
+                                                        <PhoneIcon width="12" height="12" style={{ color: '#64748B' }} />
                                                         <span>{outlet.phone}</span>
-                                                    </div>
+                                                    </a>
                                                 )}
                                                 {outlet.whatsapp && (
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', color: '#059669', marginTop: '0.2rem' }}>
-                                                        <span>WhatsApp:</span>
-                                                        <span>{outlet.whatsapp}</span>
-                                                    </div>
+                                                    <a
+                                                        href={`https://wa.me/${outlet.whatsapp_raw || outlet.whatsapp.replace(/\D/g, '')}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        style={{
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '0.3rem',
+                                                            padding: '0.25rem 0.55rem',
+                                                            borderRadius: '0.375rem',
+                                                            background: '#ECFDF5',
+                                                            color: '#065F46',
+                                                            border: '1px solid #A7F3D0',
+                                                            textDecoration: 'none',
+                                                            fontWeight: 600,
+                                                            fontSize: '0.75rem',
+                                                        }}
+                                                    >
+                                                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#059669' }} />
+                                                        <span>WA</span>
+                                                    </a>
                                                 )}
-                                                {!outlet.phone && !outlet.whatsapp && (
-                                                    <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>None provided</span>
-                                                )}
-                                            </td>
-
-                                            {/* Timings */}
-                                            <td style={{ padding: '0.875rem 1rem', verticalAlign: 'top' }}>
-                                                <div style={{ fontSize: '0.8125rem', color: '#334155' }}>
-                                                    {outlet.timings || (outlet.is_coming_soon ? 'Opening Soon' : 'Standard store hours')}
-                                                </div>
-                                                {outlet.expected_opening && (
-                                                    <span style={{ fontSize: '0.75rem', color: '#D97706', fontWeight: 500 }}>
-                                                        {outlet.expected_opening}
+                                                {outlet.timings && (
+                                                    <span
+                                                        style={{
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '0.3rem',
+                                                            color: '#64748B',
+                                                            fontSize: '0.725rem',
+                                                            marginLeft: 'auto',
+                                                        }}
+                                                        title={outlet.timings}
+                                                    >
+                                                        <ClockIcon width="12" height="12" />
+                                                        <span style={{ maxWidth: '120px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                            {outlet.timings}
+                                                        </span>
                                                     </span>
                                                 )}
-                                            </td>
+                                            </div>
 
-                                            {/* Products Count */}
-                                            <td style={{ padding: '0.875rem 1rem', verticalAlign: 'top' }}>
+                                            {/* Modern 3-Column Metrics Strip */}
+                                            <div
+                                                style={{
+                                                    display: 'grid',
+                                                    gridTemplateColumns: 'repeat(3, 1fr)',
+                                                    gap: '0.5rem',
+                                                    background: '#FDF8F0',
+                                                    border: '1px solid #F3EDE4',
+                                                    borderRadius: '0.625rem',
+                                                    padding: '0.65rem 0.5rem',
+                                                    textAlign: 'center',
+                                                    marginTop: 'auto',
+                                                }}
+                                            >
+                                                <Link
+                                                    href={route('admin.outlets.show', outlet.id)}
+                                                    style={{ textDecoration: 'none', color: 'inherit' }}
+                                                    title="Products assigned to this outlet"
+                                                >
+                                                    <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#8C6226' }}>
+                                                        {outlet.products_count ?? 0}
+                                                    </div>
+                                                    <div style={{ fontSize: '0.6875rem', color: '#A17D49', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                                                        Products
+                                                    </div>
+                                                </Link>
+
+                                                <Link
+                                                    href={route('admin.outlets.show', outlet.id)}
+                                                    style={{ textDecoration: 'none', color: 'inherit', borderLeft: '1px solid #E6D2B5', borderRight: '1px solid #E6D2B5' }}
+                                                    title="Orders routed to this outlet"
+                                                >
+                                                    <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#1E40AF' }}>
+                                                        {outlet.orders_count ?? 0}
+                                                    </div>
+                                                    <div style={{ fontSize: '0.6875rem', color: '#6B7280', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                                                        Orders
+                                                    </div>
+                                                </Link>
+
+                                                <Link
+                                                    href={route('admin.outlets.shipping-zones.index', outlet.id)}
+                                                    style={{ textDecoration: 'none', color: 'inherit' }}
+                                                    title="Shipping zones configured for this outlet"
+                                                >
+                                                    <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0F172A' }}>
+                                                        {outlet.shipping_zones_count ?? 0}
+                                                    </div>
+                                                    <div style={{ fontSize: '0.6875rem', color: '#6B7280', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                                                        Zones
+                                                    </div>
+                                                </Link>
+                                            </div>
+                                        </div>
+
+                                        {/* Card Footer Toolbar */}
+                                        <div
+                                            style={{
+                                                padding: '0.75rem 1.25rem',
+                                                background: '#FAFAFA',
+                                                borderTop: '1px solid #F1F5F9',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                                gap: '0.5rem',
+                                            }}
+                                        >
+                                            {/* Quick Toggle Status */}
+                                            <button
+                                                type="button"
+                                                onClick={() => toggleStatus(outlet.id)}
+                                                style={{
+                                                    border: outlet.is_active ? '1px solid #A7F3D0' : '1px solid #CBD5E1',
+                                                    background: outlet.is_active ? '#ECFDF5' : '#FFFFFF',
+                                                    color: outlet.is_active ? '#065F46' : '#64748B',
+                                                    padding: '0.35rem 0.65rem',
+                                                    borderRadius: '9999px',
+                                                    fontSize: '0.725rem',
+                                                    fontWeight: 600,
+                                                    cursor: 'pointer',
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    gap: '0.35rem',
+                                                }}
+                                            >
+                                                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: outlet.is_active ? '#059669' : '#94A3B8' }} />
+                                                <span>{outlet.is_active ? 'Active' : 'Inactive'}</span>
+                                            </button>
+
+                                            {/* Primary Manage & Action Icons */}
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                                                 <Link
                                                     href={route('admin.outlets.show', outlet.id)}
                                                     style={{
                                                         display: 'inline-flex',
                                                         alignItems: 'center',
                                                         gap: '0.35rem',
-                                                        padding: '0.25rem 0.65rem',
-                                                        borderRadius: '9999px',
+                                                        padding: '0.35rem 0.85rem',
+                                                        borderRadius: '0.375rem',
+                                                        background: '#B88E4B',
+                                                        color: '#FFFFFF',
                                                         fontSize: '0.75rem',
-                                                        fontWeight: 600,
-                                                        background: '#FDF8F0',
-                                                        color: '#8C6226',
-                                                        border: '1px solid #E6D2B5',
+                                                        fontWeight: 700,
                                                         textDecoration: 'none',
+                                                        boxShadow: '0 1px 2px rgba(184, 142, 75, 0.25)',
+                                                        transition: 'all 0.15s ease',
                                                     }}
                                                 >
-                                                    <span>{outlet.products_count ?? 0} Products</span>
+                                                    <span>Manage Hub</span>
+                                                    <span>&rarr;</span>
                                                 </Link>
-                                            </td>
 
-                                            {/* Shipping Zones Count */}
-                                            <td style={{ padding: '0.875rem 1rem', verticalAlign: 'top' }}>
                                                 <Link
-                                                    href={route('admin.outlets.shipping-zones.index', outlet.id)}
+                                                    href={route('admin.outlets.edit', outlet.id)}
+                                                    title="Edit Outlet"
                                                     style={{
                                                         display: 'inline-flex',
                                                         alignItems: 'center',
-                                                        gap: '0.35rem',
-                                                        padding: '0.25rem 0.65rem',
-                                                        borderRadius: '9999px',
-                                                        fontSize: '0.75rem',
-                                                        fontWeight: 600,
-                                                        background: '#EFF6FF',
-                                                        color: '#1D4ED8',
-                                                        border: '1px solid #BFDBFE',
+                                                        justifyContent: 'center',
+                                                        width: '30px',
+                                                        height: '30px',
+                                                        borderRadius: '0.375rem',
+                                                        background: '#FFFFFF',
+                                                        border: '1px solid #CBD5E1',
+                                                        color: '#334155',
                                                         textDecoration: 'none',
+                                                        fontSize: '0.8125rem',
                                                     }}
-                                                    title={`Manage delivery zones for ${outlet.name}`}
                                                 >
-                                                    <TruckIcon width="13" height="13" />
-                                                    <span>{outlet.shipping_zones_count ?? 0} Zones</span>
+                                                    ✎
                                                 </Link>
-                                            </td>
 
-                                            {/* Status */}
-                                            <td style={{ padding: '0.875rem 1rem', verticalAlign: 'top' }}>
-                                                {getStatusBadge(outlet)}
-                                            </td>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleDeleteClick(outlet)}
+                                                    title="Delete Outlet"
+                                                    style={{
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        width: '30px',
+                                                        height: '30px',
+                                                        borderRadius: '0.375rem',
+                                                        background: '#FEF2F2',
+                                                        border: '1px solid #FECACA',
+                                                        color: '#DC2626',
+                                                        cursor: 'pointer',
+                                                        fontSize: '0.8125rem',
+                                                    }}
+                                                >
+                                                    🗑
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        /* Modern Table View with Expandable Rows */
+                        <div style={{ overflowX: 'auto' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.875rem' }}>
+                                <thead>
+                                    <tr style={{ borderBottom: '2px solid #E2E8F0', background: '#F8FAFC' }}>
+                                        <th style={{ padding: '0.875rem 1rem', fontWeight: 700, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.06em', width: '76px' }}>
+                                            Image
+                                        </th>
+                                        <th style={{ padding: '0.875rem 1.25rem', fontWeight: 700, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                                            Outlet / Description
+                                        </th>
+                                        <th style={{ padding: '0.875rem 1rem', fontWeight: 700, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.06em', textAlign: 'center' }}>
+                                            Products
+                                        </th>
+                                        <th style={{ padding: '0.875rem 1rem', fontWeight: 700, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.06em', textAlign: 'center' }}>
+                                            Orders
+                                        </th>
+                                        <th style={{ padding: '0.875rem 1rem', fontWeight: 700, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.06em', textAlign: 'center' }}>
+                                            Zones
+                                        </th>
+                                        <th style={{ padding: '0.875rem 1rem', fontWeight: 700, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.06em', textAlign: 'center' }}>
+                                            Status
+                                        </th>
+                                        <th style={{ padding: '0.875rem 1rem', fontWeight: 700, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.06em', textAlign: 'center' }}>
+                                            Actions
+                                        </th>
+                                        <th style={{ padding: '0.875rem 1rem', fontWeight: 700, color: '#475569', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.06em', textAlign: 'center', width: '110px' }}>
+                                            Details
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredOutlets.map((outlet) => {
+                                        const isExpanded = expandedOutletIds.includes(outlet.id);
+                                        const isActiveContext = Number(activeOutletId) === Number(outlet.id);
 
-                                            {/* Actions */}
-                                            <td style={{ padding: '0.875rem 1rem', verticalAlign: 'top', textAlign: 'right' }}>
-                                                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-                                                    {/* Manage Shipping Zones */}
-                                                    <Link
-                                                        href={route('admin.outlets.shipping-zones.index', outlet.id)}
-                                                        title="Manage Delivery Zones"
-                                                        style={{
-                                                            background: '#EFF6FF',
-                                                            border: '1px solid #BFDBFE',
-                                                            borderRadius: '0.375rem',
-                                                            padding: '0.35rem 0.55rem',
-                                                            color: '#1D4ED8',
-                                                            fontSize: '0.75rem',
-                                                            textDecoration: 'none',
-                                                            fontWeight: 600,
-                                                            display: 'inline-flex',
-                                                            alignItems: 'center',
-                                                            gap: '0.25rem',
-                                                        }}
-                                                    >
-                                                        <TruckIcon width="13" height="13" />
-                                                        <span>Zones</span>
-                                                    </Link>
+                                        return (
+                                            <React.Fragment key={outlet.id}>
+                                                <tr
+                                                    style={{
+                                                        borderBottom: isActiveContext
+                                                            ? '1px solid #A7F3D0'
+                                                            : isExpanded
+                                                            ? '1px dashed #E2E8F0'
+                                                            : '1px solid #F1F5F9',
+                                                        background: isActiveContext
+                                                            ? '#ECFDF5'
+                                                            : isExpanded
+                                                            ? '#FFFDF9'
+                                                            : 'transparent',
+                                                        transition: 'background-color 0.15s ease',
+                                                    }}
+                                                >
+                                                    {/* 1. Image */}
+                                                    <td style={{ padding: '0.85rem 1rem', verticalAlign: 'middle' }}>
+                                                        <div
+                                                            style={{
+                                                                width: '56px',
+                                                                height: '42px',
+                                                                borderRadius: '0.5rem',
+                                                                overflow: 'hidden',
+                                                                background: '#F8FAFC',
+                                                                border: '1px solid #E2E8F0',
+                                                                flexShrink: 0,
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
+                                                            }}
+                                                        >
+                                                            {outlet.image_url || outlet.image ? (
+                                                                <img
+                                                                    src={outlet.image_url || outlet.image}
+                                                                    alt={outlet.name}
+                                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                                    onError={(e) => {
+                                                                        e.target.style.display = 'none';
+                                                                    }}
+                                                                />
+                                                            ) : (
+                                                                <MapPinIcon width="20" height="20" style={{ color: '#B88E4B' }} />
+                                                            )}
+                                                        </div>
+                                                    </td>
 
-                                                    {/* Toggle Active status */}
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => toggleStatus(outlet.id)}
-                                                        title={outlet.is_active ? 'Click to deactivate' : 'Click to activate'}
-                                                        style={{
-                                                            background: 'transparent',
-                                                            border: '1px solid #CBD5E1',
-                                                            borderRadius: '0.375rem',
-                                                            padding: '0.35rem 0.5rem',
-                                                            fontSize: '0.75rem',
-                                                            cursor: 'pointer',
-                                                            color: outlet.is_active ? '#059669' : '#64748B',
-                                                        }}
-                                                    >
-                                                        {outlet.is_active ? 'Active' : 'Inactive'}
-                                                    </button>
+                                                    {/* 2. Name / Description */}
+                                                    <td style={{ padding: '0.85rem 1.25rem', verticalAlign: 'middle', maxWidth: '340px' }}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                                            <Link
+                                                                href={route('admin.outlets.show', outlet.id)}
+                                                                style={{ fontWeight: 700, color: '#0F172A', fontSize: '0.9375rem', textDecoration: 'none' }}
+                                                            >
+                                                                {outlet.name}
+                                                            </Link>
+                                                        </div>
+                                                        {outlet.subtitle && !outlet.subtitle.toLowerCase().includes('storefront') && (
+                                                            <div style={{ fontSize: '0.75rem', color: '#B88E4B', fontStyle: 'italic', fontWeight: 500, marginTop: '0.15rem' }}>
+                                                                {outlet.subtitle}
+                                                            </div>
+                                                        )}
+                                                        <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.2rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                            {outlet.city ? `${outlet.city} • ` : ''}{outlet.address}
+                                                        </div>
+                                                    </td>
 
-                                                    {/* Edit link */}
-                                                    <Link
-                                                        href={route('admin.outlets.edit', outlet.id)}
-                                                        style={{
-                                                            background: '#F1F5F9',
-                                                            border: '1px solid #CBD5E1',
-                                                            borderRadius: '0.375rem',
-                                                            padding: '0.35rem 0.55rem',
-                                                            color: '#0F172A',
-                                                            fontSize: '0.75rem',
-                                                            textDecoration: 'none',
-                                                            fontWeight: 600,
-                                                        }}
-                                                    >
-                                                        Edit
-                                                    </Link>
+                                                    {/* 3. Products Count */}
+                                                    <td style={{ padding: '0.85rem 1rem', verticalAlign: 'middle', textAlign: 'center' }}>
+                                                        <Link
+                                                            href={route('admin.outlets.show', outlet.id)}
+                                                            style={{
+                                                                display: 'inline-flex',
+                                                                alignItems: 'center',
+                                                                gap: '0.35rem',
+                                                                padding: '0.25rem 0.65rem',
+                                                                borderRadius: '9999px',
+                                                                fontSize: '0.75rem',
+                                                                fontWeight: 700,
+                                                                background: '#FDF8F0',
+                                                                color: '#8C6226',
+                                                                border: '1px solid #E6D2B5',
+                                                                textDecoration: 'none',
+                                                                transition: 'all 0.15s ease',
+                                                            }}
+                                                            title={`View ${outlet.name} products`}
+                                                        >
+                                                            <BoxIcon width="13" height="13" />
+                                                            <span>{outlet.products_count ?? 0}</span>
+                                                        </Link>
+                                                    </td>
 
-                                                    {/* Show/View link */}
-                                                    <Link
-                                                        href={route('admin.outlets.show', outlet.id)}
-                                                        style={{
-                                                            background: '#F1F5F9',
-                                                            border: '1px solid #CBD5E1',
-                                                            borderRadius: '0.375rem',
-                                                            padding: '0.35rem 0.55rem',
-                                                            color: '#0F172A',
-                                                            fontSize: '0.75rem',
-                                                            textDecoration: 'none',
-                                                            fontWeight: 600,
-                                                        }}
-                                                    >
-                                                        View
-                                                    </Link>
+                                                    {/* 4. Orders Count */}
+                                                    <td style={{ padding: '0.85rem 1rem', verticalAlign: 'middle', textAlign: 'center' }}>
+                                                        <Link
+                                                            href={route('admin.outlets.show', outlet.id)}
+                                                            style={{
+                                                                display: 'inline-flex',
+                                                                alignItems: 'center',
+                                                                gap: '0.35rem',
+                                                                padding: '0.25rem 0.65rem',
+                                                                borderRadius: '9999px',
+                                                                fontSize: '0.75rem',
+                                                                fontWeight: 700,
+                                                                background: '#EFF6FF',
+                                                                color: '#1D4ED8',
+                                                                border: '1px solid #BFDBFE',
+                                                                textDecoration: 'none',
+                                                                transition: 'all 0.15s ease',
+                                                            }}
+                                                            title={`View ${outlet.name} orders`}
+                                                        >
+                                                            <CartIcon width="13" height="13" />
+                                                            <span>{outlet.orders_count ?? 0}</span>
+                                                        </Link>
+                                                    </td>
 
-                                                    {/* Delete button */}
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleDeleteClick(outlet)}
-                                                        style={{
-                                                            background: '#FEE2E2',
-                                                            border: '1px solid #FCA5A5',
-                                                            borderRadius: '0.375rem',
-                                                            padding: '0.35rem 0.55rem',
-                                                            color: '#DC2626',
-                                                            fontSize: '0.75rem',
-                                                            cursor: 'pointer',
-                                                            fontWeight: 600,
-                                                        }}
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
+                                                    {/* 5. Zones Count */}
+                                                    <td style={{ padding: '0.85rem 1rem', verticalAlign: 'middle', textAlign: 'center' }}>
+                                                        <Link
+                                                            href={route('admin.outlets.shipping-zones.index', outlet.id)}
+                                                            style={{
+                                                                display: 'inline-flex',
+                                                                alignItems: 'center',
+                                                                gap: '0.35rem',
+                                                                padding: '0.25rem 0.65rem',
+                                                                borderRadius: '9999px',
+                                                                fontSize: '0.75rem',
+                                                                fontWeight: 700,
+                                                                background: '#ECFDF5',
+                                                                color: '#047857',
+                                                                border: '1px solid #A7F3D0',
+                                                                textDecoration: 'none',
+                                                                transition: 'all 0.15s ease',
+                                                            }}
+                                                            title={`Manage delivery zones for ${outlet.name}`}
+                                                        >
+                                                            <TruckIcon width="13" height="13" />
+                                                            <span>{outlet.shipping_zones_count ?? 0}</span>
+                                                        </Link>
+                                                    </td>
+
+                                                    {/* 6. Status Toggle */}
+                                                    <td style={{ padding: '0.85rem 1rem', verticalAlign: 'middle', textAlign: 'center' }}>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => toggleStatus(outlet.id)}
+                                                            style={{
+                                                                border: 'none',
+                                                                background: 'transparent',
+                                                                cursor: 'pointer',
+                                                                padding: 0,
+                                                            }}
+                                                            title={outlet.is_active ? 'Click to deactivate' : 'Click to activate'}
+                                                        >
+                                                            {getStatusBadge(outlet)}
+                                                        </button>
+                                                    </td>
+
+                                                    {/* 7. Actions (View, Edit, Delete) */}
+                                                    <td style={{ padding: '0.85rem 1rem', verticalAlign: 'middle', textAlign: 'center' }}>
+                                                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                                                            {/* View / Hub */}
+                                                            <Link
+                                                                href={route('admin.outlets.show', outlet.id)}
+                                                                style={{
+                                                                    padding: '0.35rem 0.65rem',
+                                                                    borderRadius: '0.375rem',
+                                                                    background: '#B88E4B',
+                                                                    color: '#FFFFFF',
+                                                                    fontSize: '0.75rem',
+                                                                    fontWeight: 700,
+                                                                    textDecoration: 'none',
+                                                                    boxShadow: '0 1px 2px rgba(184, 142, 75, 0.2)',
+                                                                }}
+                                                                title="View Outlet Hub"
+                                                            >
+                                                                View
+                                                            </Link>
+
+                                                            {/* Edit */}
+                                                            <Link
+                                                                href={route('admin.outlets.edit', outlet.id)}
+                                                                style={{
+                                                                    padding: '0.35rem 0.65rem',
+                                                                    borderRadius: '0.375rem',
+                                                                    background: '#F8FAFC',
+                                                                    border: '1px solid #CBD5E1',
+                                                                    color: '#334155',
+                                                                    fontSize: '0.75rem',
+                                                                    fontWeight: 600,
+                                                                    textDecoration: 'none',
+                                                                }}
+                                                                title="Edit Store Details"
+                                                            >
+                                                                Edit
+                                                            </Link>
+
+                                                            {/* Delete */}
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => handleDeleteClick(outlet)}
+                                                                style={{
+                                                                    padding: '0.35rem 0.65rem',
+                                                                    borderRadius: '0.375rem',
+                                                                    background: '#FEF2F2',
+                                                                    border: '1px solid #FECACA',
+                                                                    color: '#DC2626',
+                                                                    fontSize: '0.75rem',
+                                                                    fontWeight: 600,
+                                                                    cursor: 'pointer',
+                                                                }}
+                                                                title="Delete Outlet"
+                                                            >
+                                                                Delete
+                                                            </button>
+                                                        </div>
+                                                    </td>
+
+                                                    {/* 8. Expand Button */}
+                                                    <td style={{ padding: '0.85rem 1rem', verticalAlign: 'middle', textAlign: 'center' }}>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => toggleExpand(outlet.id)}
+                                                            style={{
+                                                                display: 'inline-flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                gap: '0.35rem',
+                                                                padding: '0.35rem 0.75rem',
+                                                                borderRadius: '9999px',
+                                                                fontSize: '0.75rem',
+                                                                fontWeight: 700,
+                                                                cursor: 'pointer',
+                                                                border: isExpanded ? '1px solid #B88E4B' : '1px solid #CBD5E1',
+                                                                background: isExpanded ? '#B88E4B' : '#FFFFFF',
+                                                                color: isExpanded ? '#FFFFFF' : '#334155',
+                                                                boxShadow: isExpanded ? '0 1px 3px rgba(184, 142, 75, 0.25)' : 'none',
+                                                                transition: 'all 0.15s ease',
+                                                            }}
+                                                            title={isExpanded ? 'Collapse info' : 'Expand full store information'}
+                                                        >
+                                                            <span>{isExpanded ? 'Collapse' : 'Expand'}</span>
+                                                            <span style={{ fontSize: '0.65rem' }}>{isExpanded ? '▲' : '▼'}</span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+
+                                                {/* EXPANDABLE ROW (Location & Contact Details) */}
+                                                {isExpanded && (
+                                                    <tr style={{ background: isActiveContext ? '#ECFDF5' : '#FAF8F5', borderBottom: '2px solid #E2E8F0' }}>
+                                                        <td colSpan={8} style={{ padding: '1rem 1.5rem' }}>
+                                                            <div
+                                                                style={{
+                                                                    background: '#FFFFFF',
+                                                                    border: '1px solid #E2E8F0',
+                                                                    borderRadius: '0.75rem',
+                                                                    padding: '1.25rem 1.5rem',
+                                                                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
+                                                                }}
+                                                            >
+                                                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.75rem', alignItems: 'start' }}>
+                                                                    {/* Panel 1: Location & Google Maps */}
+                                                                    <div>
+                                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.65rem', color: '#B88E4B', fontWeight: 700, fontSize: '0.8125rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                                                            <MapPinIcon width="16" height="16" />
+                                                                            <span>Location &amp; Address</span>
+                                                                        </div>
+                                                                        <p style={{ margin: '0 0 0.65rem', fontSize: '0.875rem', color: '#1E293B', lineHeight: 1.5, fontWeight: 500 }}>
+                                                                            {outlet.address || 'No address specified'}
+                                                                        </p>
+                                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.85rem' }}>
+                                                                            <span style={{ fontSize: '0.75rem', color: '#475569', background: '#F1F5F9', padding: '0.25rem 0.6rem', borderRadius: '0.375rem', fontWeight: 600 }}>
+                                                                                {outlet.city ? `${outlet.city}, ` : ''}{outlet.state || 'Himachal Pradesh'}
+                                                                            </span>
+                                                                            {outlet.pincode && (
+                                                                                <span style={{ fontSize: '0.75rem', color: '#8C6226', background: '#FDF8F0', border: '1px solid #E6D2B5', padding: '0.25rem 0.6rem', borderRadius: '0.375rem', fontWeight: 600 }}>
+                                                                                    PIN: {outlet.pincode}
+                                                                                </span>
+                                                                            )}
+                                                                        </div>
+                                                                        {outlet.map_url ? (
+                                                                            <a
+                                                                                href={outlet.map_url}
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer"
+                                                                                style={{
+                                                                                    display: 'inline-flex',
+                                                                                    alignItems: 'center',
+                                                                                    gap: '0.4rem',
+                                                                                    padding: '0.4rem 0.85rem',
+                                                                                    borderRadius: '0.375rem',
+                                                                                    background: '#F8FAFC',
+                                                                                    border: '1px solid #CBD5E1',
+                                                                                    color: '#334155',
+                                                                                    fontSize: '0.775rem',
+                                                                                    fontWeight: 600,
+                                                                                    textDecoration: 'none',
+                                                                                    transition: 'all 0.15s ease',
+                                                                                }}
+                                                                            >
+                                                                                <span>Open in Google Maps</span>
+                                                                                <span>↗</span>
+                                                                            </a>
+                                                                        ) : (
+                                                                            <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>No Google Maps link added</span>
+                                                                        )}
+                                                                    </div>
+
+                                                                    {/* Panel 2: Contact Info & Store Timings */}
+                                                                    <div>
+                                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.65rem', color: '#B88E4B', fontWeight: 700, fontSize: '0.8125rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                                                            <PhoneIcon width="16" height="16" />
+                                                                            <span>Contact &amp; Store Timings</span>
+                                                                        </div>
+                                                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.875rem' }}>
+                                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                                                <span style={{ color: '#64748B', fontSize: '0.8125rem', minWidth: '75px', fontWeight: 500 }}>Phone:</span>
+                                                                                {outlet.phone ? (
+                                                                                    <a href={`tel:${outlet.phone}`} style={{ color: '#0F172A', fontWeight: 600, textDecoration: 'none' }}>
+                                                                                        {outlet.phone}
+                                                                                    </a>
+                                                                                ) : (
+                                                                                    <span style={{ color: '#94A3B8' }}>—</span>
+                                                                                )}
+                                                                            </div>
+                                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                                                <span style={{ color: '#64748B', fontSize: '0.8125rem', minWidth: '75px', fontWeight: 500 }}>WhatsApp:</span>
+                                                                                {outlet.whatsapp ? (
+                                                                                    <a
+                                                                                        href={`https://wa.me/${outlet.whatsapp_raw || outlet.whatsapp.replace(/\D/g, '')}`}
+                                                                                        target="_blank"
+                                                                                        rel="noopener noreferrer"
+                                                                                        style={{ color: '#059669', fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+                                                                                    >
+                                                                                        <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#059669', display: 'inline-block' }} />
+                                                                                        <span>{outlet.whatsapp}</span>
+                                                                                    </a>
+                                                                                ) : (
+                                                                                    <span style={{ color: '#94A3B8' }}>—</span>
+                                                                                )}
+                                                                            </div>
+                                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                                                <span style={{ color: '#64748B', fontSize: '0.8125rem', minWidth: '75px', fontWeight: 500 }}>Timings:</span>
+                                                                                <span style={{ color: '#334155', fontWeight: 500 }}>
+                                                                                    {outlet.timings || 'Standard Operating Hours'}
+                                                                                </span>
+                                                                            </div>
+                                                                            {outlet.expected_opening && (
+                                                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                                                    <span style={{ color: '#D97706', fontSize: '0.8125rem', minWidth: '75px', fontWeight: 600 }}>Note:</span>
+                                                                                    <span style={{ color: '#D97706', fontWeight: 600 }}>
+                                                                                        {outlet.expected_opening}
+                                                                                    </span>
+                                                                                </div>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            </React.Fragment>
+                                        );
+                                    })}
                                 </tbody>
                             </table>
                         </div>

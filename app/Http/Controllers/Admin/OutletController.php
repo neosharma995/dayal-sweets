@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\Outlet;
+use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,11 +19,53 @@ use Inertia\Response;
 class OutletController extends Controller
 {
     /**
+     * Switch active outlet context for the admin session.
+     */
+    public function switchContext(Request $request): RedirectResponse|JsonResponse
+    {
+        $outletId = $request->input('outlet_id');
+        if ($outletId && Outlet::where('id', $outletId)->exists()) {
+            $request->session()->put('active_outlet_id', (int) $outletId);
+            $outlet = Outlet::find($outletId);
+            $message = "Switched to {$outlet->name} outlet context.";
+        } else {
+            $request->session()->forget('active_outlet_id');
+            $message = "Switched to all outlets view.";
+        }
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'active_outlet_id' => $request->session()->get('active_outlet_id'),
+                'message' => $message,
+            ]);
+        }
+
+        return redirect()->back()->with('success', $message);
+    }
+
+    /**
+     * Clear active outlet context.
+     */
+    public function clearContext(Request $request): RedirectResponse|JsonResponse
+    {
+        $request->session()->forget('active_outlet_id');
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Active outlet filter cleared. Showing all outlets.',
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Active outlet filter cleared. Showing all outlets.');
+    }
+    /**
      * Display a listing of all outlets.
      */
     public function index(Request $request): Response|JsonResponse
     {
-        $query = Outlet::query()->withCount(['products', 'shippingZones'])->orderBy('sort_order')->orderBy('id');
+        $query = Outlet::query()->withCount(['products', 'shippingZones', 'orders'])->orderBy('sort_order')->orderBy('id');
 
         if ($request->filled('search')) {
             $search = (string) $request->input('search');
@@ -141,28 +185,124 @@ class OutletController extends Controller
     }
 
     /**
-     * Display the specified outlet.
+     * Display the specified outlet with dedicated tabs (Overview, Products, Orders, Delivery Zones).
      */
     public function show(Outlet $outlet): Response|JsonResponse
     {
-        $outlet->loadCount(['products', 'shippingZones']);
+        $outlet->loadCount(['products', 'shippingZones', 'orders']);
         $outlet->load([
             'products' => function ($q) {
                 $q->with(['category', 'variations'])->latest('products.id');
             },
             'shippingZones.methods',
+            'orders' => function ($q) {
+                $q->with(['user', 'items'])->latest('id')->take(50);
+            },
         ]);
+
+        // Get unassigned products for quick assigning in modal
+        $assignedProductIds = $outlet->products->pluck('id')->all();
+        $unassignedProducts = Product::select('id', 'product_name', 'product_price', 'product_selling_price', 'category_id', 'product_image')
+            ->with('category:id,category_name')
+            ->whereNotIn('id', $assignedProductIds)
+            ->orderBy('product_name')
+            ->get();
+
+        $stats = [
+            'total_products' => $outlet->products_count,
+            'total_orders' => $outlet->orders_count,
+            'total_revenue' => (float) $outlet->orders()->where('payment_status', 'paid')->sum('total_amount'),
+            'pending_orders' => $outlet->orders()->where('delivery_status', 'pending')->count(),
+            'shipping_zones' => $outlet->shipping_zones_count,
+        ];
 
         if (request()->wantsJson()) {
             return response()->json([
                 'success' => true,
                 'data' => $outlet,
+                'unassigned_products' => $unassignedProducts,
+                'stats' => $stats,
             ]);
         }
 
         return Inertia::render('Admin/Outlets/Show', [
             'outlet' => $outlet,
+            'unassignedProducts' => $unassignedProducts,
+            'stats' => $stats,
         ]);
+    }
+
+    /**
+     * Assign products to this outlet.
+     */
+    public function syncProducts(Request $request, Outlet $outlet): RedirectResponse|JsonResponse
+    {
+        $validated = $request->validate([
+            'product_ids' => ['required', 'array'],
+            'product_ids.*' => ['integer', 'exists:products,id'],
+            'stock_qty' => ['nullable', 'integer', 'min:0'],
+        ]);
+
+        $productIds = $validated['product_ids'];
+        $stockQty = (int) ($validated['stock_qty'] ?? 100);
+
+        $syncData = [];
+        foreach ($productIds as $pid) {
+            $syncData[$pid] = [
+                'stock_qty' => $stockQty,
+                'is_available' => true,
+            ];
+        }
+
+        $outlet->products()->syncWithoutDetaching($syncData);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Products assigned to outlet successfully.',
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Products assigned to outlet successfully.');
+    }
+
+    /**
+     * Remove a product from this outlet.
+     */
+    public function detachProduct(Outlet $outlet, Product $product): RedirectResponse|JsonResponse
+    {
+        $outlet->products()->detach($product->id);
+
+        if (request()->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => "Product '{$product->product_name}' removed from outlet.",
+            ]);
+        }
+
+        return redirect()->back()->with('success', "Product '{$product->product_name}' removed from outlet.");
+    }
+
+    /**
+     * Update stock or availability for an outlet product.
+     */
+    public function updateProductPivot(Request $request, Outlet $outlet, Product $product): RedirectResponse|JsonResponse
+    {
+        $validated = $request->validate([
+            'stock_qty' => ['nullable', 'integer', 'min:0'],
+            'is_available' => ['nullable', 'boolean'],
+        ]);
+
+        $outlet->products()->updateExistingPivot($product->id, $validated);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Outlet product inventory updated.',
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Outlet product inventory updated.');
     }
 
     /**

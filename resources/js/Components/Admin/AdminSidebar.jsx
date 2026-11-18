@@ -67,15 +67,38 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
                             Management
                         </div>
 
+                        {/* 1. Dashboard */}
                         <Link
                             href={route('admin.dashboard')}
                             className={`dayal-sidebar-link ${route().current('admin.dashboard') ? 'active' : ''}`}
                         >
                             <StoreIcon width="18" height="18" />
-                            <span>Store Dashboard</span>
+                            <span>Dashboard</span>
                         </Link>
 
-                        {/* Orders Management */}
+                        {/* 2. Outlets Management (includes per-outlet Shipping Zones) */}
+                        <Link
+                            href={route('admin.outlets.index')}
+                            className={`dayal-sidebar-link ${route().current('admin.outlets.*') || route().current('admin.shipping-zones.*') ? 'active' : ''}`}
+                        >
+                            <MapPinIcon width="18" height="18" />
+                            <span>Outlets</span>
+                        </Link>
+
+                        {/* 3. Tax Rates */}
+                        <Link
+                            href={route('admin.taxes.index')}
+                            className={`dayal-sidebar-link ${route().current('admin.taxes.*') ? 'active' : ''}`}
+                        >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="19" y1="5" x2="5" y2="19"></line>
+                                <circle cx="6.5" cy="6.5" r="2.5"></circle>
+                                <circle cx="17.5" cy="17.5" r="2.5"></circle>
+                            </svg>
+                            <span>Taxes &amp; GST Rates</span>
+                        </Link>
+
+                        {/* 4. Orders Management */}
                         <Link
                             href={route('admin.orders.index')}
                             className={`dayal-sidebar-link ${route().current('admin.orders.*') ? 'active' : ''}`}
@@ -88,7 +111,7 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
                             <span>Orders</span>
                         </Link>
 
-                        {/* Products Accordion / Nested Navigation */}
+                        {/* 5. Products Accordion / Nested Navigation */}
                         <div className="dayal-sidebar-dropdown-group">
                             <div
                                 onClick={() => setProductsOpen((prev) => !prev)}
@@ -184,28 +207,6 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
                                 </div>
                             )}
                         </div>
-
-                        {/* Outlets Management (includes per-outlet Shipping Zones) */}
-                        <Link
-                            href={route('admin.outlets.index')}
-                            className={`dayal-sidebar-link ${route().current('admin.outlets.*') || route().current('admin.shipping-zones.*') ? 'active' : ''}`}
-                        >
-                            <MapPinIcon width="18" height="18" />
-                            <span>Outlets</span>
-                        </Link>
-
-                        {/* Tax Rates */}
-                        <Link
-                            href={route('admin.taxes.index')}
-                            className={`dayal-sidebar-link ${route().current('admin.taxes.*') ? 'active' : ''}`}
-                        >
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <line x1="19" y1="5" x2="5" y2="19"></line>
-                                <circle cx="6.5" cy="6.5" r="2.5"></circle>
-                                <circle cx="17.5" cy="17.5" r="2.5"></circle>
-                            </svg>
-                            <span>Taxes &amp; GST Rates</span>
-                        </Link>
 
                         {/* Dynamic Pages Accordion / Dropdown */}
                         <div className="dayal-sidebar-dropdown-group">

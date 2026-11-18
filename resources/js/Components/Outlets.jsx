@@ -133,7 +133,7 @@ export default function Outlets({
                                                 </div>
                                                 <img
                                                     src={outlet.image}
-                                                    alt={`${outlet.name} Storefront Architectural Rendering`}
+                                                    alt={`${outlet.name} Architectural Rendering`}
                                                     className="dayal-outlet-card-img"
                                                     loading="lazy"
                                                 />
@@ -208,7 +208,7 @@ export default function Outlets({
                                         <div className="dayal-outlet-card-img-wrap">
                                             <img
                                                 src={outlet.image}
-                                                alt={`Dayal Sweets ${outlet.name} Storefront`}
+                                                alt={`Dayal Sweets ${outlet.name} Outlet`}
                                                 className="dayal-outlet-card-img"
                                                 loading="lazy"
                                             />

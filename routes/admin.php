@@ -184,6 +184,9 @@ Route::middleware(['auth', 'verified', 'role:'.UserRole::Admin->value])->prefix(
 
     // Outlet Management Web Routes (CRUD, Status & Outlet Shipping Zones)
     Route::prefix('outlets')->name('outlets.')->group(function () {
+        Route::post('/switch-context', [OutletController::class, 'switchContext'])->name('switch-context');
+        Route::post('/clear-context', [OutletController::class, 'clearContext'])->name('clear-context');
+
         Route::get('/', [OutletController::class, 'index'])->name('index');
         Route::get('/get-all', [OutletController::class, 'index'])->name('getAll');
         Route::get('/get_all', [OutletController::class, 'index'])->name('getAllUnderscore');
@@ -199,6 +202,11 @@ Route::middleware(['auth', 'verified', 'role:'.UserRole::Admin->value])->prefix(
         Route::patch('/{outlet}/toggle', [OutletController::class, 'toggleActive'])->name('toggle');
         Route::delete('/delete/{outlet}', [OutletController::class, 'destroy'])->name('deleteAlias');
         Route::delete('/{outlet}', [OutletController::class, 'destroy'])->name('destroy');
+
+        // Products management inside an Outlet
+        Route::post('/{outlet}/products/sync', [OutletController::class, 'syncProducts'])->name('products.sync');
+        Route::delete('/{outlet}/products/{product}', [OutletController::class, 'detachProduct'])->name('products.detach');
+        Route::patch('/{outlet}/products/{product}/pivot', [OutletController::class, 'updateProductPivot'])->name('products.update-pivot');
 
         // Shipping Zones managed inside each Outlet
         Route::prefix('{outlet}/shipping-zones')->name('shipping-zones.')->group(function () {

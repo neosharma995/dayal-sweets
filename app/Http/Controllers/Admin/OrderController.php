@@ -25,8 +25,14 @@ class OrderController extends Controller
         $search = $request->input('search');
         $deliveryStatus = $request->input('delivery_status', 'all');
         $paymentStatus = $request->input('payment_status', 'all');
+        $outletId = $request->input('outlet_id') ?? $request->session()->get('active_outlet_id');
 
-        $query = Order::with(['items', 'user'])->latest();
+        $query = Order::with(['items', 'user', 'outlet'])->latest();
+
+        // Filter by outlet if specified
+        if ($outletId && $outletId !== 'all') {
+            $query->where('outlet_id', (int) $outletId);
+        }
 
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
@@ -50,14 +56,19 @@ class OrderController extends Controller
         $orders = $query->paginate($perPage)->withQueryString();
 
         // Calculate statistics for top metric cards
+        $statsQuery = Order::query();
+        if ($outletId && $outletId !== 'all') {
+            $statsQuery->where('outlet_id', (int) $outletId);
+        }
+
         $counts = [
-            'total' => Order::count(),
-            'pending' => Order::where('delivery_status', 'pending')->count(),
-            'shipping' => Order::where('delivery_status', 'shipping')->count(),
-            'out_for_delivery' => Order::where('delivery_status', 'out_for_delivery')->count(),
-            'delivered' => Order::where('delivery_status', 'delivered')->count(),
-            'cancelled' => Order::where('delivery_status', 'cancelled')->count(),
-            'total_revenue' => (float) Order::where('payment_status', 'paid')->sum('total_amount'),
+            'total' => (clone $statsQuery)->count(),
+            'pending' => (clone $statsQuery)->where('delivery_status', 'pending')->count(),
+            'shipping' => (clone $statsQuery)->where('delivery_status', 'shipping')->count(),
+            'out_for_delivery' => (clone $statsQuery)->where('delivery_status', 'out_for_delivery')->count(),
+            'delivered' => (clone $statsQuery)->where('delivery_status', 'delivered')->count(),
+            'cancelled' => (clone $statsQuery)->where('delivery_status', 'cancelled')->count(),
+            'total_revenue' => (float) (clone $statsQuery)->where('payment_status', 'paid')->sum('total_amount'),
         ];
 
         return Inertia::render('Admin/Orders/Index', [
@@ -67,6 +78,7 @@ class OrderController extends Controller
                 'search' => $search,
                 'delivery_status' => $deliveryStatus,
                 'payment_status' => $paymentStatus,
+                'outlet_id' => $outletId,
             ],
         ]);
     }

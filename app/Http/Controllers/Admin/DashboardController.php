@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
+use App\Models\Outlet;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -16,78 +19,103 @@ class DashboardController extends Controller
      */
     public function index(Request $request): Response
     {
-        // Sample real-world e-commerce metrics for Dayal Sweets store
+        $outletId = $request->input('outlet_id') ?? $request->session()->get('active_outlet_id');
+        $activeOutlet = null;
+
+        if ($outletId && $outletId !== 'all') {
+            $activeOutlet = Outlet::find((int) $outletId);
+        }
+
+        // 1. Outlets Count
+        $totalOutlets = Outlet::count();
+        $activeOutletsCount = Outlet::where('is_active', true)->count();
+
+        // 2. Orders Query
+        $ordersQuery = Order::query()->with(['items', 'outlet'])->latest('id');
+        $statsOrdersQuery = Order::query();
+
+        if ($activeOutlet) {
+            $ordersQuery->where('outlet_id', $activeOutlet->id);
+            $statsOrdersQuery->where('outlet_id', $activeOutlet->id);
+        }
+
+        $totalOrders = (clone $statsOrdersQuery)->count();
+        $pendingOrders = (clone $statsOrdersQuery)->whereIn('delivery_status', ['pending', 'processing', 'shipping', 'out_for_delivery'])->count();
+        $deliveredOrders = (clone $statsOrdersQuery)->where('delivery_status', 'delivered')->count();
+        $totalRevenue = (float) (clone $statsOrdersQuery)->where('payment_status', 'paid')->sum('total_amount');
+
+        // Recent Orders list (latest 8)
+        $recentOrders = $ordersQuery->limit(8)->get()->map(function (Order $order) {
+            $itemsSummary = $order->items->map(function ($item) {
+                return ($item->product_name ?? 'Item') . ' (' . ($item->quantity ?? 1) . ')';
+            })->implode(', ');
+
+            return [
+                'id' => $order->id,
+                'order_number' => $order->order_number,
+                'customer_name' => $order->customer_name,
+                'customer_phone' => $order->customer_phone,
+                'customer_email' => $order->customer_email,
+                'city' => $order->city,
+                'items' => $itemsSummary ?: 'Standard Order Items',
+                'items_count' => $order->items->count(),
+                'total' => (float) $order->total_amount,
+                'payment_status' => $order->payment_status ?: 'pending',
+                'delivery_status' => $order->delivery_status ?: 'pending',
+                'placed_at' => $order->created_at ? $order->created_at->diffForHumans() : 'Recently',
+                'created_at_formatted' => $order->created_at ? $order->created_at->format('d M Y, h:i A') : 'N/A',
+                'outlet_name' => $order->outlet?->name,
+                'outlet_id' => $order->outlet_id,
+            ];
+        });
+
+        // 3. Products Query
+        $productsQuery = Product::query()->with(['category', 'outlets'])->latest('id');
+
+        if ($activeOutlet) {
+            $productsQuery->whereHas('outlets', function ($q) use ($activeOutlet) {
+                $q->where('outlets.id', $activeOutlet->id);
+            });
+        }
+
+        $totalProducts = (clone $productsQuery)->count();
+
+        // Recent Products list (latest 8)
+        $recentProducts = $productsQuery->limit(8)->get()->map(function (Product $product) {
+            return [
+                'id' => $product->id,
+                'name' => $product->product_name,
+                'price' => (float) ($product->product_selling_price ?: $product->product_price ?: 0),
+                'regular_price' => (float) ($product->product_price ?: 0),
+                'stock_quantity' => (int) ($product->product_qty ?? 0),
+                'category_name' => $product->category?->category_name ?? 'General',
+                'image' => $product->product_image,
+                'outlets_count' => $product->outlets->count(),
+                'outlets_names' => $product->outlets->pluck('name')->all(),
+            ];
+        });
+
         $metrics = [
-            'today_sales' => 48250,
-            'month_sales' => 1245000,
-            'total_orders' => 184,
-            'pending_orders' => 12,
-            'total_customers' => 1420,
-            'low_stock_items' => 3,
-        ];
-
-        $recentOrders = [
-            [
-                'order_number' => 'DS-8921',
-                'customer_name' => 'Amit Verma',
-                'customer_phone' => '+91 98765 43210',
-                'items' => 'Kaju Katli (1kg), Special Gulab Jamun (1kg)',
-                'total' => 1650,
-                'payment_status' => 'Paid (UPI)',
-                'status' => 'Processing',
-                'placed_at' => '15 mins ago',
-            ],
-            [
-                'order_number' => 'DS-8920',
-                'customer_name' => 'Pooja Sharma',
-                'customer_phone' => '+91 98111 22334',
-                'items' => 'Motichoor Laddu (500g), Rasgulla Tin (1kg)',
-                'total' => 780,
-                'payment_status' => 'Paid (Card)',
-                'status' => 'Out for Delivery',
-                'placed_at' => '1 hour ago',
-            ],
-            [
-                'order_number' => 'DS-8919',
-                'customer_name' => 'Suresh Gupta',
-                'customer_phone' => '+91 97234 56789',
-                'items' => 'Desi Ghee Besan Laddu (1kg), Khoya Barfi (500g)',
-                'total' => 1120,
-                'payment_status' => 'Cash on Delivery',
-                'status' => 'Pending Confirmation',
-                'placed_at' => '2 hours ago',
-            ],
-            [
-                'order_number' => 'DS-8918',
-                'customer_name' => 'Neha Agarwal',
-                'customer_phone' => '+91 98990 11223',
-                'items' => 'Assorted Festive Mithai Box (2kg)',
-                'total' => 2400,
-                'payment_status' => 'Paid (NetBanking)',
-                'status' => 'Delivered',
-                'placed_at' => '4 hours ago',
-            ],
-        ];
-
-        $topProducts = [
-            ['name' => 'Royal Kaju Katli', 'category' => 'Dry Fruit Sweets', 'sold_qty' => '142 kg', 'revenue' => '₹1,56,200', 'stock_status' => 'In Stock'],
-            ['name' => 'Desi Ghee Motichoor Laddu', 'category' => 'Traditional Sweets', 'sold_qty' => '118 kg', 'revenue' => '₹70,800', 'stock_status' => 'In Stock'],
-            ['name' => 'Kesar Rasmalai', 'category' => 'Bengali Sweets', 'sold_qty' => '85 boxes', 'revenue' => '₹42,500', 'stock_status' => 'Low Stock (8 left)'],
-            ['name' => 'Gulab Jamun (Desi Ghee)', 'category' => 'Traditional Sweets', 'sold_qty' => '95 kg', 'revenue' => '₹47,500', 'stock_status' => 'In Stock'],
-            ['name' => 'Special Dry Fruit Barfi', 'category' => 'Sugar Free & Premium', 'sold_qty' => '64 kg', 'revenue' => '₹76,800', 'stock_status' => 'Low Stock (5 left)'],
-        ];
-
-        $inventoryAlerts = [
-            ['item' => 'Pista Badam Roll', 'stock' => '4 kg remaining', 'level' => 'critical'],
-            ['item' => 'Kesar Rasmalai', 'stock' => '8 boxes remaining', 'level' => 'warning'],
-            ['item' => 'Silver Vark Packing Boxes', 'stock' => '25 pcs remaining', 'level' => 'warning'],
+            'total_outlets' => $totalOutlets,
+            'active_outlets' => $activeOutletsCount,
+            'total_products' => $totalProducts,
+            'total_orders' => $totalOrders,
+            'pending_orders' => $pendingOrders,
+            'delivered_orders' => $deliveredOrders,
+            'total_revenue' => $totalRevenue,
+            'today_sales' => (float) (clone $statsOrdersQuery)->whereDate('created_at', today())->where('payment_status', 'paid')->sum('total_amount'),
         ];
 
         return Inertia::render('Admin/Dashboard', [
             'metrics' => $metrics,
             'recentOrders' => $recentOrders,
-            'topProducts' => $topProducts,
-            'inventoryAlerts' => $inventoryAlerts,
+            'recentProducts' => $recentProducts,
+            'activeOutlet' => $activeOutlet ? [
+                'id' => $activeOutlet->id,
+                'name' => $activeOutlet->name,
+                'city' => $activeOutlet->city,
+                'state' => $activeOutlet->state,
+            ] : null,
         ]);
     }
 }

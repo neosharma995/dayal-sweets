@@ -1,11 +1,12 @@
 // ==========================================================================
 // DAYAL SWEETS — PRIVACY POLICY PAGE STYLESHEET
 // 100% Faithful to Dayal Sweets Design System & Source of Truth (Post 3)
-// Strictly PX units throughout (no rem, no em)
+// Strictly PX units throughout (no rem, no em) - Fixed 1720px Container
 // Fully Responsive: Desktop (>1024px), Tablet (1024px), Small Tablet (768px), Mobile (<=468px)
-// Container: width: 90% and max-width: 100% (No restrictive fixed max-width)
 // Scoped under .privacy-policy-page-root
 // ==========================================================================
+
+@import '../abstracts/storefront-variables';
 
 .privacy-policy-page-root {
   width: 100%;
@@ -41,35 +42,32 @@
   }
 
   // --------------------------------------------------------------------------
-  // 2. 90% FULL-WIDTH PAGE CONTAINER
-  // Follows website full-width standard: width: 90% / max-width: 100%
+  // 2. FIXED 1720px PAGE CONTAINER
+  // Follows website standard: @include dayal-container ($ds-container-width)
   // --------------------------------------------------------------------------
   .privacy-policy-page-container {
-    width: 90%;
-    max-width: 1140px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 50px 0px;
-    box-sizing: border-box;
+    @include dayal-container;
+    padding-top: 50px;
+    padding-bottom: 50px;
 
     @media (max-width: 1024px) {
-      width: 90%;
-      padding: 40px 0px;
+      padding-top: 40px;
+      padding-bottom: 40px;
     }
 
     @media (max-width: 768px) {
-      width: 90%;
-      padding: 30px 0px;
+      padding-top: 30px;
+      padding-bottom: 30px;
     }
 
     @media (max-width: 468px) {
-      width: 92%;
-      padding: 20px 0px;
+      padding-top: 20px;
+      padding-bottom: 20px;
     }
 
     @media (max-width: 360px) {
-      width: 94%;
-      padding: 16px 0px;
+      padding-top: 16px;
+      padding-bottom: 16px;
     }
   }
 

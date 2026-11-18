@@ -54,6 +54,7 @@
     font-family: $ds-font-body;
 }
 
+.dayal-container,
 .dayal-header-container,
 .dayal-footer-container {
     @include dayal-container;

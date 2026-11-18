@@ -27,7 +27,7 @@ class OrderController extends Controller
         $paymentStatus = $request->input('payment_status', 'all');
         $outletId = $request->input('outlet_id') ?? $request->session()->get('active_outlet_id');
 
-        $query = Order::with(['items', 'user', 'outlet'])->latest();
+        $query = Order::with(['items', 'user', 'outlet', 'outletTable'])->latest();
 
         // Filter by outlet if specified
         if ($outletId && $outletId !== 'all') {
@@ -40,6 +40,8 @@ class OrderController extends Controller
                     ->orWhere('customer_name', 'like', "%{$search}%")
                     ->orWhere('customer_email', 'like', "%{$search}%")
                     ->orWhere('customer_phone', 'like', "%{$search}%")
+                    ->orWhere('table_number', 'like', "%{$search}%")
+                    ->orWhere('table_location', 'like', "%{$search}%")
                     ->orWhere('city', 'like', "%{$search}%");
             });
         }

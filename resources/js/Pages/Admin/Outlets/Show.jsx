@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import Modal from '@/Components/Modal';
+import OutletTablesTab from '@/Components/Admin/OutletTablesTab';
 import {
     MapPinIcon,
     PhoneIcon,
@@ -656,6 +657,40 @@ export default function Show({ outlet, unassignedProducts = [], stats = {} }) {
                             }}
                         >
                             {zonesCount}
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => setActiveTab('tables')}
+                        style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.45rem',
+                            padding: '0.75rem 1.25rem',
+                            border: 'none',
+                            borderBottom: activeTab === 'tables' ? '3px solid #B88E4B' : '3px solid transparent',
+                            background: 'transparent',
+                            color: activeTab === 'tables' ? '#B88E4B' : '#64748B',
+                            fontWeight: activeTab === 'tables' ? 700 : 500,
+                            fontSize: '0.875rem',
+                            cursor: 'pointer',
+                            marginBottom: '-2px',
+                            transition: 'all 0.15s ease',
+                        }}
+                    >
+                        <span>🍽️ Dining Tables &amp; QR</span>
+                        <span
+                            style={{
+                                padding: '0.1rem 0.45rem',
+                                borderRadius: '9999px',
+                                background: activeTab === 'tables' ? '#F5EBD7' : '#F1F5F9',
+                                color: activeTab === 'tables' ? '#8C6226' : '#64748B',
+                                fontSize: '0.6875rem',
+                                fontWeight: 700,
+                            }}
+                        >
+                            {outlet?.tables?.length || stats?.total_tables || 0}
                         </span>
                     </button>
                 </div>
@@ -1815,6 +1850,11 @@ export default function Show({ outlet, unassignedProducts = [], stats = {} }) {
                             </div>
                         )}
                     </div>
+                )}
+
+                {/* TAB 5: DINING TABLES & QR SCANNERS */}
+                {activeTab === 'tables' && (
+                    <OutletTablesTab outlet={outlet} />
                 )}
             </div>
 

@@ -173,4 +173,12 @@ class Outlet extends Model
     {
         return $this->hasMany(Order::class, 'outlet_id')->latest('id');
     }
+
+    /**
+     * Relationship: Outlet has many Dining Tables.
+     */
+    public function tables(): HasMany
+    {
+        return $this->hasMany(OutletTable::class, 'outlet_id')->orderBy('sort_order')->orderBy('id');
+    }
 }

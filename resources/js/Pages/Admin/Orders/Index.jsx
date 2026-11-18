@@ -381,6 +381,13 @@ export default function Index({ orders, counts, filters }) {
                                                 >
                                                     {order.order_number}
                                                 </Link>
+                                                {order.order_type === 'dine_in' && (
+                                                    <div style={{ marginTop: '0.25rem' }}>
+                                                        <span style={{ display: 'inline-block', padding: '0.15rem 0.5rem', borderRadius: '0.35rem', background: '#FDF8F0', border: '1px solid #E6D2B5', color: '#5A1E1E', fontSize: '0.7rem', fontWeight: 800 }}>
+                                                            🍽️ DINE-IN • {order.table_number || 'Table'} {order.table_location ? `(${order.table_location})` : ''}
+                                                        </span>
+                                                    </div>
+                                                )}
                                                 <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.2rem' }}>
                                                     {new Date(order.created_at).toLocaleDateString('en-IN', {
                                                         day: 'numeric',

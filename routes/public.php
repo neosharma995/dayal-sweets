@@ -11,6 +11,7 @@ use App\Http\Controllers\Public\DashboardController;
 use App\Http\Controllers\Public\DeliveryZoneController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\ProductReviewController;
+use App\Http\Controllers\Public\TableOrderController;
 use App\Http\Controllers\Public\TestimonialController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,12 @@ Route::post('/pincode/clear', [DeliveryZoneController::class, 'clear'])->name('p
 Route::get('/cart/items', [CartController::class, 'get'])->name('cart.get');
 Route::post('/cart/sync', [CartController::class, 'sync'])->name('cart.sync');
 Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+
+// Dine-In Table QR Scanner Direct Ordering Panel (Guest & Logged-in Table Customers)
+Route::get('/scan/{token}', [TableOrderController::class, 'show'])->name('table.order.show');
+Route::post('/scan/{token}/order', [TableOrderController::class, 'placeOrder'])->name('table.order.place');
+Route::get('/table-order/{token}', [TableOrderController::class, 'show'])->name('table.order.alias');
+Route::post('/table-order/{token}/order', [TableOrderController::class, 'placeOrder'])->name('table.order.place.alias');
 
 // Authenticated Checkout Actions (User must be logged in to create orders)
 Route::middleware('auth')->prefix('checkout')->name('checkout.')->group(function () {

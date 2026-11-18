@@ -21,13 +21,26 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
         route().current('admin.attributes.*')
     );
 
+    const isOutletRouteActive = Boolean(
+        route().current('admin.outlets.*') ||
+        route().current('admin.shipping-zones.*') ||
+        route().current('admin.tables.*')
+    );
+
     const [productsOpen, setProductsOpen] = useState(isProductRouteActive);
+    const [outletsOpen, setOutletsOpen] = useState(isOutletRouteActive);
 
     useEffect(() => {
         if (isProductRouteActive) {
             setProductsOpen(true);
         }
     }, [isProductRouteActive]);
+
+    useEffect(() => {
+        if (isOutletRouteActive) {
+            setOutletsOpen(true);
+        }
+    }, [isOutletRouteActive]);
 
     return (
         <>
@@ -71,15 +84,79 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
                             <span>Dashboard</span>
                         </Link>
 
-                        {/* 2. Outlets Management (includes per-outlet Shipping Zones) */}
+                        {/* 2. Outlets Accordion / Dropdown (Outlets, Tables & QR Scanners) */}
                         {can('manage outlets') && (
-                            <Link
-                                href={route('admin.outlets.index')}
-                                className={`dayal-sidebar-link ${route().current('admin.outlets.*') || route().current('admin.shipping-zones.*') ? 'active' : ''}`}
-                            >
-                                <MapPinIcon width="18" height="18" />
-                                <span>Outlets</span>
-                            </Link>
+                            <div className="dayal-sidebar-dropdown-group">
+                                <div
+                                    onClick={() => setOutletsOpen((prev) => !prev)}
+                                    className={`dayal-sidebar-link ${isOutletRouteActive ? 'parent-active' : ''}`}
+                                    style={{ cursor: 'pointer', justifyContent: 'space-between', userSelect: 'none' }}
+                                    title="Click to toggle outlets, tables & QR scanners menu"
+                                >
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                        <MapPinIcon width="18" height="18" />
+                                        <span>Outlets</span>
+                                    </div>
+
+                                    <svg
+                                        width="14"
+                                        height="14"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        style={{
+                                            transform: outletsOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                                            transition: 'transform 0.2s ease',
+                                        }}
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+
+                                {outletsOpen && (
+                                    <div className="dayal-sidebar-submenu">
+                                        <Link
+                                            href={route('admin.outlets.index')}
+                                            className={`dayal-sidebar-sublink ${route().current('admin.outlets.index') || route().current('admin.outlets.show') || route().current('admin.outlets.edit') || route().current('admin.shipping-zones.*') ? 'active' : ''}`}
+                                        >
+                                            <span className="dayal-sublink-dot" />
+                                            <span>All Outlets</span>
+                                        </Link>
+
+                                        <Link
+                                            href={route('admin.outlets.create')}
+                                            className={`dayal-sidebar-sublink ${route().current('admin.outlets.create') ? 'active' : ''}`}
+                                        >
+                                            <span className="dayal-sublink-dot" />
+                                            <span>Add New Outlet</span>
+                                        </Link>
+
+                                        <Link
+                                            href={route('admin.tables.index')}
+                                            className={`dayal-sidebar-sublink ${route().current('admin.tables.index') || route().current('admin.tables.edit') ? 'active' : ''}`}
+                                        >
+                                            <span className="dayal-sublink-dot" />
+                                            <span>All Tables</span>
+                                        </Link>
+
+                                        <Link
+                                            href={route('admin.tables.create')}
+                                            className={`dayal-sidebar-sublink ${route().current('admin.tables.create') ? 'active' : ''}`}
+                                        >
+                                            <span className="dayal-sublink-dot" />
+                                            <span>Add New Table</span>
+                                        </Link>
+
+                                        <Link
+                                            href={route('admin.tables.scanners')}
+                                            className={`dayal-sidebar-sublink ${route().current('admin.tables.scanners') ? 'active' : ''}`}
+                                        >
+                                            <span className="dayal-sublink-dot" />
+                                            <span>Table QR Scanners</span>
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
                         )}
 
                         {/* 3. Tax Rates */}

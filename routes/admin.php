@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\HeaderFooterController;
 use App\Http\Controllers\Admin\OccasionController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\OutletController;
+use App\Http\Controllers\Admin\OutletTableController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\ProductController;
@@ -226,6 +227,19 @@ Route::middleware(['auth', 'verified', 'staff'])->prefix('admin')->name('admin.'
             Route::delete('/delete/{shippingZone}', [ShippingZoneController::class, 'destroy'])->name('deleteAlias');
             Route::delete('/{shippingZone}', [ShippingZoneController::class, 'destroy'])->name('destroy');
         });
+    });
+
+    // Dining Tables & QR Scanners Management Routes
+    Route::prefix('tables')->name('tables.')->group(function () {
+        Route::get('/', [OutletTableController::class, 'index'])->name('index');
+        Route::get('/create', [OutletTableController::class, 'create'])->name('create');
+        Route::post('/', [OutletTableController::class, 'store'])->name('store');
+        Route::get('/scanners', [OutletTableController::class, 'scanners'])->name('scanners');
+        Route::get('/{table}/edit', [OutletTableController::class, 'edit'])->name('edit');
+        Route::match(['put', 'patch', 'post'], '/{table}', [OutletTableController::class, 'update'])->name('update');
+        Route::patch('/{table}/status', [OutletTableController::class, 'updateStatus'])->name('update-status');
+        Route::post('/{table}/regenerate-qr', [OutletTableController::class, 'regenerateQr'])->name('regenerate-qr');
+        Route::delete('/{table}', [OutletTableController::class, 'destroy'])->name('destroy');
     });
 
     // Dynamic Pages Management Web Routes

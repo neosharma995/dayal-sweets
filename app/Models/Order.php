@@ -20,6 +20,11 @@ class Order extends Model
         'order_number',
         'user_id',
         'outlet_id',
+        'order_type',
+        'outlet_table_id',
+        'table_number',
+        'table_location',
+        'guests_count',
         'customer_name',
         'customer_email',
         'customer_phone',
@@ -88,6 +93,14 @@ class Order extends Model
     public function outlet(): BelongsTo
     {
         return $this->belongsTo(Outlet::class, 'outlet_id');
+    }
+
+    /**
+     * Relationship: Order belongs to an Outlet Dining Table (if dine-in).
+     */
+    public function outletTable(): BelongsTo
+    {
+        return $this->belongsTo(OutletTable::class, 'outlet_table_id');
     }
 
     /**

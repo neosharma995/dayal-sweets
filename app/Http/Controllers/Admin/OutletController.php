@@ -65,7 +65,7 @@ class OutletController extends Controller
      */
     public function index(Request $request): Response|JsonResponse
     {
-        $query = Outlet::query()->withCount(['products', 'shippingZones', 'orders'])->orderBy('sort_order')->orderBy('id');
+        $query = Outlet::query()->withCount(['products', 'shippingZones', 'orders', 'tables'])->orderBy('sort_order')->orderBy('id');
 
         if ($request->filled('search')) {
             $search = (string) $request->input('search');
@@ -189,14 +189,17 @@ class OutletController extends Controller
      */
     public function show(Outlet $outlet): Response|JsonResponse
     {
-        $outlet->loadCount(['products', 'shippingZones', 'orders']);
+        $outlet->loadCount(['products', 'shippingZones', 'orders', 'tables']);
         $outlet->load([
             'products' => function ($q) {
                 $q->with(['category', 'variations'])->latest('products.id');
             },
             'shippingZones.methods',
+            'tables' => function ($q) {
+                $q->withCount('orders')->orderBy('sort_order')->orderBy('id');
+            },
             'orders' => function ($q) {
-                $q->with(['user', 'items'])->latest('id')->take(50);
+                $q->with(['user', 'items', 'outletTable'])->latest('id')->take(50);
             },
         ]);
 
@@ -214,6 +217,8 @@ class OutletController extends Controller
             'total_revenue' => (float) $outlet->orders()->where('payment_status', 'paid')->sum('total_amount'),
             'pending_orders' => $outlet->orders()->where('delivery_status', 'pending')->count(),
             'shipping_zones' => $outlet->shipping_zones_count,
+            'total_tables' => $outlet->tables_count,
+            'total_seats' => (int) $outlet->tables->sum('capacity'),
         ];
 
         if (request()->wantsJson()) {

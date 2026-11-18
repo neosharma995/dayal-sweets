@@ -18,15 +18,10 @@ export default function DiningQROrdering() {
         <section className="dining-qr-section" aria-label="QR Table Ordering">
             <div className="dining-qr-container">
                 <div className="dining-qr-box">
-                    {/* Left Column: Phone & QR Stand Image */}
-                    <div className="dining-qr-media-col">
-                        <div className="dining-qr-media-wrap">
-                            <img
-                                src="/uploads/2026/09/Ellipse-2487.png"
-                                alt=""
-                                className="dining-qr-ellipse-bg"
-                                aria-hidden="true"
-                            />
+                    {/* Left Parent: Media + Text */}
+                    <div className="dining-qr-left-parent">
+                        {/* Media Column: Direct Background Arch Image */}
+                        <div className="dining-qr-media-col">
                             <img
                                 src="/uploads/2026/09/table-scan-img.png"
                                 alt="Dayal Sweets QR Table Ordering Stand and Mobile App"
@@ -34,26 +29,26 @@ export default function DiningQROrdering() {
                                 loading="lazy"
                             />
                         </div>
-                    </div>
 
-                    {/* Middle Column: Text & Heading */}
-                    <div className="dining-qr-text-col">
-                        <div className="dining-qr-eyebrow-wrap">
-                            <span className="dining-qr-eyebrow-line" aria-hidden="true" />
-                            <span className="dining-qr-eyebrow">QR TABLE ORDERING</span>
-                            <span className="dining-qr-eyebrow-line" aria-hidden="true" />
+                        {/* Text Column */}
+                        <div className="dining-qr-text-col">
+                            <div className="dining-qr-eyebrow-wrap">
+                                <span className="dining-qr-eyebrow-line" aria-hidden="true" />
+                                <span className="dining-qr-eyebrow">QR TABLE ORDERING</span>
+                                <span className="dining-qr-eyebrow-line" aria-hidden="true" />
+                            </div>
+
+                            <h2 className="dining-qr-heading">
+                                Scan. <span className="rt-span-color">Order.</span> Enjoy.
+                            </h2>
+
+                            <p className="dining-qr-desc">
+                                Skip the wait! Scan the QR code at your table, browse the menu, place your order, and enjoy a seamless waiter-free dining experience.
+                            </p>
                         </div>
-
-                        <h2 className="dining-qr-heading">
-                            Scan. <span className="rt-span-color">Order.</span> Enjoy.
-                        </h2>
-
-                        <p className="dining-qr-desc">
-                            Skip the wait! Scan the QR code at your table, browse the menu, place your order, and enjoy a seamless waiter-free dining experience.
-                        </p>
                     </div>
 
-                    {/* Right Column: Step-by-Step Card */}
+                    {/* Right Parent: 40% Width (Steps Card) */}
                     <div className="dining-qr-steps-col">
                         <div className="dining-qr-steps-card">
                             <div className="dining-qr-steps-header">
@@ -128,14 +123,6 @@ export default function DiningQROrdering() {
                                     </div>
                                 )}
                             </div>
-
-                            {/* Decorative Thali at bottom right of card */}
-                            <img
-                                src="/uploads/2026/08/Qr-Container-Step-Background.png"
-                                alt=""
-                                className="dining-qr-steps-bg-decor"
-                                aria-hidden="true"
-                            />
                         </div>
                     </div>
                 </div>

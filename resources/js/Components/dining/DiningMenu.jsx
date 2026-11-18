@@ -42,17 +42,18 @@ export default function DiningMenu() {
                                 <Link href={cat.url} className="dining-menu-card-btn">
                                     <span>EXPLORE</span>
                                     <svg
-                                        width="12"
-                                        height="12"
-                                        viewBox="0 0 24 24"
+                                        width="14"
+                                        height="14"
+                                        viewBox="0 0 14 14"
                                         fill="none"
                                         stroke="currentColor"
-                                        strokeWidth="2.5"
+                                        strokeWidth="1.3"
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
                                         aria-hidden="true"
                                     >
-                                        <polyline points="9 18 15 12 9 6" />
+                                        <path d="M2.9165 7H11.0832" />
+                                        <path d="M7 2.9165L11.0833 6.99984L7 11.0832" />
                                     </svg>
                                 </Link>
                             </div>

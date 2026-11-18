@@ -46,7 +46,9 @@ Route::post('/contact-us/submit', [HomeController::class, 'submitContact'])->nam
 Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');
 Route::get('/gifting', [HomeController::class, 'gifting'])->name('gifting');
 Route::get('/dining', [HomeController::class, 'dining'])->name('dining');
+Route::post('/dining', [HomeController::class, 'submitDiningQuery'])->name('dining.submit');
 Route::get('/dinning', [HomeController::class, 'dining'])->name('dinning');
+Route::post('/dinning', [HomeController::class, 'submitDiningQuery'])->name('dinning.submit');
 Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('privacy-policy');
 Route::get('/refund-returns', [HomeController::class, 'refundReturns'])->name('refund-returns');
 Route::get('/refund-and-returns-policy', [HomeController::class, 'refundReturns'])->name('refund-returns.alias');

@@ -5,7 +5,7 @@ import { BoxIcon, AlertIcon } from '@/Components/Icons';
 import Pagination from '@/Components/Pagination';
 
 export default function Index({ products = [], filters = {} }) {
-    const { paginationLimit = 20 } = usePage().props || {};
+    const { paginationLimit = 20, activeOutlet } = usePage().props || {};
     const itemsPerPage = Number(paginationLimit) || 20;
 
     const [search, setSearch] = useState(filters.search || '');
@@ -176,9 +176,17 @@ export default function Index({ products = [], filters = {} }) {
                         {filteredProducts.length === 0 ? (
                             <div style={{ padding: '3.5rem 1.5rem', textAlign: 'center', color: '#64748B' }}>
                                 <BoxIcon width="48" height="48" style={{ margin: '0 auto 1rem', opacity: 0.3 }} />
-                                <h4 style={{ color: '#0F172A', fontSize: '1.1rem', marginBottom: '0.5rem' }}>No products found</h4>
+                                <h4 style={{ color: '#0F172A', fontSize: '1.1rem', marginBottom: '0.5rem' }}>
+                                    {activeOutlet
+                                        ? `No products found matching your criteria - ${activeOutlet.name}`
+                                        : 'No products found matching your criteria.'}
+                                </h4>
                                 <p style={{ fontSize: '0.85rem', marginBottom: '1.5rem' }}>
-                                    {search ? `No products matching "${search}".` : 'Get started by creating your first product in Dayal Sweets.'}
+                                    {search
+                                        ? `No products matching "${search}".`
+                                        : activeOutlet
+                                            ? `No products are currently assigned to ${activeOutlet.name}.`
+                                            : 'Get started by creating your first product in Dayal Sweets.'}
                                 </p>
                                 <Link
                                     href={route('admin.products.create')}

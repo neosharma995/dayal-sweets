@@ -310,7 +310,11 @@ export default function AdminDashboard({ metrics, recentOrders = [], recentProdu
                                                 <line x1="3" y1="6" x2="21" y2="6" />
                                                 <path d="M16 10a4 4 0 0 1-8 0" />
                                             </svg>
-                                            <div style={{ fontWeight: 600, color: '#334155' }}>No orders found</div>
+                                            <div style={{ fontWeight: 600, color: '#334155' }}>
+                                                {activeOutlet
+                                                    ? `No orders found matching your criteria - ${activeOutlet.name}`
+                                                    : 'No orders found matching your criteria.'}
+                                            </div>
                                             <div style={{ fontSize: '0.8rem', color: '#94A3B8' }}>
                                                 {activeOutlet ? `No customer orders have been placed for ${activeOutlet.name} yet.` : 'No customer orders have been placed yet.'}
                                             </div>
@@ -466,7 +470,11 @@ export default function AdminDashboard({ metrics, recentOrders = [], recentProdu
                                     <td colSpan={activeOutlet ? 5 : 6} style={{ padding: '3rem 1.5rem', textAlign: 'center', color: '#64748B' }}>
                                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
                                             <BoxIcon width="36" height="36" style={{ color: '#CBD5E1' }} />
-                                            <div style={{ fontWeight: 600, color: '#334155' }}>No products found</div>
+                                            <div style={{ fontWeight: 600, color: '#334155' }}>
+                                                {activeOutlet
+                                                    ? `No products found matching your criteria - ${activeOutlet.name}`
+                                                    : 'No products found matching your criteria.'}
+                                            </div>
                                             <div style={{ fontSize: '0.8rem', color: '#94A3B8' }}>
                                                 {activeOutlet ? `No products are assigned to ${activeOutlet.name} yet.` : 'No products available.'}
                                             </div>

@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('dining_queries', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('phone');
+            $table->string('email');
+            $table->unsignedInteger('guests')->nullable()->default(1);
+            $table->text('message')->nullable();
+            $table->foreignId('outlet_id')->nullable()->constrained('outlets')->nullOnDelete();
+            $table->string('status')->default('pending')->index(); // pending, confirmed, completed, cancelled
+            $table->text('admin_notes')->nullable();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('dining_queries');
+    }
+};

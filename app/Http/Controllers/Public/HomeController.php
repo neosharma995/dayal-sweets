@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\ContactQuery;
 use App\Models\DietPreference;
+use App\Models\DiningQuery;
 use App\Models\Occasion;
 use App\Models\Page;
 use App\Models\Product;
@@ -170,6 +171,77 @@ class HomeController extends Controller
         }
 
         return back()->with('success', 'Thank you! Your message has been received. Our team will contact you shortly.');
+    }
+
+    /**
+     * Handle public Dining Table Reservation form submission.
+     */
+    public function submitDiningQuery(Request $request): JsonResponse|RedirectResponse
+    {
+        // Sanitize phone number (strip whitespace, dashes, leading +91)
+        if ($request->has('phone')) {
+            $cleanedPhone = preg_replace('/[^0-9]/', '', (string) $request->input('phone'));
+            if (str_starts_with($cleanedPhone, '91') && strlen($cleanedPhone) === 12) {
+                $cleanedPhone = substr($cleanedPhone, 2);
+            }
+            $request->merge(['phone' => $cleanedPhone]);
+        }
+
+        if ($request->has('name')) {
+            $request->merge(['name' => trim((string) $request->input('name'))]);
+        }
+
+        if ($request->has('email')) {
+            $request->merge(['email' => trim(strtolower((string) $request->input('email')))]);
+        }
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'min:2', 'max:100'],
+            'phone' => ['required', 'string', 'regex:/^[0-9]{10}$/'],
+            'email' => ['required', 'email:filter', 'max:255'],
+            'persons' => ['nullable', 'integer', 'min:1', 'max:50'],
+            'guests' => ['nullable', 'integer', 'min:1', 'max:50'],
+            'message' => ['nullable', 'string', 'max:1000'],
+            'outlet_id' => ['nullable', 'exists:outlets,id'],
+        ], [
+            'name.required' => 'Please enter your full name.',
+            'name.min' => 'Name must be at least 2 characters.',
+            'name.max' => 'Name cannot exceed 100 characters.',
+            'phone.required' => 'Please enter your 10-digit mobile number.',
+            'phone.regex' => 'Please enter a valid 10-digit mobile number (e.g. 9816012345).',
+            'email.required' => 'Please enter your email address.',
+            'email.email' => 'Please enter a valid email address (e.g. name@example.com).',
+            'persons.min' => 'Number of guests must be at least 1.',
+            'persons.max' => 'For bookings exceeding 50 guests, please contact our restaurant directly.',
+            'guests.min' => 'Number of guests must be at least 1.',
+            'guests.max' => 'For bookings exceeding 50 guests, please contact our restaurant directly.',
+            'message.max' => 'Special requests cannot exceed 1000 characters.',
+        ]);
+
+        $guests = $validated['guests'] ?? $validated['persons'] ?? 1;
+        $outletId = $validated['outlet_id'] ?? $request->session()->get('active_outlet_id');
+
+        $diningQuery = DiningQuery::create([
+            'name' => $validated['name'],
+            'phone' => $validated['phone'],
+            'email' => $validated['email'],
+            'guests' => (int) $guests,
+            'message' => $validated['message'] ?? null,
+            'outlet_id' => $outletId ? (int) $outletId : null,
+            'status' => 'pending',
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+        ]);
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Thank you! Your table reservation request has been received. Our dining team will contact you shortly to confirm your booking.',
+                'data' => $diningQuery,
+            ]);
+        }
+
+        return back()->with('success', 'Thank you! Your table reservation request has been received. Our dining team will contact you shortly to confirm your booking.');
     }
 
     /**

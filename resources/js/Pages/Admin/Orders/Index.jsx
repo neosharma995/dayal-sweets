@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import Modal from '@/Components/Modal';
 import Pagination from '@/Components/Pagination';
 
 export default function Index({ orders, counts, filters }) {
+    const { activeOutlet } = usePage().props;
     const [search, setSearch] = useState(filters?.search || '');
     const [selectedDeliveryStatus, setSelectedDeliveryStatus] = useState(filters?.delivery_status || 'all');
     const [selectedPaymentStatus, setSelectedPaymentStatus] = useState(filters?.payment_status || 'all');
@@ -64,7 +65,7 @@ export default function Index({ orders, counts, filters }) {
     const getDeliveryBadge = (status) => {
         switch (status) {
             case 'pending':
-                return { bg: '#FEF3C7', text: '#92400E', border: '#FDE68A', label: 'Pending Prep' };
+                return { bg: '#FEF3C7', text: '#92400E', border: '#FDE68A', label: 'Pending' };
             case 'shipping':
                 return { bg: '#E0E7FF', text: '#3730A3', border: '#C7D2FE', label: 'Shipping / In Transit' };
             case 'out_for_delivery':
@@ -135,7 +136,7 @@ export default function Index({ orders, counts, filters }) {
                     }}
                 >
                     <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#D97706', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        Pending Preparation
+                        Pending Orders
                     </div>
                     <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#B45309', marginTop: '0.35rem' }}>
                         {counts?.pending || 0}
@@ -344,6 +345,7 @@ export default function Index({ orders, counts, filters }) {
                                 <th style={{ padding: '0.85rem 1rem' }}>Order Details</th>
                                 <th style={{ padding: '0.85rem 1rem' }}>Customer</th>
                                 <th style={{ padding: '0.85rem 1rem' }}>Items Summary</th>
+                                <th style={{ padding: '0.85rem 1rem' }}>Outlet</th>
                                 <th style={{ padding: '0.85rem 1rem' }}>Total</th>
                                 <th style={{ padding: '0.85rem 1rem' }}>Payment</th>
                                 <th style={{ padding: '0.85rem 1rem' }}>Delivery Status</th>
@@ -422,6 +424,36 @@ export default function Index({ orders, counts, filters }) {
                                                 <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '0.15rem' }}>
                                                     {order.city}, {order.state}
                                                 </div>
+                                            </td>
+
+                                            {/* Outlet */}
+                                            <td style={{ padding: '0.85rem 1rem' }}>
+                                                {order.outlet ? (
+                                                    <div>
+                                                        <Link
+                                                            href={route('admin.outlets.show', order.outlet.id)}
+                                                            style={{
+                                                                fontWeight: 700,
+                                                                color: '#0F172A',
+                                                                textDecoration: 'none',
+                                                                fontSize: '0.8125rem',
+                                                                display: 'inline-block',
+                                                            }}
+                                                            onMouseEnter={(e) => (e.currentTarget.style.color = '#8B1E28')}
+                                                            onMouseLeave={(e) => (e.currentTarget.style.color = '#0F172A')}
+                                                            title={`View ${order.outlet.name} hub`}
+                                                        >
+                                                            {order.outlet.name}
+                                                        </Link>
+                                                        {order.outlet.city && order.outlet.city.toLowerCase() !== order.outlet.name.toLowerCase() && (
+                                                            <div style={{ fontSize: '0.725rem', color: '#64748B', marginTop: '0.15rem' }}>
+                                                                {order.outlet.city}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <span style={{ fontSize: '0.8125rem', color: '#94A3B8' }}>—</span>
+                                                )}
                                             </td>
 
                                             {/* Total */}
@@ -529,13 +561,17 @@ export default function Index({ orders, counts, filters }) {
                                 })
                             ) : (
                                 <tr>
-                                    <td colSpan={7} style={{ padding: '3.5rem 1rem', textAlign: 'center', color: '#64748B' }}>
+                                    <td colSpan={8} style={{ padding: '3.5rem 1rem', textAlign: 'center', color: '#64748B' }}>
                                         <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📦</div>
                                         <p style={{ margin: 0, fontWeight: 600, fontSize: '1rem', color: '#334155' }}>
-                                            No orders found matching your criteria.
+                                            {activeOutlet
+                                                ? `No orders found matching your criteria - ${activeOutlet.name}`
+                                                : 'No orders found matching your criteria.'}
                                         </p>
                                         <p style={{ margin: '0.25rem 0 1rem 0', fontSize: '0.8125rem' }}>
-                                            Try adjusting your status tab filter or search query.
+                                            {activeOutlet
+                                                ? `No orders match the selected filters for ${activeOutlet.name}.`
+                                                : 'Try adjusting your status tab filter or search query.'}
                                         </p>
                                         <Link href={route('admin.orders.create')} className="dayal-btn dayal-btn--primary dayal-btn--sm">
                                             Create Order Manually

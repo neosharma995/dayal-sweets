@@ -72,13 +72,15 @@ export default function ContactUs({ auth, page }) {
                     subject: '',
                     requirements: '',
                 });
-                setTimeout(() => setSubmitted(false), 9000);
+                setTimeout(() => setSubmitted(false), 4500);
             } else {
                 setErrorMessage(data.message || 'Please check your information and try again.');
+                setTimeout(() => setErrorMessage(''), 4500);
             }
         } catch (err) {
             console.error('Contact form submission error:', err);
             setErrorMessage('Network error while sending message. Please try again.');
+            setTimeout(() => setErrorMessage(''), 4500);
         } finally {
             setSubmitting(false);
         }

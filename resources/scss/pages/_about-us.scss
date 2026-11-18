@@ -6,8 +6,8 @@
 // Strict File & CSS Isolation scoped under .about-page-root
 // ==========================================================================
 
+@use '../abstracts/storefront-variables' as *;
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
-@import '../abstracts/storefront-variables';
 
 .about-page-root {
   background-color: #FDFBF7;

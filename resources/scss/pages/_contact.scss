@@ -6,7 +6,7 @@
 // Component prefixes: .contact-page-*, .contact-hero-*, .contact-form-*, .contact-info-*
 // ==========================================================================
 
-@import '../abstracts/storefront-variables';
+@use '../abstracts/storefront-variables' as *;
 
 // --------------------------------------------------------------------------
 // 1. GLOBAL HELPERS & PAGE WRAPPER

@@ -6,7 +6,7 @@
 // Scoped under .refund-returns-page-root
 // ==========================================================================
 
-@import '../abstracts/storefront-variables';
+@use '../abstracts/storefront-variables' as *;
 
 .refund-returns-page-root {
   width: 100%;

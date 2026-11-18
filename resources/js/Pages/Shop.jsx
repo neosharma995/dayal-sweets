@@ -1123,13 +1123,13 @@ export default function Shop({
                                         <span className="deal-btn-arrow" aria-hidden="true">→</span>
                                     </Link>
                                 </div>
-                                <div className="dayal-deal-card-image">
-                                    <img
-                                        src="/uploads/2026/09/20277557511ebef6fe8151f59a459df7ce4dbdb9-e1789540195108.png"
-                                        alt="Selected sweets platter"
-                                        loading="lazy"
-                                    />
-                                </div>
+                            </div>
+                            <div className="dayal-deal-card-image">
+                                <img
+                                    src="/uploads/2026/09/20277557511ebef6fe8151f59a459df7ce4dbdb9-e1789540195108.png"
+                                    alt="Selected sweets platter"
+                                    loading="lazy"
+                                />
                             </div>
                         </div>
 

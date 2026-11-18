@@ -6,7 +6,7 @@
 // Strict File & CSS Isolation scoped under .gifting-page-root
 // ==========================================================================
 
-@import '../abstracts/storefront-variables';
+@use '../abstracts/storefront-variables' as *;
 
 .gifting-page-root {
   width: 100%;

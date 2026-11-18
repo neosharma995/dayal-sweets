@@ -6,7 +6,7 @@
 // Scoped under .gallery-page-root
 // ==========================================================================
 
-@import '../abstracts/storefront-variables';
+@use '../abstracts/storefront-variables' as *;
 
 .gallery-page-root {
   background-color: #FAF7F2;

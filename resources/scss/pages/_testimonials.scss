@@ -5,7 +5,7 @@
 // Scoped under .testimonials-page-root
 // ==========================================================================
 
-@import '../abstracts/storefront-variables';
+@use '../abstracts/storefront-variables' as *;
 
 .testimonials-page-root {
   background-color: #FDFBF7;

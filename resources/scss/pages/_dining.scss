@@ -4,7 +4,7 @@
 // Scoped under .dining-page-root
 // ==========================================================================
 
-@import '../abstracts/storefront-variables';
+@use '../abstracts/storefront-variables' as *;
 
 .dining-page-root {
     width: 100%;

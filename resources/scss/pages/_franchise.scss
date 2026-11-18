@@ -4,7 +4,7 @@
 // Scoped under .franchise-page-root
 // ==========================================================================
 
-@import '../abstracts/storefront-variables';
+@use '../abstracts/storefront-variables' as *;
 
 .franchise-page-root {
     width: 100%;

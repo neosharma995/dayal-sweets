@@ -6,7 +6,7 @@
 // Scoped under .privacy-policy-page-root
 // ==========================================================================
 
-@import '../abstracts/storefront-variables';
+@use '../abstracts/storefront-variables' as *;
 
 .privacy-policy-page-root {
   width: 100%;

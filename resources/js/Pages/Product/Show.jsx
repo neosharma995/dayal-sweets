@@ -121,80 +121,47 @@ export default function ProductShow({ product: propProduct, slug: propSlug, auth
             <Header auth={auth} />
 
             <main className="dayal-product-single-main">
-                {/* Hero Banner matching user reference image */}
-                <section className="dayal-product-single-hero">
-                    <div className="dayal-product-hero-overlay" aria-hidden="true" />
-
-                    {/* Decorative Sweets and Rose Petals graphics on left */}
-                    <img
-                        src="/uploads/2026/07/image-262.png"
-                        alt=""
-                        className="dayal-hero-decor-sweet-1"
-                        aria-hidden="true"
-                    />
-                    <img
-                        src="/uploads/2026/07/image-261.png"
-                        alt=""
-                        className="dayal-hero-decor-sweet-2"
-                        aria-hidden="true"
-                    />
-                    <img
-                        src="/uploads/2026/07/image-263.png"
-                        alt=""
-                        className="dayal-hero-decor-sweet-3"
-                        aria-hidden="true"
-                    />
-
-                    {/* Decorative Peacock Feather graphic on right */}
-                    <img
-                        src="/uploads/2026/07/image-48.png"
-                        alt=""
-                        className="dayal-hero-decor-peacock"
-                        aria-hidden="true"
-                    />
-
-                    <div className="dayal-product-hero-inner">
+                {/* Hero Banner matching live design */}
+                <section className="pd-hero-wrapper">
+                    <div className="pd-hero-content">
                         {/* Breadcrumbs: HOME > CATEGORY > PRODUCT */}
-                        <nav className="dayal-product-breadcrumb" aria-label="Breadcrumb">
+                        <div className="pd-breadcrumb" aria-label="Breadcrumb">
                             <Link href="/">HOME</Link>
                             <span className="breadcrumb-sep">&gt;</span>
                             <Link href={product.categorySlug ? `/shop?category=${product.categorySlug}` : '/shop'}>
-                                {product.category || 'SWEETS'}
+                                {product.category || 'UNCATEGORIZED'}
                             </Link>
                             <span className="breadcrumb-sep">&gt;</span>
                             <span className="breadcrumb-current">{product.name.toUpperCase()}</span>
-                        </nav>
+                        </div>
 
-                        <h1 className="dayal-product-hero-title">
-                            {product.name.toUpperCase()}
-                        </h1>
-                        <p className="dayal-product-hero-subtitle">
-                            {product.tagline || 'Discover Every Festive Delight'}
-                        </p>
+                        <h1>{product.name.toUpperCase()}</h1>
+                        <p>{product.tagline || 'Discover Every Festive Delight'}</p>
                     </div>
                 </section>
 
                 {/* Main Product Showcase Section in 1720px Container */}
                 <section className="dayal-product-showcase-section">
                     <div className="dayal-product-single-container">
-                        <div className="dayal-product-layout">
+                        <div className="product-detail-layout">
                             {/* Left Column: Product Visuals */}
-                            <div className="dayal-product-gallery-column">
-                                <div className="dayal-product-main-card">
+                            <div className="product-gallery-wrap">
+                                <div className="main-image-box">
                                     <img
+                                        id="main-product-img"
                                         src={activeImage || product.image}
                                         alt={product.name}
-                                        className="dayal-product-featured-img"
                                     />
                                 </div>
 
+                                {/* Multiple Thumbnails (Retained as requested) */}
                                 {product.gallery && product.gallery.length > 1 && (
-                                    <div className="dayal-product-thumbnails-row">
+                                    <div className="product-thumbnails-row">
                                         {product.gallery.map((imgUrl, idx) => (
                                             <button
                                                 key={idx}
                                                 type="button"
-                                                className={`dayal-thumbnail-btn ${activeImage === imgUrl ? 'is-active' : ''}`}
+                                                className={`product-thumbnail-btn ${activeImage === imgUrl ? 'is-active' : ''}`}
                                                 onClick={() => setActiveImage(imgUrl)}
                                                 aria-label={`View image ${idx + 1}`}
                                             >
@@ -206,53 +173,44 @@ export default function ProductShow({ product: propProduct, slug: propSlug, auth
                             </div>
 
                             {/* Right Column: Product Information & Purchase Controls */}
-                            <div className="dayal-product-details-column">
-                                <div className="product-category-eyebrow">
-                                    {product.category || 'SWEETS'}
+                            <div className="product-info-wrap">
+                                <div className="single-category">
+                                    {product.category || 'UNCATEGORIZED'}
                                 </div>
 
-                                <h2 className="product-single-title">{product.name}</h2>
+                                <h1 className="single-title">{product.name}</h1>
 
                                 {/* Rating and Stock Status Row */}
-                                <div className="product-meta-row">
-                                    <div className="product-stars-rating">
-                                        <div className="stars-cluster">
-                                            {[...Array(5)].map((_, i) => (
-                                                <Star
-                                                    key={i}
-                                                    size={14}
-                                                    className={i < Math.floor(product.rating || 0) ? 'star-filled' : 'star-empty'}
-                                                    fill={i < Math.floor(product.rating || 0) ? '#D4AF37' : 'none'}
-                                                />
-                                            ))}
-                                        </div>
-                                        <span className="rating-text">
-                                            {Number(product.rating || 0).toFixed(1)} ({product.ratingCount || 0} Verified Reviews)
-                                        </span>
-                                    </div>
-
-                                    <div className="product-stock-badge">
-                                        <span>In Stock</span>
-                                    </div>
+                                <div className="single-rating-row">
+                                    <span className="rating-stars">
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="#E5A600" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 0L8.57 4.84L13.66 4.84L9.54 7.83L11.11 12.67L7 9.68L2.89 12.67L4.46 7.83L0.34 4.84L5.43 4.84L7 0Z"></path>
+                                        </svg>
+                                        {Number(product.rating || 0).toFixed(1)}
+                                    </span>
+                                    <span className="rating-count">
+                                        ({product.ratingCount || 0} Verified Reviews)
+                                    </span>
+                                    <span className="stock-tag">In Stock</span>
                                 </div>
 
                                 {/* Price Row */}
-                                <div className="product-price-row">
+                                <div className="single-price-row">
                                     <span className="price-label">Price:</span>
-                                    <span className="price-amount">
-                                        &#8377;{currentPrice.toFixed(2)}
-                                    </span>
+                                    <div className="single-price" id="single-display-price">
+                                        <span className="woocommerce-Price-currencySymbol">₹</span>{currentPrice.toFixed(2)}
+                                    </div>
                                     {product.originalPrice && product.originalPrice > currentPrice && (
                                         <span className="original-price-amount">
-                                            &#8377;{Number(product.originalPrice).toFixed(2)}
+                                            ₹{Number(product.originalPrice).toFixed(2)}
                                         </span>
                                     )}
                                 </div>
 
                                 {/* Short Description */}
-                                <p className="product-short-description">
-                                    {product.description}
-                                </p>
+                                <div className="single-excerpt">
+                                    <p>{product.description}</p>
+                                </div>
 
                                 {/* Variation Pills (if applicable) */}
                                 {hasVariations && (
@@ -267,7 +225,7 @@ export default function ProductShow({ product: propProduct, slug: propSlug, auth
                                                     onClick={() => setSelectedVarIndex(idx)}
                                                 >
                                                     <span className="var-title">{v.label}</span>
-                                                    <span className="var-price">&#8377;{v.price}</span>
+                                                    <span className="var-price">₹{v.price}</span>
                                                 </button>
                                             ))}
                                         </div>
@@ -283,158 +241,151 @@ export default function ProductShow({ product: propProduct, slug: propSlug, auth
                                 )}
 
                                 {/* Quantity Counter & Action Buttons */}
-                                <div className="product-actions-cluster">
-                                    <div className="product-quantity-counter">
-                                        <button
-                                            type="button"
-                                            className="qty-btn minus"
-                                            onClick={() => handleQuantityChange(-1)}
-                                            aria-label="Decrease quantity"
-                                            disabled={isPincodeSet && !isAvailableInArea}
-                                        >
-                                            -
-                                        </button>
-                                        <span className="qty-value">{quantity}</span>
-                                        <button
-                                            type="button"
-                                            className="qty-btn plus"
-                                            onClick={() => handleQuantityChange(1)}
-                                            aria-label="Increase quantity"
-                                            disabled={isPincodeSet && !isAvailableInArea}
-                                        >
-                                            +
-                                        </button>
+                                <div className="cart-form-container">
+                                    <div className="action-row">
+                                        <div className="qty-wrapper">
+                                            <div className="qty-selector">
+                                                <button
+                                                    type="button"
+                                                    className="qty-btn"
+                                                    onClick={() => handleQuantityChange(-1)}
+                                                    aria-label="Decrease quantity"
+                                                >
+                                                    −
+                                                </button>
+                                                <span className="qty-input">{quantity}</span>
+                                                <button
+                                                    type="button"
+                                                    className="qty-btn"
+                                                    onClick={() => handleQuantityChange(1)}
+                                                    aria-label="Increase quantity"
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="action-wrapper">
+                                            <button
+                                                type="button"
+                                                id="btn-single-add-cart"
+                                                className={`btn-add-to-cart ${isAdded ? 'is-success' : ''}`}
+                                                onClick={handleAddToCart}
+                                            >
+                                                {isAdded ? (
+                                                    <>
+                                                        <Check size={18} strokeWidth={2.5} />
+                                                        <span>Added!</span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                                                            <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                                        </svg>
+                                                        <span>Add To Cart</span>
+                                                    </>
+                                                )}
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                className="btn-buy-now"
+                                                onClick={handleBuyNow}
+                                            >
+                                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M5 6.5V5C5 2.79086 6.79086 1 9 1C11.2091 1 13 2.79086 13 5V6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+                                                    <rect x="2" y="6" width="14" height="11" rx="1.5" stroke="white" strokeWidth="1.5"></rect>
+                                                    <path d="M6 9V10C6 11.6569 7.34315 13 9 13C10.6569 13 12 11.6569 12 10V9" stroke="white" strokeWidth="1.5" strokeLinecap="round"></path>
+                                                </svg>
+                                                <span>Buy Now</span>
+                                            </button>
+                                        </div>
                                     </div>
-
-                                    <button
-                                        type="button"
-                                        className={`btn-add-to-cart ${isAdded ? 'is-success' : ''}`}
-                                        onClick={handleAddToCart}
-                                        disabled={isPincodeSet && !isAvailableInArea}
-                                    >
-                                        {isAdded ? (
-                                            <>
-                                                <Check size={16} strokeWidth={2.5} />
-                                                <span>ADDED TO CART!</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <ShoppingBag size={16} />
-                                                <span>ADD TO CART</span>
-                                            </>
-                                        )}
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        className="btn-buy-now"
-                                        onClick={handleBuyNow}
-                                        disabled={isPincodeSet && !isAvailableInArea}
-                                    >
-                                        <Zap size={16} />
-                                        <span>BUY NOW</span>
-                                    </button>
                                 </div>
 
                                 {/* 4 Quality & Delivery Guarantees */}
-                                <div className="product-guarantees-grid">
-                                    <div className="guarantee-cell">
-                                        <span className="guarantee-check-icon">
-                                            <Check size={12} strokeWidth={3} />
-                                        </span>
-                                        <span className="guarantee-label">100% Pure Desi Ghee</span>
+                                <div className="trust-highlights">
+                                    <div className="trust-item">
+                                        <div className="trust-icon">✓</div>
+                                        <span>100% Pure Desi Ghee</span>
                                     </div>
-
-                                    <div className="guarantee-cell">
-                                        <span className="guarantee-check-icon">
-                                            <Check size={12} strokeWidth={3} />
-                                        </span>
-                                        <span className="guarantee-label">Freshly Prepared Daily</span>
+                                    <div className="trust-item">
+                                        <div className="trust-icon">✦</div>
+                                        <span>Freshly Prepared Daily</span>
                                     </div>
-
-                                    <div className="guarantee-cell">
-                                        <span className="guarantee-check-icon">
-                                            <Check size={12} strokeWidth={3} />
-                                        </span>
-                                        <span className="guarantee-label">Hygienic Packaging</span>
+                                    <div className="trust-item">
+                                        <div className="trust-icon">⚙</div>
+                                        <span>Hygienic Packaging</span>
                                     </div>
-
-                                    <div className="guarantee-cell">
-                                        <span className="guarantee-check-icon">
-                                            <Check size={12} strokeWidth={3} />
-                                        </span>
-                                        <span className="guarantee-label">Express Delivery</span>
+                                    <div className="trust-item">
+                                        <div className="trust-icon">✈</div>
+                                        <span>Express Delivery</span>
                                     </div>
                                 </div>
 
                                 {/* Collapsible Accordion Tabs */}
-                                <div className="product-accordions-group">
+                                <div className="product-tabs">
                                     {/* Tab 1: Product Description */}
-                                    <div className="accordion-item">
-                                        <button
-                                            type="button"
-                                            className="accordion-trigger"
+                                    <div className="tab-item">
+                                        <div
+                                            className={`tab-header ${openAccordions.description ? 'open' : ''}`}
                                             onClick={() => toggleAccordion('description')}
-                                            aria-expanded={openAccordions.description}
                                         >
-                                            <span className="accordion-title">PRODUCT DESCRIPTION</span>
-                                            {openAccordions.description ? (
-                                                <ChevronUp size={16} className="accordion-icon" />
-                                            ) : (
-                                                <ChevronDown size={16} className="accordion-icon" />
-                                            )}
-                                        </button>
+                                            <span>PRODUCT DESCRIPTION</span>
+                                            <span className="chevron-icon">
+                                                <svg
+                                                    width="12"
+                                                    height="12"
+                                                    viewBox="0 0 12 12"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    style={{
+                                                        transform: openAccordions.description ? 'rotate(180deg)' : 'none',
+                                                        transition: 'transform 0.2s',
+                                                    }}
+                                                >
+                                                    <path d="M2 4L6 8L10 4" stroke="#B5B0A8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+                                                </svg>
+                                            </span>
+                                        </div>
                                         {openAccordions.description && (
-                                            <div className="accordion-content">
+                                            <div className="tab-body">
                                                 <p>{product.fullDescription || product.description}</p>
                                             </div>
                                         )}
                                     </div>
 
                                     {/* Tab 2: Ingredients & Allergen Info */}
-                                    <div className="accordion-item">
-                                        <button
-                                            type="button"
-                                            className="accordion-trigger"
+                                    <div className="tab-item">
+                                        <div
+                                            className={`tab-header ${openAccordions.ingredients ? 'open' : ''}`}
                                             onClick={() => toggleAccordion('ingredients')}
-                                            aria-expanded={openAccordions.ingredients}
                                         >
-                                            <span className="accordion-title">INGREDIENTS &amp; ALLERGEN INFO</span>
-                                            {openAccordions.ingredients ? (
-                                                <ChevronUp size={16} className="accordion-icon" />
-                                            ) : (
-                                                <ChevronDown size={16} className="accordion-icon" />
-                                            )}
-                                        </button>
+                                            <span>INGREDIENTS &amp; ALLERGEN INFO</span>
+                                            <span className="chevron-icon">
+                                                <svg
+                                                    width="12"
+                                                    height="12"
+                                                    viewBox="0 0 12 12"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    style={{
+                                                        transform: openAccordions.ingredients ? 'rotate(180deg)' : 'none',
+                                                        transition: 'transform 0.2s',
+                                                    }}
+                                                >
+                                                    <path d="M2 4L6 8L10 4" stroke="#B5B0A8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+                                                </svg>
+                                            </span>
+                                        </div>
                                         {openAccordions.ingredients && (
-                                            <div className="accordion-content">
-                                                <p><strong>Ingredients:</strong> {product.ingredients || 'Handcrafted with 100% pure desi ghee, premium grade dry fruits, saffron, and natural aromatics.'}</p>
+                                            <div className="tab-body">
+                                                <p>{product.ingredients || 'Pure Desi Ghee, Quality Cashews / Flour, Sugar, Cardamom, Pistachio, Almonds.'}</p>
                                                 {product.allergens && (
                                                     <p><strong>Allergens:</strong> {product.allergens}</p>
                                                 )}
-                                                <p className="facility-note">Prepared with utmost care in an FSSAI certified 100% vegetarian facility.</p>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Tab 3: Storage & Shelf Life */}
-                                    <div className="accordion-item">
-                                        <button
-                                            type="button"
-                                            className="accordion-trigger"
-                                            onClick={() => toggleAccordion('storage')}
-                                            aria-expanded={openAccordions.storage}
-                                        >
-                                            <span className="accordion-title">STORAGE &amp; SHELF LIFE</span>
-                                            {openAccordions.storage ? (
-                                                <ChevronUp size={16} className="accordion-icon" />
-                                            ) : (
-                                                <ChevronDown size={16} className="accordion-icon" />
-                                            )}
-                                        </button>
-                                        {openAccordions.storage && (
-                                            <div className="accordion-content">
-                                                <p>{product.storage || 'Store in a cool, dry place away from direct sunlight. To preserve maximum aroma and taste, keep sealed in an airtight container.'}</p>
                                             </div>
                                         )}
                                     </div>
@@ -445,13 +396,11 @@ export default function ProductShow({ product: propProduct, slug: propSlug, auth
                 </section>
 
                 {/* YOU MAY ALSO LIKE Section */}
-                <section className="dayal-product-related-section">
+                <section className="related-products-section">
                     <div className="dayal-product-single-container">
-                        <header className="dayal-related-header">
-                            <h2 className="related-title">
-                                YOU MAY <span className="title-accent">ALSO LIKE</span>
-                            </h2>
-                        </header>
+                        <h2>
+                            YOU MAY <span>ALSO LIKE</span>
+                        </h2>
 
                         <div className="dayal-related-grid">
                             {relatedProducts.map((relProduct) => (

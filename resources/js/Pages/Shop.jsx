@@ -321,7 +321,7 @@ export default function Shop({
     occasionTags: propOccasionTags = [],
     dietTags: propDietTags = [],
 }) {
-    const { addToCart } = useCart();
+    const { addToCart, pincodeSession, openPincodeModal } = useCart();
 
     // Dynamic / Default Tag options from separate category tables
     const seasonalTags = useMemo(() => {
@@ -443,8 +443,14 @@ export default function Shop({
     };
 
     const sourceProducts = useMemo(() => {
-        return Array.isArray(products) && products.length > 0 ? products : initialShopProducts;
-    }, [products]);
+        if (Array.isArray(products) && products.length > 0) {
+            return products;
+        }
+        if (pincodeSession?.isServiceable) {
+            return [];
+        }
+        return initialShopProducts;
+    }, [products, pincodeSession?.isServiceable]);
 
     const displayCategories = useMemo(() => {
         if (Array.isArray(categories) && categories.length > 0) {
@@ -985,7 +991,13 @@ export default function Shop({
                     {/* TOOLBAR */}
                     <div className="dayal-shop-toolbar oto-shop-toolbar">
                         <div className="dayal-shop-results-count oto-results-count">
-                            Showing {startCount}–{endCount} of {sortedProducts.length} results
+                            <span>Showing {startCount}–{endCount} of {sortedProducts.length} results</span>
+                            {pincodeSession?.isServiceable && pincodeSession?.pincode && (
+                                <span className="dayal-shop-pincode-indicator">
+                                    • Delivering to <strong>{pincodeSession.pincode}</strong>
+                                    {pincodeSession.outlets?.[0]?.name ? ` via ${pincodeSession.outlets.map((o) => o.name).join(' & ')}` : ''}
+                                </span>
+                            )}
                         </div>
 
                         <div className="oto-toolbar-actions">
@@ -1012,7 +1024,21 @@ export default function Shop({
                     ) : (
                         <div className="dayal-shop-empty oto-no-products">
                             <h3>No Products Found</h3>
-                            <p>Try clearing some filters or searching with a different term.</p>
+                            <p>
+                                {pincodeSession?.isServiceable
+                                    ? `No sweets or savouries are currently available for PIN code ${pincodeSession.pincode}. Try checking another delivery location or clearing your filters.`
+                                    : 'Try clearing some filters or searching with a different term.'}
+                            </p>
+                            {pincodeSession?.isServiceable && (
+                                <button
+                                    type="button"
+                                    className="dayal-shop-apply-btn dayal-shop-empty-btn"
+                                    onClick={() => openPincodeModal({ reason: 'user_initiated' })}
+                                    style={{ marginRight: '8px' }}
+                                >
+                                    Change Delivery PIN
+                                </button>
+                            )}
                             <button type="button" className="dayal-shop-apply-btn dayal-shop-empty-btn" onClick={handleClearAll}>
                                 Reset All Filters
                             </button>

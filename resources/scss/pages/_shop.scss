@@ -4,8 +4,8 @@
 // Reusable Hero Banner matches Gifting, About Us, Contact Us pages
 // ==========================================================================
 
-@import '../variables';
-@import '../abstracts/storefront-variables';
+@use '../variables' as *;
+@use '../abstracts/storefront-variables' as *;
 
 .dayal-sweets-shop {
     font-family: $ds-font-body;

@@ -64,13 +64,16 @@ export default function ProductCard({ product, onAddToCart }) {
     const handleAddToCart = (e) => {
         e.preventDefault();
         e.stopPropagation();
+        let success = false;
         if (onAddToCart) {
-            onAddToCart(product, qty, activeVariation);
+            success = onAddToCart(product, qty, activeVariation);
         } else if (fallbackAddToCart) {
-            fallbackAddToCart(product, qty, activeVariation);
+            success = fallbackAddToCart(product, qty, activeVariation);
         }
-        setIsAdded(true);
-        setTimeout(() => setIsAdded(false), 1200);
+        if (success === true) {
+            setIsAdded(true);
+            setTimeout(() => setIsAdded(false), 1200);
+        }
     };
 
     const productHref = product.slug ? `/product/${product.slug}/` : '/shop';

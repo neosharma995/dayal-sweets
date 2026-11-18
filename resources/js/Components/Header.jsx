@@ -4,6 +4,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { useCart } from '@/Context/CartContext';
 import CartDrawer from '@/Components/CartDrawer';
 import CartToaster from '@/Components/CartToaster';
+import PincodeModal from '@/Components/PincodeModal';
 import Modal from '@/Components/Modal';
 
 const navItems = [
@@ -47,6 +48,24 @@ export default function Header({ auth }) {
     const cartContext = useCart();
     const cartCount = cartContext?.cartCount ?? 0;
     const openCart = cartContext?.openCart ?? (() => { });
+    const pincodeSession = cartContext?.pincodeSession;
+    const setPincodeSession = cartContext?.setPincodeSession;
+    const openPincodeModal = cartContext?.openPincodeModal ?? (() => { });
+    const serverPincode = props?.pincodeSession;
+    const serverCart = props?.cart;
+    const syncServerCart = cartContext?.syncServerCart;
+
+    useEffect(() => {
+        if (serverPincode?.pincode && serverPincode?.isServiceable && setPincodeSession) {
+            setPincodeSession(serverPincode);
+        }
+    }, [serverPincode, setPincodeSession]);
+
+    useEffect(() => {
+        if (Array.isArray(serverCart) && syncServerCart) {
+            syncServerCart(serverCart);
+        }
+    }, [serverCart, syncServerCart]);
     const currentPath = url.split(/[?#]/, 1)[0].replace(/\/+$/, '') || '/';
     const shopActive = currentPath === '/shop' || currentPath.startsWith('/shop/') || currentPath.startsWith('/product/');
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -159,6 +178,28 @@ export default function Header({ auth }) {
                     <p>FREE DELIVERY ON ORDERS ABOVE <strong>&#8377;999</strong></p>
                     <div className="dayal-header-quicklinks">
                         {utilityLinks.map(([label, href, icon]) => {
+                            if (label === 'Delivery') {
+                                const isVerified = Boolean(pincodeSession?.isServiceable && pincodeSession?.pincode);
+                                return (
+                                    <button
+                                        key="delivery-pincode-trigger"
+                                        type="button"
+                                        className="dayal-header-delivery-btn"
+                                        onClick={() => openPincodeModal({ reason: 'user_initiated' })}
+                                        title={isVerified ? `Delivery PIN: ${pincodeSession.pincode} (${pincodeSession.outlets?.[0]?.name || 'Verified'}). Click to change.` : 'Check delivery availability in your area'}
+                                    >
+                                        <img src={`/uploads/2026/07/${icon}`} alt="" />
+                                        {isVerified ? (
+                                            <span>
+                                                Deliver: <strong>{pincodeSession.pincode}</strong>
+                                                {pincodeSession.outlets?.[0]?.name ? ` (${pincodeSession.outlets[0].name})` : ''}
+                                            </span>
+                                        ) : (
+                                            <span>Delivery</span>
+                                        )}
+                                    </button>
+                                );
+                            }
                             if (href.startsWith('tel:') || href.startsWith('mailto:') || href.startsWith('http')) {
                                 return (
                                     <a href={href} key={label}>
@@ -426,6 +467,9 @@ export default function Header({ auth }) {
 
             {/* Global Cart Toast Notification */}
             <CartToaster />
+
+            {/* Delivery Pincode Verification Modal */}
+            <PincodeModal />
 
             {/* Logout Confirmation Modal */}
             <Modal show={logoutModalOpen} onClose={() => !loggingOut && setLogoutModalOpen(false)}>

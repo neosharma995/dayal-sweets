@@ -462,7 +462,7 @@ function SectionHeading({ eyebrow, children }) {
 }
 
 function BestSellers({ products = [], categories = [] }) {
-    const { addToCart } = useCart();
+    const { addToCart, pincodeSession } = useCart();
 
     const fallbackFilters = [
         'All', 'Bakery', 'Best Seller', 'Beverages', 'Chinese', 'Combo', 'Desserts',
@@ -476,7 +476,9 @@ function BestSellers({ products = [], categories = [] }) {
 
     const [selected, setSelected] = useState('All');
 
-    const displayProducts = products && products.length > 0 ? products : bestSellers;
+    const displayProducts = products && products.length > 0
+        ? products
+        : (pincodeSession?.isServiceable ? [] : bestSellers);
 
     const filteredProducts = selected === 'All'
         ? displayProducts
@@ -493,7 +495,7 @@ function BestSellers({ products = [], categories = [] }) {
 
     const handleAddToCart = (product, qty, variation) => {
         // Add to cart with openDrawer = false: only add item, do not show the cart drawer
-        addToCart(product, qty, variation, false);
+        return addToCart(product, qty, variation, false);
     };
 
     return (

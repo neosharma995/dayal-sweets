@@ -26,9 +26,22 @@ class HomeController extends Controller
     /**
      * Display the public Dayal Sweets storefront landing page.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $products = Product::with(['category', 'variations'])
+        $productQuery = Product::with(['category', 'variations']);
+
+        if ($request->session()->has('customer_pincode') && $request->session()->get('is_pincode_verified')) {
+            $outletIds = $request->session()->get('serviceable_outlet_ids', []);
+            if (! empty($outletIds)) {
+                $productQuery->whereHas('outlets', function ($q) use ($outletIds) {
+                    $q->whereIn('outlets.id', $outletIds)->where('outlet_products.is_available', true);
+                });
+            } else {
+                $productQuery->whereRaw('1 = 0');
+            }
+        }
+
+        $products = $productQuery
             ->latest('id')
             ->get()
             ->map(function (Product $product) {
@@ -162,9 +175,22 @@ class HomeController extends Controller
     /**
      * Display the Dayal Sweets Shop page with dynamic products from the database.
      */
-    public function shop(): Response
+    public function shop(Request $request): Response
     {
-        $products = Product::with(['category', 'variations', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags'])
+        $productQuery = Product::with(['category', 'variations', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags']);
+
+        if ($request->session()->has('customer_pincode') && $request->session()->get('is_pincode_verified')) {
+            $outletIds = $request->session()->get('serviceable_outlet_ids', []);
+            if (! empty($outletIds)) {
+                $productQuery->whereHas('outlets', function ($q) use ($outletIds) {
+                    $q->whereIn('outlets.id', $outletIds)->where('outlet_products.is_available', true);
+                });
+            } else {
+                $productQuery->whereRaw('1 = 0');
+            }
+        }
+
+        $products = $productQuery
             ->latest('id')
             ->get()
             ->map(function (Product $product) {
@@ -361,7 +387,7 @@ class HomeController extends Controller
     /**
      * Display the Dayal Sweets Single Product page.
      */
-    public function product(?string $slug = 'office-tea-combo'): Response
+    public function product(Request $request, ?string $slug = 'office-tea-combo'): Response
     {
         $cleanSlug = $slug ? trim($slug, '/') : 'office-tea-combo';
 
@@ -377,6 +403,20 @@ class HomeController extends Controller
                 }
             })
             ->first();
+
+        $isAvailableInArea = true;
+        $isPincodeSet = $request->session()->has('customer_pincode') && $request->session()->get('is_pincode_verified');
+        if ($isPincodeSet && $found) {
+            $outletIds = $request->session()->get('serviceable_outlet_ids', []);
+            if (! empty($outletIds)) {
+                $isAvailableInArea = $found->outlets()
+                    ->whereIn('outlets.id', $outletIds)
+                    ->where('outlet_products.is_available', true)
+                    ->exists();
+            } else {
+                $isAvailableInArea = false;
+            }
+        }
 
         if ($found) {
             $image = $found->product_image ?: $found->product_image_url;
@@ -429,6 +469,8 @@ class HomeController extends Controller
         return Inertia::render('Product/Show', [
             'slug' => $cleanSlug,
             'product' => $dbProduct,
+            'isAvailableInArea' => $isAvailableInArea,
+            'isPincodeSet' => $isPincodeSet,
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
         ]);

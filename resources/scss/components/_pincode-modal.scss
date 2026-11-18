@@ -1,0 +1,401 @@
+// ==========================================================================
+// Dayal Sweets - Delivery Pincode Modal SCSS
+// Pure SCSS Architecture - Strict royal theme integration
+// ==========================================================================
+
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.dayal-pincode-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background-color: rgba(30, 8, 12, 0.68);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    animation: dayalFadeIn 0.25s ease-out;
+}
+
+.dayal-pincode-modal {
+    background-color: #FFFDF9;
+    border: 1px solid rgba(184, 142, 75, 0.35);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: 0 25px 60px -15px rgba(54, 8, 17, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+    overflow: hidden;
+    position: relative;
+    animation: dayalScaleUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dayal-pincode-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(120, 113, 108, 0.2);
+    background: #FFFFFF;
+    color: #78716C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 2;
+
+    &:hover {
+        background-color: #FEE2E2;
+        border-color: #FECACA;
+        color: #DC2626;
+        transform: rotate(90deg);
+    }
+}
+
+.dayal-pincode-body {
+    padding: 32px 28px 24px;
+    text-align: center;
+}
+
+.dayal-pincode-icon-wrap {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(99, 24, 38, 0.1) 0%, rgba(184, 142, 75, 0.2) 100%);
+    border: 1.5px solid rgba(184, 142, 75, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $color-maroon;
+    box-shadow: 0 8px 20px -4px rgba(99, 24, 38, 0.15);
+}
+
+.dayal-pincode-title {
+    font-family: $font-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: $color-maroon-dark;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+}
+
+.dayal-pincode-subtitle {
+    font-size: 14px;
+    line-height: 1.55;
+    color: #57534E;
+    margin: 0 0 20px;
+    padding: 0 10px;
+}
+
+.dayal-pincode-alert {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 20px;
+
+    &.dayal-pincode-alert--warning {
+        background-color: #FFFBEB;
+        border: 1px solid #FDE68A;
+        color: #B45309;
+    }
+
+    &.dayal-pincode-alert--error {
+        background-color: #FEF2F2;
+        border: 1px solid #FECACA;
+        color: #DC2626;
+    }
+
+    &.dayal-pincode-alert--success {
+        background-color: #ECFDF5;
+        border: 1px solid #A7F3D0;
+        color: #065F46;
+    }
+
+    svg {
+        flex-shrink: 0;
+    }
+}
+
+.dayal-pincode-form {
+    margin-bottom: 20px;
+}
+
+.dayal-pincode-input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.dayal-pincode-input-icon {
+    position: absolute;
+    left: 14px;
+    color: $color-gold;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+}
+
+.dayal-pincode-input {
+    width: 100%;
+    height: 50px;
+    padding: 0 16px 0 44px;
+    border-radius: 10px;
+    border: 1.5px solid #E7E5E4;
+    background-color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1C1917;
+    letter-spacing: 0.08em;
+    transition: all 0.2s ease;
+
+    &::placeholder {
+        font-weight: 400;
+        letter-spacing: normal;
+        color: #A8A29E;
+    }
+
+    &:focus {
+        outline: none;
+        border-color: $color-maroon;
+        box-shadow: 0 0 0 3px rgba(99, 24, 38, 0.12);
+    }
+}
+
+.dayal-pincode-quick-pills {
+    margin-bottom: 22px;
+    text-align: left;
+
+    .dayal-pincode-quick-label {
+        display: block;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #78716C;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+    .dayal-pincode-pills-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .dayal-pincode-pill-btn {
+        background: #FFFFFF;
+        border: 1px solid #E7E5E4;
+        border-radius: 20px;
+        padding: 5px 12px;
+        font-size: 12px;
+        font-weight: 500;
+        color: #44403C;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: all 0.15s ease;
+
+        &:hover {
+            border-color: $color-maroon;
+            color: $color-maroon;
+            background-color: rgba(99, 24, 38, 0.04);
+            transform: translateY(-1px);
+        }
+
+        strong {
+            color: $color-maroon;
+            font-weight: 700;
+        }
+    }
+}
+
+.dayal-pincode-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dayal-pincode-submit-btn {
+    width: 100%;
+    height: 48px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, $color-maroon 0%, #4A0E1A 100%);
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(99, 24, 38, 0.28);
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #7E1325 0%, #360811 100%);
+        box-shadow: 0 6px 18px rgba(99, 24, 38, 0.38);
+        transform: translateY(-1px);
+    }
+
+    &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+}
+
+.dayal-pincode-skip-btn {
+    background: transparent;
+    border: none;
+    color: #78716C;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 8px 12px;
+    transition: color 0.15s ease;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    &:hover {
+        color: $color-maroon;
+    }
+}
+
+.dayal-pincode-outlet-info {
+    margin-top: 18px;
+    padding: 14px 16px;
+    background-color: #FBF8F3;
+    border: 1px dashed rgba(184, 142, 75, 0.45);
+    border-radius: 10px;
+    text-align: left;
+
+    .dayal-pincode-outlet-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+
+        strong {
+            font-size: 13px;
+            color: $color-maroon-dark;
+            font-weight: 700;
+        }
+
+        .dayal-pincode-outlet-badge {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: 4px;
+            background-color: #ECFDF5;
+            color: #059669;
+            border: 1px solid #A7F3D0;
+        }
+    }
+
+    p {
+        font-size: 12px;
+        color: #57534E;
+        line-height: 1.45;
+        margin: 0;
+    }
+}
+
+// Top Bar Delivery Selector pill
+.dayal-delivery-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.22);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: translateY(-1px);
+    }
+
+    .dayal-delivery-pin-icon {
+        color: #FBBF24;
+    }
+
+    .dayal-delivery-change-tag {
+        font-size: 10px;
+        color: #FDE68A;
+        text-decoration: underline;
+        margin-left: 2px;
+    }
+}
+
+// Single Product Area Serviceability Notice
+.dayal-product-area-serviceable {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 16px;
+
+    &.is-available {
+        background-color: #ECFDF5;
+        border: 1px solid #A7F3D0;
+        color: #065F46;
+    }
+
+    &.is-unavailable {
+        background-color: #FEF2F2;
+        border: 1px solid #FECACA;
+        color: #DC2626;
+    }
+}
+
+// Shop Page Pincode Indicator
+.dayal-shop-pincode-indicator {
+    margin-left: 10px;
+    font-size: 12px;
+    color: $color-maroon;
+    font-weight: 500;
+
+    strong {
+        font-weight: 700;
+    }
+}
+
+@keyframes dayalFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes dayalScaleUp {
+    from {
+        opacity: 0;
+        transform: scale(0.94) translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}

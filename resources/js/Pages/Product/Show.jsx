@@ -18,9 +18,10 @@ import {
     CheckCircle2,
     Heart,
     Share2,
+    AlertCircle,
 } from 'lucide-react';
 
-export default function ProductShow({ product: propProduct, slug: propSlug, auth }) {
+export default function ProductShow({ product: propProduct, slug: propSlug, auth, isAvailableInArea = true, isPincodeSet = false }) {
     // Resolve product from prop or fallback to catalog
     const product = useMemo(() => {
         if (propProduct && propProduct.id) {
@@ -73,7 +74,7 @@ export default function ProductShow({ product: propProduct, slug: propSlug, auth
     };
 
     const handleAddToCart = () => {
-        addToCart(
+        const success = addToCart(
             {
                 id: product.id,
                 name: product.name,
@@ -84,12 +85,14 @@ export default function ProductShow({ product: propProduct, slug: propSlug, auth
             quantity
         );
 
-        setIsAdded(true);
-        setTimeout(() => setIsAdded(false), 2000);
+        if (success !== false) {
+            setIsAdded(true);
+            setTimeout(() => setIsAdded(false), 2000);
+        }
     };
 
     const handleBuyNow = () => {
-        addToCart(
+        const success = addToCart(
             {
                 id: product.id,
                 name: product.name,
@@ -100,7 +103,9 @@ export default function ProductShow({ product: propProduct, slug: propSlug, auth
             quantity
         );
 
-        router.visit('/checkout');
+        if (success !== false) {
+            router.visit('/checkout');
+        }
     };
 
     const relatedProducts = useMemo(() => getRelatedProducts(product, 4), [product]);
@@ -269,6 +274,14 @@ export default function ProductShow({ product: propProduct, slug: propSlug, auth
                                     </div>
                                 )}
 
+                                {/* Pincode Area Serviceability Status */}
+                                {isPincodeSet && !isAvailableInArea && (
+                                    <div className="dayal-product-area-serviceable is-unavailable" role="alert">
+                                        <AlertCircle size={15} />
+                                        <span>Currently not available for delivery from the outlet serving your PIN code.</span>
+                                    </div>
+                                )}
+
                                 {/* Quantity Counter & Action Buttons */}
                                 <div className="product-actions-cluster">
                                     <div className="product-quantity-counter">
@@ -277,6 +290,7 @@ export default function ProductShow({ product: propProduct, slug: propSlug, auth
                                             className="qty-btn minus"
                                             onClick={() => handleQuantityChange(-1)}
                                             aria-label="Decrease quantity"
+                                            disabled={isPincodeSet && !isAvailableInArea}
                                         >
                                             -
                                         </button>
@@ -286,6 +300,7 @@ export default function ProductShow({ product: propProduct, slug: propSlug, auth
                                             className="qty-btn plus"
                                             onClick={() => handleQuantityChange(1)}
                                             aria-label="Increase quantity"
+                                            disabled={isPincodeSet && !isAvailableInArea}
                                         >
                                             +
                                         </button>
@@ -295,6 +310,7 @@ export default function ProductShow({ product: propProduct, slug: propSlug, auth
                                         type="button"
                                         className={`btn-add-to-cart ${isAdded ? 'is-success' : ''}`}
                                         onClick={handleAddToCart}
+                                        disabled={isPincodeSet && !isAvailableInArea}
                                     >
                                         {isAdded ? (
                                             <>
@@ -313,6 +329,7 @@ export default function ProductShow({ product: propProduct, slug: propSlug, auth
                                         type="button"
                                         className="btn-buy-now"
                                         onClick={handleBuyNow}
+                                        disabled={isPincodeSet && !isAvailableInArea}
                                     >
                                         <Zap size={16} />
                                         <span>BUY NOW</span>

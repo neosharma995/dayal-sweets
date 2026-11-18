@@ -51,6 +51,15 @@ class HandleInertiaRequests extends Middleware
             'headerFooter' => fn () => \App\Models\Page::getOrCreateHeaderFooter()->sections,
             'outlets' => fn () => \App\Models\Outlet::where('is_active', true)->orderBy('sort_order')->orderBy('id')->get(),
             'paginationLimit' => (int) env('PAGINATION_LIMIT', 20),
+            'cart' => fn () => $request->session()->get('cart', []),
+            'sessionToken' => fn () => $request->session()->getId(),
+            'pincodeSession' => fn () => [
+                'pincode' => $request->session()->get('customer_pincode'),
+                'isServiceable' => (bool) $request->session()->get('is_pincode_verified', false),
+                'outletIds' => $request->session()->get('serviceable_outlet_ids', []),
+                'outlets' => $request->session()->get('serviceable_outlets', []),
+                'message' => $request->session()->get('pincode_message'),
+            ],
         ];
     }
 }

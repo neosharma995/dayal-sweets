@@ -5,8 +5,10 @@ declare(strict_types=1);
 use App\Enums\UserRole;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\AccountController;
+use App\Http\Controllers\Public\CartController;
 use App\Http\Controllers\Public\CheckoutController;
 use App\Http\Controllers\Public\DashboardController;
+use App\Http\Controllers\Public\DeliveryZoneController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\ProductReviewController;
 use App\Http\Controllers\Public\TestimonialController;
@@ -17,6 +19,16 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/shop', [HomeController::class, 'shop'])->name('shop');
 Route::get('/cart', [HomeController::class, 'cart'])->name('cart');
 Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
+
+// Pincode & Delivery Serviceability
+Route::post('/pincode/check', [DeliveryZoneController::class, 'check'])->name('pincode.check');
+Route::get('/pincode/current', [DeliveryZoneController::class, 'current'])->name('pincode.current');
+Route::post('/pincode/clear', [DeliveryZoneController::class, 'clear'])->name('pincode.clear');
+
+// Session-Backed Cart Operations (For Guest and Authenticated Users)
+Route::get('/cart/items', [CartController::class, 'get'])->name('cart.get');
+Route::post('/cart/sync', [CartController::class, 'sync'])->name('cart.sync');
+Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 
 // Authenticated Checkout Actions (User must be logged in to create orders)
 Route::middleware('auth')->prefix('checkout')->name('checkout.')->group(function () {

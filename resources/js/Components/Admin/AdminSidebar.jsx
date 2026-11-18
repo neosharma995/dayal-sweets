@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, router } from '@inertiajs/react';
 import { StoreIcon, BoxIcon, UserIcon, ShieldCheckIcon, LogOutIcon, TruckIcon, MapPinIcon } from '@/Components/Icons';
 
 export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLogout }) {
-    const { auth } = usePage().props;
+    const { auth, outlets = [], activeOutletId } = usePage().props;
 
     const userRoles = auth?.user?.roles || [];
     const userPermissions = auth?.user?.permissions || [];
@@ -115,6 +115,44 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
 
                                 {outletsOpen && (
                                     <div className="dayal-sidebar-submenu">
+                                        {/* Outlet-Wise Filter Dropdown inside Outlets menu */}
+                                        {outlets && outlets.length > 0 && (
+                                            <div style={{ padding: '0.35rem 0.65rem 0.55rem', marginBottom: '0.25rem', borderBottom: '1px solid #F1F5F9' }}>
+                                                <label style={{ display: 'block', fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#8C6226', marginBottom: '0.25rem' }}>
+                                                    Filter by Outlet
+                                                </label>
+                                                <select
+                                                    value={activeOutletId || 'all'}
+                                                    onChange={(e) => {
+                                                        const val = e.target.value;
+                                                        if (val === 'all') {
+                                                            router.post(route('admin.outlets.clear-context'), {}, { preserveScroll: true });
+                                                        } else {
+                                                            router.post(route('admin.outlets.switch-context'), { outlet_id: Number(val) }, { preserveScroll: true });
+                                                        }
+                                                    }}
+                                                    style={{
+                                                        width: '100%',
+                                                        padding: '0.38rem 0.5rem',
+                                                        borderRadius: '0.375rem',
+                                                        border: '1px solid #E6D2B5',
+                                                        background: '#FDF8F0',
+                                                        color: '#5A1E1E',
+                                                        fontSize: '0.78rem',
+                                                        fontWeight: 700,
+                                                        cursor: 'pointer',
+                                                    }}
+                                                >
+                                                    <option value="all">All Outlets ({outlets.length})</option>
+                                                    {outlets.map((o) => (
+                                                        <option key={o.id} value={o.id}>
+                                                            {o.name}{o.city ? ` (${o.city})` : ''}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        )}
+
                                         <Link
                                             href={route('admin.outlets.index')}
                                             className={`dayal-sidebar-sublink ${route().current('admin.outlets.index') || route().current('admin.outlets.show') || route().current('admin.outlets.edit') || route().current('admin.shipping-zones.*') ? 'active' : ''}`}

@@ -88,7 +88,7 @@ class OutletTableController extends Controller
             ->all();
 
         $locations = array_values(array_unique(array_merge(self::DEFAULT_LOCATIONS, $dbLocations)));
-        $outlets = Outlet::orderBy('sort_order')->orderBy('id')->get(['id', 'name', 'slug', 'city', 'status']);
+        $outlets = Outlet::withCount('tables')->orderBy('sort_order')->orderBy('id')->get(['id', 'name', 'slug', 'city', 'status']);
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -347,7 +347,7 @@ class OutletTableController extends Controller
         }
 
         $tables = $query->get();
-        $outlets = Outlet::orderBy('sort_order')->orderBy('id')->get(['id', 'name', 'slug', 'city']);
+        $outlets = Outlet::withCount('tables')->orderBy('sort_order')->orderBy('id')->get(['id', 'name', 'slug', 'city']);
         $dbLocations = OutletTable::query()->select('location')->distinct()->pluck('location')->filter()->values()->all();
         $locations = array_values(array_unique(array_merge(self::DEFAULT_LOCATIONS, $dbLocations)));
 

@@ -1047,7 +1047,9 @@ export default function Show({ outlet, unassignedProducts = [], stats = {} }) {
                                     <BoxIcon width="24" height="24" />
                                 </div>
                                 <p style={{ margin: 0, fontWeight: 700, color: '#334155' }}>
-                                    {productSearch ? 'No products match your search' : `No products assigned to ${outlet.name} yet.`}
+                                    {productSearch
+                                        ? `No products found matching your criteria - ${outlet.name}`
+                                        : `No products assigned to ${outlet.name} yet.`}
                                 </p>
                                 <p style={{ margin: '0.25rem 0 1.25rem', fontSize: '0.8125rem', color: '#94A3B8' }}>
                                     Assign catalog products to this outlet to manage local stock and availability.
@@ -1379,7 +1381,7 @@ export default function Show({ outlet, unassignedProducts = [], stats = {} }) {
                                 </div>
                                 <p style={{ margin: 0, fontWeight: 700, color: '#334155' }}>
                                     {orderSearch || orderFilterStatus !== 'all'
-                                        ? 'No orders match your filter criteria'
+                                        ? `No orders found matching your criteria - ${outlet.name}`
                                         : `No orders routed to ${outlet.name} yet.`}
                                 </p>
                                 <p style={{ margin: '0.25rem 0 0', fontSize: '0.8125rem', color: '#94A3B8' }}>

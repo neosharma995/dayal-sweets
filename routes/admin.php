@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactQueryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DietPreferenceController;
+use App\Http\Controllers\Admin\DiningQueryController;
 use App\Http\Controllers\Admin\HeaderFooterController;
 use App\Http\Controllers\Admin\OccasionController;
 use App\Http\Controllers\Admin\OrderController;
@@ -246,5 +247,13 @@ Route::middleware(['auth', 'verified', 'role:'.UserRole::Admin->value])->prefix(
         Route::get('/{query}', [ContactQueryController::class, 'show'])->name('show');
         Route::patch('/{query}/status', [ContactQueryController::class, 'updateStatus'])->name('update-status');
         Route::delete('/{query}', [ContactQueryController::class, 'destroy'])->name('destroy');
+    });
+
+    // Customer Dining Queries / Table Reservations Web Routes
+    Route::prefix('dining-queries')->name('dining-queries.')->group(function () {
+        Route::get('/', [DiningQueryController::class, 'index'])->name('index');
+        Route::get('/{query}', [DiningQueryController::class, 'show'])->name('show');
+        Route::patch('/{query}/status', [DiningQueryController::class, 'updateStatus'])->name('update-status');
+        Route::delete('/{query}', [DiningQueryController::class, 'destroy'])->name('destroy');
     });
 });

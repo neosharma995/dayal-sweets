@@ -18,7 +18,7 @@ class OutletSeeder extends Seeder
             [
                 'name' => 'Amb',
                 'slug' => 'amb',
-                'subtitle' => 'Storefront',
+                'subtitle' => 'Main Bazaar',
                 'address' => 'VPO Amb, Main Bazaar, Tehsil Amb, Distt. Una, Himachal Pradesh 177203',
                 'city' => 'Amb',
                 'state' => 'Himachal Pradesh',

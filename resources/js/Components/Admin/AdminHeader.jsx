@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { LogOutIcon } from '@/Components/Icons';
+import OutletSwitcher from '@/Components/Admin/OutletSwitcher';
 
 export default function AdminHeader({ onToggleSidebar, header, onRequestLogout }) {
     const { auth } = usePage().props;
@@ -20,7 +21,10 @@ export default function AdminHeader({ onToggleSidebar, header, onRequestLogout }
                 {header && <div>{header}</div>}
             </div>
 
-            <div className="dayal-admin-header-right">
+            <div className="dayal-admin-header-right" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                {/* Global Multi-Outlet Switcher */}
+                <OutletSwitcher />
+
                 <Link
                     href={route('admin.account')}
                     className="dayal-admin-head-btn"

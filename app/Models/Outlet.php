@@ -165,4 +165,12 @@ class Outlet extends Model
     {
         return $this->hasMany(ShippingZone::class, 'outlet_id')->orderBy('sort_order')->orderBy('id');
     }
+
+    /**
+     * Relationship: Outlet has many Orders.
+     */
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'outlet_id')->latest('id');
+    }
 }

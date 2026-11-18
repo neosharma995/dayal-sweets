@@ -49,7 +49,12 @@ class HandleInertiaRequests extends Middleware
                 'error' => fn () => $request->session()->get('error'),
             ],
             'headerFooter' => fn () => \App\Models\Page::getOrCreateHeaderFooter()->sections,
-            'outlets' => fn () => \App\Models\Outlet::where('is_active', true)->orderBy('sort_order')->orderBy('id')->get(),
+            'outlets' => fn () => \App\Models\Outlet::where('is_active', true)->orderBy('sort_order')->orderBy('id')->get(['id', 'name', 'city', 'state', 'status']),
+            'activeOutletId' => fn () => $request->session()->get('active_outlet_id', $request->query('outlet_id')),
+            'activeOutlet' => function () use ($request) {
+                $id = $request->session()->get('active_outlet_id', $request->query('outlet_id'));
+                return $id ? \App\Models\Outlet::find($id) : null;
+            },
             'paginationLimit' => (int) env('PAGINATION_LIMIT', 20),
         ];
     }

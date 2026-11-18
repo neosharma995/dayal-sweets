@@ -6,7 +6,7 @@ import { diningChefSpecials } from '@/data/diningData';
 /**
  * Section E: Book Your Table / Reservation
  * Left: Chef's Special promotional card with chef photo and menu items
- * Right: Table reservation form with smooth client & server-side validation and auto-dismiss toaster
+ * Right: Table reservation form
  */
 export default function DiningReservation() {
     const { activeOutlet } = usePage().props || {};
@@ -232,54 +232,41 @@ export default function DiningReservation() {
                 <div className="dining-reservation-grid">
                     {/* Left Column: Chef's Special Promotional Card */}
                     <div className="dining-reservation-chef-card">
-                        <div className="dining-reservation-chef-inner">
-                            {/* Chef Photograph */}
-                            <div className="dining-reservation-chef-media">
-                                <img
-                                    src="/uploads/2026/08/halwai-2.png"
-                                    alt="Dayal Sweets Master Chef"
-                                    className="dining-reservation-chef-img"
-                                    loading="lazy"
-                                />
-                            </div>
+                        {/* Chef Photograph */}
+                        <div className="dining-reservation-chef-media">
+                            <img
+                                src="/uploads/2026/08/halwai-2.png"
+                                alt="Halwai"
+                                className="dining-reservation-chef-img"
+                            />
+                        </div>
 
-                            {/* Chef Menu Content */}
-                            <div className="dining-reservation-chef-content">
-                                <span className="dining-reservation-chef-eyebrow">TODAY'S</span>
-                                <h3 className="dining-reservation-chef-title">CHEF'S SPECIAL</h3>
+                        {/* Chef Menu Content */}
+                        <div className="dining-reservation-chef-content">
+                            <span className="dining-reservation-chef-eyebrow">TODAY'S</span>
+                            <h3 className="dining-reservation-chef-title">CHEF'S SPECIAL</h3>
 
-                                <img
-                                    src="/uploads/2026/07/Group-2.png"
-                                    alt=""
-                                    className="dining-reservation-chef-divider"
-                                    aria-hidden="true"
-                                />
+                            <div className="dining-reservation-chef-divider" aria-hidden="true" />
 
-                                <ul className="dining-reservation-chef-list">
-                                    {diningChefSpecials.map((item) => (
-                                        <li key={item} className="dining-reservation-chef-item">
-                                            <span className="dining-reservation-chef-dot" aria-hidden="true" />
-                                            <span>{item}</span>
-                                        </li>
-                                    ))}
-                                </ul>
+                            <ul className="dining-reservation-chef-list">
+                                {diningChefSpecials.map((item) => (
+                                    <li key={item} className="dining-reservation-chef-item">
+                                        <span className="dining-reservation-chef-icon">
+                                            <svg aria-hidden="true" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm80 248c0 44.112-35.888 80-80 80s-80-35.888-80-80 35.888-80 80-80 80 35.888 80 80z" />
+                                            </svg>
+                                        </span>
+                                        <span className="dining-reservation-chef-text">{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
 
+                            <div className="dining-reservation-chef-btn-wrap">
                                 <Link href="/shop" className="dining-reservation-chef-btn">
-                                    <span>ORDER NOW</span>
-                                    <svg
-                                        width="14"
-                                        height="14"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2.5"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        aria-hidden="true"
-                                    >
-                                        <line x1="5" y1="12" x2="19" y2="12" />
-                                        <polyline points="12 5 19 12 12 19" />
+                                    <svg className="dining-reservation-btn-icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M30.966 16.234l-9.6-9.6c-0.312-0.312-0.819-0.312-1.131 0s-0.312 0.819 0 1.131l8.234 8.234h-26.069c-0.442 0-0.8 0.358-0.8 0.8s0.358 0.8 0.8 0.8h26.069l-8.234 8.234c-0.312 0.312-0.312 0.819 0 1.131 0.156 0.156 0.361 0.234 0.566 0.234s0.409-0.078 0.566-0.234l9.6-9.6c0.312-0.312 0.312-0.819 0-1.131z" />
                                     </svg>
+                                    <span>Order Now</span>
                                 </Link>
                             </div>
                         </div>
@@ -482,11 +469,7 @@ export default function DiningReservation() {
                                     rows="4"
                                     value={formData.message}
                                     onChange={handleChange}
-                                    onBlur={handleBlur}
                                     placeholder="Your Message or Special Requests..."
-                                    maxLength={1000}
-                                    disabled={submitting}
-                                    style={errors.message ? { borderColor: '#DC2626', backgroundColor: '#FFF8F8' } : {}}
                                 />
                                 {errors.message && (
                                     <span style={{ color: '#DC2626', fontSize: '0.785rem', marginTop: '0.35rem', display: 'block', fontWeight: 500 }}>

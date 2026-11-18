@@ -12,6 +12,7 @@ export default function Index({ queries, counts, filters }) {
     const [search, setSearch] = useState(filters?.search || '');
     const [selectedStatus, setSelectedStatus] = useState(filters?.status || 'all');
     const [perPage, setPerPage] = useState(filters?.per_page || 15);
+    const [showCards, setShowCards] = useState(false);
 
     // Detail Modal State
     const [detailModalOpen, setDetailModalOpen] = useState(false);
@@ -176,7 +177,42 @@ export default function Index({ queries, counts, filters }) {
                         </p>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
+                        <button
+                            type="button"
+                            onClick={() => setShowCards(!showCards)}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                height: '38px',
+                                padding: '0 0.85rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #CBD5E1',
+                                backgroundColor: '#FFFFFF',
+                                color: '#334155',
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                                boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                            }}
+                        >
+                            <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                style={{ transform: showCards ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}
+                            >
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                            <span>{showCards ? 'Hide Summary Cards ▲' : 'Expand Summary Cards ▼'}</span>
+                        </button>
+
                         <a
                             href={route('contact')}
                             target="_blank"
@@ -205,110 +241,135 @@ export default function Index({ queries, counts, filters }) {
                     </div>
                 </div>
 
-                {/* Top Metrics Cards */}
-                <div
-                    style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
-                        gap: '1rem',
-                        marginBottom: '1.5rem',
-                    }}
-                >
-                    {/* 1. Total Queries */}
+                {/* Top Metrics Cards - Collapsed by default, counts only, NO clicks */}
+                {showCards && (
                     <div
-                        onClick={() => handleStatusFilterChange('all')}
                         style={{
-                            background: '#FFFFFF',
-                            padding: '1.25rem',
-                            borderRadius: '0.5rem',
-                            border: selectedStatus === 'all' ? '2px solid #7A1C1C' : '1px solid #E2E8F0',
-                            boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-                            cursor: 'pointer',
-                            transition: 'all 0.15s ease',
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
+                            gap: '1rem',
+                            marginBottom: '1.5rem',
                         }}
                     >
-                        <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                            Total Inquiries
+                        {/* 1. Total Queries */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Total Inquiries
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#0F172A', marginTop: '0.35rem' }}>
+                                {counts?.total || 0}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
+                                All messages received
+                            </div>
                         </div>
-                        <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#0F172A', marginTop: '0.35rem' }}>
-                            {counts?.total || 0}
-                        </div>
-                        <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
-                            All messages received
-                        </div>
-                    </div>
 
-                    {/* 2. Unread Queries */}
-                    <div
-                        onClick={() => handleStatusFilterChange('unread')}
-                        style={{
-                            background: '#FFFFFF',
-                            padding: '1.25rem',
-                            borderRadius: '0.5rem',
-                            border: selectedStatus === 'unread' ? '2px solid #D97706' : '1px solid #E2E8F0',
-                            boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-                            cursor: 'pointer',
-                            transition: 'all 0.15s ease',
-                        }}
-                    >
-                        <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#D97706', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                            New / Unread
+                        {/* 2. Unread Queries */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#D97706', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                New / Unread
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#B45309', marginTop: '0.35rem' }}>
+                                {counts?.unread || 0}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#D97706', marginTop: '0.25rem', fontWeight: 600 }}>
+                                Awaiting initial review
+                            </div>
                         </div>
-                        <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#B45309', marginTop: '0.35rem' }}>
-                            {counts?.unread || 0}
-                        </div>
-                        <div style={{ fontSize: '0.75rem', color: '#D97706', marginTop: '0.25rem', fontWeight: 600 }}>
-                            Awaiting initial review
-                        </div>
-                    </div>
 
-                    {/* 3. Read Queries */}
-                    <div
-                        onClick={() => handleStatusFilterChange('read')}
-                        style={{
-                            background: '#FFFFFF',
-                            padding: '1.25rem',
-                            borderRadius: '0.5rem',
-                            border: selectedStatus === 'read' ? '2px solid #0284C7' : '1px solid #E2E8F0',
-                            boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-                            cursor: 'pointer',
-                            transition: 'all 0.15s ease',
-                        }}
-                    >
-                        <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0284C7', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                            Reviewed / Read
+                        {/* 3. Read Queries */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0284C7', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Reviewed / Read
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#0369A1', marginTop: '0.35rem' }}>
+                                {counts?.read || 0}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
+                                Opened &amp; reviewed
+                            </div>
                         </div>
-                        <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#0369A1', marginTop: '0.35rem' }}>
-                            {counts?.read || 0}
-                        </div>
-                        <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
-                            Opened &amp; reviewed
-                        </div>
-                    </div>
 
-                    {/* 4. Replied Queries */}
-                    <div
-                        onClick={() => handleStatusFilterChange('replied')}
-                        style={{
-                            background: '#FFFFFF',
-                            padding: '1.25rem',
-                            borderRadius: '0.5rem',
-                            border: selectedStatus === 'replied' ? '2px solid #059669' : '1px solid #E2E8F0',
-                            boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-                            cursor: 'pointer',
-                            transition: 'all 0.15s ease',
-                        }}
-                    >
-                        <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                            Replied / Contacted
-                        </div>
-                        <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#15803D', marginTop: '0.35rem' }}>
-                            {counts?.replied || 0}
-                        </div>
-                        <div style={{ fontSize: '0.75rem', color: '#059669', marginTop: '0.25rem' }}>
-                            Customer contacted
+                        {/* 4. Replied Queries */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Replied / Contacted
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#15803D', marginTop: '0.35rem' }}>
+                                {counts?.replied || 0}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#059669', marginTop: '0.25rem' }}>
+                                Customer contacted
+                            </div>
                         </div>
                     </div>
+                )}
+
+                {/* Status Filter Buttons without count - Clicks happen here */}
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+                    {[
+                        { key: 'all', label: 'All Inquiries' },
+                        { key: 'unread', label: 'New / Unread' },
+                        { key: 'read', label: 'Reviewed / Read' },
+                        { key: 'replied', label: 'Replied / Contacted' },
+                    ].map((tab) => {
+                        const isActive = selectedStatus === tab.key;
+                        return (
+                            <button
+                                key={tab.key}
+                                type="button"
+                                onClick={() => handleStatusFilterChange(tab.key)}
+                                style={{
+                                    padding: '0.45rem 0.9rem',
+                                    borderRadius: '0.375rem',
+                                    fontSize: '0.8125rem',
+                                    fontWeight: isActive ? 700 : 500,
+                                    border: isActive ? '1px solid #7A1C1C' : '1px solid #CBD5E1',
+                                    background: isActive ? '#7A1C1C' : '#FFFFFF',
+                                    color: isActive ? '#FFFFFF' : '#475569',
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    transition: 'all 0.15s ease',
+                                    boxShadow: isActive ? '0 1px 2px rgba(122, 28, 28, 0.2)' : '0 1px 2px rgba(0,0,0,0.03)',
+                                }}
+                            >
+                                <span>{tab.label}</span>
+                            </button>
+                        );
+                    })}
                 </div>
 
                 {/* Search & Filter Toolbar */}
@@ -393,10 +454,10 @@ export default function Index({ queries, counts, filters }) {
                                     background: '#FFFFFF',
                                 }}
                             >
-                                <option value="all">All Inquiries ({counts?.total || 0})</option>
-                                <option value="unread">Unread ({counts?.unread || 0})</option>
-                                <option value="read">Read ({counts?.read || 0})</option>
-                                <option value="replied">Replied ({counts?.replied || 0})</option>
+                                <option value="all">All Inquiries</option>
+                                <option value="unread">Unread</option>
+                                <option value="read">Read</option>
+                                <option value="replied">Replied</option>
                             </select>
                         </div>
 

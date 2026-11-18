@@ -7,6 +7,7 @@ export default function StaffUsersIndex({ users, roles, stats, currentAdminId, f
 
     const [search, setSearch] = useState(filters.search || '');
     const [roleFilter, setRoleFilter] = useState(filters.role || 'all');
+    const [showCards, setShowCards] = useState(false);
 
     // Change Role Modal
     const [selectedUser, setSelectedUser] = useState(null);
@@ -141,40 +142,93 @@ export default function StaffUsersIndex({ users, roles, stats, currentAdminId, f
         <AdminLayout>
             <Head title="Staff Management - Dayal Sweets Admin" />
 
-            <div className="dayal-admin-content-container" style={{ padding: '1.5rem 2rem' }}>
-                {/* Header */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+            <div className="dayal-container" style={{ width: '100%', maxWidth: '1600px', margin: '0 auto' }}>
+                {/* Header Row */}
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        flexWrap: 'wrap',
+                        gap: '1rem',
+                        marginBottom: '1.5rem',
+                    }}
+                >
                     <div>
-                        <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F172A', margin: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                            <Link href={route('admin.dashboard')} style={{ color: '#64748B', fontSize: '0.8125rem', textDecoration: 'none' }}>
+                                Admin
+                            </Link>
+                            <span style={{ color: '#CBD5E1', fontSize: '0.75rem' }}>/</span>
+                            <span style={{ color: '#0F172A', fontSize: '0.8125rem', fontWeight: 600 }}>Staff Management</span>
+                        </div>
+                        <h1 style={{ fontSize: '1.65rem', fontWeight: 700, color: '#0F172A', margin: 0 }}>
                             Staff Management
                         </h1>
-                        <p style={{ color: '#64748B', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+                        <p style={{ color: '#64748B', fontSize: '0.875rem', marginTop: '0.35rem' }}>
                             Create and manage staff accounts, assign specific roles, and control access permissions.
                         </p>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                        <button
+                            type="button"
+                            onClick={() => setShowCards(!showCards)}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                height: '38px',
+                                padding: '0 0.85rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #CBD5E1',
+                                backgroundColor: '#FFFFFF',
+                                color: '#334155',
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                                boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                            }}
+                        >
+                            <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                style={{ transform: showCards ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}
+                            >
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                            <span>{showCards ? 'Hide Summary Cards ▲' : 'Expand Summary Cards ▼'}</span>
+                        </button>
+
                         <Link
                             href={route('admin.customers.index')}
                             style={{
                                 display: 'inline-flex',
                                 alignItems: 'center',
-                                gap: '0.5rem',
-                                padding: '0.6rem 1rem',
-                                borderRadius: '0.375rem',
+                                gap: '0.4rem',
+                                height: '38px',
+                                padding: '0 0.9rem',
+                                borderRadius: '0.5rem',
                                 border: '1px solid #CBD5E1',
                                 background: '#FFFFFF',
                                 color: '#334155',
-                                fontSize: '0.85rem',
+                                fontSize: '0.8125rem',
                                 fontWeight: 600,
                                 textDecoration: 'none',
+                                boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
                             }}
                         >
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                                 <circle cx="12" cy="7" r="4" />
                             </svg>
-                            <span>View Customers ({stats.total_customers})</span>
+                            <span>Customers</span>
                         </Link>
 
                         <button
@@ -183,14 +237,15 @@ export default function StaffUsersIndex({ users, roles, stats, currentAdminId, f
                             style={{
                                 display: 'inline-flex',
                                 alignItems: 'center',
-                                gap: '0.5rem',
-                                padding: '0.6rem 1.15rem',
-                                borderRadius: '0.375rem',
+                                gap: '0.4rem',
+                                height: '38px',
+                                padding: '0 1rem',
+                                borderRadius: '0.5rem',
                                 border: 'none',
-                                background: '#B88E4B',
+                                background: '#7A1C1C',
                                 color: '#FFFFFF',
-                                fontSize: '0.875rem',
-                                fontWeight: 700,
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
                                 cursor: 'pointer',
                                 boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
                             }}
@@ -200,85 +255,212 @@ export default function StaffUsersIndex({ users, roles, stats, currentAdminId, f
                     </div>
                 </div>
 
-                {/* Metric Cards */}
-                <div
-                    style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                        gap: '1rem',
-                        marginBottom: '1.5rem',
-                    }}
-                >
-                    <div style={{ background: '#FFFFFF', padding: '1.25rem', borderRadius: '0.5rem', border: '1px solid #E2E8F0', boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}>
-                        <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                            Total Staff Members
+                {/* Top Metric Cards - Collapsed by default, counts only, NO clicks */}
+                {showCards && (
+                    <div
+                        style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
+                            gap: '1rem',
+                            marginBottom: '1.5rem',
+                        }}
+                    >
+                        {/* 1. Total Staff */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Total Staff Members
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#0F172A', marginTop: '0.35rem' }}>
+                                {stats.total_staff}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
+                                Authorized staff accounts
+                            </div>
                         </div>
-                        <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0F172A', marginTop: '0.35rem' }}>
-                            {stats.total_staff}
-                        </div>
-                        <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.2rem' }}>
-                            Authorized staff accounts
-                        </div>
-                    </div>
 
-                    <div style={{ background: '#FFFFFF', padding: '1.25rem', borderRadius: '0.5rem', border: '1px solid #E2E8F0', boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}>
-                        <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                            Administrators
+                        {/* 2. Administrators */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#7A1C1C', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Administrators
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#7A1C1C', marginTop: '0.35rem' }}>
+                                {stats.admins}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
+                                Full store control
+                            </div>
                         </div>
-                        <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#B88E4B', marginTop: '0.35rem' }}>
-                            {stats.admins}
-                        </div>
-                        <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.2rem' }}>
-                            Full store control
-                        </div>
-                    </div>
 
-                    <div style={{ background: '#FFFFFF', padding: '1.25rem', borderRadius: '0.5rem', border: '1px solid #E2E8F0', boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}>
-                        <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                            Content Editors
+                        {/* 3. Content Editors */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#2563EB', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Content Editors
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#2563EB', marginTop: '0.35rem' }}>
+                                {stats.editors}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
+                                Page &amp; branding editors
+                            </div>
                         </div>
-                        <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#2563EB', marginTop: '0.35rem' }}>
-                            {stats.editors}
-                        </div>
-                        <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.2rem' }}>
-                            Page &amp; branding editors
-                        </div>
-                    </div>
 
-                    <div style={{ background: '#FFFFFF', padding: '1.25rem', borderRadius: '0.5rem', border: '1px solid #E2E8F0', boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}>
-                        <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                            Registered Customers
+                        {/* 4. Registered Customers */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Registered Customers
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#059669', marginTop: '0.35rem' }}>
+                                {stats.total_customers}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#059669', marginTop: '0.25rem' }}>
+                                <Link href={route('admin.customers.index')} style={{ color: '#059669', textDecoration: 'none', fontWeight: 600 }}>
+                                    View in Customers →
+                                </Link>
+                            </div>
                         </div>
-                        <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#059669', marginTop: '0.35rem' }}>
-                            {stats.total_customers}
-                        </div>
-                        <Link href={route('admin.customers.index')} style={{ fontSize: '0.75rem', color: '#1D4ED8', marginTop: '0.2rem', textDecoration: 'none', fontWeight: 600, display: 'inline-block' }}>
-                            View in Customers →
-                        </Link>
                     </div>
+                )}
+
+                {/* Status Filter Buttons without count - Clicks happen here */}
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+                    {[
+                        { key: 'all', label: 'All Staff' },
+                        { key: 'admin', label: 'Administrators' },
+                        { key: 'editor', label: 'Content Editors' },
+                    ].map((tab) => {
+                        const isActive = roleFilter === tab.key;
+                        return (
+                            <button
+                                key={tab.key}
+                                type="button"
+                                onClick={() => {
+                                    setRoleFilter(tab.key);
+                                    handleApplyFilters({ role: tab.key });
+                                }}
+                                style={{
+                                    padding: '0.45rem 0.9rem',
+                                    borderRadius: '0.375rem',
+                                    fontSize: '0.8125rem',
+                                    fontWeight: isActive ? 700 : 500,
+                                    border: isActive ? '1px solid #7A1C1C' : '1px solid #CBD5E1',
+                                    background: isActive ? '#7A1C1C' : '#FFFFFF',
+                                    color: isActive ? '#FFFFFF' : '#475569',
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    transition: 'all 0.15s ease',
+                                    boxShadow: isActive ? '0 1px 2px rgba(122, 28, 28, 0.2)' : '0 1px 2px rgba(0,0,0,0.03)',
+                                }}
+                            >
+                                <span>{tab.label}</span>
+                            </button>
+                        );
+                    })}
                 </div>
 
-                {/* Filter and Search Bar */}
-                <div style={{ background: '#FFFFFF', padding: '1rem', borderRadius: '0.5rem', border: '1px solid #E2E8F0', marginBottom: '1.5rem' }}>
-                    <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                        <div style={{ flex: '1 1 240px' }}>
-                            <input
-                                type="text"
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                placeholder="Search staff by name or email..."
-                                style={{
-                                    width: '100%',
-                                    padding: '0.55rem 0.85rem',
-                                    borderRadius: '0.375rem',
-                                    border: '1px solid #CBD5E1',
-                                    fontSize: '0.875rem',
-                                    background: '#F8FAFC',
+                {/* Search & Filter Toolbar */}
+                <div
+                    style={{
+                        background: '#FFFFFF',
+                        border: '1px solid #E2E8F0',
+                        borderRadius: '0.5rem',
+                        padding: '1rem 1.25rem',
+                        marginBottom: '1.25rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        flexWrap: 'wrap',
+                        gap: '1rem',
+                    }}
+                >
+                    <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flex: '1 1 340px', maxWidth: '480px' }}>
+                        <input
+                            type="text"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            placeholder="Search staff by name or email..."
+                            style={{
+                                width: '100%',
+                                padding: '0.5rem 0.75rem',
+                                borderRadius: '0.375rem',
+                                border: '1px solid #CBD5E1',
+                                fontSize: '0.8125rem',
+                                outline: 'none',
+                            }}
+                        />
+                        <button
+                            type="submit"
+                            style={{
+                                padding: '0.5rem 0.85rem',
+                                borderRadius: '0.375rem',
+                                background: '#7A1C1C',
+                                color: '#FFFFFF',
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
+                                border: 'none',
+                                cursor: 'pointer',
+                                whiteSpace: 'nowrap',
+                            }}
+                        >
+                            Search
+                        </button>
+                        {search && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setSearch('');
+                                    handleApplyFilters({ search: '' });
                                 }}
-                            />
-                        </div>
+                                style={{
+                                    padding: '0.5rem 0.65rem',
+                                    borderRadius: '0.375rem',
+                                    background: '#F1F5F9',
+                                    color: '#475569',
+                                    fontSize: '0.8125rem',
+                                    border: '1px solid #CBD5E1',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                Clear
+                            </button>
+                        )}
+                    </form>
 
-                        <div style={{ minWidth: '170px' }}>
+                    <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', color: '#64748B' }}>
+                            <span>Role:</span>
                             <select
                                 value={roleFilter}
                                 onChange={(e) => {
@@ -286,11 +468,10 @@ export default function StaffUsersIndex({ users, roles, stats, currentAdminId, f
                                     handleApplyFilters({ role: e.target.value });
                                 }}
                                 style={{
-                                    width: '100%',
-                                    padding: '0.55rem 0.85rem',
+                                    padding: '0.45rem 0.75rem',
                                     borderRadius: '0.375rem',
                                     border: '1px solid #CBD5E1',
-                                    fontSize: '0.875rem',
+                                    fontSize: '0.8125rem',
                                     background: '#FFFFFF',
                                 }}
                             >
@@ -300,40 +481,25 @@ export default function StaffUsersIndex({ users, roles, stats, currentAdminId, f
                             </select>
                         </div>
 
-                        <button
-                            type="submit"
-                            style={{
-                                padding: '0.55rem 1rem',
-                                background: '#B88E4B',
-                                color: '#FFFFFF',
-                                border: 'none',
-                                borderRadius: '0.375rem',
-                                fontSize: '0.875rem',
-                                fontWeight: 600,
-                                cursor: 'pointer',
-                            }}
-                        >
-                            Filter
-                        </button>
-
                         {(search || roleFilter !== 'all') && (
                             <button
                                 type="button"
                                 onClick={handleClearFilters}
                                 style={{
-                                    padding: '0.55rem 0.85rem',
-                                    background: 'transparent',
-                                    color: '#64748B',
-                                    border: '1px solid #CBD5E1',
+                                    padding: '0.45rem 0.75rem',
                                     borderRadius: '0.375rem',
-                                    fontSize: '0.875rem',
+                                    background: '#F1F5F9',
+                                    color: '#475569',
+                                    border: '1px solid #CBD5E1',
+                                    fontSize: '0.8125rem',
                                     cursor: 'pointer',
+                                    fontWeight: 500,
                                 }}
                             >
-                                Reset
+                                Reset All
                             </button>
                         )}
-                    </form>
+                    </div>
                 </div>
 
                 {/* Staff Table */}

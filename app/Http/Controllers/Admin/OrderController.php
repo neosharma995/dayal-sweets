@@ -54,7 +54,7 @@ class OrderController extends Controller
             $query->where('payment_status', $paymentStatus);
         }
 
-        $perPage = (int) env('PAGINATION_LIMIT', 20);
+        $perPage = (int) ($request->input('per_page') ?: env('PAGINATION_LIMIT', 15));
         $orders = $query->paginate($perPage)->withQueryString();
 
         // Calculate statistics for top metric cards
@@ -81,6 +81,7 @@ class OrderController extends Controller
                 'delivery_status' => $deliveryStatus,
                 'payment_status' => $paymentStatus,
                 'outlet_id' => $outletId,
+                'per_page' => $perPage,
             ],
         ]);
     }

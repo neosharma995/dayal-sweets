@@ -16,6 +16,7 @@ export default function Index({
     const [outletFilter, setOutletFilter] = useState(String(filters.outlet_id || 'all'));
     const [locationFilter, setLocationFilter] = useState(filters.location || 'all');
     const [statusFilter, setStatusFilter] = useState(filters.status || 'all');
+    const [showCards, setShowCards] = useState(false);
 
     // Sync local filter state when server props change (e.g. from sidebar or header outlet switcher)
     useEffect(() => {
@@ -173,139 +174,417 @@ export default function Index({
     };
 
     return (
-        <AdminLayout
-            header={
-                <div>
-                    <h1 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0F172A', margin: 0 }}>
-                        Outlet Dining Tables &amp; QR Scanners
-                    </h1>
-                    <p style={{ fontSize: '0.82rem', color: '#64748B', margin: '0.15rem 0 0' }}>
-                        Manage seating capacity, floor locations, and table QR code scanners across all outlets
-                    </p>
-                </div>
-            }
-        >
+        <AdminLayout>
             <Head title="Dining Tables & QR Scanners - Admin" />
 
-            {/* Top Summary Metrics */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
-                <div style={{ background: '#FFFFFF', borderRadius: '0.75rem', padding: '1.1rem 1.25rem', border: '1px solid #E2E8F0' }}>
-                    <div style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748B' }}>Total Tables</div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0F172A', marginTop: '0.25rem' }}>{stats.total_tables || 0}</div>
-                    <div style={{ fontSize: '0.78rem', color: '#10B981', fontWeight: 600 }}>Active QR ordering tables</div>
+            <div className="dayal-container" style={{ width: '100%', maxWidth: '1600px', margin: '0 auto' }}>
+                {/* Header Row */}
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        flexWrap: 'wrap',
+                        gap: '1rem',
+                        marginBottom: '1.5rem',
+                    }}
+                >
+                    <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                            <Link href={route('admin.dashboard')} style={{ color: '#64748B', fontSize: '0.8125rem', textDecoration: 'none' }}>
+                                Admin
+                            </Link>
+                            <span style={{ color: '#CBD5E1', fontSize: '0.75rem' }}>/</span>
+                            <span style={{ color: '#0F172A', fontSize: '0.8125rem', fontWeight: 600 }}>Dining Tables</span>
+                        </div>
+                        <h1 style={{ fontSize: '1.65rem', fontWeight: 700, color: '#0F172A', margin: 0 }}>
+                            Outlet Dining Tables &amp; QR Scanners
+                        </h1>
+                        <p style={{ color: '#64748B', fontSize: '0.875rem', marginTop: '0.35rem' }}>
+                            Manage seating capacity, floor locations, and table QR code scanners across all outlets.
+                        </p>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                        <button
+                            type="button"
+                            onClick={() => setShowCards(!showCards)}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                height: '38px',
+                                padding: '0 0.85rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #CBD5E1',
+                                backgroundColor: '#FFFFFF',
+                                color: '#334155',
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                                boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                            }}
+                        >
+                            <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                style={{ transform: showCards ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}
+                            >
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                            <span>{showCards ? 'Hide Summary Cards ▲' : 'Expand Summary Cards ▼'}</span>
+                        </button>
+
+                        <Link
+                            href={route('admin.tables.scanners', { outlet_id: outletFilter !== 'all' ? outletFilter : undefined })}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                height: '38px',
+                                padding: '0 0.9rem',
+                                borderRadius: '0.5rem',
+                                background: '#FDF8F0',
+                                color: '#8C6226',
+                                border: '1px solid #E6D2B5',
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
+                                textDecoration: 'none',
+                            }}
+                        >
+                            <span>Print All QR Scanners</span>
+                        </Link>
+
+                        <button
+                            type="button"
+                            onClick={() => setQuickAddOpen(true)}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                height: '38px',
+                                padding: '0 0.9rem',
+                                borderRadius: '0.5rem',
+                                background: '#7A1C1C',
+                                color: '#FFFFFF',
+                                border: 'none',
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                            }}
+                        >
+                            + Quick Add Table
+                        </button>
+
+                        <Link
+                            href={route('admin.tables.create')}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                height: '38px',
+                                padding: '0 0.9rem',
+                                borderRadius: '0.5rem',
+                                background: '#B88E4B',
+                                color: '#FFFFFF',
+                                textDecoration: 'none',
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
+                            }}
+                        >
+                            + Full Create Page
+                        </Link>
+                    </div>
                 </div>
 
-                <div style={{ background: '#FFFFFF', borderRadius: '0.75rem', padding: '1.1rem 1.25rem', border: '1px solid #E2E8F0' }}>
-                    <div style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748B' }}>Total Seating Capacity</div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#8C6226', marginTop: '0.25rem' }}>{stats.total_capacity || 0} Guests</div>
-                    <div style={{ fontSize: '0.78rem', color: '#64748B' }}>People who can sit simultaneously</div>
-                </div>
-
-                <div style={{ background: '#FFFFFF', borderRadius: '0.75rem', padding: '1.1rem 1.25rem', border: '1px solid #E2E8F0' }}>
-                    <div style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: '#047857' }}>Available Now</div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#047857', marginTop: '0.25rem' }}>{stats.available || 0}</div>
-                    <div style={{ fontSize: '0.78rem', color: '#64748B' }}>Ready to seat guests</div>
-                </div>
-
-                <div style={{ background: '#FFFFFF', borderRadius: '0.75rem', padding: '1.1rem 1.25rem', border: '1px solid #E2E8F0' }}>
-                    <div style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: '#B91C1C' }}>Occupied / Dining</div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#B91C1C', marginTop: '0.25rem' }}>{(stats.occupied || 0) + (stats.reserved || 0)}</div>
-                    <div style={{ fontSize: '0.78rem', color: '#64748B' }}>{stats.occupied || 0} occupied • {stats.reserved || 0} reserved</div>
-                </div>
-            </div>
-
-            {/* Filter & Action Toolbar */}
-            <div style={{ background: '#FFFFFF', borderRadius: '0.75rem', padding: '1rem 1.25rem', border: '1px solid #E2E8F0', marginBottom: '1.25rem', display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center', justifyContent: 'space-between' }}>
-                <form onSubmit={handleSearchSubmit} style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem', alignItems: 'center', flex: 1 }}>
-                    <select
-                        value={outletFilter}
-                        onChange={(e) => {
-                            const val = e.target.value;
-                            setOutletFilter(val);
-                            setCurrentPage(1);
-                            applyFilters({ outlet_id: val });
+                {/* Top Metric Cards - Collapsed by default, counts only, NO clicks */}
+                {showCards && (
+                    <div
+                        style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
+                            gap: '1rem',
+                            marginBottom: '1.5rem',
                         }}
-                        style={{ padding: '0.5rem 0.75rem', borderRadius: '0.5rem', border: '1px solid #B88E4B', background: '#FDF8F0', color: '#5A1E1E', fontSize: '0.85rem', fontWeight: 700 }}
                     >
-                        <option value="all">All Outlets ({outlets.reduce((acc, o) => acc + (o.tables_count || 0), 0) || tables.length} Tables)</option>
-                        {outlets.map((o) => (
-                            <option key={o.id} value={String(o.id)}>
-                                {o.name} ({o.city}){typeof o.tables_count === 'number' ? ` — ${o.tables_count} Tables` : ''}
-                            </option>
-                        ))}
-                    </select>
+                        {/* 1. Total Tables */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Total Tables
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#0F172A', marginTop: '0.35rem' }}>
+                                {stats.total_tables || 0}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#10B981', marginTop: '0.25rem', fontWeight: 600 }}>
+                                Active QR ordering tables
+                            </div>
+                        </div>
 
-                    <select
-                        value={locationFilter}
-                        onChange={(e) => {
-                            setLocationFilter(e.target.value);
-                            applyFilters({ location: e.target.value });
-                        }}
-                        style={{ padding: '0.5rem 0.75rem', borderRadius: '0.5rem', border: '1px solid #CBD5E1', fontSize: '0.85rem' }}
-                    >
-                        <option value="all">All Floor / Hall Locations</option>
-                        {locations.map((loc) => (
-                            <option key={loc} value={loc}>{loc}</option>
-                        ))}
-                    </select>
+                        {/* 2. Total Seating Capacity */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#8C6226', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Total Seating Capacity
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#8C6226', marginTop: '0.35rem' }}>
+                                {stats.total_capacity || 0} Guests
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
+                                People who can sit simultaneously
+                            </div>
+                        </div>
 
-                    <select
-                        value={statusFilter}
-                        onChange={(e) => {
-                            setStatusFilter(e.target.value);
-                            applyFilters({ status: e.target.value });
-                        }}
-                        style={{ padding: '0.5rem 0.75rem', borderRadius: '0.5rem', border: '1px solid #CBD5E1', fontSize: '0.85rem' }}
-                    >
-                        <option value="all">All Statuses</option>
-                        <option value="available">Available</option>
-                        <option value="occupied">Occupied</option>
-                        <option value="reserved">Reserved</option>
-                        <option value="inactive">Inactive</option>
-                    </select>
+                        {/* 3. Available Now */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Available Now
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#059669', marginTop: '0.35rem' }}>
+                                {stats.available || 0}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#059669', marginTop: '0.25rem' }}>
+                                Ready to seat guests
+                            </div>
+                        </div>
 
-                    <input
-                        type="text"
-                        placeholder="Search table #, name, location..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        style={{ padding: '0.5rem 0.85rem', borderRadius: '0.5rem', border: '1px solid #CBD5E1', fontSize: '0.85rem', minWidth: '210px' }}
-                    />
+                        {/* 4. Occupied / Dining */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#DC2626', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Occupied / Dining
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#DC2626', marginTop: '0.35rem' }}>
+                                {(stats.occupied || 0) + (stats.reserved || 0)}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
+                                {stats.occupied || 0} occupied • {stats.reserved || 0} reserved
+                            </div>
+                        </div>
+                    </div>
+                )}
 
-                    <button
-                        type="submit"
-                        style={{ padding: '0.5rem 0.95rem', borderRadius: '0.5rem', background: '#0F172A', color: '#FFFFFF', border: 'none', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' }}
-                    >
-                        Filter
-                    </button>
-                </form>
-
-                <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
-                    <Link
-                        href={route('admin.tables.scanners', { outlet_id: outletFilter !== 'all' ? outletFilter : undefined })}
-                        style={{ padding: '0.55rem 1rem', borderRadius: '0.5rem', background: '#FDF8F0', color: '#8C6226', border: '1px solid #E6D2B5', fontSize: '0.85rem', fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-                    >
-                        <span>Print All QR Scanners</span>
-                    </Link>
-
-                    <button
-                        type="button"
-                        onClick={() => setQuickAddOpen(true)}
-                        style={{ padding: '0.55rem 1rem', borderRadius: '0.5rem', background: '#5A1E1E', color: '#FFFFFF', border: 'none', fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer' }}
-                    >
-                        + Quick Add Table
-                    </button>
-
-                    <Link
-                        href={route('admin.tables.create')}
-                        style={{ padding: '0.55rem 1rem', borderRadius: '0.5rem', background: '#B88E4B', color: '#FFFFFF', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 700 }}
-                    >
-                        + Full Create Page
-                    </Link>
+                {/* Status Filter Buttons without count - Clicks happen here */}
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+                    {[
+                        { key: 'all', label: 'All Tables' },
+                        { key: 'available', label: 'Available' },
+                        { key: 'occupied', label: 'Occupied' },
+                        { key: 'reserved', label: 'Reserved' },
+                        { key: 'inactive', label: 'Inactive' },
+                    ].map((tab) => {
+                        const isActive = statusFilter === tab.key;
+                        return (
+                            <button
+                                key={tab.key}
+                                type="button"
+                                onClick={() => {
+                                    setStatusFilter(tab.key);
+                                    applyFilters({ status: tab.key });
+                                }}
+                                style={{
+                                    padding: '0.45rem 0.9rem',
+                                    borderRadius: '0.375rem',
+                                    fontSize: '0.8125rem',
+                                    fontWeight: isActive ? 700 : 500,
+                                    border: isActive ? '1px solid #7A1C1C' : '1px solid #CBD5E1',
+                                    background: isActive ? '#7A1C1C' : '#FFFFFF',
+                                    color: isActive ? '#FFFFFF' : '#475569',
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    transition: 'all 0.15s ease',
+                                    boxShadow: isActive ? '0 1px 2px rgba(122, 28, 28, 0.2)' : '0 1px 2px rgba(0,0,0,0.03)',
+                                }}
+                            >
+                                <span>{tab.label}</span>
+                            </button>
+                        );
+                    })}
                 </div>
-            </div>
 
-            {/* Tables Data Grid */}
+                {/* Search & Filter Toolbar */}
+                <div
+                    style={{
+                        background: '#FFFFFF',
+                        border: '1px solid #E2E8F0',
+                        borderRadius: '0.5rem',
+                        padding: '1rem 1.25rem',
+                        marginBottom: '1.25rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        flexWrap: 'wrap',
+                        gap: '1rem',
+                    }}
+                >
+                    <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flex: '1 1 320px', maxWidth: '420px' }}>
+                        <input
+                            type="text"
+                            placeholder="Search table #, name, location..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '0.5rem 0.75rem',
+                                borderRadius: '0.375rem',
+                                border: '1px solid #CBD5E1',
+                                fontSize: '0.8125rem',
+                                outline: 'none',
+                            }}
+                        />
+                        <button
+                            type="submit"
+                            style={{
+                                padding: '0.5rem 0.85rem',
+                                borderRadius: '0.375rem',
+                                background: '#7A1C1C',
+                                color: '#FFFFFF',
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
+                                border: 'none',
+                                cursor: 'pointer',
+                                whiteSpace: 'nowrap',
+                            }}
+                        >
+                            Search
+                        </button>
+                        {search && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setSearch('');
+                                    applyFilters({ search: '' });
+                                }}
+                                style={{
+                                    padding: '0.5rem 0.65rem',
+                                    borderRadius: '0.375rem',
+                                    background: '#F1F5F9',
+                                    color: '#475569',
+                                    fontSize: '0.8125rem',
+                                    border: '1px solid #CBD5E1',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                Clear
+                            </button>
+                        )}
+                    </form>
+
+                    <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', color: '#64748B' }}>
+                            <span>Outlet:</span>
+                            <select
+                                value={outletFilter}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    setOutletFilter(val);
+                                    setCurrentPage(1);
+                                    applyFilters({ outlet_id: val });
+                                }}
+                                style={{ padding: '0.45rem 0.75rem', borderRadius: '0.375rem', border: '1px solid #CBD5E1', fontSize: '0.8125rem', background: '#FFFFFF' }}
+                            >
+                                <option value="all">All Outlets</option>
+                                {outlets.map((o) => (
+                                    <option key={o.id} value={String(o.id)}>
+                                        {o.name} ({o.city})
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', color: '#64748B' }}>
+                            <span>Location:</span>
+                            <select
+                                value={locationFilter}
+                                onChange={(e) => {
+                                    setLocationFilter(e.target.value);
+                                    applyFilters({ location: e.target.value });
+                                }}
+                                style={{ padding: '0.45rem 0.75rem', borderRadius: '0.375rem', border: '1px solid #CBD5E1', fontSize: '0.8125rem', background: '#FFFFFF' }}
+                            >
+                                <option value="all">All Locations</option>
+                                {locations.map((loc) => (
+                                    <option key={loc} value={loc}>{loc}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', color: '#64748B' }}>
+                            <span>Status:</span>
+                            <select
+                                value={statusFilter}
+                                onChange={(e) => {
+                                    setStatusFilter(e.target.value);
+                                    applyFilters({ status: e.target.value });
+                                }}
+                                style={{ padding: '0.45rem 0.75rem', borderRadius: '0.375rem', border: '1px solid #CBD5E1', fontSize: '0.8125rem', background: '#FFFFFF' }}
+                            >
+                                <option value="all">All Statuses</option>
+                                <option value="available">Available</option>
+                                <option value="occupied">Occupied</option>
+                                <option value="reserved">Reserved</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', color: '#64748B' }}>
+                            <span>Per page:</span>
+                            <select
+                                value={itemsPerPage}
+                                onChange={(e) => {
+                                    const val = parseInt(e.target.value, 10);
+                                    setItemsPerPage(val);
+                                    setCurrentPage(1);
+                                }}
+                                style={{ padding: '0.45rem 0.6rem', borderRadius: '0.375rem', border: '1px solid #CBD5E1', fontSize: '0.8125rem', background: '#FFFFFF' }}
+                            >
+                                <option value={8}>8</option>
+                                <option value={10}>10</option>
+                                <option value={15}>15</option>
+                                <option value={25}>25</option>
+                                <option value={50}>50</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Tables Data Grid */}
             <div style={{ background: '#FFFFFF', borderRadius: '0.75rem', border: '1px solid #E2E8F0', overflow: 'hidden' }}>
                 {tables.length === 0 ? (
                     <div style={{ padding: '3rem', textAlign: 'center', color: '#64748B' }}>
@@ -479,6 +758,7 @@ export default function Index({
                         )}
                     </div>
                 )}
+            </div>
             </div>
 
             {/* QR Code Scanner Modal */}

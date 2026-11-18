@@ -12,6 +12,7 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
     const [expandedOutletIds, setExpandedOutletIds] = useState([]);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [outletToDelete, setOutletToDelete] = useState(null);
+    const [showCards, setShowCards] = useState(false);
 
     const toggleExpand = (outletId) => {
         setExpandedOutletIds((prev) =>
@@ -211,61 +212,101 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                     </Link>
                 </div>
 
-                {/* Metrics Cards */}
-                <div
-                    style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                        gap: '1rem',
-                        marginBottom: '1.75rem',
-                    }}
-                >
-                    <div className="dayal-admin-stat-card">
-                        <div className="dayal-stat-top">
-                            <span className="dayal-stat-label">Total Outlets</span>
-                            <span className="dayal-stat-badge">All</span>
-                        </div>
-                        <div className="dayal-stat-value">{stats.total ?? outlets.length}</div>
-                        <div className="dayal-stat-subtext">Configured locations</div>
-                    </div>
-
-                    <div className="dayal-admin-stat-card">
-                        <div className="dayal-stat-top">
-                            <span className="dayal-stat-label">Active Outlets</span>
-                            <span className="dayal-stat-badge" style={{ color: '#059669', background: '#ECFDF5' }}>
-                                Open
-                            </span>
-                        </div>
-                        <div className="dayal-stat-value" style={{ color: '#059669' }}>
-                            {stats.active ?? outlets.filter((o) => o.is_active && o.status === 'active').length}
-                        </div>
-                        <div className="dayal-stat-subtext">Currently serving customers</div>
-                    </div>
-
-                    <div className="dayal-admin-stat-card">
-                        <div className="dayal-stat-top">
-                            <span className="dayal-stat-label">Coming Soon</span>
-                            <span className="dayal-stat-badge" style={{ color: '#D97706', background: '#FEF3C7' }}>
-                                Upcoming
-                            </span>
-                        </div>
-                        <div className="dayal-stat-value" style={{ color: '#D97706' }}>
-                            {stats.coming_soon ?? outlets.filter((o) => o.is_coming_soon || o.status === 'coming_soon').length}
-                        </div>
-                        <div className="dayal-stat-subtext">Under setup / expansion</div>
-                    </div>
-
-                    <div className="dayal-admin-stat-card">
-                        <div className="dayal-stat-top">
-                            <span className="dayal-stat-label">Regions Covered</span>
-                            <span className="dayal-stat-badge" style={{ color: '#4F46E5', background: '#EEF2FF' }}>
-                                HP
-                            </span>
-                        </div>
-                        <div className="dayal-stat-value">Himachal</div>
-                        <div className="dayal-stat-subtext">Una, Hamirpur, Kangra...</div>
-                    </div>
+                {/* Top Cards Expand / Collapse Control */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                    <button
+                        type="button"
+                        onClick={() => setShowCards(!showCards)}
+                        style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            padding: '0.45rem 0.95rem',
+                            borderRadius: '0.5rem',
+                            border: '1px solid #CBD5E1',
+                            background: showCards ? '#F8FAFC' : '#FFFFFF',
+                            color: '#334155',
+                            fontSize: '0.8125rem',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            transition: 'all 0.15s ease',
+                            boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                        }}
+                    >
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            style={{ transform: showCards ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}
+                        >
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                        <span>{showCards ? 'Hide Summary Cards ▲' : 'Expand Summary Cards ▼'}</span>
+                    </button>
                 </div>
+
+                {/* Metrics Cards - Collapsed by default */}
+                {showCards && (
+                    <div
+                        style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                            gap: '1rem',
+                            marginBottom: '1.75rem',
+                        }}
+                    >
+                        <div className="dayal-admin-stat-card">
+                            <div className="dayal-stat-top">
+                                <span className="dayal-stat-label">Total Outlets</span>
+                                <span className="dayal-stat-badge">All</span>
+                            </div>
+                            <div className="dayal-stat-value">{stats.total ?? outlets.length}</div>
+                            <div className="dayal-stat-subtext">Configured locations</div>
+                        </div>
+
+                        <div className="dayal-admin-stat-card">
+                            <div className="dayal-stat-top">
+                                <span className="dayal-stat-label">Active Outlets</span>
+                                <span className="dayal-stat-badge" style={{ color: '#059669', background: '#ECFDF5' }}>
+                                    Open
+                                </span>
+                            </div>
+                            <div className="dayal-stat-value" style={{ color: '#059669' }}>
+                                {stats.active ?? outlets.filter((o) => o.is_active && o.status === 'active').length}
+                            </div>
+                            <div className="dayal-stat-subtext">Currently serving customers</div>
+                        </div>
+
+                        <div className="dayal-admin-stat-card">
+                            <div className="dayal-stat-top">
+                                <span className="dayal-stat-label">Coming Soon</span>
+                                <span className="dayal-stat-badge" style={{ color: '#D97706', background: '#FEF3C7' }}>
+                                    Upcoming
+                                </span>
+                            </div>
+                            <div className="dayal-stat-value" style={{ color: '#D97706' }}>
+                                {stats.coming_soon ?? outlets.filter((o) => o.is_coming_soon || o.status === 'coming_soon').length}
+                            </div>
+                            <div className="dayal-stat-subtext">Under setup / expansion</div>
+                        </div>
+
+                        <div className="dayal-admin-stat-card">
+                            <div className="dayal-stat-top">
+                                <span className="dayal-stat-label">Regions Covered</span>
+                                <span className="dayal-stat-badge" style={{ color: '#4F46E5', background: '#EEF2FF' }}>
+                                    HP
+                                </span>
+                            </div>
+                            <div className="dayal-stat-value">Himachal</div>
+                            <div className="dayal-stat-subtext">Una, Hamirpur, Kangra...</div>
+                        </div>
+                    </div>
+                )}
 
                 {/* Filter and Search Bar */}
                 <div className="dayal-admin-table-card" style={{ marginBottom: '2rem' }}>

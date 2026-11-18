@@ -9,34 +9,40 @@ export default function Index({ orders, counts, filters }) {
     const [search, setSearch] = useState(filters?.search || '');
     const [selectedDeliveryStatus, setSelectedDeliveryStatus] = useState(filters?.delivery_status || 'all');
     const [selectedPaymentStatus, setSelectedPaymentStatus] = useState(filters?.payment_status || 'all');
+    const [perPage, setPerPage] = useState(filters?.per_page || 15);
+    const [showCards, setShowCards] = useState(false);
 
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [orderToDelete, setOrderToDelete] = useState(null);
 
+    const applyFilters = (newParams = {}) => {
+        const params = {
+            search: newParams.search !== undefined ? newParams.search : search,
+            delivery_status: newParams.delivery_status !== undefined ? newParams.delivery_status : selectedDeliveryStatus,
+            payment_status: newParams.payment_status !== undefined ? newParams.payment_status : selectedPaymentStatus,
+            per_page: newParams.per_page !== undefined ? newParams.per_page : perPage,
+        };
+
+        router.get(route('admin.orders.index'), params, {
+            preserveState: true,
+            preserveScroll: true,
+        });
+    };
+
     const handleSearchSubmit = (e) => {
         e.preventDefault();
-        router.get(
-            route('admin.orders.index'),
-            {
-                search,
-                delivery_status: selectedDeliveryStatus,
-                payment_status: selectedPaymentStatus,
-            },
-            { preserveState: true }
-        );
+        applyFilters({ search });
     };
 
     const handleStatusFilterChange = (status) => {
         setSelectedDeliveryStatus(status);
-        router.get(
-            route('admin.orders.index'),
-            {
-                search,
-                delivery_status: status,
-                payment_status: selectedPaymentStatus,
-            },
-            { preserveState: true }
-        );
+        applyFilters({ delivery_status: status });
+    };
+
+    const handlePerPageChange = (e) => {
+        const val = parseInt(e.target.value, 10);
+        setPerPage(val);
+        applyFilters({ per_page: val });
     };
 
     const handleQuickStatusChange = (orderId, newDeliveryStatus) => {
@@ -95,240 +101,364 @@ export default function Index({ orders, counts, filters }) {
     };
 
     return (
-        <AdminLayout
-            title="Customer Orders"
-            subtitle="Manage online orders, track delivery status & live Razorpay transactions"
-        >
+        <AdminLayout>
             <Head title="Orders Management - Dayal Sweets Admin" />
 
-            {/* Top Metric Cards */}
-            <div
-                style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                    gap: '1rem',
-                    marginBottom: '1.5rem',
-                }}
-            >
-                {/* Total Orders */}
-                <div style={{ background: '#FFFFFF', padding: '1.25rem', borderRadius: '0.5rem', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        Total Orders
-                    </div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0F172A', marginTop: '0.35rem' }}>
-                        {counts?.total || 0}
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: '#10B981', marginTop: '0.25rem', fontWeight: 600 }}>
-                        All time store records
-                    </div>
-                </div>
-
-                {/* Pending Orders */}
+            <div className="dayal-container" style={{ width: '100%', maxWidth: '1600px', margin: '0 auto' }}>
+                {/* Header Row */}
                 <div
-                    onClick={() => handleStatusFilterChange('pending')}
                     style={{
-                        background: '#FFFFFF',
-                        padding: '1.25rem',
-                        borderRadius: '0.5rem',
-                        border: selectedDeliveryStatus === 'pending' ? '2px solid #D97706' : '1px solid #E2E8F0',
-                        boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-                        cursor: 'pointer',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        flexWrap: 'wrap',
+                        gap: '1rem',
+                        marginBottom: '1.5rem',
                     }}
                 >
-                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#D97706', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        Pending Orders
+                    <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                            <Link href={route('admin.dashboard')} style={{ color: '#64748B', fontSize: '0.8125rem', textDecoration: 'none' }}>
+                                Admin
+                            </Link>
+                            <span style={{ color: '#CBD5E1', fontSize: '0.75rem' }}>/</span>
+                            <span style={{ color: '#0F172A', fontSize: '0.8125rem', fontWeight: 600 }}>Orders</span>
+                        </div>
+                        <h1 style={{ fontSize: '1.65rem', fontWeight: 700, color: '#0F172A', margin: 0 }}>
+                            Customer Orders &amp; Delivery Management
+                        </h1>
+                        <p style={{ color: '#64748B', fontSize: '0.875rem', marginTop: '0.35rem' }}>
+                            View and manage online customer orders, track real-time delivery status &amp; Razorpay payments.
+                        </p>
                     </div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#B45309', marginTop: '0.35rem' }}>
-                        {counts?.pending || 0}
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
-                        Awaiting dispatch
+
+                    <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
+                        <button
+                            type="button"
+                            onClick={() => setShowCards(!showCards)}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                height: '38px',
+                                padding: '0 0.85rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #CBD5E1',
+                                backgroundColor: '#FFFFFF',
+                                color: '#334155',
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                                boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                            }}
+                        >
+                            <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                style={{ transform: showCards ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}
+                            >
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                            <span>{showCards ? 'Hide Summary Cards ▲' : 'Expand Summary Cards ▼'}</span>
+                        </button>
+
+                        <Link
+                            href={route('admin.orders.create')}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                height: '38px',
+                                padding: '0 1rem',
+                                borderRadius: '0.5rem',
+                                background: '#7A1C1C',
+                                color: '#FFFFFF',
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
+                                textDecoration: 'none',
+                                boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <span>+</span>
+                            <span>Create New Order</span>
+                        </Link>
                     </div>
                 </div>
 
-                {/* Shipping Orders */}
-                <div
-                    onClick={() => handleStatusFilterChange('shipping')}
-                    style={{
-                        background: '#FFFFFF',
-                        padding: '1.25rem',
-                        borderRadius: '0.5rem',
-                        border: selectedDeliveryStatus === 'shipping' ? '2px solid #4F46E5' : '1px solid #E2E8F0',
-                        boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-                        cursor: 'pointer',
-                    }}
-                >
-                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#4F46E5', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        Shipping / In Transit
-                    </div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#3730A3', marginTop: '0.35rem' }}>
-                        {counts?.shipping || 0}
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
-                        Currently in transit
-                    </div>
-                </div>
+                {/* Top Metric Cards - Collapsed by default, counts only, NO clicks */}
+                {showCards && (
+                    <div
+                        style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
+                            gap: '1rem',
+                            marginBottom: '1.5rem',
+                        }}
+                    >
+                        {/* 1. Total Orders */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Total Orders
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#0F172A', marginTop: '0.35rem' }}>
+                                {counts?.total || 0}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#10B981', marginTop: '0.25rem', fontWeight: 600 }}>
+                                All time store records
+                            </div>
+                        </div>
 
-                {/* Delivered Orders */}
-                <div
-                    onClick={() => handleStatusFilterChange('delivered')}
-                    style={{
-                        background: '#FFFFFF',
-                        padding: '1.25rem',
-                        borderRadius: '0.5rem',
-                        border: selectedDeliveryStatus === 'delivered' ? '2px solid #10B981' : '1px solid #E2E8F0',
-                        boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-                        cursor: 'pointer',
-                    }}
-                >
-                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        Delivered
-                    </div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#15803D', marginTop: '0.35rem' }}>
-                        {counts?.delivered || 0}
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
-                        Successfully fulfilled
-                    </div>
-                </div>
+                        {/* 2. Pending Orders */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#D97706', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Pending Orders
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#B45309', marginTop: '0.35rem' }}>
+                                {counts?.pending || 0}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#D97706', marginTop: '0.25rem', fontWeight: 600 }}>
+                                Awaiting dispatch
+                            </div>
+                        </div>
 
-                {/* Paid Revenue */}
-                <div style={{ background: '#FFFFFF', padding: '1.25rem', borderRadius: '0.5rem', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#8B1E28', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        Paid Revenue
-                    </div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#8B1E28', marginTop: '0.35rem' }}>
-                        ₹{(counts?.total_revenue || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
-                        Settled payments
-                    </div>
-                </div>
-            </div>
+                        {/* 3. Shipping Orders */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0284C7', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Shipping / In Transit
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#0369A1', marginTop: '0.35rem' }}>
+                                {counts?.shipping || 0}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
+                                Currently in transit
+                            </div>
+                        </div>
 
-            {/* Filter Tabs & Search Header */}
-            <div
-                style={{
-                    background: '#FFFFFF',
-                    borderRadius: '0.5rem',
-                    border: '1px solid #E2E8F0',
-                    padding: '1.25rem',
-                    marginBottom: '1.25rem',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
-                }}
-            >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem' }}>
-                    {/* Status Tabs */}
-                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                        {[
-                            { key: 'all', label: 'All Orders', count: counts?.total },
-                            { key: 'pending', label: 'Pending', count: counts?.pending },
-                            { key: 'shipping', label: 'Shipping', count: counts?.shipping },
-                            { key: 'out_for_delivery', label: 'Out for Delivery', count: counts?.out_for_delivery },
-                            { key: 'delivered', label: 'Delivered', count: counts?.delivered },
-                            { key: 'cancelled', label: 'Cancelled', count: counts?.cancelled },
-                        ].map((tab) => (
+                        {/* 4. Delivered Orders */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Delivered
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#15803D', marginTop: '0.35rem' }}>
+                                {counts?.delivered || 0}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#059669', marginTop: '0.25rem' }}>
+                                Successfully fulfilled
+                            </div>
+                        </div>
+
+                        {/* 5. Paid Revenue */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#7A1C1C', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Paid Revenue
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#7A1C1C', marginTop: '0.35rem' }}>
+                                ₹{(counts?.total_revenue || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
+                                Settled payments
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Status Filter Buttons without count - Clicks happen here */}
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+                    {[
+                        { key: 'all', label: 'All Orders' },
+                        { key: 'pending', label: 'Pending' },
+                        { key: 'shipping', label: 'Shipping' },
+                        { key: 'out_for_delivery', label: 'Out for Delivery' },
+                        { key: 'delivered', label: 'Delivered' },
+                        { key: 'cancelled', label: 'Cancelled' },
+                    ].map((tab) => {
+                        const isActive = selectedDeliveryStatus === tab.key;
+                        return (
                             <button
                                 key={tab.key}
                                 type="button"
                                 onClick={() => handleStatusFilterChange(tab.key)}
                                 style={{
-                                    padding: '0.45rem 0.85rem',
+                                    padding: '0.45rem 0.9rem',
                                     borderRadius: '0.375rem',
                                     fontSize: '0.8125rem',
-                                    fontWeight: selectedDeliveryStatus === tab.key ? 700 : 500,
-                                    border: selectedDeliveryStatus === tab.key ? '1px solid #8B1E28' : '1px solid #E2E8F0',
-                                    background: selectedDeliveryStatus === tab.key ? '#8B1E28' : '#F8FAFC',
-                                    color: selectedDeliveryStatus === tab.key ? '#FFFFFF' : '#475569',
+                                    fontWeight: isActive ? 700 : 500,
+                                    border: isActive ? '1px solid #7A1C1C' : '1px solid #CBD5E1',
+                                    background: isActive ? '#7A1C1C' : '#FFFFFF',
+                                    color: isActive ? '#FFFFFF' : '#475569',
                                     cursor: 'pointer',
                                     display: 'inline-flex',
                                     alignItems: 'center',
-                                    gap: '0.4rem',
                                     transition: 'all 0.15s ease',
+                                    boxShadow: isActive ? '0 1px 2px rgba(122, 28, 28, 0.2)' : '0 1px 2px rgba(0,0,0,0.03)',
                                 }}
                             >
                                 <span>{tab.label}</span>
-                                {tab.count !== undefined && (
-                                    <span
-                                        style={{
-                                            fontSize: '0.6875rem',
-                                            padding: '0.1rem 0.35rem',
-                                            borderRadius: '999px',
-                                            background: selectedDeliveryStatus === tab.key ? 'rgba(255,255,255,0.25)' : '#E2E8F0',
-                                            color: selectedDeliveryStatus === tab.key ? '#FFFFFF' : '#475569',
-                                        }}
-                                    >
-                                        {tab.count}
-                                    </span>
-                                )}
                             </button>
-                        ))}
-                    </div>
-
-                    {/* Action: Create Manual Order */}
-                    <Link
-                        href={route('admin.orders.create')}
-                        className="dayal-btn dayal-btn--primary dayal-btn--sm"
-                        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', textDecoration: 'none' }}
-                    >
-                        <span>+</span>
-                        <span>Create New Order</span>
-                    </Link>
+                        );
+                    })}
                 </div>
 
-                {/* Search Bar */}
-                <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                    <div style={{ flex: 1, position: 'relative' }}>
+                {/* Search & Filter Toolbar */}
+                <div
+                    style={{
+                        background: '#FFFFFF',
+                        border: '1px solid #E2E8F0',
+                        borderRadius: '0.5rem',
+                        padding: '1rem 1.25rem',
+                        marginBottom: '1.25rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        flexWrap: 'wrap',
+                        gap: '1rem',
+                    }}
+                >
+                    <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flex: '1 1 340px', maxWidth: '480px' }}>
                         <input
                             type="text"
+                            placeholder="Search by order ID, customer name, email, phone, city..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Search by order ID, customer name, email, phone, or city..."
                             style={{
                                 width: '100%',
-                                padding: '0.55rem 0.75rem 0.55rem 2.25rem',
+                                padding: '0.5rem 0.75rem',
                                 borderRadius: '0.375rem',
                                 border: '1px solid #CBD5E1',
-                                fontSize: '0.875rem',
+                                fontSize: '0.8125rem',
+                                outline: 'none',
                             }}
                         />
-                        <svg
-                            style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }}
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                        >
-                            <circle cx="11" cy="11" r="8" />
-                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                        </svg>
-                    </div>
-
-                    <button
-                        type="submit"
-                        className="dayal-btn dayal-btn--outline dayal-btn--sm"
-                    >
-                        Search
-                    </button>
-
-                    {search && (
                         <button
-                            type="button"
-                            onClick={() => {
-                                setSearch('');
-                                router.get(route('admin.orders.index'), { delivery_status: selectedDeliveryStatus });
+                            type="submit"
+                            style={{
+                                padding: '0.5rem 0.85rem',
+                                borderRadius: '0.375rem',
+                                background: '#7A1C1C',
+                                color: '#FFFFFF',
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
+                                border: 'none',
+                                cursor: 'pointer',
+                                whiteSpace: 'nowrap',
                             }}
-                            className="dayal-btn dayal-btn--ghost dayal-btn--sm"
                         >
-                            Reset
+                            Search
                         </button>
-                    )}
-                </form>
-            </div>
+                        {search && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setSearch('');
+                                    applyFilters({ search: '' });
+                                }}
+                                style={{
+                                    padding: '0.5rem 0.65rem',
+                                    borderRadius: '0.375rem',
+                                    background: '#F1F5F9',
+                                    color: '#475569',
+                                    fontSize: '0.8125rem',
+                                    border: '1px solid #CBD5E1',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                Clear
+                            </button>
+                        )}
+                    </form>
 
-            {/* Orders Table */}
+                    <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', color: '#64748B' }}>
+                            <span>Status:</span>
+                            <select
+                                value={selectedDeliveryStatus}
+                                onChange={(e) => handleStatusFilterChange(e.target.value)}
+                                style={{
+                                    padding: '0.45rem 0.75rem',
+                                    borderRadius: '0.375rem',
+                                    border: '1px solid #CBD5E1',
+                                    fontSize: '0.8125rem',
+                                    background: '#FFFFFF',
+                                }}
+                            >
+                                <option value="all">All Orders</option>
+                                <option value="pending">Pending</option>
+                                <option value="shipping">Shipping</option>
+                                <option value="out_for_delivery">Out for Delivery</option>
+                                <option value="delivered">Delivered</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', color: '#64748B' }}>
+                            <span>Per page:</span>
+                            <select
+                                value={perPage}
+                                onChange={handlePerPageChange}
+                                style={{
+                                    padding: '0.45rem 0.6rem',
+                                    borderRadius: '0.375rem',
+                                    border: '1px solid #CBD5E1',
+                                    fontSize: '0.8125rem',
+                                    background: '#FFFFFF',
+                                }}
+                            >
+                                <option value={10}>10</option>
+                                <option value={15}>15</option>
+                                <option value={25}>25</option>
+                                <option value={50}>50</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Orders Table */}
             <div
                 style={{
                     background: '#FFFFFF',
@@ -613,6 +743,7 @@ export default function Index({ orders, counts, filters }) {
                         />
                     </div>
                 )}
+            </div>
             </div>
 
             {/* Delete Confirmation Modal */}

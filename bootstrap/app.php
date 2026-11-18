@@ -36,8 +36,11 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\HttpException $e, $request) {
-            if ($e->getStatusCode() === 419 && $request->header('X-Inertia')) {
-                return back()->with('error', 'Your session timed out. Please try again.');
+            if ($e->getStatusCode() === 419) {
+                if ($request->header('X-Inertia')) {
+                    return back()->with('error', 'Your session timed out. Please try again.');
+                }
+                return redirect()->guest(route('login'))->with('error', 'Your page session expired. Please try again.');
             }
         });
 
@@ -45,5 +48,6 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($request->header('X-Inertia')) {
                 return back()->with('error', 'Your session timed out. Please try again.');
             }
+            return redirect()->guest(route('login'))->with('error', 'Your page session expired. Please try again.');
         });
     })->create();

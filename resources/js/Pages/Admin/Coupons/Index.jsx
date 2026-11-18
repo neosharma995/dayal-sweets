@@ -9,6 +9,8 @@ export default function CouponsIndex({ coupons, stats, outlets, filters }) {
     const [status, setStatus] = useState(filters.status || 'all');
     const [outletFilter, setOutletFilter] = useState(filters.outlet_filter || 'all');
     const [type, setType] = useState(filters.type || 'all');
+    const [perPage, setPerPage] = useState(filters.per_page || 15);
+    const [showCards, setShowCards] = useState(false);
 
     // Selection for bulk actions
     const [selectedIds, setSelectedIds] = useState([]);
@@ -63,10 +65,12 @@ export default function CouponsIndex({ coupons, stats, outlets, filters }) {
                 status,
                 outlet_filter: outletFilter,
                 type,
+                per_page: perPage,
                 ...newOverrides,
             },
             {
                 preserveState: true,
+                preserveScroll: true,
                 replace: true,
             }
         );
@@ -82,8 +86,25 @@ export default function CouponsIndex({ coupons, stats, outlets, filters }) {
         setStatus('all');
         setOutletFilter('all');
         setType('all');
-        router.get(route('admin.coupons.index'), {}, { preserveState: true });
+        router.get(route('admin.coupons.index'), { per_page: perPage }, { preserveState: true });
     };
+
+    const handleTabFilter = (tabStatus, tabOutletFilter) => {
+        setStatus(tabStatus);
+        setOutletFilter(tabOutletFilter);
+        applyFilters({ status: tabStatus, outlet_filter: tabOutletFilter });
+    };
+
+    // Determine active tab
+    const getActiveTabKey = () => {
+        if (outletFilter === 'global') return 'global';
+        if (outletFilter === 'outlet_specific') return 'outlet_specific';
+        if (status === 'active') return 'active';
+        if (status === 'inactive') return 'inactive';
+        if (status === 'expired') return 'expired';
+        return 'all';
+    };
+    const activeTab = getActiveTabKey();
 
     // Row selection for bulk actions
     const handleSelectAll = (e) => {
@@ -210,34 +231,87 @@ export default function CouponsIndex({ coupons, stats, outlets, filters }) {
         <AdminLayout>
             <Head title="Discount Coupons & Outlet Rules - Dayal Sweets Admin" />
 
-            <div className="dayal-admin-content-container" style={{ padding: '1.5rem 2rem' }}>
-                {/* Header */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+            <div className="dayal-container" style={{ width: '100%', maxWidth: '1600px', margin: '0 auto' }}>
+                {/* Header Row */}
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        flexWrap: 'wrap',
+                        gap: '1rem',
+                        marginBottom: '1.5rem',
+                    }}
+                >
                     <div>
-                        <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F172A', margin: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                            <Link href={route('admin.dashboard')} style={{ color: '#64748B', fontSize: '0.8125rem', textDecoration: 'none' }}>
+                                Admin
+                            </Link>
+                            <span style={{ color: '#CBD5E1', fontSize: '0.75rem' }}>/</span>
+                            <span style={{ color: '#0F172A', fontSize: '0.8125rem', fontWeight: 600 }}>Coupons &amp; Rules</span>
+                        </div>
+                        <h1 style={{ fontSize: '1.65rem', fontWeight: 700, color: '#0F172A', margin: 0 }}>
                             Discount Coupons &amp; Outlet Rules
                         </h1>
-                        <p style={{ color: '#64748B', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+                        <p style={{ color: '#64748B', fontSize: '0.875rem', marginTop: '0.35rem' }}>
                             Create and manage Global or Outlet-specific promotional coupons with automated rules and bulk generators.
                         </p>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '0.75rem' }}>
+                    <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                        <button
+                            type="button"
+                            onClick={() => setShowCards(!showCards)}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                height: '38px',
+                                padding: '0 0.85rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #CBD5E1',
+                                backgroundColor: '#FFFFFF',
+                                color: '#334155',
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                                boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                            }}
+                        >
+                            <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                style={{ transform: showCards ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}
+                            >
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                            <span>{showCards ? 'Hide Summary Cards ▲' : 'Expand Summary Cards ▼'}</span>
+                        </button>
+
                         <button
                             type="button"
                             onClick={() => setShowBulkGenModal(true)}
                             style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                height: '38px',
+                                padding: '0 0.9rem',
+                                borderRadius: '0.5rem',
                                 background: '#F1F5F9',
                                 color: '#334155',
                                 border: '1px solid #CBD5E1',
-                                borderRadius: '0.5rem',
-                                padding: '0.6rem 1rem',
-                                fontSize: '0.875rem',
+                                fontSize: '0.8125rem',
                                 fontWeight: 600,
                                 cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
+                                boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
                             }}
                         >
                             <span>⚡ Bulk Generator</span>
@@ -252,18 +326,19 @@ export default function CouponsIndex({ coupons, stats, outlets, filters }) {
                                 setShowCreateModal(true);
                             }}
                             style={{
-                                background: '#B88E4B',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                height: '38px',
+                                padding: '0 1rem',
+                                borderRadius: '0.5rem',
+                                background: '#7A1C1C',
                                 color: '#FFFFFF',
                                 border: 'none',
-                                borderRadius: '0.5rem',
-                                padding: '0.6rem 1.25rem',
-                                fontSize: '0.875rem',
-                                fontWeight: 700,
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
                                 cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                                boxShadow: '0 2px 4px rgba(184, 142, 75, 0.25)',
+                                boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
                             }}
                         >
                             <span>+ Create Coupon</span>
@@ -271,73 +346,232 @@ export default function CouponsIndex({ coupons, stats, outlets, filters }) {
                     </div>
                 </div>
 
-                {/* Metric Cards */}
-                <div
-                    style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                        gap: '1rem',
-                        marginBottom: '1.5rem',
-                    }}
-                >
-                    <div style={{ background: '#FFFFFF', padding: '1rem', borderRadius: '0.5rem', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                        <div style={{ color: '#64748B', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase' }}>Total Coupons</div>
-                        <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F172A', marginTop: '0.35rem' }}>{stats.total}</div>
-                    </div>
+                {/* Top Metric Cards - Collapsed by default, counts only, NO clicks */}
+                {showCards && (
+                    <div
+                        style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                            gap: '1rem',
+                            marginBottom: '1.5rem',
+                        }}
+                    >
+                        {/* 1. Total Coupons */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Total Coupons
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#0F172A', marginTop: '0.35rem' }}>
+                                {stats.total ?? 0}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
+                                All promotional discount codes
+                            </div>
+                        </div>
 
-                    <div style={{ background: '#FFFFFF', padding: '1rem', borderRadius: '0.5rem', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                        <div style={{ color: '#059669', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase' }}>Active Now</div>
-                        <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#059669', marginTop: '0.35rem' }}>{stats.active}</div>
-                    </div>
+                        {/* 2. Active Now */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Active Now
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#059669', marginTop: '0.35rem' }}>
+                                {stats.active ?? 0}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#059669', marginTop: '0.25rem', fontWeight: 600 }}>
+                                Ready for checkout application
+                            </div>
+                        </div>
 
-                    <div style={{ background: '#FFFFFF', padding: '1rem', borderRadius: '0.5rem', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                        <div style={{ color: '#2563EB', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase' }}>Global (All Outlets)</div>
-                        <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#2563EB', marginTop: '0.35rem' }}>{stats.global}</div>
-                    </div>
+                        {/* 3. Global Coupons */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#2563EB', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Global (All Outlets)
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#2563EB', marginTop: '0.35rem' }}>
+                                {stats.global ?? 0}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
+                                Universal storewide rules
+                            </div>
+                        </div>
 
-                    <div style={{ background: '#FFFFFF', padding: '1rem', borderRadius: '0.5rem', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                        <div style={{ color: '#D97706', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase' }}>Outlet-Specific</div>
-                        <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#D97706', marginTop: '0.35rem' }}>{stats.outlet_specific}</div>
-                    </div>
+                        {/* 4. Outlet-Specific */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#D97706', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Outlet-Specific
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#D97706', marginTop: '0.35rem' }}>
+                                {stats.outlet_specific ?? 0}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
+                                Tied to targeted store branches
+                            </div>
+                        </div>
 
-                    <div style={{ background: '#FFFFFF', padding: '1rem', borderRadius: '0.5rem', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                        <div style={{ color: '#64748B', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase' }}>Total Redemptions</div>
-                        <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F172A', marginTop: '0.35rem' }}>{stats.total_used}</div>
+                        {/* 5. Total Redemptions */}
+                        <div
+                            style={{
+                                background: '#FFFFFF',
+                                padding: '1.25rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #E2E8F0',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#7A1C1C', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Total Redemptions
+                            </div>
+                            <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#7A1C1C', marginTop: '0.35rem' }}>
+                                {stats.total_used ?? 0}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.25rem' }}>
+                                Times successfully redeemed
+                            </div>
+                        </div>
                     </div>
+                )}
+
+                {/* Status Filter Buttons without count - Clicks happen here */}
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+                    {[
+                        { key: 'all', label: 'All Coupons', status: 'all', outlet_filter: 'all' },
+                        { key: 'active', label: 'Active Now', status: 'active', outlet_filter: 'all' },
+                        { key: 'global', label: 'Global Coupons', status: 'all', outlet_filter: 'global' },
+                        { key: 'outlet_specific', label: 'Outlet-Specific', status: 'all', outlet_filter: 'outlet_specific' },
+                        { key: 'inactive', label: 'Inactive', status: 'inactive', outlet_filter: 'all' },
+                        { key: 'expired', label: 'Expired', status: 'expired', outlet_filter: 'all' },
+                    ].map((tab) => {
+                        const isActive = activeTab === tab.key;
+                        return (
+                            <button
+                                key={tab.key}
+                                type="button"
+                                onClick={() => handleTabFilter(tab.status, tab.outlet_filter)}
+                                style={{
+                                    padding: '0.45rem 0.9rem',
+                                    borderRadius: '0.375rem',
+                                    fontSize: '0.8125rem',
+                                    fontWeight: isActive ? 700 : 500,
+                                    border: isActive ? '1px solid #7A1C1C' : '1px solid #CBD5E1',
+                                    background: isActive ? '#7A1C1C' : '#FFFFFF',
+                                    color: isActive ? '#FFFFFF' : '#475569',
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    transition: 'all 0.15s ease',
+                                    boxShadow: isActive ? '0 1px 2px rgba(122, 28, 28, 0.2)' : '0 1px 2px rgba(0,0,0,0.03)',
+                                }}
+                            >
+                                <span>{tab.label}</span>
+                            </button>
+                        );
+                    })}
                 </div>
 
-                {/* Filter Controls Bar */}
+                {/* Search & Filter Toolbar */}
                 <div
                     style={{
                         background: '#FFFFFF',
                         border: '1px solid #E2E8F0',
                         borderRadius: '0.5rem',
-                        padding: '1rem',
-                        marginBottom: '1.5rem',
-                        boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+                        padding: '1rem 1.25rem',
+                        marginBottom: '1.25rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        flexWrap: 'wrap',
+                        gap: '1rem',
                     }}
                 >
-                    <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                        {/* Search Input */}
-                        <div style={{ flex: '1 1 220px', minWidth: '200px' }}>
-                            <input
-                                type="text"
-                                placeholder="Search by Code or Description..."
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                style={{
-                                    width: '100%',
-                                    padding: '0.55rem 0.85rem',
-                                    borderRadius: '0.375rem',
-                                    border: '1px solid #CBD5E1',
-                                    fontSize: '0.875rem',
-                                    background: '#F8FAFC',
+                    <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flex: '1 1 300px', maxWidth: '420px' }}>
+                        <input
+                            type="text"
+                            placeholder="Search by Code or Description..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '0.5rem 0.75rem',
+                                borderRadius: '0.375rem',
+                                border: '1px solid #CBD5E1',
+                                fontSize: '0.8125rem',
+                                outline: 'none',
+                            }}
+                        />
+                        <button
+                            type="submit"
+                            style={{
+                                padding: '0.5rem 0.85rem',
+                                borderRadius: '0.375rem',
+                                background: '#7A1C1C',
+                                color: '#FFFFFF',
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
+                                border: 'none',
+                                cursor: 'pointer',
+                                whiteSpace: 'nowrap',
+                            }}
+                        >
+                            Search
+                        </button>
+                        {search && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setSearch('');
+                                    applyFilters({ search: '' });
                                 }}
-                            />
-                        </div>
+                                style={{
+                                    padding: '0.5rem 0.65rem',
+                                    borderRadius: '0.375rem',
+                                    background: '#F1F5F9',
+                                    color: '#475569',
+                                    fontSize: '0.8125rem',
+                                    border: '1px solid #CBD5E1',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                Clear
+                            </button>
+                        )}
+                    </form>
 
-                        {/* Outlet Filter */}
-                        <div style={{ minWidth: '180px' }}>
+                    <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                        {/* Outlet Scope Filter */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', color: '#64748B' }}>
+                            <span>Scope:</span>
                             <select
                                 value={outletFilter}
                                 onChange={(e) => {
@@ -345,11 +579,10 @@ export default function CouponsIndex({ coupons, stats, outlets, filters }) {
                                     applyFilters({ outlet_filter: e.target.value });
                                 }}
                                 style={{
-                                    width: '100%',
-                                    padding: '0.55rem 0.85rem',
+                                    padding: '0.45rem 0.75rem',
                                     borderRadius: '0.375rem',
                                     border: '1px solid #CBD5E1',
-                                    fontSize: '0.875rem',
+                                    fontSize: '0.8125rem',
                                     background: '#FFFFFF',
                                 }}
                             >
@@ -367,7 +600,8 @@ export default function CouponsIndex({ coupons, stats, outlets, filters }) {
                         </div>
 
                         {/* Status Filter */}
-                        <div style={{ minWidth: '140px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', color: '#64748B' }}>
+                            <span>Status:</span>
                             <select
                                 value={status}
                                 onChange={(e) => {
@@ -375,11 +609,10 @@ export default function CouponsIndex({ coupons, stats, outlets, filters }) {
                                     applyFilters({ status: e.target.value });
                                 }}
                                 style={{
-                                    width: '100%',
-                                    padding: '0.55rem 0.85rem',
+                                    padding: '0.45rem 0.75rem',
                                     borderRadius: '0.375rem',
                                     border: '1px solid #CBD5E1',
-                                    fontSize: '0.875rem',
+                                    fontSize: '0.8125rem',
                                     background: '#FFFFFF',
                                 }}
                             >
@@ -391,7 +624,8 @@ export default function CouponsIndex({ coupons, stats, outlets, filters }) {
                         </div>
 
                         {/* Type Filter */}
-                        <div style={{ minWidth: '140px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', color: '#64748B' }}>
+                            <span>Type:</span>
                             <select
                                 value={type}
                                 onChange={(e) => {
@@ -399,11 +633,10 @@ export default function CouponsIndex({ coupons, stats, outlets, filters }) {
                                     applyFilters({ type: e.target.value });
                                 }}
                                 style={{
-                                    width: '100%',
-                                    padding: '0.55rem 0.85rem',
+                                    padding: '0.45rem 0.75rem',
                                     borderRadius: '0.375rem',
                                     border: '1px solid #CBD5E1',
-                                    fontSize: '0.875rem',
+                                    fontSize: '0.8125rem',
                                     background: '#FFFFFF',
                                 }}
                             >
@@ -413,41 +646,50 @@ export default function CouponsIndex({ coupons, stats, outlets, filters }) {
                             </select>
                         </div>
 
-                        {/* Search Button */}
-                        <button
-                            type="submit"
-                            style={{
-                                padding: '0.55rem 1rem',
-                                background: '#0F172A',
-                                color: '#FFFFFF',
-                                border: 'none',
-                                borderRadius: '0.375rem',
-                                fontSize: '0.875rem',
-                                fontWeight: 600,
-                                cursor: 'pointer',
-                            }}
-                        >
-                            Filter
-                        </button>
+                        {/* Per page Filter */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', color: '#64748B' }}>
+                            <span>Per page:</span>
+                            <select
+                                value={perPage}
+                                onChange={(e) => {
+                                    const val = parseInt(e.target.value, 10);
+                                    setPerPage(val);
+                                    applyFilters({ per_page: val });
+                                }}
+                                style={{
+                                    padding: '0.45rem 0.6rem',
+                                    borderRadius: '0.375rem',
+                                    border: '1px solid #CBD5E1',
+                                    fontSize: '0.8125rem',
+                                    background: '#FFFFFF',
+                                }}
+                            >
+                                <option value={10}>10</option>
+                                <option value={15}>15</option>
+                                <option value={25}>25</option>
+                                <option value={50}>50</option>
+                            </select>
+                        </div>
 
                         {(search || status !== 'all' || outletFilter !== 'all' || type !== 'all') && (
                             <button
                                 type="button"
                                 onClick={handleClearFilters}
                                 style={{
-                                    padding: '0.55rem 0.85rem',
-                                    background: 'transparent',
-                                    color: '#64748B',
-                                    border: '1px solid #CBD5E1',
+                                    padding: '0.45rem 0.75rem',
                                     borderRadius: '0.375rem',
-                                    fontSize: '0.875rem',
+                                    background: '#F1F5F9',
+                                    color: '#475569',
+                                    border: '1px solid #CBD5E1',
+                                    fontSize: '0.8125rem',
                                     cursor: 'pointer',
+                                    fontWeight: 500,
                                 }}
                             >
-                                Reset
+                                Reset All
                             </button>
                         )}
-                    </form>
+                    </div>
                 </div>
 
                 {/* Bulk Actions Floating / Active Bar */}

@@ -14,8 +14,7 @@ class PageSeeder extends Seeder
      */
     public function run(): void
     {
-        Page::getOrCreateContactUs();
-        Page::getOrCreateGallery();
+        Page::ensureAllWebsitePagesExist();
     }
 }
 

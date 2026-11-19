@@ -1,5 +1,5 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
+import SeoHead from '@/Components/SeoHead';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import ContactHero from '@/Components/contact/ContactHero';
@@ -25,16 +25,19 @@ import '../../scss/pages/_franchise.scss';
  * 7. Section E: Customer Testimonials (4.9 Rating Badge + Mascot + Testimonial Slider)
  * 8. Promotional CTA & Global Footer
  */
-export default function Franchise({ auth }) {
+export default function Franchise({ auth, page }) {
+    const sections = page?.sections || {};
+    const topBarHeading = sections.top_bar_Heading || 'FRANCHISE';
+    const topBarSubHeading = sections.top_bar_sub_heading || 'Loved By Thousands, Trusted Every Day';
+    const topBarDescription = sections.top_bar_description || "From our delicious sweets to our warm hospitality, here's what our happy customers have to say about Dayal Sweets.";
+
     return (
         <div className="franchise-page-root">
-            <Head>
-                <title>Franchise | Dayal Sweets</title>
-                <meta
-                    name="description"
-                    content="Partner with Dayal Sweets and bring our rich culinary heritage and premium sweets to your city. High returns, end-to-end support, and a trusted legacy."
-                />
-            </Head>
+            <SeoHead
+                page={page}
+                fallbackTitle="Franchise | Dayal Sweets"
+                fallbackDescription={topBarDescription}
+            />
 
             {/* Global Header */}
             <Header auth={auth} />
@@ -44,11 +47,11 @@ export default function Franchise({ auth }) {
                 <ContactHero
                     breadcrumbs={[
                         { label: 'HOME', url: '/' },
-                        { label: 'FRANCHISE', url: null },
+                        { label: topBarHeading, url: null },
                     ]}
-                    title="FRANCHISE"
-                    subtitle="Loved By Thousands, Trusted Every Day"
-                    description="From our delicious sweets to our warm hospitality, here's what our happy customers have to say about Dayal Sweets."
+                    title={topBarHeading}
+                    subtitle={topBarSubHeading}
+                    description={topBarDescription}
                 />
 
                 {/* Section A: Why Partner With Dayal Sweets? */}

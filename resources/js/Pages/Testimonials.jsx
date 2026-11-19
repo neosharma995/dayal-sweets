@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
+import SeoHead from '@/Components/SeoHead';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import ContactHero from '@/Components/contact/ContactHero';
@@ -22,6 +23,7 @@ import '../../scss/pages/_testimonials.scss';
  */
 export default function Testimonials({
     auth = {},
+    page = null,
     stats = {
         total: 5,
         average: 4.4,
@@ -82,15 +84,18 @@ export default function Testimonials({
         });
     };
 
+    const sections = page?.sections || {};
+    const topBarHeading = sections.top_bar_Heading || 'TESTIMONIALS';
+    const topBarSubHeading = sections.top_bar_sub_heading || 'Loved By Thousands, Trusted Every Day';
+    const topBarDescription = sections.top_bar_description || "From our delicious sweets to our warm hospitality, here's what our happy customers have to say about Dayal Sweets.";
+
     return (
         <div className="testimonials-page-root">
-            <Head>
-                <title>Testimonials | Dayal Sweets</title>
-                <meta
-                    name="description"
-                    content="What our customers are saying about Dayal Sweets. Authentic sweets, rich hospitality, and happy customer testimonials."
-                />
-            </Head>
+            <SeoHead
+                page={page}
+                fallbackTitle="Testimonials | Dayal Sweets"
+                fallbackDescription={topBarDescription}
+            />
 
             {/* Existing Global Header */}
             <Header auth={auth} />
@@ -100,11 +105,11 @@ export default function Testimonials({
                 <ContactHero
                     breadcrumbs={[
                         { label: 'HOME', url: '/' },
-                        { label: 'TESTIMONIALS', url: null },
+                        { label: topBarHeading, url: null },
                     ]}
-                    title="TESTIMONIALS"
-                    subtitle="Loved By Thousands, Trusted Every Day"
-                    description="From our delicious sweets to our warm hospitality, here's what our happy customers have to say about Dayal Sweets."
+                    title={topBarHeading}
+                    subtitle={topBarSubHeading}
+                    description={topBarDescription}
                 />
 
                 {/* Main Content Area */}

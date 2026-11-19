@@ -1,5 +1,5 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
+import SeoHead from '@/Components/SeoHead';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import ContactHero from '@/Components/contact/ContactHero';
@@ -24,16 +24,19 @@ import '../../scss/pages/_dining.scss';
  * 6. Section E: Book Your Table (Chef's Special Card + Table Reservation Form)
  * 7. Section F & G: Promotional CTA & Global Footer
  */
-export default function Dining({ auth }) {
+export default function Dining({ auth, page }) {
+    const sections = page?.sections || {};
+    const topBarHeading = sections.top_bar_Heading || 'DINNING';
+    const topBarSubHeading = sections.top_bar_sub_heading || 'Good Food. Great Moments.';
+    const topBarDescription = sections.top_bar_description || 'Enjoy authentic Indian, Himachali, Chinese, South Indian, and Fast Food prepared fresh every day by our experienced chefs.';
+
     return (
         <div className="dining-page-root">
-            <Head>
-                <title>Dining | Dayal Sweets</title>
-                <meta
-                    name="description"
-                    content="Enjoy authentic Indian, Himachali, Chinese, South Indian, and Fast Food prepared fresh every day by our experienced chefs at Dayal Sweets."
-                />
-            </Head>
+            <SeoHead
+                page={page}
+                fallbackTitle="Dining | Dayal Sweets"
+                fallbackDescription={topBarDescription}
+            />
 
             {/* Global Header */}
             <Header auth={auth} />
@@ -43,11 +46,11 @@ export default function Dining({ auth }) {
                 <ContactHero
                     breadcrumbs={[
                         { label: 'HOME', url: '/' },
-                        { label: 'DINNING', url: null },
+                        { label: topBarHeading, url: null },
                     ]}
-                    title="DINNING"
-                    subtitle="Good Food. Great Moments."
-                    description="Enjoy authentic Indian, Himachali, Chinese, South Indian, and Fast Food prepared fresh every day by our experienced chefs."
+                    title={topBarHeading}
+                    subtitle={topBarSubHeading}
+                    description={topBarDescription}
                 />
 
                 {/* Section B: Welcome to Dayal Sweets Dining */}

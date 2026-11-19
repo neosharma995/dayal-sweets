@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Head } from '@inertiajs/react';
+import SeoHead from '@/Components/SeoHead';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import ContactHero from '@/Components/contact/ContactHero';
@@ -119,7 +119,11 @@ export default function ContactUs({ auth, page }) {
 
     return (
         <div className="dayal-contact-page">
-            <Head title="Contact Us - Dayal Sweets" />
+            <SeoHead
+                page={page}
+                fallbackTitle="Contact Us - Dayal Sweets"
+                fallbackDescription={topBarDescription || "We'd Love to Hear From You! Have a query, feedback, or a special request? Contact Dayal Sweets."}
+            />
 
             {/* Modular Reusable Header (Active on CONTACT US) */}
             <Header auth={auth} />

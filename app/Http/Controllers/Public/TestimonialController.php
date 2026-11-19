@@ -82,6 +82,7 @@ class TestimonialController extends Controller
         });
 
         return Inertia::render('Testimonials', [
+            'page' => \App\Models\Page::getOrCreateBySlug('testimonials'),
             'stats' => $stats,
             'testimonials' => $testimonials,
             'currentSort' => $sort,

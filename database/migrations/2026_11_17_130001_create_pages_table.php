@@ -21,6 +21,12 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->string('meta_title')->nullable();
             $table->text('meta_description')->nullable();
+            $table->text('meta_keywords')->nullable();
+            $table->string('canonical_url')->nullable();
+            $table->string('og_title')->nullable();
+            $table->text('og_description')->nullable();
+            $table->string('og_image')->nullable();
+            $table->string('robots')->default('index, follow');
             $table->timestamps();
         });
     }

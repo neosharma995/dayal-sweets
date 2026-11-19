@@ -13,9 +13,12 @@ Route::middleware(['auth', 'verified', 'role:editor|admin'])
     ->group(function () {
         Route::get('/dashboard', [EditorDashboardController::class, 'index'])->name('dashboard');
 
-        // Dedicated Pages Editing Routes for Editor
+        // Dedicated Pages & SEO Editing Routes for Editor
         Route::prefix('pages')->name('pages.')->group(function () {
             Route::get('/', [PageController::class, 'index'])->name('index');
+            Route::get('/seo', [PageController::class, 'seo'])->name('seo');
+            Route::post('/seo/upload-image', [PageController::class, 'uploadSeoImage'])->name('seo.upload-image');
+            Route::match(['put', 'patch', 'post'], '/seo/{page}', [PageController::class, 'updateSeo'])->name('seo.update');
             Route::get('/about-us', [PageController::class, 'aboutUs'])->name('about-us');
             Route::match(['put', 'patch', 'post'], '/about-us', [PageController::class, 'updateAboutUs'])->name('about-us.update');
             Route::get('/contact-us', [PageController::class, 'contactUs'])->name('contact-us');
@@ -23,6 +26,8 @@ Route::middleware(['auth', 'verified', 'role:editor|admin'])
             Route::get('/gallery', [PageController::class, 'gallery'])->name('gallery');
             Route::match(['put', 'patch', 'post'], '/gallery', [PageController::class, 'updateGallery'])->name('gallery.update');
             Route::post('/gallery/upload-image', [PageController::class, 'uploadGalleryImage'])->name('gallery.upload-image');
+            Route::get('/edit/{slug}', [PageController::class, 'edit'])->name('edit');
+            Route::match(['put', 'patch', 'post'], '/edit/{slug}', [PageController::class, 'update'])->name('update');
         });
 
         // Dedicated Header & Footer Editing Routes for Editor

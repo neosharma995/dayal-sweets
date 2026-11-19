@@ -18,6 +18,12 @@ class Page extends Model
         'is_active',
         'meta_title',
         'meta_description',
+        'meta_keywords',
+        'canonical_url',
+        'og_title',
+        'og_description',
+        'og_image',
+        'robots',
     ];
 
     protected $casts = [
@@ -340,8 +346,321 @@ class Page extends Model
                 'is_active' => true,
                 'meta_title' => 'Our Gallery | Dayal Sweets',
                 'meta_description' => 'Explore Dayal Sweets moments - Authentic Indian, Himachali, Chinese, South Indian, and fresh sweets crafted with love.',
+                'meta_keywords' => 'Dayal Sweets gallery, sweet shop photos, dining ambience, festival hampers gallery',
+                'robots' => 'index, follow',
             ]
         );
+    }
+
+    /**
+     * Definitions for all public website pages and their default content & SEO.
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    public static function getWebsitePageDefinitions(): array
+    {
+        return [
+            'home' => [
+                'title' => 'Home',
+                'public_url' => '/',
+                'sections' => [
+                    'top_bar_Heading' => 'DAYAL SWEETS',
+                    'top_bar_sub_heading' => "Crafting India's Most Loved Sweet Moments Since 1962",
+                    'top_bar_description' => 'Order authentic handmade Indian sweets, pure desi ghee mithai, namkeen, bakery treats, and festive gift hampers online.',
+                ],
+                'meta_title' => 'Dayal Sweets | Authentic Indian Mithai, Snacks, Dining & Gifting Since 1962',
+                'meta_description' => 'Order authentic handmade Indian sweets, pure desi ghee mithai, namkeen, bakery treats, and festive gift hampers online from Dayal Sweets.',
+                'meta_keywords' => 'Dayal Sweets, Indian sweets online, desi ghee mithai, kaju katli, gift hampers, restaurant dining',
+                'og_title' => 'Dayal Sweets | Authentic Indian Mithai & Dining Since 1962',
+                'og_description' => 'Order authentic handmade Indian sweets, pure desi ghee mithai, namkeen, bakery treats, and festive gift hampers online from Dayal Sweets.',
+                'og_image' => '/uploads/2026/08/Hero-Banner.png',
+                'robots' => 'index, follow',
+            ],
+            'shop' => [
+                'title' => 'Shop',
+                'public_url' => '/shop',
+                'sections' => [
+                    'top_bar_Heading' => 'OUR SWEET SHOP',
+                    'top_bar_sub_heading' => 'Freshly Handcrafted Mithai, Namkeen & Bakery',
+                    'top_bar_description' => 'Explore our signature collection of pure desi ghee sweets, savory namkeen, festive hampers, and combos delivered fresh to your doorstep.',
+                ],
+                'meta_title' => 'Shop Authentic Sweets, Namkeen & Gift Boxes | Dayal Sweets',
+                'meta_description' => 'Browse and order fresh handmade Indian sweets, namkeen, dry fruits, bakery items, and festive combos online with fast delivery from Dayal Sweets.',
+                'meta_keywords' => 'buy sweets online, Dayal Sweets shop, mithai catalog, order sweets, Indian namkeen, festive combos',
+                'og_title' => 'Shop Authentic Sweets, Namkeen & Gift Boxes | Dayal Sweets',
+                'og_description' => 'Browse and order fresh handmade Indian sweets, namkeen, dry fruits, bakery items, and festive combos online.',
+                'og_image' => '/uploads/2026/07/thaal.png',
+                'robots' => 'index, follow',
+            ],
+            'about-us' => [
+                'title' => 'About Us',
+                'public_url' => '/about-us',
+                'sections' => [
+                    'top_bar_Heading' => 'ABOUT DAYAL',
+                    'top_bar_sub_heading' => 'Crafting Sweet Traditions Since 1962',
+                    'top_bar_description' => 'Over six decades of crafting authentic Indian sweets with premium ingredients, age-old recipes and a promise of purity.',
+                ],
+                'meta_title' => 'About Us | Dayal Sweets - Crafting Sweet Traditions Since 1962',
+                'meta_description' => 'Over six decades of crafting authentic Indian sweets with premium ingredients, age-old recipes and a promise of purity. Crafting sweet traditions since 1962.',
+                'meta_keywords' => 'About Dayal Sweets, Dayal Sweets history, Indian sweet shop legacy, pure desi ghee mithai since 1962',
+                'og_title' => 'About Us | Dayal Sweets',
+                'og_description' => 'Over six decades of crafting authentic Indian sweets with premium ingredients, age-old recipes and a promise of purity.',
+                'og_image' => '/uploads/2026/08/Family-Dining.png',
+                'robots' => 'index, follow',
+            ],
+            'contact-us' => [
+                'title' => 'Contact Us',
+                'public_url' => '/contact-us',
+                'sections' => static::getContactUsDefaults(),
+                'meta_title' => 'Contact Us - Dayal Sweets',
+                'meta_description' => "We'd Love to Hear From You! Have a query, feedback, or a special request? Contact Dayal Sweets.",
+                'meta_keywords' => 'Contact Dayal Sweets, Dayal Sweets phone number, Dayal Sweets email, store outlets contact',
+                'og_title' => 'Contact Us - Dayal Sweets',
+                'og_description' => "We'd Love to Hear From You! Have a query, feedback, or a special request? Contact Dayal Sweets.",
+                'og_image' => '/uploads/2026/08/Book-Your-Table.png',
+                'robots' => 'index, follow',
+            ],
+            'gallery' => [
+                'title' => 'Gallery',
+                'public_url' => '/gallery',
+                'sections' => static::getGalleryDefaults(),
+                'meta_title' => 'Our Gallery | Dayal Sweets',
+                'meta_description' => 'Explore Dayal Sweets moments - Authentic Indian, Himachali, Chinese, South Indian, and fresh sweets crafted with love.',
+                'meta_keywords' => 'Dayal Sweets gallery, sweet shop photos, dining ambience, festival hampers gallery',
+                'og_title' => 'Our Gallery | Dayal Sweets',
+                'og_description' => 'Explore Dayal Sweets moments - Authentic Indian, Himachali, Chinese, South Indian, and fresh sweets crafted with love.',
+                'og_image' => '/uploads/2026/08/Family-Dining.png',
+                'robots' => 'index, follow',
+            ],
+            'gifting' => [
+                'title' => 'Gifting',
+                'public_url' => '/gifting',
+                'sections' => [
+                    'top_bar_Heading' => 'GIFTING',
+                    'top_bar_sub_heading' => 'Make Every Occasion Unforgettable',
+                    'top_bar_description' => 'Share the joy of every celebration with beautifully crafted mithai boxes, luxury hampers, dry fruit collections, and personalized gifting experiences.',
+                ],
+                'meta_title' => 'Gifting | Dayal Sweets - Luxury Hampers & Festive Sweet Boxes',
+                'meta_description' => 'Share the joy of every celebration with beautifully crafted mithai boxes, luxury hampers, dry fruit collections, and personalized gifting experiences from Dayal Sweets.',
+                'meta_keywords' => 'corporate gifting sweets, wedding mithai boxes, Diwali gift hampers, Dayal Sweets gifting',
+                'og_title' => 'Gifting | Dayal Sweets',
+                'og_description' => 'Share the joy of every celebration with beautifully crafted mithai boxes, luxury hampers, dry fruit collections, and personalized gifting experiences.',
+                'og_image' => '/uploads/2026/08/Gift-Hamper-img.png',
+                'robots' => 'index, follow',
+            ],
+            'dining' => [
+                'title' => 'Dining',
+                'public_url' => '/dining',
+                'sections' => [
+                    'top_bar_Heading' => 'DINING',
+                    'top_bar_sub_heading' => 'Where Flavors Meet Warm Hospitality',
+                    'top_bar_description' => 'Enjoy authentic Indian, Himachali, Chinese, South Indian, and Fast Food prepared fresh every day by our experienced chefs.',
+                ],
+                'meta_title' => 'Dining | Dayal Sweets - Family Restaurant & Table Reservations',
+                'meta_description' => 'Enjoy authentic Indian, Himachali, Chinese, South Indian, and Fast Food prepared fresh every day by our experienced chefs at Dayal Sweets.',
+                'meta_keywords' => 'Dayal Sweets dining, family restaurant, book a table, QR table ordering, Himachali food',
+                'og_title' => 'Dining | Dayal Sweets',
+                'og_description' => 'Enjoy authentic Indian, Himachali, Chinese, South Indian, and Fast Food prepared fresh every day by our experienced chefs.',
+                'og_image' => '/uploads/2026/08/Book-Your-Table.png',
+                'robots' => 'index, follow',
+            ],
+            'franchise' => [
+                'title' => 'Franchise',
+                'public_url' => '/franchise',
+                'sections' => [
+                    'top_bar_Heading' => 'FRANCHISE',
+                    'top_bar_sub_heading' => 'Grow With a Trusted Legacy',
+                    'top_bar_description' => 'Partner with Dayal Sweets and bring our rich culinary heritage and premium sweets to your city.',
+                ],
+                'meta_title' => 'Franchise | Dayal Sweets - Partner With Our Trusted Legacy',
+                'meta_description' => 'Partner with Dayal Sweets and bring our rich culinary heritage and premium sweets to your city. High returns, end-to-end support, and a trusted legacy.',
+                'meta_keywords' => 'Dayal Sweets franchise, sweet shop franchise India, restaurant franchise opportunity',
+                'og_title' => 'Franchise | Dayal Sweets',
+                'og_description' => 'Partner with Dayal Sweets and bring our rich culinary heritage and premium sweets to your city.',
+                'og_image' => '/uploads/2026/08/Corporate-Dining.png',
+                'robots' => 'index, follow',
+            ],
+            'testimonials' => [
+                'title' => 'Testimonials',
+                'public_url' => '/testimonials',
+                'sections' => [
+                    'top_bar_Heading' => 'TESTIMONIALS',
+                    'top_bar_sub_heading' => 'Stories of Sweetness & Trust',
+                    'top_bar_description' => 'Discover why generations of families trust Dayal Sweets for their everyday cravings and grandest celebrations.',
+                ],
+                'meta_title' => 'Customer Testimonials & Reviews | Dayal Sweets',
+                'meta_description' => 'Read real customer reviews and testimonials about Dayal Sweets authentic mithai, dining hospitality, and festive gifting hampers.',
+                'meta_keywords' => 'Dayal Sweets reviews, customer testimonials, sweet shop ratings',
+                'og_title' => 'Customer Testimonials & Reviews | Dayal Sweets',
+                'og_description' => 'Read real customer reviews and testimonials about Dayal Sweets authentic mithai, dining hospitality, and festive gifting.',
+                'og_image' => '/uploads/2026/08/Family-Dining.png',
+                'robots' => 'index, follow',
+            ],
+            'privacy-policy' => [
+                'title' => 'Privacy Policy',
+                'public_url' => '/privacy-policy',
+                'sections' => [
+                    'top_bar_Heading' => 'PRIVACY POLICY',
+                    'top_bar_sub_heading' => 'Your Privacy Matters to Us',
+                    'top_bar_description' => 'Learn how Dayal Sweets collects, uses and protects your personal information when you visit our website or use our services.',
+                ],
+                'meta_title' => 'Privacy Policy | Dayal Sweets',
+                'meta_description' => 'Learn how Dayal Sweets collects, uses and protects your personal information when you visit our website or use our services.',
+                'meta_keywords' => 'Dayal Sweets privacy policy, data protection, customer privacy',
+                'og_title' => 'Privacy Policy | Dayal Sweets',
+                'og_description' => 'Learn how Dayal Sweets collects, uses and protects your personal information when you visit our website or use our services.',
+                'og_image' => '',
+                'robots' => 'index, follow',
+            ],
+            'refund-returns' => [
+                'title' => 'Refund & Returns Policy',
+                'public_url' => '/refund-returns',
+                'sections' => [
+                    'top_bar_Heading' => 'REFUND & RETURNS',
+                    'top_bar_sub_heading' => 'Your Satisfaction Matters to Us',
+                    'top_bar_description' => 'Learn about our refund, cancellation and returns process for orders placed with Dayal Sweets.',
+                ],
+                'meta_title' => 'Refund and Returns Policy | Dayal Sweets',
+                'meta_description' => 'Learn about our refund, cancellation and returns process for orders placed with Dayal Sweets.',
+                'meta_keywords' => 'Dayal Sweets refund policy, return policy, order cancellation',
+                'og_title' => 'Refund and Returns Policy | Dayal Sweets',
+                'og_description' => 'Learn about our refund, cancellation and returns process for orders placed with Dayal Sweets.',
+                'og_image' => '',
+                'robots' => 'index, follow',
+            ],
+        ];
+    }
+
+    /**
+     * Ensure all public website pages exist in the database with default content & SEO.
+     */
+    public static function ensureAllWebsitePagesExist(): void
+    {
+        static::getOrCreateContactUs();
+        static::getOrCreateGallery();
+
+        foreach (static::getWebsitePageDefinitions() as $slug => $def) {
+            $page = static::firstOrCreate(
+                ['slug' => $slug],
+                [
+                    'title' => $def['title'],
+                    'sections' => $def['sections'],
+                    'is_active' => true,
+                    'meta_title' => $def['meta_title'],
+                    'meta_description' => $def['meta_description'],
+                    'meta_keywords' => $def['meta_keywords'] ?? null,
+                    'og_title' => $def['og_title'] ?? $def['meta_title'],
+                    'og_description' => $def['og_description'] ?? $def['meta_description'],
+                    'og_image' => $def['og_image'] ?? null,
+                    'robots' => $def['robots'] ?? 'index, follow',
+                ]
+            );
+
+            // Backfill missing SEO fields on older existing records
+            $dirty = false;
+            if (empty($page->meta_title) && ! empty($def['meta_title'])) {
+                $page->meta_title = $def['meta_title'];
+                $dirty = true;
+            }
+            if (empty($page->meta_description) && ! empty($def['meta_description'])) {
+                $page->meta_description = $def['meta_description'];
+                $dirty = true;
+            }
+            if (empty($page->meta_keywords) && ! empty($def['meta_keywords'])) {
+                $page->meta_keywords = $def['meta_keywords'];
+                $dirty = true;
+            }
+            if (empty($page->og_title) && ! empty($def['og_title'])) {
+                $page->og_title = $def['og_title'];
+                $dirty = true;
+            }
+            if (empty($page->og_description) && ! empty($def['og_description'])) {
+                $page->og_description = $def['og_description'];
+                $dirty = true;
+            }
+            if (empty($page->robots)) {
+                $page->robots = 'index, follow';
+                $dirty = true;
+            }
+
+            if ($dirty) {
+                $page->save();
+            }
+        }
+    }
+
+    /**
+     * Find or create any website page by slug.
+     */
+    public static function getOrCreateBySlug(string $slug): self
+    {
+        if ($slug === 'contact-us') {
+            return static::getOrCreateContactUs();
+        }
+        if ($slug === 'gallery') {
+            return static::getOrCreateGallery();
+        }
+        if ($slug === 'header-footer') {
+            return static::getOrCreateHeaderFooter();
+        }
+
+        $definitions = static::getWebsitePageDefinitions();
+        $def = $definitions[$slug] ?? [
+            'title' => ucwords(str_replace('-', ' ', $slug)),
+            'sections' => [
+                'top_bar_Heading' => strtoupper(str_replace('-', ' ', $slug)),
+                'top_bar_sub_heading' => 'Dayal Sweets',
+                'top_bar_description' => '',
+            ],
+            'meta_title' => ucwords(str_replace('-', ' ', $slug)).' | Dayal Sweets',
+            'meta_description' => 'Dayal Sweets - Crafting Sweet Traditions Since 1962.',
+            'meta_keywords' => 'Dayal Sweets',
+            'robots' => 'index, follow',
+        ];
+
+        $page = static::firstOrCreate(
+            ['slug' => $slug],
+            [
+                'title' => $def['title'],
+                'sections' => $def['sections'],
+                'is_active' => true,
+                'meta_title' => $def['meta_title'],
+                'meta_description' => $def['meta_description'],
+                'meta_keywords' => $def['meta_keywords'] ?? null,
+                'og_title' => $def['og_title'] ?? $def['meta_title'],
+                'og_description' => $def['og_description'] ?? $def['meta_description'],
+                'og_image' => $def['og_image'] ?? null,
+                'robots' => $def['robots'] ?? 'index, follow',
+            ]
+        );
+
+        // Backfill missing SEO fields if needed
+        $dirty = false;
+        if (empty($page->meta_title) && ! empty($def['meta_title'])) {
+            $page->meta_title = $def['meta_title'];
+            $dirty = true;
+        }
+        if (empty($page->meta_description) && ! empty($def['meta_description'])) {
+            $page->meta_description = $def['meta_description'];
+            $dirty = true;
+        }
+        if (empty($page->robots)) {
+            $page->robots = 'index, follow';
+            $dirty = true;
+        }
+        if ($dirty) {
+            $page->save();
+        }
+
+        return $page;
+    }
+
+    /**
+     * Find or create the About Us page record.
+     */
+    public static function getOrCreateAboutUs(): self
+    {
+        return static::getOrCreateBySlug('about-us');
     }
 }
 

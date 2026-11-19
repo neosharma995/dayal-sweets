@@ -1,5 +1,5 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
+import SeoHead from '@/Components/SeoHead';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import ContactHero from '@/Components/contact/ContactHero';
@@ -16,16 +16,19 @@ import '../../scss/pages/_privacy-policy.scss';
  * 3. Privacy Policy Content Area (9 Sections in 90% Container Card)
  * 4. Promotional CTA & Global Footer
  */
-export default function PrivacyPolicy({ auth }) {
+export default function PrivacyPolicy({ auth, page }) {
+    const sections = page?.sections || {};
+    const topBarHeading = sections.top_bar_Heading || 'PRIVACY POLICY';
+    const topBarSubHeading = sections.top_bar_sub_heading || 'Your Privacy Matters to Us';
+    const topBarDescription = sections.top_bar_description || 'Learn how Dayal Sweets collects, uses and protects your personal information when you visit our website or use our services.';
+
     return (
         <div className="privacy-policy-page-root">
-            <Head>
-                <title>Privacy Policy | Dayal Sweets</title>
-                <meta
-                    name="description"
-                    content="Learn how Dayal Sweets collects, uses and protects your personal information when you visit our website or use our services."
-                />
-            </Head>
+            <SeoHead
+                page={page}
+                fallbackTitle="Privacy Policy | Dayal Sweets"
+                fallbackDescription={topBarDescription}
+            />
 
             {/* Existing Global Header */}
             <Header auth={auth} />
@@ -35,11 +38,11 @@ export default function PrivacyPolicy({ auth }) {
                 <ContactHero
                     breadcrumbs={[
                         { label: 'HOME', url: '/' },
-                        { label: 'PRIVACY POLICY', url: null },
+                        { label: topBarHeading, url: null },
                     ]}
-                    title="PRIVACY POLICY"
-                    subtitle="Your Privacy Matters to Us"
-                    description="Learn how Dayal Sweets collects, uses and protects your personal information when you visit our website or use our services."
+                    title={topBarHeading}
+                    subtitle={topBarSubHeading}
+                    description={topBarDescription}
                 />
 
                 {/* Privacy Policy Content Area */}

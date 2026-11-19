@@ -103,6 +103,7 @@ class HomeController extends Controller
             'phpVersion' => PHP_VERSION,
             'products' => $products,
             'categories' => $categories,
+            'page' => Page::getOrCreateBySlug('home'),
         ]);
     }
 
@@ -114,6 +115,7 @@ class HomeController extends Controller
         return Inertia::render('About', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
+            'page' => Page::getOrCreateBySlug('about-us'),
         ]);
     }
 
@@ -363,6 +365,7 @@ class HomeController extends Controller
             'seasonalTags' => $seasonalTags,
             'occasionTags' => $occasionTags,
             'dietTags' => $dietTags,
+            'page' => Page::getOrCreateBySlug('shop'),
         ]);
     }
 
@@ -409,6 +412,7 @@ class HomeController extends Controller
         return Inertia::render('Gifting', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
+            'page' => Page::getOrCreateBySlug('gifting'),
         ]);
     }
 
@@ -420,6 +424,7 @@ class HomeController extends Controller
         return Inertia::render('Dining', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
+            'page' => Page::getOrCreateBySlug('dining'),
         ]);
     }
 
@@ -431,6 +436,7 @@ class HomeController extends Controller
         return Inertia::render('PrivacyPolicy', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
+            'page' => Page::getOrCreateBySlug('privacy-policy'),
         ]);
     }
 
@@ -442,6 +448,7 @@ class HomeController extends Controller
         return Inertia::render('RefundReturns', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
+            'page' => Page::getOrCreateBySlug('refund-returns'),
         ]);
     }
 
@@ -453,6 +460,7 @@ class HomeController extends Controller
         return Inertia::render('Franchise', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
+            'page' => Page::getOrCreateBySlug('franchise'),
         ]);
     }
 

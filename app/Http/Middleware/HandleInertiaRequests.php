@@ -49,6 +49,30 @@ class HandleInertiaRequests extends Middleware
                 'error' => fn () => $request->session()->get('error'),
             ],
             'headerFooter' => fn () => \App\Models\Page::getOrCreateHeaderFooter()->sections,
+            'pageSeo' => function () use ($request) {
+                $path = trim($request->path(), '/');
+                $slugMap = [
+                    '' => 'home',
+                    'shop' => 'shop',
+                    'about-us' => 'about-us',
+                    'contact-us' => 'contact-us',
+                    'gallery' => 'gallery',
+                    'gifting' => 'gifting',
+                    'dining' => 'dining',
+                    'dinning' => 'dining',
+                    'franchise' => 'franchise',
+                    'testimonials' => 'testimonials',
+                    'reviews' => 'testimonials',
+                    'privacy-policy' => 'privacy-policy',
+                    'refund-returns' => 'refund-returns',
+                    'refund-and-returns-policy' => 'refund-returns',
+                ];
+                if (isset($slugMap[$path])) {
+                    return \App\Models\Page::getOrCreateBySlug($slugMap[$path]);
+                }
+
+                return null;
+            },
             'outlets' => fn () => \App\Models\Outlet::where('is_active', true)->orderBy('sort_order')->orderBy('id')->get(['id', 'name', 'city', 'state', 'status']),
             'activeOutletId' => fn () => $request->session()->get('active_outlet_id', $request->query('outlet_id')),
             'activeOutlet' => function () use ($request) {

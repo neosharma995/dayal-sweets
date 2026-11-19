@@ -27,8 +27,13 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
         route().current('admin.tables.*')
     );
 
+    const isPagesRouteActive = Boolean(
+        route().current('admin.pages.*')
+    );
+
     const [productsOpen, setProductsOpen] = useState(isProductRouteActive);
     const [outletsOpen, setOutletsOpen] = useState(isOutletRouteActive);
+    const [pagesOpen, setPagesOpen] = useState(isPagesRouteActive);
 
     useEffect(() => {
         if (isProductRouteActive) {
@@ -41,6 +46,12 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
             setOutletsOpen(true);
         }
     }, [isOutletRouteActive]);
+
+    useEffect(() => {
+        if (isPagesRouteActive) {
+            setPagesOpen(true);
+        }
+    }, [isPagesRouteActive]);
 
     return (
         <>
@@ -383,6 +394,117 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
                                     <line x1="14" y1="1" x2="14" y2="4" />
                                 </svg>
                                 <span>Dining Queries</span>
+                            </Link>
+                        )}
+
+                        {/* Website Pages & SEO Information */}
+                        {(can('manage pages') || can('manage seo')) && (
+                            <div className="dayal-sidebar-dropdown-group">
+                                <div
+                                    onClick={() => setPagesOpen((prev) => !prev)}
+                                    className={`dayal-sidebar-link ${isPagesRouteActive ? 'parent-active' : ''}`}
+                                    style={{ cursor: 'pointer', justifyContent: 'space-between', userSelect: 'none' }}
+                                    title="Click to toggle website pages & SEO menu"
+                                >
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                            <polyline points="14 2 14 8 20 8" />
+                                            <line x1="16" y1="13" x2="8" y2="13" />
+                                            <line x1="16" y1="17" x2="8" y2="17" />
+                                        </svg>
+                                        <span>Website Pages</span>
+                                    </div>
+
+                                    <svg
+                                        width="14"
+                                        height="14"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        style={{
+                                            transform: pagesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                                            transition: 'transform 0.2s ease',
+                                        }}
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+
+                                {pagesOpen && (
+                                    <div className="dayal-sidebar-submenu">
+                                        <Link
+                                            href={route('admin.pages.index')}
+                                            className={`dayal-sidebar-sublink ${route().current('admin.pages.index') || route().current('admin.pages.edit') ? 'active' : ''}`}
+                                        >
+                                            <span className="dayal-sublink-dot" />
+                                            <span>All Website Pages</span>
+                                        </Link>
+
+                                        <Link
+                                            href={route('admin.pages.seo')}
+                                            className={`dayal-sidebar-sublink ${route().current('admin.pages.seo') ? 'active' : ''}`}
+                                        >
+                                            <span className="dayal-sublink-dot" />
+                                            <span>Pages SEO Information</span>
+                                        </Link>
+
+                                        <Link
+                                            href={route('admin.pages.about-us')}
+                                            className={`dayal-sidebar-sublink ${route().current('admin.pages.about-us') ? 'active' : ''}`}
+                                        >
+                                            <span className="dayal-sublink-dot" />
+                                            <span>Edit About Us</span>
+                                        </Link>
+
+                                        <Link
+                                            href={route('admin.pages.contact-us')}
+                                            className={`dayal-sidebar-sublink ${route().current('admin.pages.contact-us') ? 'active' : ''}`}
+                                        >
+                                            <span className="dayal-sublink-dot" />
+                                            <span>Edit Contact Us</span>
+                                        </Link>
+
+                                        <Link
+                                            href={route('admin.pages.gallery')}
+                                            className={`dayal-sidebar-sublink ${route().current('admin.pages.gallery') ? 'active' : ''}`}
+                                        >
+                                            <span className="dayal-sublink-dot" />
+                                            <span>Edit Gallery</span>
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Pages SEO Quick Access (Right After Website Pages) */}
+                        {(can('manage seo') || can('manage pages')) && (
+                            <Link
+                                href={route('admin.pages.seo')}
+                                className={`dayal-sidebar-link ${route().current('admin.pages.seo') ? 'active' : ''}`}
+                            >
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                    <line x1="11" y1="8" x2="11" y2="14" />
+                                    <line x1="8" y1="11" x2="14" y2="11" />
+                                </svg>
+                                <span>Pages SEO</span>
+                            </Link>
+                        )}
+
+                        {/* Header & Footer Branding */}
+                        {can('manage header footer') && (
+                            <Link
+                                href={route('admin.header-footer.index')}
+                                className={`dayal-sidebar-link ${route().current('admin.header-footer.*') ? 'active' : ''}`}
+                            >
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                    <line x1="3" y1="9" x2="21" y2="9" />
+                                    <line x1="3" y1="15" x2="21" y2="15" />
+                                </svg>
+                                <span>Header &amp; Footer</span>
                             </Link>
                         )}
 

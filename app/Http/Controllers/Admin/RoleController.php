@@ -24,7 +24,24 @@ class RoleController extends Controller
      */
     public function index(Request $request): Response|JsonResponse
     {
-        // Ensure Spatie permissions cache is fresh
+        // Ensure Spatie permissions cache is fresh and all enum permissions exist
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+
+        foreach (UserPermission::values() as $permName) {
+            Permission::firstOrCreate(['name' => $permName, 'guard_name' => 'web']);
+        }
+
+        // Ensure Admin always has all permissions assigned
+        $adminRole = Role::where('name', UserRole::Admin->value)->first();
+        if ($adminRole) {
+            $adminRole->syncPermissions(UserPermission::adminPermissions());
+        }
+
+        $editorRole = Role::where('name', UserRole::Editor->value)->first();
+        if ($editorRole && ! $editorRole->hasPermissionTo(UserPermission::ManageSeo->value)) {
+            $editorRole->givePermissionTo(UserPermission::ManageSeo->value);
+        }
+
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         $roles = Role::with('permissions')
@@ -56,7 +73,7 @@ class RoleController extends Controller
                 ['name' => UserPermission::ManageCoupons->value, 'label' => 'Discount Coupons', 'description' => 'Create, edit, toggle coupons, generate bulk coupon batches, and outlet rules.'],
             ],
             'Outlets & Logistics' => [
-                ['name' => UserPermission::ManageOutlets->value, 'label' => 'Outlets & Delivery Zones', 'description' => 'Manage physical store outlets, addresses, and delivery shipping zones.'],
+                ['name' => UserPermission::ManageOutlets->value, 'label' => 'Outlets & Delivery Zones', 'description' => 'Manage physical store outlets, addresses, dining tables, QR scanners, and delivery shipping zones.'],
             ],
             'Taxes & Accounting' => [
                 ['name' => UserPermission::ManageTaxes->value, 'label' => 'Taxes & GST Rates', 'description' => 'Configure standard GST rates, CGST/SGST, and tax classes.'],
@@ -69,7 +86,8 @@ class RoleController extends Controller
                 ['name' => UserPermission::ManageRoles->value, 'label' => 'Roles & Permissions', 'description' => 'Create custom roles and configure granular system permissions.'],
             ],
             'Website Pages & Content' => [
-                ['name' => UserPermission::ManagePages->value, 'label' => 'Public Website Pages', 'description' => 'Edit content sections for About Us, Contact Us, and Photo Gallery.'],
+                ['name' => UserPermission::ManagePages->value, 'label' => 'Public Website Pages', 'description' => 'Edit content sections for Home, Shop, About Us, Contact Us, Photo Gallery, Gifting, Dining, Franchise, Testimonials, and Policies.'],
+                ['name' => UserPermission::ManageSeo->value, 'label' => 'Pages SEO Information', 'description' => 'Configure Meta Title, Meta Description, Meta Keywords, Canonical URLs, Open Graph tags, and Robots indexing for all website pages.'],
                 ['name' => UserPermission::ManageHeaderFooter->value, 'label' => 'Header & Footer Branding', 'description' => 'Customize site logo, top announcement bar, store contact details, and footer.'],
             ],
             'Store Administration' => [

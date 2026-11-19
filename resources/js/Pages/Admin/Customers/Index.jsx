@@ -8,7 +8,7 @@ export default function CustomersIndex({ customers, stats, filters }) {
     const [search, setSearch] = useState(filters.search || '');
     const [dateFilter, setDateFilter] = useState(filters.date || 'all');
     const [ordersFilter, setOrdersFilter] = useState(filters.orders || 'all');
-    const [perPage, setPerPage] = useState(filters.per_page || 15);
+    const [perPage, setPerPage] = useState(filters.per_page || 10);
     const [showCards, setShowCards] = useState(false);
 
     const handleApplyFilters = (newOverrides = {}) => {

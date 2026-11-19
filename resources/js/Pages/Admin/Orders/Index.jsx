@@ -9,7 +9,7 @@ export default function Index({ orders, counts, filters }) {
     const [search, setSearch] = useState(filters?.search || '');
     const [selectedDeliveryStatus, setSelectedDeliveryStatus] = useState(filters?.delivery_status || 'all');
     const [selectedPaymentStatus, setSelectedPaymentStatus] = useState(filters?.payment_status || 'all');
-    const [perPage, setPerPage] = useState(filters?.per_page || 15);
+    const [perPage, setPerPage] = useState(filters?.per_page || 10);
     const [showCards, setShowCards] = useState(false);
 
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);

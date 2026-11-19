@@ -26,9 +26,9 @@ class CustomerController extends Controller
         $search = trim((string) $request->input('search', ''));
         $dateFilter = trim((string) $request->input('date', 'all'));
         $ordersFilter = trim((string) $request->input('orders', 'all'));
-        $perPage = (int) $request->input('per_page', 15);
+        $perPage = (int) $request->input('per_page', 10);
         if ($perPage < 5 || $perPage > 100) {
-            $perPage = 15;
+            $perPage = 10;
         }
 
         // Query customers: users with role 'customer' or without any staff role

@@ -10,7 +10,7 @@ import AdminDataTable, {
 export default function StaffUsersIndex({ users, roles = [], stats = {}, currentAdminId, filters = {} }) {
     const [search, setSearch] = useState(filters.search || '');
     const [roleFilter, setRoleFilter] = useState(filters.role || 'all');
-    const [perPage, setPerPage] = useState(Number(filters.per_page) || 15);
+    const [perPage, setPerPage] = useState(Number(filters.per_page) || 10);
 
     // Only non-admin, non-customer staff roles
     const staffRoles = useMemo(
@@ -45,7 +45,7 @@ export default function StaffUsersIndex({ users, roles = [], stats = {}, current
         const params = {};
         if (nextSearch && nextSearch.trim()) params.search = nextSearch.trim();
         if (nextRole && nextRole !== 'all') params.role = nextRole;
-        if (nextPerPage && Number(nextPerPage) !== 15) params.per_page = Number(nextPerPage);
+        if (nextPerPage && Number(nextPerPage) !== 10) params.per_page = Number(nextPerPage);
 
         router.get(route('admin.users.index'), params, {
             preserveState: true,
@@ -57,7 +57,7 @@ export default function StaffUsersIndex({ users, roles = [], stats = {}, current
     const handleClearFilters = () => {
         setSearch('');
         setRoleFilter('all');
-        setPerPage(15);
+        setPerPage(10);
         router.get(route('admin.users.index'), {}, { preserveState: true, replace: true });
     };
 

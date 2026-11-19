@@ -159,7 +159,7 @@ export default function AdminDataTable({
     onPerPageChange = null,
     onPageChange = null,
     perPageOptions = [10, 15, 25, 50, 100],
-    defaultPerPage = 15,
+    defaultPerPage = 10,
     showPerPage = true,
     syncClientPaginationToUrl = true,
     children = null,

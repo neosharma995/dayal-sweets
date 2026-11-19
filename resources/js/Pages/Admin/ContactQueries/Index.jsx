@@ -11,7 +11,7 @@ export default function Index({ queries, counts, filters }) {
     // Filter controls
     const [search, setSearch] = useState(filters?.search || '');
     const [selectedStatus, setSelectedStatus] = useState(filters?.status || 'all');
-    const [perPage, setPerPage] = useState(filters?.per_page || 15);
+    const [perPage, setPerPage] = useState(filters?.per_page || 10);
     const [showCards, setShowCards] = useState(false);
 
     // Detail Modal State

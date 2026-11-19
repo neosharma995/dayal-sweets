@@ -27,9 +27,9 @@ class CouponController extends Controller
         $outletFilter = $request->input('outlet_filter', 'all');
         $sessionOutletId = $request->session()->get('active_outlet_id');
         $type = trim((string) $request->input('type', 'all'));
-        $perPage = (int) $request->input('per_page', 15);
+        $perPage = (int) $request->input('per_page', 10);
         if ($perPage < 5 || $perPage > 100) {
-            $perPage = 15;
+            $perPage = 10;
         }
 
         $query = Coupon::with(['outlet', 'outlets']);

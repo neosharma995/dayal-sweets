@@ -54,7 +54,10 @@ class OrderController extends Controller
             $query->where('payment_status', $paymentStatus);
         }
 
-        $perPage = (int) ($request->input('per_page') ?: env('PAGINATION_LIMIT', 15));
+        $perPage = (int) ($request->input('per_page') ?: 10);
+        if ($perPage < 5 || $perPage > 100) {
+            $perPage = 10;
+        }
         $orders = $query->paginate($perPage)->withQueryString();
 
         // Calculate statistics for top metric cards

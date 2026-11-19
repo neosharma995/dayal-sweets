@@ -26,9 +26,9 @@ class UserController extends Controller
     {
         $search = trim((string) $request->input('search', ''));
         $roleFilter = trim((string) $request->input('role', 'all'));
-        $perPage = (int) $request->input('per_page', 15);
+        $perPage = (int) $request->input('per_page', 10);
         if ($perPage < 5 || $perPage > 100) {
-            $perPage = 15;
+            $perPage = 10;
         }
 
         $excludedRoles = [UserRole::Admin->value, UserRole::Customer->value];

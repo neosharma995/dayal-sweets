@@ -22,7 +22,7 @@ export default function Index({ queries, counts, filters }) {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [queryToDelete, setQueryToDelete] = useState(null);
     const [deleting, setDeleting] = useState(false);
-    const [perPage, setPerPage] = useState(filters?.per_page || 15);
+    const [perPage, setPerPage] = useState(filters?.per_page || 10);
     const [showCards, setShowCards] = useState(false);
 
     // Trigger server-side filtering

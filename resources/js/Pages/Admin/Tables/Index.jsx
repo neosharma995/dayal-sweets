@@ -18,8 +18,8 @@ export default function Index({
 
     const totalItems = isPaginator ? tables.total : tableList.length;
     const currentPage = isPaginator ? tables.current_page : Number(filters.page || 1);
-    const totalPages = isPaginator ? tables.last_page : (Math.ceil(totalItems / (Number(filters.per_page) || 8)) || 1);
-    const itemsPerPage = isPaginator ? tables.per_page : Number(filters.per_page || 8);
+    const totalPages = isPaginator ? tables.last_page : (Math.ceil(totalItems / (Number(filters.per_page) || 10)) || 1);
+    const itemsPerPage = isPaginator ? tables.per_page : Number(filters.per_page || 10);
 
     const [search, setSearch] = useState(filters.search || '');
     const [outletFilter, setOutletFilter] = useState(String(filters.outlet_id || 'all'));
@@ -77,7 +77,7 @@ export default function Index({
         if (params.location === 'all') delete params.location;
         if (params.status === 'all') delete params.status;
         if (!params.search) delete params.search;
-        if (Number(params.per_page) === 8) delete params.per_page;
+        if (Number(params.per_page) === 10) delete params.per_page;
         if (Number(params.page) <= 1) delete params.page;
 
         router.get(route('admin.tables.index'), params, {

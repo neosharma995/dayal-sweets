@@ -9,7 +9,7 @@ export default function Index({ taxRates = [], filters = {} }) {
     const [statusFilter, setStatusFilter] = useState('all');
     const [classFilter, setClassFilter] = useState('all');
     const [showCards, setShowCards] = useState(false);
-    const [itemsPerPage, setItemsPerPage] = useState(15);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
 
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);

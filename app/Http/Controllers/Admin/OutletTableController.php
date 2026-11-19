@@ -44,9 +44,9 @@ class OutletTableController extends Controller
         $location = $request->input('location', 'all');
         $status = $request->input('status', 'all');
         $search = $request->input('search');
-        $perPage = (int) $request->input('per_page', 8);
+        $perPage = (int) $request->input('per_page', 10);
         if ($perPage < 1 || $perPage > 100) {
-            $perPage = 8;
+            $perPage = 10;
         }
 
         $query = OutletTable::query()

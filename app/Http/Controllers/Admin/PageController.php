@@ -24,9 +24,9 @@ class PageController extends Controller
 
         $search = trim((string) $request->input('search', ''));
         $status = (string) $request->input('status', 'all');
-        $perPage = (int) $request->input('per_page', 15);
+        $perPage = (int) $request->input('per_page', 10);
         if ($perPage < 1 || $perPage > 100) {
-            $perPage = 15;
+            $perPage = 10;
         }
 
         $query = Page::query()->where('slug', '!=', 'header-footer')->orderBy('id');
@@ -98,9 +98,9 @@ class PageController extends Controller
 
         $search = trim((string) $request->input('search', ''));
         $robotsFilter = (string) $request->input('robots', 'all');
-        $perPage = (int) $request->input('per_page', 15);
+        $perPage = (int) $request->input('per_page', 10);
         if ($perPage < 1 || $perPage > 100) {
-            $perPage = 15;
+            $perPage = 10;
         }
 
         $query = Page::query()->where('slug', '!=', 'header-footer')->orderBy('id');

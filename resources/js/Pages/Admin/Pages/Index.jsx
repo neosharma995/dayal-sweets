@@ -13,7 +13,7 @@ export default function Index({ pages, stats = {}, filters = {} }) {
     const totalItems = isPaginator ? pages.total : pageList.length;
     const currentPage = isPaginator ? pages.current_page : Number(filters.page || 1);
     const totalPages = isPaginator ? pages.last_page : 1;
-    const itemsPerPage = isPaginator ? pages.per_page : Number(filters.per_page || 15);
+    const itemsPerPage = isPaginator ? pages.per_page : Number(filters.per_page || 10);
 
     const [search, setSearch] = useState(filters.search || '');
     const [statusFilter, setStatusFilter] = useState(filters.status || 'all');
@@ -44,7 +44,7 @@ export default function Index({ pages, stats = {}, filters = {} }) {
 
         if (params.status === 'all') delete params.status;
         if (!params.search) delete params.search;
-        if (Number(params.per_page) === 15) delete params.per_page;
+        if (Number(params.per_page) === 10) delete params.per_page;
         if (Number(params.page) <= 1) delete params.page;
 
         router.get(route('admin.pages.index'), params, {

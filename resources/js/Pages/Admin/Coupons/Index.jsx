@@ -9,7 +9,7 @@ export default function CouponsIndex({ coupons, stats, outlets, filters }) {
     const [status, setStatus] = useState(filters.status || 'all');
     const [outletFilter, setOutletFilter] = useState(filters.outlet_filter || 'all');
     const [type, setType] = useState(filters.type || 'all');
-    const [perPage, setPerPage] = useState(filters.per_page || 15);
+    const [perPage, setPerPage] = useState(filters.per_page || 10);
     const [showCards, setShowCards] = useState(false);
 
     // Selection for bulk actions

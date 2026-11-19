@@ -562,22 +562,34 @@ export default function Seo({ pages, stats = {}, filters = {} }) {
             </div>
 
             {/* Edit SEO Modal */}
-            <Modal show={Boolean(activePage)} onClose={() => !saving && setActivePage(null)} maxWidth="2xl">
+            <Modal show={Boolean(activePage)} onClose={() => !saving && setActivePage(null)} maxWidth="4xl">
                 {activePage && (
-                    <form onSubmit={handleSaveSeo} style={{ padding: '1.25rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                    <form onSubmit={handleSaveSeo} style={{ padding: '0.25rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', paddingBottom: '0.75rem', borderBottom: '1px solid #E2E8F0' }}>
                             <div>
-                                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0F172A', margin: 0 }}>
+                                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', margin: 0 }}>
                                     Edit SEO Information — {activePage.title}
                                 </h3>
-                                <span style={{ fontSize: '0.78rem', color: '#64748B' }}>
+                                <span style={{ fontSize: '0.8rem', color: '#64748B' }}>
                                     Frontend URL: {activePage.slug === 'home' ? '/' : `/${activePage.slug}`}
                                 </span>
                             </div>
                             <button
                                 type="button"
                                 onClick={() => setActivePage(null)}
-                                style={{ background: 'transparent', border: 'none', fontSize: '1.4rem', color: '#64748B', cursor: 'pointer' }}
+                                style={{
+                                    width: '34px',
+                                    height: '34px',
+                                    borderRadius: '0.5rem',
+                                    background: '#F8FAFC',
+                                    border: '1px solid #E2E8F0',
+                                    fontSize: '1.25rem',
+                                    color: '#475569',
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
                             >
                                 &times;
                             </button>
@@ -591,19 +603,19 @@ export default function Seo({ pages, stats = {}, filters = {} }) {
                             errors={errors}
                         />
 
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.65rem', marginTop: '1.25rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.65rem', marginTop: '1.25rem', paddingTop: '0.85rem', borderTop: '1px solid #E2E8F0' }}>
                             <button
                                 type="button"
                                 onClick={() => setActivePage(null)}
                                 disabled={saving}
-                                style={{ padding: '0.55rem 1.1rem', borderRadius: '0.45rem', border: '1px solid #CBD5E1', background: '#FFFFFF', color: '#334155', fontWeight: 600, fontSize: '0.84rem', cursor: 'pointer' }}
+                                style={{ padding: '0.55rem 1.15rem', borderRadius: '0.45rem', border: '1px solid #CBD5E1', background: '#FFFFFF', color: '#334155', fontWeight: 600, fontSize: '0.84rem', cursor: 'pointer' }}
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
                                 disabled={saving}
-                                style={{ padding: '0.55rem 1.25rem', borderRadius: '0.45rem', border: 'none', background: '#7A1C1C', color: '#FFFFFF', fontWeight: 700, fontSize: '0.84rem', cursor: saving ? 'not-allowed' : 'pointer' }}
+                                style={{ padding: '0.55rem 1.35rem', borderRadius: '0.45rem', border: 'none', background: '#7A1C1C', color: '#FFFFFF', fontWeight: 700, fontSize: '0.84rem', cursor: saving ? 'not-allowed' : 'pointer' }}
                             >
                                 {saving ? 'Saving SEO...' : 'Save SEO Information'}
                             </button>

@@ -131,19 +131,60 @@ class Outlet extends Model
     {
         return Attribute::make(
             get: function (): ?string {
-                if (! $this->image) {
-                    return null;
+                $image = $this->image;
+
+                if (! empty($image)) {
+                    if (str_starts_with($image, 'http://') || str_starts_with($image, 'https://')) {
+                        return $image;
+                    }
+
+                    if (str_starts_with($image, '/')) {
+                        if (file_exists(public_path(ltrim($image, '/')))) {
+                            return $image;
+                        }
+                    }
+
+                    if (Storage::disk('public')->exists($image)) {
+                        return Storage::disk('public')->url($image);
+                    }
+
+                    if (file_exists(public_path('storage/' . ltrim($image, '/')))) {
+                        return '/storage/' . ltrim($image, '/');
+                    }
+
+                    if (file_exists(public_path(ltrim($image, '/')))) {
+                        return '/' . ltrim($image, '/');
+                    }
                 }
 
-                if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
-                    return $this->image;
+                // Fallback to public images by slug/name if missing or not found in storage
+                $slug = Str::slug($this->slug ?: $this->name);
+
+                $uploadCandidates = [
+                    'amb' => '/uploads/2026/08/Amb-Outlet.png',
+                    'hamirpur' => '/uploads/2026/08/Hamirpur-Outlet.png',
+                    'una' => '/uploads/2026/08/Nangal-Road-Una-Outlet.png',
+                    'una-bus-stand' => '/uploads/2026/07/About-Outlet.png',
+                    'palampur' => '/uploads/2026/09/palampoor-stor.png',
+                ];
+
+                if (isset($uploadCandidates[$slug]) && file_exists(public_path(ltrim($uploadCandidates[$slug], '/')))) {
+                    return $uploadCandidates[$slug];
                 }
 
-                if (str_starts_with($this->image, '/')) {
-                    return $this->image;
+                $contactCandidates = [
+                    'amb' => '/images/contact/outlet-amb.jpg',
+                    'hamirpur' => '/images/contact/outlet-hamirpur.jpg',
+                    'una' => '/images/contact/outlet-una.jpg',
+                    'una-bus-stand' => '/images/contact/outlet-una-bus-stand.jpg',
+                    'palampur' => '/images/contact/outlet-palampur.jpg',
+                ];
+
+                if (isset($contactCandidates[$slug]) && file_exists(public_path(ltrim($contactCandidates[$slug], '/')))) {
+                    return $contactCandidates[$slug];
                 }
 
-                return Storage::disk('public')->url($this->image);
+                return ! empty($image) ? (str_starts_with($image, '/') ? $image : '/' . ltrim($image, '/')) : null;
             }
         );
     }

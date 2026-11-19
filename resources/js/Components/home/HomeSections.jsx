@@ -445,16 +445,78 @@ const serviceCards = [
 ];
 
 const videos = [
-    ['Festive Sweet Preparation', 'Fresh ingredients and traditional recipes come together for every celebration.'],
-    ['Traditional Sweet Making', 'Time-honored techniques bring authentic Dayal sweets to life.'],
-    ['Diwali festival', 'enjoying purchasing with friends and colleagues in dayal sweets'],
-    ['Festival Gift Platters', 'Bespoke gifting for every celebration'],
-    ['Jalebi Frying Fresh', 'Fried fresh every morning, served warm'],
-    ['Khoya Pedas Magic', '100% desi ghee, Pure milk, no preservatives'],
-    ['Spounch', 'Each peda shaped by hand, one at a time'],
-    ['Slow Cooking Tradition', 'Traditional wood-fire methods since 1952'],
-    ['Kaju katli', '100% cashew, no preservatives, pure silver vark'],
-    ['Fresh Milk Poured Daily', 'Pure A2 milk sourced fresh every morning'],
+    {
+        title: 'Fresh Milk Poured Daily',
+        description: 'Pure A2 Milk Sourced Fresh Every Morning',
+        badge: 'HERITAGE',
+        duration: '0:30',
+        poster: '/images/making/card-1.jpg',
+        src: '/uploads/2026/07/dayal-sweets-showcase.mp4',
+    },
+    {
+        title: 'Kaju katli',
+        description: '100% Cashew, No Preservatives, Pure Silver Vark',
+        badge: 'HERITAGE',
+        duration: '0:30',
+        poster: '/images/making/card-2.jpg',
+        src: '/uploads/2026/07/dayal-sweets-showcase.mp4',
+    },
+    {
+        title: 'Fresh Milk Poured Daily',
+        description: 'Pure A2 Milk Sourced Fresh Every Morning',
+        badge: 'CRAFT',
+        duration: '0:35',
+        poster: '/images/making/card-3.jpg',
+        src: '/uploads/2026/07/dayal-sweets-showcase.mp4',
+    },
+    {
+        title: 'Slow Cooking Tradition',
+        description: 'Traditional Wood-Fire Methods Since 1952',
+        badge: 'PROCESS',
+        duration: '1:15',
+        poster: '/images/making/card-4.jpg',
+        src: '/uploads/2026/07/dayal-sweets-showcase.mp4',
+    },
+    {
+        title: 'Spounch',
+        description: 'Each Peda Shaped By Hand, One At A Time',
+        badge: 'ARTISAN',
+        duration: '0:45',
+        poster: '/images/making/card-5.jpg',
+        src: '/uploads/2026/07/dayal-sweets-showcase.mp4',
+    },
+    {
+        title: 'Khoya Pedas Magic',
+        description: '100% Desi Ghee, Pure Milk, No Preservatives',
+        badge: 'ARTISAN',
+        duration: '0:45',
+        poster: '/images/making/card-6.jpg',
+        src: '/uploads/2026/07/dayal-sweets-showcase.mp4',
+    },
+    {
+        title: 'Jalebi Frying Fresh',
+        description: 'Fried Fresh Every Morning, Served Warm',
+        badge: 'LIVE',
+        duration: '0:52',
+        poster: '/images/making/card-7.jpg',
+        src: '/uploads/2026/07/dayal-sweets-showcase.mp4',
+    },
+    {
+        title: 'Festival Gift Platters',
+        description: 'Bespoke Gifting For Every Celebration',
+        badge: 'STORY',
+        duration: '1:05',
+        poster: '/images/making/card-8.jpg',
+        src: '/uploads/2026/07/dayal-sweets-showcase.mp4',
+    },
+    {
+        title: 'Diwali festival',
+        description: 'Enjoying Purchasing with friends And Colleagues In Dayal Sweets',
+        badge: 'HERITAGE',
+        duration: '0:32',
+        poster: '/images/making/card-9.jpg',
+        src: '/uploads/2026/07/dayal-sweets-showcase.mp4',
+    },
 ];
 
 function SectionHeading({ eyebrow, children }) {
@@ -739,7 +801,8 @@ function VideoGallery() {
                         <span className="dsg-video-divider" aria-hidden="true" />
                     </div>
                     <h2 className="dsg-video-heading">
-                        The Art Behind <span className="dayal-highlight">Every Sweet Bite</span>
+                        <span className="dsg-video-title-lead">The Art Behind</span>
+                        <span className="dayal-highlight">Every Sweet Bite</span>
                     </h2>
                     <p className="dsg-video-desc-top">
                         From selecting the finest ingredients to handcrafted preparation and slow cooking, witness the journey that makes every Dayal sweet truly special.
@@ -757,32 +820,44 @@ function VideoGallery() {
                     onMouseUp={handleMouseUp}
                     onMouseMove={handleMouseMove}
                 >
-                    {videos.map(([title, description], index) => (
+                    {videos.map((item, index) => (
                         <div
                             className="dsg-video-item"
-                            key={title}
+                            key={`${item.title}-${index}`}
                             onClick={() => togglePlay(index)}
                         >
                             <video
                                 className="dsg-video-el"
-                                src="/uploads/2026/07/dayal-sweets-showcase.mp4"
+                                src={item.src}
+                                poster={item.poster}
                                 muted
                                 loop
                                 playsInline
                                 preload="metadata"
                             />
+                            <div className="dsg-video-top-meta">
+                                <span className="dsg-video-badge">{item.badge}</span>
+                                <span className="dsg-video-duration">{item.duration}</span>
+                            </div>
                             <button
                                 type="button"
                                 className={`dsg-video-play ${playing === index ? 'is-playing' : ''}`}
-                                aria-label={playing === index ? `Pause ${title}` : `Play ${title}`}
+                                aria-label={playing === index ? `Pause ${item.title}` : `Play ${item.title}`}
                             >
-                                <span className="dsg-play-icon" aria-hidden="true">
-                                    {playing === index ? '❚❚' : '►'}
-                                </span>
+                                {playing === index ? (
+                                    <svg className="dsg-play-svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <rect x="5" y="4" width="4" height="16" rx="1" />
+                                        <rect x="15" y="4" width="4" height="16" rx="1" />
+                                    </svg>
+                                ) : (
+                                    <svg className="dsg-play-svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: '2px' }}>
+                                        <path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86a1 1 0 0 0-1.5.86z" />
+                                    </svg>
+                                )}
                             </button>
                             <div className="dsg-video-info">
-                                <h4 className="dsg-video-title">{title}</h4>
-                                <p className="dsg-video-desc">{description}</p>
+                                <h4 className="dsg-video-title">{item.title}</h4>
+                                <p className="dsg-video-desc">{item.description}</p>
                             </div>
                         </div>
                     ))}

@@ -19,9 +19,21 @@ export default function Edit({
 
     const initialData = {
         category_id: product.category_id || '',
+        category_ids: Array.isArray(product.categories) && product.categories.length > 0
+            ? product.categories.map((c) => c.id)
+            : (product.category_id ? [product.category_id] : []),
         seasonal_mithai_id: product.seasonal_mithai_id || '',
+        seasonal_mithai_ids: Array.isArray(product.seasonal_mithais) && product.seasonal_mithais.length > 0
+            ? product.seasonal_mithais.map((s) => s.id)
+            : (product.seasonal_mithai_id ? [product.seasonal_mithai_id] : []),
         occasion_id: product.occasion_id || '',
+        occasion_ids: Array.isArray(product.occasions) && product.occasions.length > 0
+            ? product.occasions.map((o) => o.id)
+            : (product.occasion_id ? [product.occasion_id] : []),
         diet_preference_id: product.diet_preference_id || '',
+        diet_preference_ids: Array.isArray(product.diet_preferences) && product.diet_preferences.length > 0
+            ? product.diet_preferences.map((d) => d.id)
+            : (product.diet_preference_id ? [product.diet_preference_id] : []),
         product_tag_id: product.product_tag_id || '',
         tax_rate_id: product.tax_rate_id || '',
         tax_status: product.tax_status || 'taxable',

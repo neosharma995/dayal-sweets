@@ -32,7 +32,7 @@ class ProductController extends Controller
      */
     public function index(Request $request): Response|JsonResponse
     {
-        $query = Product::query()->with(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'taxRate', 'variations', 'outlets'])->latest('id');
+        $query = Product::query()->with(['category', 'categories', 'seasonalMithai', 'seasonalMithais', 'occasion', 'occasions', 'dietPreference', 'dietPreferences', 'tag', 'tags', 'taxRate', 'variations', 'outlets'])->latest('id');
 
         // Optional search filter by product name or description
         if ($request->filled('search')) {
@@ -74,7 +74,7 @@ class ProductController extends Controller
     public function create(): Response
     {
         return Inertia::render('Admin/Products/Create', [
-            'categories' => Category::orderBy('category_name')->get(['id', 'category_name']),
+            'categories' => Category::orderBy('category_name')->get(['id', 'parent_id', 'category_name']),
             'seasonalMithais' => SeasonalMithai::orderBy('category_name')->get(['id', 'category_name']),
             'occasions' => Occasion::orderBy('category_name')->get(['id', 'category_name']),
             'dietPreferences' => DietPreference::orderBy('category_name')->get(['id', 'category_name']),
@@ -91,11 +91,11 @@ class ProductController extends Controller
     public function edit(Product|int|string $product): Response
     {
         $productModel = $product instanceof Product ? $product : Product::findOrFail($product);
-        $productModel->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'taxRate', 'variations.attributeValue.attribute', 'outlets']);
+        $productModel->load(['category', 'categories', 'seasonalMithai', 'seasonalMithais', 'occasion', 'occasions', 'dietPreference', 'dietPreferences', 'tag', 'tags', 'taxRate', 'variations.attributeValue.attribute', 'outlets']);
 
         return Inertia::render('Admin/Products/Edit', [
             'product' => $productModel,
-            'categories' => Category::orderBy('category_name')->get(['id', 'category_name']),
+            'categories' => Category::orderBy('category_name')->get(['id', 'parent_id', 'category_name']),
             'seasonalMithais' => SeasonalMithai::orderBy('category_name')->get(['id', 'category_name']),
             'occasions' => Occasion::orderBy('category_name')->get(['id', 'category_name']),
             'dietPreferences' => DietPreference::orderBy('category_name')->get(['id', 'category_name']),
@@ -112,7 +112,7 @@ class ProductController extends Controller
     public function show(Request $request, Product|int|string $product): Response|JsonResponse
     {
         $productModel = $product instanceof Product ? $product : Product::findOrFail($product);
-        $productModel->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'taxRate', 'variations.attributeValue.attribute', 'outlets']);
+        $productModel->load(['category', 'categories', 'seasonalMithai', 'seasonalMithais', 'occasion', 'occasions', 'dietPreference', 'dietPreferences', 'tag', 'tags', 'taxRate', 'variations.attributeValue.attribute', 'outlets']);
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -185,15 +185,61 @@ class ProductController extends Controller
         $outletIds = $data['outlet_ids'] ?? null;
         unset($data['outlet_ids']);
 
+        $categoryIds = $data['category_ids'] ?? null;
+        unset($data['category_ids']);
+        $seasonalIds = $data['seasonal_mithai_ids'] ?? null;
+        unset($data['seasonal_mithai_ids']);
+        $occasionIds = $data['occasion_ids'] ?? null;
+        unset($data['occasion_ids']);
+        $dietIds = $data['diet_preference_ids'] ?? null;
+        unset($data['diet_preference_ids']);
+
+        if (is_array($categoryIds)) {
+            $data['category_id'] = ! empty($categoryIds) ? $categoryIds[0] : null;
+        }
+        if (is_array($seasonalIds)) {
+            $data['seasonal_mithai_id'] = ! empty($seasonalIds) ? $seasonalIds[0] : null;
+        }
+        if (is_array($occasionIds)) {
+            $data['occasion_id'] = ! empty($occasionIds) ? $occasionIds[0] : null;
+        }
+        if (is_array($dietIds)) {
+            $data['diet_preference_id'] = ! empty($dietIds) ? $dietIds[0] : null;
+        }
+
         if (empty($data['product_tag_id']) && is_array($tagIds) && ! empty($tagIds)) {
             $data['product_tag_id'] = $tagIds[0];
         }
 
-        $createdProduct = DB::transaction(function () use ($data, $variationsData, $tagIds, $outletIds) {
+        $createdProduct = DB::transaction(function () use ($data, $variationsData, $tagIds, $outletIds, $categoryIds, $seasonalIds, $occasionIds, $dietIds) {
             $product = Product::create($data);
 
             if (is_array($variationsData) && ! empty($variationsData)) {
                 $this->syncProductVariations($product, $variationsData);
+            }
+
+            if (is_array($categoryIds)) {
+                $product->categories()->sync($categoryIds);
+            } elseif (! empty($product->category_id)) {
+                $product->categories()->sync([$product->category_id]);
+            }
+
+            if (is_array($seasonalIds)) {
+                $product->seasonalMithais()->sync($seasonalIds);
+            } elseif (! empty($product->seasonal_mithai_id)) {
+                $product->seasonalMithais()->sync([$product->seasonal_mithai_id]);
+            }
+
+            if (is_array($occasionIds)) {
+                $product->occasions()->sync($occasionIds);
+            } elseif (! empty($product->occasion_id)) {
+                $product->occasions()->sync([$product->occasion_id]);
+            }
+
+            if (is_array($dietIds)) {
+                $product->dietPreferences()->sync($dietIds);
+            } elseif (! empty($product->diet_preference_id)) {
+                $product->dietPreferences()->sync([$product->diet_preference_id]);
             }
 
             if (is_array($tagIds)) {
@@ -213,7 +259,7 @@ class ProductController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Product created successfully.',
-                'data' => $createdProduct->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'taxRate', 'variations', 'outlets'])->fresh(),
+                'data' => $createdProduct->load(['category', 'categories', 'seasonalMithai', 'seasonalMithais', 'occasion', 'occasions', 'dietPreference', 'dietPreferences', 'tag', 'tags', 'taxRate', 'variations', 'outlets'])->fresh(),
             ], 201);
         }
 
@@ -280,15 +326,61 @@ class ProductController extends Controller
         $outletIds = $data['outlet_ids'] ?? null;
         unset($data['outlet_ids']);
 
+        $categoryIds = $data['category_ids'] ?? null;
+        unset($data['category_ids']);
+        $seasonalIds = $data['seasonal_mithai_ids'] ?? null;
+        unset($data['seasonal_mithai_ids']);
+        $occasionIds = $data['occasion_ids'] ?? null;
+        unset($data['occasion_ids']);
+        $dietIds = $data['diet_preference_ids'] ?? null;
+        unset($data['diet_preference_ids']);
+
+        if (is_array($categoryIds)) {
+            $data['category_id'] = ! empty($categoryIds) ? $categoryIds[0] : null;
+        }
+        if (is_array($seasonalIds)) {
+            $data['seasonal_mithai_id'] = ! empty($seasonalIds) ? $seasonalIds[0] : null;
+        }
+        if (is_array($occasionIds)) {
+            $data['occasion_id'] = ! empty($occasionIds) ? $occasionIds[0] : null;
+        }
+        if (is_array($dietIds)) {
+            $data['diet_preference_id'] = ! empty($dietIds) ? $dietIds[0] : null;
+        }
+
         if (empty($data['product_tag_id']) && is_array($tagIds) && ! empty($tagIds)) {
             $data['product_tag_id'] = $tagIds[0];
         }
 
-        DB::transaction(function () use ($productModel, $data, $variationsData, $tagIds, $outletIds) {
+        DB::transaction(function () use ($productModel, $data, $variationsData, $tagIds, $outletIds, $categoryIds, $seasonalIds, $occasionIds, $dietIds) {
             $productModel->update($data);
 
             if (is_array($variationsData)) {
                 $this->syncProductVariations($productModel, $variationsData);
+            }
+
+            if (is_array($categoryIds)) {
+                $productModel->categories()->sync($categoryIds);
+            } elseif (! empty($productModel->category_id)) {
+                $productModel->categories()->sync([$productModel->category_id]);
+            }
+
+            if (is_array($seasonalIds)) {
+                $productModel->seasonalMithais()->sync($seasonalIds);
+            } elseif (! empty($productModel->seasonal_mithai_id)) {
+                $productModel->seasonalMithais()->sync([$productModel->seasonal_mithai_id]);
+            }
+
+            if (is_array($occasionIds)) {
+                $productModel->occasions()->sync($occasionIds);
+            } elseif (! empty($productModel->occasion_id)) {
+                $productModel->occasions()->sync([$productModel->occasion_id]);
+            }
+
+            if (is_array($dietIds)) {
+                $productModel->dietPreferences()->sync($dietIds);
+            } elseif (! empty($productModel->diet_preference_id)) {
+                $productModel->dietPreferences()->sync([$productModel->diet_preference_id]);
             }
 
             if (is_array($tagIds)) {
@@ -306,7 +398,7 @@ class ProductController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Product updated successfully.',
-                'data' => $productModel->load(['category', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags', 'taxRate', 'variations', 'outlets'])->fresh(),
+                'data' => $productModel->load(['category', 'categories', 'seasonalMithai', 'seasonalMithais', 'occasion', 'occasions', 'dietPreference', 'dietPreferences', 'tag', 'tags', 'taxRate', 'variations', 'outlets'])->fresh(),
             ]);
         }
 

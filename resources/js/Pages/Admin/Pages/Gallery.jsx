@@ -3,7 +3,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import Modal from '@/Components/Modal';
 import { AlertIcon } from '@/Components/Icons';
-import PageSeoSection from '@/Components/Admin/PageSeoSection';
+import { PageSeoSummaryCard } from '@/Components/Admin/PageSeoSection';
 
 export default function Gallery({ page }) {
     const sections = page?.sections || {};
@@ -1161,14 +1161,12 @@ export default function Gallery({ page }) {
                     </div>
                 </div>
 
-                {/* Page SEO Information Section */}
+                {/* Page SEO Summary (View Only - Edit Separately) */}
                 <div style={{ marginTop: '1.5rem' }}>
-                    <PageSeoSection
+                    <PageSeoSummaryCard
                         seo={seo}
-                        onChange={setSeo}
                         pageSlug="gallery"
                         pageTitle="Our Gallery"
-                        errors={errors}
                     />
                 </div>
 

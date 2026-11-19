@@ -109,11 +109,29 @@ class Product extends Model
     }
 
     /**
+     * Relationship: Product belongs to many Categories (via pivot).
+     */
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'category_product', 'product_id', 'category_id')
+            ->withTimestamps();
+    }
+
+    /**
      * Relationship: Product belongs to a Seasonal Mithai category.
      */
     public function seasonalMithai(): BelongsTo
     {
         return $this->belongsTo(SeasonalMithai::class, 'seasonal_mithai_id');
+    }
+
+    /**
+     * Relationship: Product belongs to many Seasonal Mithai categories (via pivot).
+     */
+    public function seasonalMithais(): BelongsToMany
+    {
+        return $this->belongsToMany(SeasonalMithai::class, 'product_seasonal_mithai', 'product_id', 'seasonal_mithai_id')
+            ->withTimestamps();
     }
 
     /**
@@ -125,11 +143,29 @@ class Product extends Model
     }
 
     /**
+     * Relationship: Product belongs to many Occasions (via pivot).
+     */
+    public function occasions(): BelongsToMany
+    {
+        return $this->belongsToMany(Occasion::class, 'occasion_product', 'product_id', 'occasion_id')
+            ->withTimestamps();
+    }
+
+    /**
      * Relationship: Product belongs to a Diet Preference category.
      */
     public function dietPreference(): BelongsTo
     {
         return $this->belongsTo(DietPreference::class, 'diet_preference_id');
+    }
+
+    /**
+     * Relationship: Product belongs to many Diet Preferences (via pivot).
+     */
+    public function dietPreferences(): BelongsToMany
+    {
+        return $this->belongsToMany(DietPreference::class, 'diet_preference_product', 'product_id', 'diet_preference_id')
+            ->withTimestamps();
     }
 
     /**

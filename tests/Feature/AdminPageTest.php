@@ -41,7 +41,8 @@ class AdminPageTest extends TestCase
         $response->assertOk();
         $response->assertInertia(fn ($assert) => $assert
             ->component('Admin/Pages/Index')
-            ->has('pages.data', 11)
+            ->has('pages.data', 10)
+            ->where('pages.total', 11)
         );
     }
 

@@ -22,10 +22,67 @@ export default function WooCommerceProductForm({
     const [title, setTitle] = useState(initialData.product_name || '');
     const [description, setDescription] = useState(initialData.product_description || '');
     const [shortDescription, setShortDescription] = useState(initialData.short_description || '');
-    const [categoryId, setCategoryId] = useState(initialData.category_id || '');
-    const [seasonalMithaiId, setSeasonalMithaiId] = useState(initialData.seasonal_mithai_id || '');
-    const [occasionId, setOccasionId] = useState(initialData.occasion_id || '');
-    const [dietPreferenceId, setDietPreferenceId] = useState(initialData.diet_preference_id || '');
+    const [selectedCategoryIds, setSelectedCategoryIds] = useState(() => {
+        if (Array.isArray(initialData.category_ids) && initialData.category_ids.length > 0) {
+            return initialData.category_ids.map(Number);
+        }
+        return initialData.category_id ? [Number(initialData.category_id)] : [];
+    });
+    const [selectedSeasonalMithaiIds, setSelectedSeasonalMithaiIds] = useState(() => {
+        if (Array.isArray(initialData.seasonal_mithai_ids) && initialData.seasonal_mithai_ids.length > 0) {
+            return initialData.seasonal_mithai_ids.map(Number);
+        }
+        return initialData.seasonal_mithai_id ? [Number(initialData.seasonal_mithai_id)] : [];
+    });
+    const [selectedOccasionIds, setSelectedOccasionIds] = useState(() => {
+        if (Array.isArray(initialData.occasion_ids) && initialData.occasion_ids.length > 0) {
+            return initialData.occasion_ids.map(Number);
+        }
+        return initialData.occasion_id ? [Number(initialData.occasion_id)] : [];
+    });
+    const [selectedDietPreferenceIds, setSelectedDietPreferenceIds] = useState(() => {
+        if (Array.isArray(initialData.diet_preference_ids) && initialData.diet_preference_ids.length > 0) {
+            return initialData.diet_preference_ids.map(Number);
+        }
+        return initialData.diet_preference_id ? [Number(initialData.diet_preference_id)] : [];
+    });
+
+    const toggleMultiId = (setter, id) => {
+        const numId = Number(id);
+        setter((prev) => (prev.includes(numId) ? prev.filter((item) => item !== numId) : [...prev, numId]));
+    };
+
+    // Build hierarchical parent-child list ONLY for Product Categories
+    const hierarchicalCategories = React.useMemo(() => {
+        const byParent = new Map();
+        const allIds = new Set(categories.map((c) => Number(c.id)));
+        categories.forEach((c) => {
+            const pId = c.parent_id && allIds.has(Number(c.parent_id)) ? Number(c.parent_id) : 0;
+            if (!byParent.has(pId)) byParent.set(pId, []);
+            byParent.get(pId).push(c);
+        });
+
+        const result = [];
+        const visited = new Set();
+        const walk = (parentId, depth) => {
+            const children = byParent.get(parentId) || [];
+            children.forEach((node) => {
+                const nid = Number(node.id);
+                if (visited.has(nid)) return;
+                visited.add(nid);
+                result.push({ ...node, depth });
+                walk(nid, depth + 1);
+            });
+        };
+        walk(0, 0);
+        // Append any orphan cycles just in case
+        categories.forEach((c) => {
+            if (!visited.has(Number(c.id))) {
+                result.push({ ...c, depth: 0 });
+            }
+        });
+        return result;
+    }, [categories]);
     const [taxRateId, setTaxRateId] = useState(
         initialData.tax_rate_id ? String(initialData.tax_rate_id) : (taxRates.length > 0 ? String(taxRates[0].id) : '')
     );
@@ -67,6 +124,19 @@ export default function WooCommerceProductForm({
 
     // Active Tab in Product Data box
     const [activeTab, setActiveTab] = useState('general');
+
+    const errorEntries = React.useMemo(() => Object.entries(errors || {}), [errors]);
+
+    useEffect(() => {
+        if (errorEntries.length === 0) return;
+        const keys = errorEntries.map(([k]) => k);
+        if (keys.some((k) => k === 'product_price' || k === 'product_selling_price')) {
+            setActiveTab('general');
+        } else if (keys.some((k) => k.startsWith('variations'))) {
+            setActiveTab('variations');
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [errorEntries]);
 
     // Variations state
     const [variations, setVariations] = useState(
@@ -393,15 +463,22 @@ export default function WooCommerceProductForm({
                 if (!finalSalePrice && def.selling_price) finalSalePrice = def.selling_price;
             }
         }
+        if (finalRegularPrice && !finalSalePrice) {
+            finalSalePrice = finalRegularPrice;
+        }
 
         // Prepare combined galleries
         const allGalleries = [...existingGalleries, ...galleryFiles];
 
         const payload = {
-            category_id: categoryId || null,
-            seasonal_mithai_id: seasonalMithaiId || null,
-            occasion_id: occasionId || null,
-            diet_preference_id: dietPreferenceId || null,
+            category_id: selectedCategoryIds.length > 0 ? selectedCategoryIds[0] : null,
+            category_ids: selectedCategoryIds,
+            seasonal_mithai_id: selectedSeasonalMithaiIds.length > 0 ? selectedSeasonalMithaiIds[0] : null,
+            seasonal_mithai_ids: selectedSeasonalMithaiIds,
+            occasion_id: selectedOccasionIds.length > 0 ? selectedOccasionIds[0] : null,
+            occasion_ids: selectedOccasionIds,
+            diet_preference_id: selectedDietPreferenceIds.length > 0 ? selectedDietPreferenceIds[0] : null,
+            diet_preference_ids: selectedDietPreferenceIds,
             product_tag_id: selectedTagIds.length > 0 ? selectedTagIds[0] : null,
             tax_rate_id: taxRateId ? Number(taxRateId) : null,
             tax_status: taxStatus,
@@ -441,6 +518,33 @@ export default function WooCommerceProductForm({
                     {isEdit ? `Edit Product: ${product?.product_name || title}` : 'Add new product'}
                 </h1>
             </div>
+
+            {errorEntries.length > 0 && (
+                <div
+                    role="alert"
+                    style={{
+                        marginBottom: '1.25rem',
+                        padding: '0.95rem 1.15rem',
+                        borderRadius: '0.65rem',
+                        backgroundColor: '#FEF2F2',
+                        border: '1px solid #FECACA',
+                        color: '#991B1B',
+                    }}
+                >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '0.875rem', marginBottom: '0.4rem' }}>
+                        <AlertIcon size={16} />
+                        <span>Could not save product. Please fix the following:</span>
+                    </div>
+                    <ul style={{ margin: 0, paddingLeft: '1.25rem', fontSize: '0.8125rem', lineHeight: 1.6 }}>
+                        {errorEntries.map(([field, message]) => (
+                            <li key={field}>
+                                <strong style={{ textTransform: 'capitalize' }}>{field.replace(/[._]/g, ' ')}:</strong>{' '}
+                                {Array.isArray(message) ? message.join(', ') : String(message)}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
 
             {/* 2-Column WordPress Layout */}
             <div
@@ -548,7 +652,7 @@ export default function WooCommerceProductForm({
                                 <span>Product Categories &amp; Classifications</span>
                             </div>
                             <span style={{ fontSize: '0.75rem', color: '#64748B' }}>
-                                Select 4 categories for this sweet
+                                Select one or more options in each classification
                             </span>
                         </div>
                         <div className="dayal-wc-meta-body" style={{ padding: '1.25rem' }}>
@@ -559,47 +663,34 @@ export default function WooCommerceProductForm({
                                     gap: '1rem',
                                 }}
                             >
-                                {/* Card 1: Product Category */}
+                                {/* Card 1: Product Category (Hierarchical Parent-Child + Multiple) */}
                                 <div style={{ border: '1px solid #E2E8F0', borderRadius: '0.5rem', background: '#FFFFFF', overflow: 'hidden', boxShadow: '0 1px 2px rgba(0,0,0,0.03)' }}>
                                     <div style={{ background: '#F8FAFC', padding: '0.65rem 0.85rem', borderBottom: '1px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <span style={{ fontWeight: 700, fontSize: '0.8125rem', color: '#0F172A' }}>
-                                            Product Category
+                                            Product Category {selectedCategoryIds.length > 0 ? `(${selectedCategoryIds.length})` : ''}
                                         </span>
-                                        <Link
-                                            href={route('admin.categories.create')}
-                                            target="_blank"
-                                            style={{ fontSize: '0.75rem', color: '#B88E4B', textDecoration: 'none', fontWeight: 600 }}
-                                        >
-                                            + Add new
-                                        </Link>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                                            {selectedCategoryIds.length > 0 && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setSelectedCategoryIds([])}
+                                                    style={{ background: 'none', border: 'none', padding: 0, fontSize: '0.72rem', color: '#64748B', cursor: 'pointer' }}
+                                                >
+                                                    Clear
+                                                </button>
+                                            )}
+                                            <Link
+                                                href={route('admin.categories.create')}
+                                                target="_blank"
+                                                style={{ fontSize: '0.75rem', color: '#B88E4B', textDecoration: 'none', fontWeight: 600 }}
+                                            >
+                                                + Add new
+                                            </Link>
+                                        </div>
                                     </div>
-                                    <div style={{ maxHeight: '185px', overflowY: 'auto', padding: '0.65rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '0.5rem',
-                                                fontSize: '0.8125rem',
-                                                color: categoryId ? '#64748B' : '#0F172A',
-                                                cursor: 'pointer',
-                                                padding: '0.3rem 0.5rem',
-                                                borderRadius: '0.25rem',
-                                                background: !categoryId ? '#FDF8F0' : 'transparent',
-                                                border: !categoryId ? '1px solid #E6D2B5' : '1px solid transparent',
-                                                fontWeight: !categoryId ? 600 : 400,
-                                            }}
-                                        >
-                                            <input
-                                                type="radio"
-                                                name="product_category_card"
-                                                checked={!categoryId}
-                                                onChange={() => setCategoryId('')}
-                                                style={{ accentColor: '#B88E4B' }}
-                                            />
-                                            <span>None (Uncategorized)</span>
-                                        </label>
-                                        {categories.map((c) => {
-                                            const isSelected = String(categoryId) === String(c.id);
+                                    <div style={{ maxHeight: '210px', overflowY: 'auto', padding: '0.65rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                                        {hierarchicalCategories.map((c) => {
+                                            const isSelected = selectedCategoryIds.includes(Number(c.id));
                                             return (
                                                 <label
                                                     key={c.id}
@@ -611,67 +702,57 @@ export default function WooCommerceProductForm({
                                                         color: '#0F172A',
                                                         cursor: 'pointer',
                                                         padding: '0.3rem 0.5rem',
+                                                        marginLeft: `${Math.min(c.depth || 0, 3) * 16}px`,
                                                         borderRadius: '0.25rem',
                                                         background: isSelected ? '#FDF8F0' : 'transparent',
                                                         border: isSelected ? '1px solid #E6D2B5' : '1px solid transparent',
-                                                        fontWeight: isSelected ? 600 : 400,
+                                                        fontWeight: isSelected ? 600 : (c.depth === 0 ? 500 : 400),
                                                     }}
                                                 >
                                                     <input
-                                                        type="radio"
-                                                        name="product_category_card"
+                                                        type="checkbox"
                                                         checked={isSelected}
-                                                        onChange={() => setCategoryId(c.id)}
-                                                        style={{ accentColor: '#B88E4B' }}
+                                                        onChange={() => toggleMultiId(setSelectedCategoryIds, c.id)}
+                                                        style={{ accentColor: '#7A1C1C' }}
                                                     />
-                                                    <span>{c.category_name}</span>
+                                                    <span>
+                                                        {c.depth > 0 ? '↳ ' : ''}
+                                                        {c.category_name}
+                                                    </span>
                                                 </label>
                                             );
                                         })}
                                     </div>
                                 </div>
 
-                                {/* Card 2: Seasonal Mithai */}
+                                {/* Card 2: Seasonal Mithai (Multiple) */}
                                 <div style={{ border: '1px solid #E2E8F0', borderRadius: '0.5rem', background: '#FFFFFF', overflow: 'hidden', boxShadow: '0 1px 2px rgba(0,0,0,0.03)' }}>
                                     <div style={{ background: '#F8FAFC', padding: '0.65rem 0.85rem', borderBottom: '1px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <span style={{ fontWeight: 700, fontSize: '0.8125rem', color: '#0F172A' }}>
-                                            Seasonal Mithai
+                                            Seasonal Mithai {selectedSeasonalMithaiIds.length > 0 ? `(${selectedSeasonalMithaiIds.length})` : ''}
                                         </span>
-                                        <Link
-                                            href={route('admin.seasonal-mithais.create')}
-                                            target="_blank"
-                                            style={{ fontSize: '0.75rem', color: '#B88E4B', textDecoration: 'none', fontWeight: 600 }}
-                                        >
-                                            + Add new
-                                        </Link>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                                            {selectedSeasonalMithaiIds.length > 0 && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setSelectedSeasonalMithaiIds([])}
+                                                    style={{ background: 'none', border: 'none', padding: 0, fontSize: '0.72rem', color: '#64748B', cursor: 'pointer' }}
+                                                >
+                                                    Clear
+                                                </button>
+                                            )}
+                                            <Link
+                                                href={route('admin.seasonal-mithais.create')}
+                                                target="_blank"
+                                                style={{ fontSize: '0.75rem', color: '#B88E4B', textDecoration: 'none', fontWeight: 600 }}
+                                            >
+                                                + Add new
+                                            </Link>
+                                        </div>
                                     </div>
-                                    <div style={{ maxHeight: '185px', overflowY: 'auto', padding: '0.65rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '0.5rem',
-                                                fontSize: '0.8125rem',
-                                                color: seasonalMithaiId ? '#64748B' : '#0F172A',
-                                                cursor: 'pointer',
-                                                padding: '0.3rem 0.5rem',
-                                                borderRadius: '0.25rem',
-                                                background: !seasonalMithaiId ? '#FDF8F0' : 'transparent',
-                                                border: !seasonalMithaiId ? '1px solid #E6D2B5' : '1px solid transparent',
-                                                fontWeight: !seasonalMithaiId ? 600 : 400,
-                                            }}
-                                        >
-                                            <input
-                                                type="radio"
-                                                name="seasonal_mithai_card"
-                                                checked={!seasonalMithaiId}
-                                                onChange={() => setSeasonalMithaiId('')}
-                                                style={{ accentColor: '#B88E4B' }}
-                                            />
-                                            <span>None (All-Season)</span>
-                                        </label>
+                                    <div style={{ maxHeight: '210px', overflowY: 'auto', padding: '0.65rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                                         {seasonalMithais.map((s) => {
-                                            const isSelected = String(seasonalMithaiId) === String(s.id);
+                                            const isSelected = selectedSeasonalMithaiIds.includes(Number(s.id));
                                             return (
                                                 <label
                                                     key={s.id}
@@ -690,11 +771,10 @@ export default function WooCommerceProductForm({
                                                     }}
                                                 >
                                                     <input
-                                                        type="radio"
-                                                        name="seasonal_mithai_card"
+                                                        type="checkbox"
                                                         checked={isSelected}
-                                                        onChange={() => setSeasonalMithaiId(s.id)}
-                                                        style={{ accentColor: '#B88E4B' }}
+                                                        onChange={() => toggleMultiId(setSelectedSeasonalMithaiIds, s.id)}
+                                                        style={{ accentColor: '#7A1C1C' }}
                                                     />
                                                     <span>{s.category_name}</span>
                                                 </label>
@@ -703,47 +783,34 @@ export default function WooCommerceProductForm({
                                     </div>
                                 </div>
 
-                                {/* Card 3: Occasion */}
+                                {/* Card 3: Occasion (Multiple) */}
                                 <div style={{ border: '1px solid #E2E8F0', borderRadius: '0.5rem', background: '#FFFFFF', overflow: 'hidden', boxShadow: '0 1px 2px rgba(0,0,0,0.03)' }}>
                                     <div style={{ background: '#F8FAFC', padding: '0.65rem 0.85rem', borderBottom: '1px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <span style={{ fontWeight: 700, fontSize: '0.8125rem', color: '#0F172A' }}>
-                                            Occasion
+                                            Occasion {selectedOccasionIds.length > 0 ? `(${selectedOccasionIds.length})` : ''}
                                         </span>
-                                        <Link
-                                            href={route('admin.occasions.create')}
-                                            target="_blank"
-                                            style={{ fontSize: '0.75rem', color: '#B88E4B', textDecoration: 'none', fontWeight: 600 }}
-                                        >
-                                            + Add new
-                                        </Link>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                                            {selectedOccasionIds.length > 0 && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setSelectedOccasionIds([])}
+                                                    style={{ background: 'none', border: 'none', padding: 0, fontSize: '0.72rem', color: '#64748B', cursor: 'pointer' }}
+                                                >
+                                                    Clear
+                                                </button>
+                                            )}
+                                            <Link
+                                                href={route('admin.occasions.create')}
+                                                target="_blank"
+                                                style={{ fontSize: '0.75rem', color: '#B88E4B', textDecoration: 'none', fontWeight: 600 }}
+                                            >
+                                                + Add new
+                                            </Link>
+                                        </div>
                                     </div>
-                                    <div style={{ maxHeight: '185px', overflowY: 'auto', padding: '0.65rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '0.5rem',
-                                                fontSize: '0.8125rem',
-                                                color: occasionId ? '#64748B' : '#0F172A',
-                                                cursor: 'pointer',
-                                                padding: '0.3rem 0.5rem',
-                                                borderRadius: '0.25rem',
-                                                background: !occasionId ? '#FDF8F0' : 'transparent',
-                                                border: !occasionId ? '1px solid #E6D2B5' : '1px solid transparent',
-                                                fontWeight: !occasionId ? 600 : 400,
-                                            }}
-                                        >
-                                            <input
-                                                type="radio"
-                                                name="product_occasion_card"
-                                                checked={!occasionId}
-                                                onChange={() => setOccasionId('')}
-                                                style={{ accentColor: '#B88E4B' }}
-                                            />
-                                            <span>None (Any Occasion)</span>
-                                        </label>
+                                    <div style={{ maxHeight: '210px', overflowY: 'auto', padding: '0.65rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                                         {occasions.map((o) => {
-                                            const isSelected = String(occasionId) === String(o.id);
+                                            const isSelected = selectedOccasionIds.includes(Number(o.id));
                                             return (
                                                 <label
                                                     key={o.id}
@@ -762,11 +829,10 @@ export default function WooCommerceProductForm({
                                                     }}
                                                 >
                                                     <input
-                                                        type="radio"
-                                                        name="product_occasion_card"
+                                                        type="checkbox"
                                                         checked={isSelected}
-                                                        onChange={() => setOccasionId(o.id)}
-                                                        style={{ accentColor: '#B88E4B' }}
+                                                        onChange={() => toggleMultiId(setSelectedOccasionIds, o.id)}
+                                                        style={{ accentColor: '#7A1C1C' }}
                                                     />
                                                     <span>{o.category_name}</span>
                                                 </label>
@@ -775,47 +841,34 @@ export default function WooCommerceProductForm({
                                     </div>
                                 </div>
 
-                                {/* Card 4: Diet Preference */}
+                                {/* Card 4: Diet Preference (Multiple) */}
                                 <div style={{ border: '1px solid #E2E8F0', borderRadius: '0.5rem', background: '#FFFFFF', overflow: 'hidden', boxShadow: '0 1px 2px rgba(0,0,0,0.03)' }}>
                                     <div style={{ background: '#F8FAFC', padding: '0.65rem 0.85rem', borderBottom: '1px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <span style={{ fontWeight: 700, fontSize: '0.8125rem', color: '#0F172A' }}>
-                                            Diet Preference
+                                            Diet Preference {selectedDietPreferenceIds.length > 0 ? `(${selectedDietPreferenceIds.length})` : ''}
                                         </span>
-                                        <Link
-                                            href={route('admin.diet-preferences.create')}
-                                            target="_blank"
-                                            style={{ fontSize: '0.75rem', color: '#B88E4B', textDecoration: 'none', fontWeight: 600 }}
-                                        >
-                                            + Add new
-                                        </Link>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                                            {selectedDietPreferenceIds.length > 0 && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setSelectedDietPreferenceIds([])}
+                                                    style={{ background: 'none', border: 'none', padding: 0, fontSize: '0.72rem', color: '#64748B', cursor: 'pointer' }}
+                                                >
+                                                    Clear
+                                                </button>
+                                            )}
+                                            <Link
+                                                href={route('admin.diet-preferences.create')}
+                                                target="_blank"
+                                                style={{ fontSize: '0.75rem', color: '#B88E4B', textDecoration: 'none', fontWeight: 600 }}
+                                            >
+                                                + Add new
+                                            </Link>
+                                        </div>
                                     </div>
-                                    <div style={{ maxHeight: '185px', overflowY: 'auto', padding: '0.65rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '0.5rem',
-                                                fontSize: '0.8125rem',
-                                                color: dietPreferenceId ? '#64748B' : '#0F172A',
-                                                cursor: 'pointer',
-                                                padding: '0.3rem 0.5rem',
-                                                borderRadius: '0.25rem',
-                                                background: !dietPreferenceId ? '#FDF8F0' : 'transparent',
-                                                border: !dietPreferenceId ? '1px solid #E6D2B5' : '1px solid transparent',
-                                                fontWeight: !dietPreferenceId ? 600 : 400,
-                                            }}
-                                        >
-                                            <input
-                                                type="radio"
-                                                name="product_diet_pref_card"
-                                                checked={!dietPreferenceId}
-                                                onChange={() => setDietPreferenceId('')}
-                                                style={{ accentColor: '#B88E4B' }}
-                                            />
-                                            <span>Standard (Regular)</span>
-                                        </label>
+                                    <div style={{ maxHeight: '210px', overflowY: 'auto', padding: '0.65rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                                         {dietPreferences.map((d) => {
-                                            const isSelected = String(dietPreferenceId) === String(d.id);
+                                            const isSelected = selectedDietPreferenceIds.includes(Number(d.id));
                                             return (
                                                 <label
                                                     key={d.id}
@@ -834,11 +887,10 @@ export default function WooCommerceProductForm({
                                                     }}
                                                 >
                                                     <input
-                                                        type="radio"
-                                                        name="product_diet_pref_card"
+                                                        type="checkbox"
                                                         checked={isSelected}
-                                                        onChange={() => setDietPreferenceId(d.id)}
-                                                        style={{ accentColor: '#B88E4B' }}
+                                                        onChange={() => toggleMultiId(setSelectedDietPreferenceIds, d.id)}
+                                                        style={{ accentColor: '#7A1C1C' }}
                                                     />
                                                     <span>{d.category_name}</span>
                                                 </label>

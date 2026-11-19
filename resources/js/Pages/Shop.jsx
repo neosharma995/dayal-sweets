@@ -346,24 +346,115 @@ export default function Shop({
         return defaultDietOptions;
     }, [propDietTags]);
 
-    // Search & Filter States
-    const [searchQuery, setSearchQuery] = useState('');
-    const [selectedCats, setSelectedCats] = useState([]);
-    const [selectedTag, setSelectedTag] = useState('');
-    const [sortOption, setSortOption] = useState('date');
-    const [minPrice, setMinPrice] = useState(0);
-    const [maxPrice, setMaxPrice] = useState(5000);
-    const [minRating, setMinRating] = useState(0);
-    const [selectedOccasions, setSelectedOccasions] = useState([]);
-    const [selectedDiet, setSelectedDiet] = useState([]);
+    const { url, props } = usePage();
+    const paginationLimit = props?.paginationLimit || 20;
+
+    const parseUrlFilters = (rawUrl) => {
+        try {
+            const searchParams = new URL(rawUrl || (typeof window !== 'undefined' ? window.location.href : 'http://localhost/shop'), 'http://localhost').searchParams;
+            const catsParam = searchParams.get('cats') || searchParams.get('category') || '';
+            const sParam = searchParams.get('s') || searchParams.get('search') || '';
+            const sortParam = searchParams.get('sort') || 'date';
+            const minP = parseInt(searchParams.get('min_price') || '0', 10);
+            const maxP = parseInt(searchParams.get('max_price') || '5000', 10);
+            const ratingP = parseFloat(searchParams.get('rating') || '0');
+            const seasonalParam = searchParams.get('seasonal') || searchParams.get('tag') || '';
+            const occasionsParam = searchParams.get('occasions') || searchParams.get('occasion') || '';
+            const dietParam = searchParams.get('diet') || '';
+            const pageParam = parseInt(searchParams.get('page') || '1', 10);
+
+            return {
+                cats: catsParam ? catsParam.split(',').map((c) => c.trim().toLowerCase()).filter(Boolean) : [],
+                search: sParam,
+                sort: sortParam,
+                minPrice: Number.isFinite(minP) && minP >= 0 ? minP : 0,
+                maxPrice: Number.isFinite(maxP) && maxP > 0 ? maxP : 5000,
+                minRating: Number.isFinite(ratingP) && ratingP >= 0 ? ratingP : 0,
+                seasonal: seasonalParam,
+                occasions: occasionsParam ? occasionsParam.split(',').map((v) => v.trim()).filter(Boolean) : [],
+                diet: dietParam ? dietParam.split(',').map((v) => v.trim()).filter(Boolean) : [],
+                page: Number.isFinite(pageParam) && pageParam > 0 ? pageParam : 1,
+            };
+        } catch {
+            return {
+                cats: [], search: '', sort: 'date', minPrice: 0, maxPrice: 5000,
+                minRating: 0, seasonal: '', occasions: [], diet: [], page: 1,
+            };
+        }
+    };
+
+    const initialUrlFilters = parseUrlFilters(url);
+
+    // Search & Filter States (initialized directly from URL params)
+    const [searchQuery, setSearchQuery] = useState(initialUrlFilters.search);
+    const [selectedCats, setSelectedCats] = useState(initialUrlFilters.cats);
+    const [selectedTag, setSelectedTag] = useState(initialUrlFilters.seasonal);
+    const [sortOption, setSortOption] = useState(initialUrlFilters.sort);
+    const [minPrice, setMinPrice] = useState(initialUrlFilters.minPrice);
+    const [maxPrice, setMaxPrice] = useState(initialUrlFilters.maxPrice);
+    const [minRating, setMinRating] = useState(initialUrlFilters.minRating);
+    const [selectedOccasions, setSelectedOccasions] = useState(initialUrlFilters.occasions);
+    const [selectedDiet, setSelectedDiet] = useState(initialUrlFilters.diet);
     const [copiedCode, setCopiedCode] = useState(false);
 
     // UI States
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-    const { url, props } = usePage();
-    const paginationLimit = props?.paginationLimit || 20;
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(initialUrlFilters.page);
     const itemsPerPage = paginationLimit;
+
+    // Sync state when Inertia URL changes (e.g., header/footer links or browser back/forward)
+    useEffect(() => {
+        const parsed = parseUrlFilters(url);
+        setSelectedCats(parsed.cats);
+        setSearchQuery(parsed.search);
+        setSortOption(parsed.sort);
+        setMinPrice(parsed.minPrice);
+        setMaxPrice(parsed.maxPrice);
+        setMinRating(parsed.minRating);
+        setSelectedTag(parsed.seasonal);
+        setSelectedOccasions(parsed.occasions);
+        setSelectedDiet(parsed.diet);
+        setCurrentPage(parsed.page);
+    }, [url]);
+
+    // Sync filter state back to browser URL query parameters
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        try {
+            const nextUrl = new URL(window.location.href);
+            const setOrDel = (key, val) => {
+                if (val === null || val === undefined || val === '') {
+                    nextUrl.searchParams.delete(key);
+                } else {
+                    nextUrl.searchParams.set(key, String(val));
+                }
+            };
+
+            nextUrl.searchParams.delete('category');
+            nextUrl.searchParams.delete('search');
+            nextUrl.searchParams.delete('tag');
+            nextUrl.searchParams.delete('occasion');
+
+            setOrDel('cats', selectedCats.length > 0 ? selectedCats.join(',') : '');
+            setOrDel('s', searchQuery.trim());
+            setOrDel('sort', sortOption !== 'date' ? sortOption : '');
+            setOrDel('min_price', minPrice > 0 ? minPrice : '');
+            setOrDel('max_price', maxPrice < 5000 ? maxPrice : '');
+            setOrDel('rating', minRating > 0 ? minRating : '');
+            setOrDel('seasonal', selectedTag);
+            setOrDel('occasions', selectedOccasions.length > 0 ? selectedOccasions.join(',') : '');
+            setOrDel('diet', selectedDiet.length > 0 ? selectedDiet.join(',') : '');
+            setOrDel('page', currentPage > 1 ? currentPage : '');
+
+            const nextHref = nextUrl.pathname + nextUrl.search + nextUrl.hash;
+            const currentHref = window.location.pathname + window.location.search + window.location.hash;
+            if (nextHref !== currentHref) {
+                window.history.replaceState(window.history.state, '', nextHref);
+            }
+        } catch {
+            // ignore
+        }
+    }, [selectedCats, searchQuery, sortOption, minPrice, maxPrice, minRating, selectedTag, selectedOccasions, selectedDiet, currentPage]);
 
     useEffect(() => {
         if (mobileSidebarOpen) {
@@ -375,23 +466,6 @@ export default function Shop({
             document.body.style.overflow = '';
         };
     }, [mobileSidebarOpen]);
-
-    useEffect(() => {
-        try {
-            const searchParams = new URL(url, 'http://localhost').searchParams;
-            const catsParam = searchParams.get('cats') || searchParams.get('category');
-            if (catsParam) {
-                const cats = catsParam.split(',').map((c) => c.trim().toLowerCase()).filter(Boolean);
-                setSelectedCats(cats);
-            }
-            const sParam = searchParams.get('s') || searchParams.get('search');
-            if (sParam) {
-                setSearchQuery(sParam);
-            }
-        } catch {
-            // ignore
-        }
-    }, [url]);
 
     // Collapsible Accordion Sections
     const [collapsed, setCollapsed] = useState({
@@ -456,10 +530,12 @@ export default function Shop({
     const displayCategories = useMemo(() => {
         if (Array.isArray(categories) && categories.length > 0) {
             return categories.map((cat) => {
+                const cSlug = (cat.slug || '').toLowerCase();
                 const count = sourceProducts.filter((p) => {
-                    const pSlug = (p.categorySlug || '').toLowerCase();
-                    const cSlug = (cat.slug || '').toLowerCase();
-                    return pSlug === cSlug || pSlug.startsWith(cSlug) || cSlug.startsWith(pSlug);
+                const pSlugs = Array.isArray(p.categorySlugs) && p.categorySlugs.length > 0
+                    ? p.categorySlugs.map((s) => String(s).toLowerCase())
+                    : (p.categorySlug ? [String(p.categorySlug).toLowerCase()] : []);
+                return pSlugs.includes(cSlug);
                 }).length;
 
                 return {
@@ -470,6 +546,29 @@ export default function Shop({
         }
         return categoryList;
     }, [categories, sourceProducts]);
+
+    const expandedSelectedCatSlugs = useMemo(() => {
+        if (selectedCats.length === 0) return [];
+        const slugSet = new Set(selectedCats.map((c) => c.toLowerCase()));
+        const catList = Array.isArray(displayCategories) ? displayCategories : [];
+        let added = true;
+        while (added) {
+            added = false;
+            for (const cat of catList) {
+                if (cat.parent_id) {
+                    const parent = catList.find((p) => p.id === cat.parent_id);
+                    if (parent && slugSet.has(String(parent.slug || '').toLowerCase())) {
+                        const childSlug = String(cat.slug || '').toLowerCase();
+                        if (childSlug && !slugSet.has(childSlug)) {
+                            slugSet.add(childSlug);
+                            added = true;
+                        }
+                    }
+                }
+            }
+        }
+        return Array.from(slugSet);
+    }, [selectedCats, displayCategories]);
 
     // Filter Logic
     const filteredProducts = useMemo(() => {
@@ -483,34 +582,38 @@ export default function Shop({
                 if (!matchName && !matchDesc && !matchCat) return false;
             }
 
-            // Categories filter (multi-select)
-            if (selectedCats.length > 0) {
-                const matchCat = selectedCats.some((c) => {
-                    const normalized = c.toLowerCase();
-                    const pCatSlug = (product.categorySlug || '').toLowerCase();
-                    return pCatSlug === normalized || pCatSlug.startsWith(normalized) || normalized.startsWith(pCatSlug);
-                });
+            // Categories filter (multi-select, supports multi-category and parent-child categories)
+            if (expandedSelectedCatSlugs.length > 0) {
+                const pSlugs = Array.isArray(product.categorySlugs) && product.categorySlugs.length > 0
+                    ? product.categorySlugs.map((s) => String(s).toLowerCase())
+                    : (product.categorySlug ? [String(product.categorySlug).toLowerCase()] : []);
+                const matchCat = expandedSelectedCatSlugs.some((c) => pSlugs.includes(c));
                 if (!matchCat) return false;
             }
 
-            // Seasonal category filter
+            // Seasonal category filter (supports multi-seasonal products)
             if (selectedTag) {
-                const matchSeasonal = product.seasonal === selectedTag ||
-                    product.seasonalSlug === selectedTag.toLowerCase().replace(/\s+/g, '-') ||
+                const tagSlug = selectedTag.toLowerCase().replace(/\s+/g, '-');
+                const seasonalNames = Array.isArray(product.seasonalNames) ? product.seasonalNames : (product.seasonal ? [product.seasonal] : []);
+                const seasonalSlugs = Array.isArray(product.seasonalSlugs) ? product.seasonalSlugs : (product.seasonalSlug ? [product.seasonalSlug] : []);
+                const matchSeasonal = seasonalNames.includes(selectedTag) ||
+                    seasonalSlugs.includes(tagSlug) ||
                     (product.tags && product.tags.includes(selectedTag));
                 if (!matchSeasonal) return false;
             }
 
-            // Occasion category filter
+            // Occasion category filter (supports multi-occasion products)
             if (selectedOccasions.length > 0) {
-                const matchOccasion = selectedOccasions.includes(product.occasion) ||
+                const occasionNames = Array.isArray(product.occasionNames) ? product.occasionNames : (product.occasion ? [product.occasion] : []);
+                const matchOccasion = occasionNames.some((o) => selectedOccasions.includes(o)) ||
                     (product.tags && product.tags.some((t) => selectedOccasions.includes(t)));
                 if (!matchOccasion) return false;
             }
 
-            // Diet Preference category filter
+            // Diet Preference category filter (supports multi-diet products)
             if (selectedDiet.length > 0) {
-                const matchDiet = selectedDiet.includes(product.diet) ||
+                const dietNames = Array.isArray(product.dietNames) ? product.dietNames : (product.diet ? [product.diet] : []);
+                const matchDiet = dietNames.some((d) => selectedDiet.includes(d)) ||
                     (product.tags && product.tags.some((t) => selectedDiet.includes(t)));
                 if (!matchDiet) return false;
             }
@@ -552,7 +655,7 @@ export default function Shop({
 
             return true;
         });
-    }, [searchQuery, selectedCats, selectedTag, selectedOccasions, selectedDiet, minRating, minPrice, maxPrice]);
+    }, [sourceProducts, searchQuery, expandedSelectedCatSlugs, selectedTag, selectedOccasions, selectedDiet, minRating, minPrice, maxPrice]);
 
     // Sorting Logic
     const sortedProducts = useMemo(() => {

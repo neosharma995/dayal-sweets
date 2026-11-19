@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductTagController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SalesAnalyticsController;
 use App\Http\Controllers\Admin\SeasonalMithaiController;
 use App\Http\Controllers\Admin\ShippingZoneController;
 use App\Http\Controllers\Admin\TaxRateController;
@@ -271,6 +272,9 @@ Route::middleware(['auth', 'verified', 'staff'])->prefix('admin')->name('admin.'
         Route::match(['put', 'patch', 'post'], '/', [HeaderFooterController::class, 'update'])->name('update');
         Route::post('/upload-image', [HeaderFooterController::class, 'uploadImage'])->name('upload-image');
     });
+
+    // Sales Analytics (Website & Dine-In Revenue & Breakdown)
+    Route::middleware('role_or_permission:admin|manage analytics')->get('/sales-analytics', [SalesAnalyticsController::class, 'index'])->name('analytics.index');
 
     // Customer Contact & Dining Queries Management Web Routes
     Route::middleware('role_or_permission:admin|manage queries')->group(function () {

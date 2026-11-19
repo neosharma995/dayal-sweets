@@ -251,7 +251,19 @@ class HomeController extends Controller
      */
     public function shop(Request $request): Response
     {
-        $productQuery = Product::with(['category', 'variations', 'seasonalMithai', 'occasion', 'dietPreference', 'tag', 'tags']);
+        $productQuery = Product::with([
+            'category',
+            'categories',
+            'variations',
+            'seasonalMithai',
+            'seasonalMithais',
+            'occasion',
+            'occasions',
+            'dietPreference',
+            'dietPreferences',
+            'tag',
+            'tags',
+        ]);
 
         if ($request->session()->has('customer_pincode') && $request->session()->get('is_pincode_verified')) {
             $outletIds = $request->session()->get('serviceable_outlet_ids', []);
@@ -283,8 +295,12 @@ class HomeController extends Controller
                     $image = '/uploads/2026/07/kaaju-katli.png';
                 }
 
-                $catName = $product->category?->category_name ?? 'Sweets';
-                $catSlug = $product->category?->category_slug ?? Str::slug($catName);
+                $allCats = $product->categories->isNotEmpty()
+                    ? $product->categories
+                    : ($product->category ? collect([$product->category]) : collect());
+                $catName = $allCats->first()?->category_name ?? $product->category?->category_name;
+                $catSlug = $allCats->first()?->category_slug ?? ($product->category?->category_slug ?? ($catName ? Str::slug($catName) : ''));
+                $catSlugs = $allCats->map(fn ($c) => $c->category_slug ?: Str::slug($c->category_name))->filter()->values()->all();
 
                 $variations = $product->variations->map(fn ($v) => [
                     'id' => $v->id,
@@ -292,18 +308,29 @@ class HomeController extends Controller
                     'price' => (float) ($v->selling_price ?? $v->price ?? 0),
                 ])->values()->all();
 
-                $seasonalName = $product->seasonalMithai?->category_name;
-                $occasionName = $product->occasion?->category_name;
-                $dietName = $product->dietPreference?->category_name;
+                $allSeasonal = $product->seasonalMithais->isNotEmpty()
+                    ? $product->seasonalMithais
+                    : ($product->seasonalMithai ? collect([$product->seasonalMithai]) : collect());
+                $allOccasions = $product->occasions->isNotEmpty()
+                    ? $product->occasions
+                    : ($product->occasion ? collect([$product->occasion]) : collect());
+                $allDiets = $product->dietPreferences->isNotEmpty()
+                    ? $product->dietPreferences
+                    : ($product->dietPreference ? collect([$product->dietPreference]) : collect());
+
+                $seasonalName = $allSeasonal->first()?->category_name;
+                $occasionName = $allOccasions->first()?->category_name;
+                $dietName = $allDiets->first()?->category_name;
                 $tagNames = $product->tags->pluck('product_tag_name')->values()->all();
 
                 return [
                     'id' => $product->id,
                     'name' => $product->product_name,
-                    'category' => strtoupper($catName),
+                    'category' => $catName ? strtoupper($catName) : 'UNCATEGORIZED',
                     'categorySlug' => $catSlug,
+                    'categorySlugs' => $catSlugs,
                     'slug' => Str::slug($product->product_name),
-                    'badge' => strtoupper($catName),
+                    'badge' => $catName ? strtoupper($catName) : '',
                     'description' => $product->product_description,
                     'image' => $image,
                     'price' => $price,
@@ -312,25 +339,38 @@ class HomeController extends Controller
                     'rating' => 4.9,
                     'ratingCount' => 24,
                     'seasonal' => $seasonalName,
-                    'seasonalSlug' => $product->seasonalMithai?->category_slug,
+                    'seasonalSlug' => $allSeasonal->first()?->category_slug,
+                    'seasonalNames' => $allSeasonal->pluck('category_name')->values()->all(),
+                    'seasonalSlugs' => $allSeasonal->pluck('category_slug')->values()->all(),
                     'occasion' => $occasionName,
-                    'occasionSlug' => $product->occasion?->category_slug,
+                    'occasionSlug' => $allOccasions->first()?->category_slug,
+                    'occasionNames' => $allOccasions->pluck('category_name')->values()->all(),
+                    'occasionSlugs' => $allOccasions->pluck('category_slug')->values()->all(),
                     'diet' => $dietName ?? 'Vegetarian',
-                    'dietSlug' => $product->dietPreference?->category_slug,
+                    'dietSlug' => $allDiets->first()?->category_slug,
+                    'dietNames' => $allDiets->pluck('category_name')->values()->all(),
+                    'dietSlugs' => $allDiets->pluck('category_slug')->values()->all(),
                     'primaryTag' => $product->tag?->product_tag_name,
-                    'tags' => array_values(array_unique(array_filter(array_merge([$catName, $seasonalName, $occasionName, $dietName], $tagNames)))),
+                    'tags' => array_values(array_unique(array_filter(array_merge(
+                        $allCats->pluck('category_name')->all(),
+                        $allSeasonal->pluck('category_name')->all(),
+                        $allOccasions->pluck('category_name')->all(),
+                        $allDiets->pluck('category_name')->all(),
+                        $tagNames
+                    )))),
                     'variations' => $variations,
                 ];
             });
 
-        $categories = Category::withCount('products')
+        $categories = Category::withCount(['products', 'manyProducts'])
             ->orderBy('category_name')
             ->get()
             ->map(fn (Category $cat) => [
                 'id' => $cat->id,
+                'parent_id' => $cat->parent_id,
                 'name' => $cat->category_name,
                 'slug' => $cat->category_slug ?? Str::slug($cat->category_name),
-                'count' => $cat->products_count,
+                'count' => max((int) $cat->products_count, (int) $cat->many_products_count),
             ]);
 
         $seasonalTags = SeasonalMithai::orderBy('id')

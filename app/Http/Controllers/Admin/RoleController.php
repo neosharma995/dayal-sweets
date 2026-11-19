@@ -81,6 +81,7 @@ class RoleController extends Controller
         $groupedPermissions = [
             'Orders & Sales' => [
                 ['name' => UserPermission::ManageOrders->value, 'label' => 'Orders & Deliveries', 'description' => 'View customer orders, update tracking status, and process deliveries.'],
+                ['name' => UserPermission::ManageAnalytics->value, 'label' => 'Sales Analytics', 'description' => 'View website & dine-in sales analytics, outlet revenue breakdowns, and top-selling products.'],
             ],
             'Products & Catalog' => [
                 ['name' => UserPermission::ManageProducts->value, 'label' => 'Products & Inventory', 'description' => 'Add, edit products, manage variations, categories, tags, and stock.'],

@@ -25,10 +25,15 @@ class UpdateCategoryRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
+        $merge = [];
         if (empty($this->input('category_slug')) && ! empty($this->input('category_name'))) {
-            $this->merge([
-                'category_slug' => Str::slug((string) $this->input('category_name')),
-            ]);
+            $merge['category_slug'] = Str::slug((string) $this->input('category_name'));
+        }
+        if ($this->has('parent_id') && ($this->input('parent_id') === '' || $this->input('parent_id') === 'null')) {
+            $merge['parent_id'] = null;
+        }
+        if (! empty($merge)) {
+            $this->merge($merge);
         }
     }
 
@@ -44,6 +49,12 @@ class UpdateCategoryRequest extends FormRequest
             : $this->route('category');
 
         return [
+            'parent_id' => [
+                'nullable',
+                'integer',
+                'exists:product_categories,id',
+                Rule::notIn([$categoryId]),
+            ],
             'category_name' => ['sometimes', 'required', 'string', 'max:255'],
             'category_slug' => [
                 'sometimes',

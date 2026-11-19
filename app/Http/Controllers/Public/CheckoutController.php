@@ -25,6 +25,64 @@ class CheckoutController extends Controller
     ) {}
 
     /**
+     * Resolve authoritative product/variation prices from the database so client-submitted prices cannot be tampered with.
+     *
+     * @return array{subtotal: float, items: array<int, array<string, mixed>>}
+     */
+    private function resolveAuthoritativeItems(array $rawItems): array
+    {
+        $subtotal = 0.0;
+        $resolved = [];
+
+        foreach ($rawItems as $item) {
+            $qty = max(1, (int) ($item['quantity'] ?? 1));
+            $rawProdId = $item['productId'] ?? $item['product_id'] ?? (is_numeric($item['id'] ?? null) ? (int) $item['id'] : null);
+            $productId = is_numeric($rawProdId) ? (int) $rawProdId : null;
+
+            $product = $productId ? Product::find($productId) : null;
+            if (! $product && ! empty($item['name'])) {
+                $cleanName = explode(' - ', (string) $item['name'])[0];
+                $product = Product::where('product_name', $item['name'])
+                    ->orWhere('product_name', 'like', $cleanName . '%')
+                    ->first();
+            }
+
+            $variationId = is_numeric($item['variationId'] ?? null) ? (int) $item['variationId'] : null;
+            $variation = null;
+            if ($variationId) {
+                $variationQuery = ProductVariation::where('id', $variationId);
+                if ($product) {
+                    $variationQuery->where('product_id', $product->id);
+                }
+                $variation = $variationQuery->first();
+            }
+
+            // Always prefer authoritative database price when product/variation exists
+            if ($variation) {
+                $unitPrice = (float) ($variation->selling_price ?? $variation->price ?? $item['price']);
+            } elseif ($product) {
+                $unitPrice = (float) ($product->product_selling_price ?? $product->product_price ?? $item['price']);
+            } else {
+                $unitPrice = max(0.0, (float) ($item['price'] ?? 0));
+            }
+
+            $lineTotal = round($unitPrice * $qty, 2);
+            $subtotal += $lineTotal;
+
+            $item['price'] = $unitPrice;
+            $item['quantity'] = $qty;
+            $item['resolved_product_id'] = $product?->id;
+            $item['resolved_variation_id'] = $variation?->id;
+            $resolved[] = $item;
+        }
+
+        return [
+            'subtotal' => round($subtotal, 2),
+            'items' => $resolved,
+        ];
+    }
+
+    /**
      * Initialize Razorpay Order session WITHOUT creating DB order yet.
      * Order will ONLY be inserted into DB after payment signature is cryptographically verified.
      */
@@ -56,11 +114,9 @@ class CheckoutController extends Controller
         $shippingCost = (float) ($validated['shipping_cost'] ?? 0);
 
         try {
-            // Calculate subtotal from items
-            $subtotal = 0;
-            foreach ($validated['items'] as $item) {
-                $subtotal += ((float) $item['price']) * ((int) $item['quantity']);
-            }
+            // Calculate authoritative subtotal from DB prices
+            $resolved = $this->resolveAuthoritativeItems($validated['items']);
+            $subtotal = $resolved['subtotal'];
 
             $taxAmount = 0;
             $totalAmount = $subtotal + $shippingCost + $taxAmount;
@@ -192,7 +248,7 @@ class CheckoutController extends Controller
                 ->where('user_id', $user->id)
                 ->first();
 
-            if ($order) {
+            if ($order && $order->payment_status !== 'paid' && (! $order->razorpay_order_id || $order->razorpay_order_id === $validated['razorpay_order_id'])) {
                 $order->update([
                     'payment_status' => 'paid',
                     'delivery_status' => 'pending',
@@ -215,7 +271,7 @@ class CheckoutController extends Controller
         $cacheKey = 'pending_rzp_' . $validated['razorpay_order_id'];
         $pendingData = Cache::get($cacheKey) ?? session()->get($cacheKey) ?? $validated['checkout_payload'] ?? null;
 
-        if (!$pendingData) {
+        if (!$pendingData || (isset($pendingData['user_id']) && (int) $pendingData['user_id'] !== (int) $user->id)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Payment was charged but order session expired. Please contact Dayal Sweets support with payment ID: ' . $validated['razorpay_payment_id'],
@@ -224,11 +280,9 @@ class CheckoutController extends Controller
 
         // 5. NOW create Order & OrderItems in DB in a single safe transaction!
         return DB::transaction(function () use ($pendingData, $user, $validated, $cacheKey) {
-            $subtotal = 0;
-            foreach ($pendingData['items'] as $item) {
-                $subtotal += ((float) $item['price']) * ((int) $item['quantity']);
-            }
-            $shippingCost = (float) ($pendingData['shipping_cost'] ?? 0);
+            $resolved = $this->resolveAuthoritativeItems($pendingData['items'] ?? []);
+            $subtotal = $resolved['subtotal'];
+            $shippingCost = max(0.0, (float) ($pendingData['shipping_cost'] ?? 0));
             $taxAmount = 0;
             $totalAmount = $subtotal + $shippingCost + $taxAmount;
 
@@ -258,27 +312,13 @@ class CheckoutController extends Controller
                 'paid_at' => now(),
             ]);
 
-            foreach ($pendingData['items'] as $item) {
+            foreach ($resolved['items'] as $item) {
                 $itemPrice = (float) $item['price'];
                 $itemQty = (int) $item['quantity'];
-                $itemTotal = $itemPrice * $itemQty;
+                $itemTotal = round($itemPrice * $itemQty, 2);
 
-                $rawProdId = $item['productId'] ?? $item['product_id'] ?? (is_numeric($item['id'] ?? null) ? (int) $item['id'] : null);
-                $productId = is_numeric($rawProdId) ? (int) $rawProdId : null;
-                if ($productId && !Product::where('id', $productId)->exists()) {
-                    $productId = null;
-                }
-                if (!$productId && !empty($item['name'])) {
-                    $cleanName = explode(' - ', $item['name'])[0];
-                    $productId = Product::where('product_name', $item['name'])
-                        ->orWhere('product_name', 'like', $cleanName . '%')
-                        ->value('id');
-                }
-
-                $variationId = is_numeric($item['variationId'] ?? null) ? (int) $item['variationId'] : null;
-                if ($variationId && !ProductVariation::where('id', $variationId)->exists()) {
-                    $variationId = null;
-                }
+                $productId = $item['resolved_product_id'] ?? null;
+                $variationId = $item['resolved_variation_id'] ?? null;
 
                 OrderItem::create([
                     'order_id' => $order->id,
@@ -341,10 +381,8 @@ class CheckoutController extends Controller
 
         try {
             return DB::transaction(function () use ($validated, $user, $shippingCost) {
-                $subtotal = 0;
-                foreach ($validated['items'] as $item) {
-                    $subtotal += ((float) $item['price']) * ((int) $item['quantity']);
-                }
+                $resolved = $this->resolveAuthoritativeItems($validated['items']);
+                $subtotal = $resolved['subtotal'];
 
                 $taxAmount = 0;
                 $totalAmount = $subtotal + $shippingCost + $taxAmount;
@@ -371,27 +409,13 @@ class CheckoutController extends Controller
                     'order_notes' => $validated['order_notes'] ?? null,
                 ]);
 
-                foreach ($validated['items'] as $item) {
+                foreach ($resolved['items'] as $item) {
                     $itemPrice = (float) $item['price'];
                     $itemQty = (int) $item['quantity'];
-                    $itemTotal = $itemPrice * $itemQty;
+                    $itemTotal = round($itemPrice * $itemQty, 2);
 
-                    $rawProdId = $item['productId'] ?? $item['product_id'] ?? (is_numeric($item['id'] ?? null) ? (int) $item['id'] : null);
-                    $productId = is_numeric($rawProdId) ? (int) $rawProdId : null;
-                    if ($productId && !Product::where('id', $productId)->exists()) {
-                        $productId = null;
-                    }
-                    if (!$productId && !empty($item['name'])) {
-                        $cleanName = explode(' - ', $item['name'])[0];
-                        $productId = Product::where('product_name', $item['name'])
-                            ->orWhere('product_name', 'like', $cleanName . '%')
-                            ->value('id');
-                    }
-
-                    $variationId = is_numeric($item['variationId'] ?? null) ? (int) $item['variationId'] : null;
-                    if ($variationId && !ProductVariation::where('id', $variationId)->exists()) {
-                        $variationId = null;
-                    }
+                    $productId = $item['resolved_product_id'] ?? null;
+                    $variationId = $item['resolved_variation_id'] ?? null;
 
                     OrderItem::create([
                         'order_id' => $order->id,
@@ -448,13 +472,14 @@ class CheckoutController extends Controller
         $webhookSignature = $request->header('X-Razorpay-Signature');
         $payload = $request->getContent();
 
-        // 1. Verify Razorpay Webhook Signature
-        if ($webhookSecret && $webhookSignature) {
-            $expectedSignature = hash_hmac('sha256', $payload, $webhookSecret);
-            if (!hash_equals($expectedSignature, $webhookSignature)) {
-                Log::warning('Razorpay Webhook signature mismatch.');
-                return response()->json(['error' => 'Invalid signature'], 400);
-            }
+        // 1. Fail closed: Require both webhook secret and signature header
+        if (! $webhookSecret || ! $webhookSignature) {
+            return response()->json(['error' => 'Webhook signature required'], 403);
+        }
+        $expectedSignature = hash_hmac('sha256', $payload, $webhookSecret);
+        if (! hash_equals($expectedSignature, $webhookSignature)) {
+            Log::warning('Razorpay Webhook signature mismatch.');
+            return response()->json(['error' => 'Invalid signature'], 400);
         }
 
         $data = json_decode($payload, true);

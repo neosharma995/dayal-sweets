@@ -133,7 +133,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed', Password::defaults()],
-            'role' => ['required', 'string', Rule::notIn([UserRole::Admin->value, UserRole::Customer->value])],
+            'role' => ['required', 'string', 'exists:roles,name', Rule::notIn([UserRole::Admin->value, UserRole::Customer->value])],
         ]);
 
         $user = User::create([
@@ -143,7 +143,7 @@ class UserController extends Controller
             'email_verified_at' => now(),
         ]);
 
-        $role = Role::firstOrCreate(['name' => $validated['role'], 'guard_name' => 'web']);
+        $role = Role::where('name', $validated['role'])->where('guard_name', 'web')->firstOrFail();
         $user->assignRole($role);
 
         $readableRole = match ($validated['role']) {
@@ -169,7 +169,7 @@ class UserController extends Controller
         }
 
         $validated = $request->validate([
-            'role' => ['required', 'string', Rule::notIn([UserRole::Admin->value, UserRole::Customer->value])],
+            'role' => ['required', 'string', 'exists:roles,name', Rule::notIn([UserRole::Admin->value, UserRole::Customer->value])],
         ]);
 
         $newRole = $validated['role'];
@@ -179,8 +179,7 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'You cannot change or demote your own role.');
         }
 
-        // Ensure Spatie role exists
-        Role::firstOrCreate(['name' => $newRole, 'guard_name' => 'web']);
+        Role::where('name', $newRole)->where('guard_name', 'web')->firstOrFail();
 
         $user->syncRoles([$newRole]);
 

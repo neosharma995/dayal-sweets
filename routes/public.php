@@ -22,7 +22,7 @@ Route::get('/cart', [HomeController::class, 'cart'])->name('cart');
 Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
 
 // Pincode & Delivery Serviceability
-Route::post('/pincode/check', [DeliveryZoneController::class, 'check'])->name('pincode.check');
+Route::post('/pincode/check', [DeliveryZoneController::class, 'check'])->middleware('throttle:30,1')->name('pincode.check');
 Route::get('/pincode/current', [DeliveryZoneController::class, 'current'])->name('pincode.current');
 Route::post('/pincode/clear', [DeliveryZoneController::class, 'clear'])->name('pincode.clear');
 
@@ -33,9 +33,9 @@ Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear')
 
 // Dine-In Table QR Scanner Direct Ordering Panel (Guest & Logged-in Table Customers)
 Route::get('/scan/{token}', [TableOrderController::class, 'show'])->name('table.order.show');
-Route::post('/scan/{token}/order', [TableOrderController::class, 'placeOrder'])->name('table.order.place');
+Route::post('/scan/{token}/order', [TableOrderController::class, 'placeOrder'])->middleware('throttle:20,1')->name('table.order.place');
 Route::get('/table-order/{token}', [TableOrderController::class, 'show'])->name('table.order.alias');
-Route::post('/table-order/{token}/order', [TableOrderController::class, 'placeOrder'])->name('table.order.place.alias');
+Route::post('/table-order/{token}/order', [TableOrderController::class, 'placeOrder'])->middleware('throttle:20,1')->name('table.order.place.alias');
 
 // Authenticated Checkout Actions (User must be logged in to create orders)
 Route::middleware('auth')->prefix('checkout')->name('checkout.')->group(function () {
@@ -48,14 +48,14 @@ Route::middleware('auth')->prefix('checkout')->name('checkout.')->group(function
 // Route::post('/webhook/razorpay', [CheckoutController::class, 'handleWebhook'])->name('razorpay.webhook');
 Route::get('/about-us', [HomeController::class, 'about'])->name('about-us');
 Route::get('/contact-us', [HomeController::class, 'contact'])->name('contact');
-Route::post('/contact-us', [HomeController::class, 'submitContact'])->name('contact.submit');
-Route::post('/contact-us/submit', [HomeController::class, 'submitContact'])->name('contact.submit.alias');
+Route::post('/contact-us', [HomeController::class, 'submitContact'])->middleware('throttle:15,1')->name('contact.submit');
+Route::post('/contact-us/submit', [HomeController::class, 'submitContact'])->middleware('throttle:15,1')->name('contact.submit.alias');
 Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');
 Route::get('/gifting', [HomeController::class, 'gifting'])->name('gifting');
 Route::get('/dining', [HomeController::class, 'dining'])->name('dining');
-Route::post('/dining', [HomeController::class, 'submitDiningQuery'])->name('dining.submit');
+Route::post('/dining', [HomeController::class, 'submitDiningQuery'])->middleware('throttle:15,1')->name('dining.submit');
 Route::get('/dinning', [HomeController::class, 'dining'])->name('dinning');
-Route::post('/dinning', [HomeController::class, 'submitDiningQuery'])->name('dinning.submit');
+Route::post('/dinning', [HomeController::class, 'submitDiningQuery'])->middleware('throttle:15,1')->name('dinning.submit');
 Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('privacy-policy');
 Route::get('/refund-returns', [HomeController::class, 'refundReturns'])->name('refund-returns');
 Route::get('/refund-and-returns-policy', [HomeController::class, 'refundReturns'])->name('refund-returns.alias');
@@ -101,4 +101,4 @@ Route::middleware('auth')->group(function () {
 });
 
 // Coupon Code Validation API
-Route::post('/api/coupon/apply', [\App\Http\Controllers\Public\CouponApiController::class, 'apply'])->name('api.coupon.apply');
+Route::post('/api/coupon/apply', [\App\Http\Controllers\Public\CouponApiController::class, 'apply'])->middleware('throttle:30,1')->name('api.coupon.apply');

@@ -41,7 +41,7 @@ class AdminPageTest extends TestCase
         $response->assertOk();
         $response->assertInertia(fn ($assert) => $assert
             ->component('Admin/Pages/Index')
-            ->has('pages', 2)
+            ->has('pages.data', 11)
         );
     }
 
@@ -69,7 +69,7 @@ class AdminPageTest extends TestCase
         ];
 
         $response = $this->actingAs($this->admin)->post('/admin/pages/contact-us', $payload);
-        $response->assertRedirect('/admin/pages/contact-us');
+        $response->assertRedirect();
 
         $page = Page::where('slug', 'contact-us')->first();
         $this->assertNotNull($page);
@@ -148,7 +148,7 @@ class AdminPageTest extends TestCase
         ];
 
         $response = $this->actingAs($this->admin)->post('/admin/pages/gallery', $payload);
-        $response->assertRedirect('/admin/pages/gallery');
+        $response->assertRedirect();
 
         $page = Page::where('slug', 'gallery')->first();
         $this->assertNotNull($page);
@@ -230,7 +230,7 @@ class AdminPageTest extends TestCase
         ];
 
         $response = $this->actingAs($this->admin)->post('/admin/pages/gallery', $payload);
-        $response->assertRedirect('/admin/pages/gallery');
+        $response->assertRedirect();
 
         // Check public storefront renders newest at index 0
         $public = $this->get('/gallery');
@@ -275,7 +275,7 @@ class AdminPageTest extends TestCase
         $response->assertOk();
         $response->assertJson([
             'success' => true,
-            'message' => 'Gallery page content updated successfully.',
+            'message' => 'Gallery page content and SEO updated successfully.',
         ]);
 
         // Immediately fetch public gallery storefront

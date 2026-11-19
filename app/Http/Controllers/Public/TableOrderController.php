@@ -189,12 +189,21 @@ class TableOrderController extends Controller
         $guestsCount = (int) ($validated['guests_count'] ?? $table->capacity);
         $paymentMethod = $validated['payment_method'] ?? 'pay_at_counter';
 
-        // Build authoritative line items from database prices
+        $hasOutletProducts = $outlet && $outlet->products()->wherePivot('is_available', true)->exists();
+
+        // Build authoritative line items from database prices (scoped to outlet when configured)
         $resolvedItems = [];
         $subtotal = 0.0;
 
         foreach ($validated['items'] as $rawItem) {
-            $product = Product::findOrFail((int) $rawItem['product_id']);
+            $productQuery = Product::where('id', (int) $rawItem['product_id']);
+            if ($hasOutletProducts) {
+                $productQuery->whereHas('outlets', function ($q) use ($outlet) {
+                    $q->where('outlets.id', $outlet->id)
+                        ->where('outlet_products.is_available', true);
+                });
+            }
+            $product = $productQuery->firstOrFail();
             $variation = null;
 
             if (! empty($rawItem['variation_id'])) {

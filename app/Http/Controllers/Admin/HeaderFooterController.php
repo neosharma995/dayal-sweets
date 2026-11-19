@@ -40,7 +40,7 @@ class HeaderFooterController extends Controller
     public function uploadImage(Request $request): JsonResponse
     {
         $request->validate([
-            'image_file' => ['required', 'file', 'mimes:jpeg,png,jpg,webp,avif,svg', 'max:5120'],
+            'image_file' => ['required', 'image', 'mimes:jpeg,png,jpg,webp,avif', 'max:5120'],
         ]);
 
         $path = $request->file('image_file')->store('header-footer', 'public');

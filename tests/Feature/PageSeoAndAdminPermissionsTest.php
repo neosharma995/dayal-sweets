@@ -185,4 +185,61 @@ class PageSeoAndAdminPermissionsTest extends TestCase
         $this->assertDatabaseHas('users', ['id' => $admin->id]);
         $this->assertTrue($admin->fresh()->hasRole(UserRole::Admin->value));
     }
+
+    public function test_staff_creation_rejects_admin_customer_and_nonexistent_roles(): void
+    {
+        $admin = User::where('email', 'admin@dayalsweets.com')->firstOrFail();
+
+        foreach (['admin', 'customer', 'made_up_hacker_role'] as $badRole) {
+            $this->actingAs($admin)->post(route('admin.users.store'), [
+                'name' => 'Test User',
+                'email' => "bad_{$badRole}@dayalsweets.com",
+                'password' => 'Password123!',
+                'password_confirmation' => 'Password123!',
+                'role' => $badRole,
+            ])->assertSessionHasErrors('role');
+        }
+    }
+
+    public function test_cod_checkout_enforces_authoritative_database_product_price(): void
+    {
+        $customer = User::factory()->create();
+        $customer->assignRole(UserRole::Customer->value);
+
+        $product = \App\Models\Product::create([
+            'product_name' => 'Royal Kaju Katli Box',
+            'product_slug' => 'royal-kaju-katli-box',
+            'product_description' => 'Pure cashew fudge',
+            'product_price' => 900.00,
+            'product_selling_price' => 850.00,
+            'product_qty' => 25,
+        ]);
+
+        // Attempt to tamper item price to 1.00
+        $res = $this->actingAs($customer)->postJson('/checkout/place-cod-order', [
+            'customer_name' => 'Test Buyer',
+            'customer_email' => 'buyer@example.com',
+            'customer_phone' => '9876543210',
+            'shipping_address' => '123 Main St',
+            'city' => 'Una',
+            'state' => 'Himachal Pradesh',
+            'pincode' => '174303',
+            'shipping_cost' => 0,
+            'items' => [
+                [
+                    'id' => $product->id,
+                    'name' => $product->product_name,
+                    'price' => 1.00,
+                    'quantity' => 2,
+                ],
+            ],
+        ]);
+
+        $res->assertOk()->assertJsonPath('success', true);
+        $this->assertDatabaseHas('orders', [
+            'id' => $res->json('order_id'),
+            'subtotal' => 1700.00,
+            'total_amount' => 1700.00,
+        ]);
+    }
 }

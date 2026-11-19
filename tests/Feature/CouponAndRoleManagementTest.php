@@ -137,8 +137,7 @@ class CouponAndRoleManagementTest extends TestCase
     public function test_admin_cannot_delete_themselves(): void
     {
         $response = $this->actingAs($this->admin)->delete(route('admin.users.destroy', $this->admin->id));
-        $response->assertRedirect();
-        $response->assertSessionHas('error');
+        $response->assertForbidden();
         $this->assertDatabaseHas('users', ['id' => $this->admin->id]);
     }
 
@@ -165,7 +164,7 @@ class CouponAndRoleManagementTest extends TestCase
             'role' => UserRole::Customer->value,
         ]);
 
-        $response->assertSessionHas('error');
+        $response->assertForbidden();
         $this->admin->refresh();
         $this->assertTrue($this->admin->hasRole(UserRole::Admin->value));
     }
@@ -173,7 +172,8 @@ class CouponAndRoleManagementTest extends TestCase
     public function test_editor_can_access_editor_dashboard(): void
     {
         $response = $this->actingAs($this->editor)->get(route('editor.dashboard'));
-        $response->assertOk();
+        $response->assertRedirect(route('admin.dashboard'));
+        $this->actingAs($this->editor)->get(route('admin.dashboard'))->assertOk();
     }
 
     public function test_editor_cannot_access_admin_orders(): void

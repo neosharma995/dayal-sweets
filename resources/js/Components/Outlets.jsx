@@ -1,6 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { usePage } from '@inertiajs/react';
 
+const FALLBACK_OUTLET_IMAGES = {
+    amb: '/uploads/2026/08/Amb-Outlet.png',
+    hamirpur: '/uploads/2026/08/Hamirpur-Outlet.png',
+    una: '/uploads/2026/08/Nangal-Road-Una-Outlet.png',
+    'una-bus-stand': '/uploads/2026/07/About-Outlet.png',
+    palampur: '/uploads/2026/09/palampoor-stor.png',
+};
+
+const SECONDARY_FALLBACK_IMAGES = {
+    amb: '/images/contact/outlet-amb.jpg',
+    hamirpur: '/images/contact/outlet-hamirpur.jpg',
+    una: '/images/contact/outlet-una.jpg',
+    'una-bus-stand': '/images/contact/outlet-una-bus-stand.jpg',
+    palampur: '/images/contact/outlet-palampur.jpg',
+};
+
 /**
  * Reusable Outlets & Stores Section Component ("Premium Outlets")
  * Fetches dynamic outlets from seeded database / Inertia shared props
@@ -12,9 +28,19 @@ function normalizeOutlet(item) {
         item.isComingSoon ||
         item.status === 'coming_soon'
     );
+
+    const slugKey = String(item.slug || item.name || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+
+    const fallbackImg = FALLBACK_OUTLET_IMAGES[slugKey] || SECONDARY_FALLBACK_IMAGES[slugKey] || null;
+    const secondaryImg = SECONDARY_FALLBACK_IMAGES[slugKey] || null;
+    const image = item.image_url || item.image || fallbackImg || secondaryImg;
+
     return {
         id: item.id || item.slug || item.name,
-        slug: item.slug,
+        slug: item.slug || slugKey,
         name: item.name,
         subtitle: item.subtitle,
         address: item.address,
@@ -26,7 +52,9 @@ function normalizeOutlet(item) {
         whatsapp: item.whatsapp,
         whatsappRaw: item.whatsapp_raw || item.whatsappRaw || '918062757395',
         timings: item.timings,
-        image: item.image_url || item.image,
+        image: image,
+        fallbackImage: fallbackImg,
+        secondaryFallbackImage: secondaryImg,
         mapUrl: item.map_url || item.mapUrl || item.map,
         isComingSoon,
         expected: item.expected || 'Expected Opening',
@@ -53,15 +81,16 @@ export default function Outlets({
     // Determine current raw outlets source
     const rawList = (initialOutlets && initialOutlets.length > 0)
         ? initialOutlets
-        : (sharedOutlets && sharedOutlets.length > 0)
-            ? sharedOutlets
-            : (fetchedOutlets && fetchedOutlets.length > 0)
-                ? fetchedOutlets
+        : (fetchedOutlets && fetchedOutlets.length > 0)
+            ? fetchedOutlets
+            : (sharedOutlets && sharedOutlets.length > 0)
+                ? sharedOutlets
                 : [];
 
-    // Fetch dynamic outlets from public API if not provided in props
+    // Fetch dynamic outlets from public API if not provided in props or if images are missing
     useEffect(() => {
-        if ((!initialOutlets || initialOutlets.length === 0) && (!sharedOutlets || sharedOutlets.length === 0)) {
+        const hasMissingImages = sharedOutlets && sharedOutlets.some((o) => !o.image && !o.image_url);
+        if ((!initialOutlets || initialOutlets.length === 0) && ((!sharedOutlets || sharedOutlets.length === 0) || hasMissingImages)) {
             fetch('/api/outlets', { headers: { Accept: 'application/json' } })
                 .then((res) => (res.ok ? res.json() : null))
                 .then((json) => {
@@ -136,6 +165,14 @@ export default function Outlets({
                                                     alt={`${outlet.name} Architectural Rendering`}
                                                     className="dayal-outlet-card-img"
                                                     loading="lazy"
+                                                    onError={(e) => {
+                                                        const el = e.currentTarget;
+                                                        if (outlet.fallbackImage && !el.src.includes(outlet.fallbackImage)) {
+                                                            el.src = outlet.fallbackImage;
+                                                        } else if (outlet.secondaryFallbackImage && !el.src.includes(outlet.secondaryFallbackImage)) {
+                                                            el.src = outlet.secondaryFallbackImage;
+                                                        }
+                                                    }}
                                                 />
                                             </div>
 
@@ -211,6 +248,14 @@ export default function Outlets({
                                                 alt={`Dayal Sweets ${outlet.name} Outlet`}
                                                 className="dayal-outlet-card-img"
                                                 loading="lazy"
+                                                onError={(e) => {
+                                                    const el = e.currentTarget;
+                                                    if (outlet.fallbackImage && !el.src.includes(outlet.fallbackImage)) {
+                                                        el.src = outlet.fallbackImage;
+                                                    } else if (outlet.secondaryFallbackImage && !el.src.includes(outlet.secondaryFallbackImage)) {
+                                                        el.src = outlet.secondaryFallbackImage;
+                                                    }
+                                                }}
                                             />
                                         </div>
 

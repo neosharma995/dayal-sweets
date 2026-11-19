@@ -3,6 +3,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import Modal from '@/Components/Modal';
 import { AlertIcon } from '@/Components/Icons';
+import PageSeoSection from '@/Components/Admin/PageSeoSection';
 
 export default function Gallery({ page }) {
     const sections = page?.sections || {};
@@ -46,6 +47,18 @@ export default function Gallery({ page }) {
         : [];
     const [images, setImages] = useState(initialImages);
 
+    // Page SEO Information State
+    const [seo, setSeo] = useState({
+        meta_title: page?.meta_title ?? sections.seo?.meta_title ?? 'Our Gallery | Dayal Sweets',
+        meta_description: page?.meta_description ?? sections.seo?.meta_description ?? 'Explore Dayal Sweets moments - Authentic Indian, Himachali, Chinese, South Indian, and fresh sweets crafted with love.',
+        meta_keywords: page?.meta_keywords ?? sections.seo?.meta_keywords ?? 'Dayal Sweets gallery, sweet shop photos, dining ambience, festival hampers gallery',
+        canonical_url: page?.canonical_url ?? sections.seo?.canonical_url ?? '',
+        og_title: page?.og_title ?? sections.seo?.og_title ?? (page?.meta_title || 'Our Gallery | Dayal Sweets'),
+        og_description: page?.og_description ?? sections.seo?.og_description ?? (page?.meta_description || 'Explore Dayal Sweets moments - Authentic Indian, Himachali, Chinese, South Indian, and fresh sweets crafted with love.'),
+        og_image: page?.og_image ?? sections.seo?.og_image ?? '/uploads/2026/08/Family-Dining.png',
+        robots: page?.robots ?? sections.seo?.robots ?? 'index, follow',
+    });
+
     // Filter controls for Left-side photo grid
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('all');
@@ -85,12 +98,14 @@ export default function Gallery({ page }) {
         const catsToSave = (overrides.categories ?? categories).filter((c) => c.name && c.name.trim() !== '');
         const imgsToSave = (overrides.images ?? images).filter((img) => img.name && img.name.trim() !== '');
 
+        const seoToSave = overrides.seo ?? seo;
         const payload = {
             top_bar_Heading: overrides.top_bar_Heading ?? topBarHeading,
             top_bar_sub_heading: overrides.top_bar_sub_heading ?? topBarSubHeading,
             top_bar_description: overrides.top_bar_description ?? topBarDescription,
             categories: catsToSave,
             images: imgsToSave,
+            ...seoToSave,
         };
 
         try {
@@ -1144,6 +1159,17 @@ export default function Gallery({ page }) {
                             </form>
                         </div>
                     </div>
+                </div>
+
+                {/* Page SEO Information Section */}
+                <div style={{ marginTop: '1.5rem' }}>
+                    <PageSeoSection
+                        seo={seo}
+                        onChange={setSeo}
+                        pageSlug="gallery"
+                        pageTitle="Our Gallery"
+                        errors={errors}
+                    />
                 </div>
 
                 {/* Delete Confirmation Modal */}

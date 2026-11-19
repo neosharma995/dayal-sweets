@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
+import SeoHead from '@/Components/SeoHead';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import ProductCard from '@/Components/ProductCard';
@@ -593,7 +594,10 @@ export default function Shop({
 
     return (
         <div className="dayal-sweets-shop oto-shop-container">
-            <Head title="Shop | Dayal Sweets - Pure Traditional Sweets & Snacks" />
+            <SeoHead
+                fallbackTitle="Shop | Dayal Sweets - Pure Traditional Sweets & Snacks"
+                fallbackDescription="Browse and order fresh handmade Indian sweets, namkeen, dry fruits, bakery items, and festive combos online with fast delivery from Dayal Sweets."
+            />
 
             {/* Global Header */}
             <Header auth={auth} />

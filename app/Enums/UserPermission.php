@@ -20,6 +20,7 @@ enum UserPermission: string
 
     // Website & Branding Permissions (Editor & Admin)
     case ManagePages = 'manage pages';
+    case ManageSeo = 'manage seo';
     case ManageHeaderFooter = 'manage header footer';
 
     // Customer Frontend Capabilities (Non-Administrative)
@@ -45,6 +46,7 @@ enum UserPermission: string
             self::ManageRoles->value,
             self::ManageStoreSettings->value,
             self::ManagePages->value,
+            self::ManageSeo->value,
             self::ManageHeaderFooter->value,
             self::ViewProducts->value,
             self::PlaceOrders->value,
@@ -60,6 +62,7 @@ enum UserPermission: string
     {
         return [
             self::ManagePages->value,
+            self::ManageSeo->value,
             self::ManageHeaderFooter->value,
         ];
     }
@@ -94,6 +97,7 @@ enum UserPermission: string
             self::ManageRoles->value,
             self::ManageStoreSettings->value,
             self::ManagePages->value,
+            self::ManageSeo->value,
             self::ManageHeaderFooter->value,
         ];
     }

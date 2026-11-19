@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
+import PageSeoSection from '@/Components/Admin/PageSeoSection';
 
 export default function ContactUs({ page }) {
     const sections = page?.sections || {};
@@ -41,6 +42,18 @@ export default function ContactUs({ page }) {
                 : sections.contact_info.hours[0])
             : 'Mon-Sun ( 07:00 AM - 12:00 AM )');
     const [openingHours, setOpeningHours] = useState(initialHours);
+
+    // Page SEO Information State
+    const [seo, setSeo] = useState({
+        meta_title: page?.meta_title ?? sections.seo?.meta_title ?? 'Contact Us - Dayal Sweets',
+        meta_description: page?.meta_description ?? sections.seo?.meta_description ?? "We'd Love to Hear From You! Have a query, feedback, or a special request? Contact Dayal Sweets.",
+        meta_keywords: page?.meta_keywords ?? sections.seo?.meta_keywords ?? 'Contact Dayal Sweets, Dayal Sweets phone number, Dayal Sweets email',
+        canonical_url: page?.canonical_url ?? sections.seo?.canonical_url ?? '',
+        og_title: page?.og_title ?? sections.seo?.og_title ?? (page?.meta_title || 'Contact Us - Dayal Sweets'),
+        og_description: page?.og_description ?? sections.seo?.og_description ?? (page?.meta_description || "We'd Love to Hear From You! Have a query, feedback, or a special request? Contact Dayal Sweets."),
+        og_image: page?.og_image ?? sections.seo?.og_image ?? '',
+        robots: page?.robots ?? sections.seo?.robots ?? 'index, follow',
+    });
 
     const [processing, setProcessing] = useState(false);
     const [errors, setErrors] = useState({});
@@ -90,6 +103,7 @@ export default function ContactUs({ page }) {
             emails: emails.filter((e) => e && e.trim() !== ''),
             phones: phones.filter((p) => p && p.trim() !== ''),
             opening_hours: openingHours,
+            ...seo,
         };
 
         router.post(route('admin.pages.contact-us.update'), payload, {
@@ -451,6 +465,17 @@ export default function ContactUs({ page }) {
                             </div>
                         </div>
                     </div>
+
+                    {/* ========================================================= */}
+                    {/* SECTION 3: PAGE SEO INFORMATION (META & OPEN GRAPH)       */}
+                    {/* ========================================================= */}
+                    <PageSeoSection
+                        seo={seo}
+                        onChange={setSeo}
+                        pageSlug="contact-us"
+                        pageTitle="Contact Us"
+                        errors={errors}
+                    />
                 </form>
             </div>
         </AdminLayout>

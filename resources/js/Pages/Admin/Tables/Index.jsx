@@ -6,12 +6,21 @@ import QrCodeSvg from '@/Components/QrCodeSvg';
 import Pagination from '@/Components/Pagination';
 
 export default function Index({
-    tables = [],
+    tables,
     outlets = [],
     locations = [],
     stats = {},
     filters = {},
 }) {
+    // Supports both LengthAwarePaginator and array
+    const tableList = Array.isArray(tables) ? tables : (tables?.data || []);
+    const isPaginator = !Array.isArray(tables) && tables?.total !== undefined;
+
+    const totalItems = isPaginator ? tables.total : tableList.length;
+    const currentPage = isPaginator ? tables.current_page : Number(filters.page || 1);
+    const totalPages = isPaginator ? tables.last_page : (Math.ceil(totalItems / (Number(filters.per_page) || 8)) || 1);
+    const itemsPerPage = isPaginator ? tables.per_page : Number(filters.per_page || 8);
+
     const [search, setSearch] = useState(filters.search || '');
     const [outletFilter, setOutletFilter] = useState(String(filters.outlet_id || 'all'));
     const [locationFilter, setLocationFilter] = useState(filters.location || 'all');
@@ -23,40 +32,17 @@ export default function Index({
         setOutletFilter(String(filters.outlet_id || 'all'));
     }, [filters.outlet_id]);
 
-    // Instant client-side + server-synced filtering
-    const filteredTables = useMemo(() => {
-        return tables.filter((t) => {
-            if (outletFilter !== 'all' && Number(t.outlet_id) !== Number(outletFilter)) {
-                return false;
-            }
-            if (locationFilter !== 'all' && t.location !== locationFilter) {
-                return false;
-            }
-            if (statusFilter !== 'all' && t.status !== statusFilter) {
-                return false;
-            }
-            if (search.trim()) {
-                const q = search.toLowerCase();
-                const matchNum = t.table_number?.toLowerCase().includes(q);
-                const matchName = t.name?.toLowerCase().includes(q);
-                const matchLoc = t.location?.toLowerCase().includes(q);
-                const matchOutlet = t.outlet?.name?.toLowerCase().includes(q);
-                if (!matchNum && !matchName && !matchLoc && !matchOutlet) return false;
-            }
-            return true;
-        });
-    }, [tables, outletFilter, locationFilter, statusFilter, search]);
+    useEffect(() => {
+        setLocationFilter(filters.location || 'all');
+    }, [filters.location]);
 
-    // Pagination State
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(8);
+    useEffect(() => {
+        setStatusFilter(filters.status || 'all');
+    }, [filters.status]);
 
-    const totalPages = Math.ceil(filteredTables.length / itemsPerPage) || 1;
-    const paginatedTables = useMemo(() => {
-        const safePage = Math.min(currentPage, totalPages);
-        const start = (safePage - 1) * itemsPerPage;
-        return filteredTables.slice(start, start + itemsPerPage);
-    }, [filteredTables, currentPage, itemsPerPage, totalPages]);
+    useEffect(() => {
+        setSearch(filters.search || '');
+    }, [filters.search]);
 
     // QR Scanner Preview Modal
     const [activeQrTable, setActiveQrTable] = useState(null);
@@ -82,8 +68,18 @@ export default function Index({
             location: locationFilter,
             status: statusFilter,
             search: search || undefined,
+            per_page: itemsPerPage,
+            page: currentPage,
             ...overrides,
         };
+
+        if (params.outlet_id === 'all') delete params.outlet_id;
+        if (params.location === 'all') delete params.location;
+        if (params.status === 'all') delete params.status;
+        if (!params.search) delete params.search;
+        if (Number(params.per_page) === 8) delete params.per_page;
+        if (Number(params.page) <= 1) delete params.page;
+
         router.get(route('admin.tables.index'), params, {
             preserveState: true,
             preserveScroll: true,
@@ -92,7 +88,7 @@ export default function Index({
 
     const handleSearchSubmit = (e) => {
         e.preventDefault();
-        applyFilters({ search });
+        applyFilters({ search, page: 1 });
     };
 
     const handleStatusChange = (table, newStatus) => {
@@ -415,7 +411,7 @@ export default function Index({
                                 type="button"
                                 onClick={() => {
                                     setStatusFilter(tab.key);
-                                    applyFilters({ status: tab.key });
+                                    applyFilters({ status: tab.key, page: 1 });
                                 }}
                                 style={{
                                     padding: '0.45rem 0.9rem',
@@ -489,7 +485,7 @@ export default function Index({
                                 type="button"
                                 onClick={() => {
                                     setSearch('');
-                                    applyFilters({ search: '' });
+                                    applyFilters({ search: '', page: 1 });
                                 }}
                                 style={{
                                     padding: '0.5rem 0.65rem',
@@ -514,8 +510,7 @@ export default function Index({
                                 onChange={(e) => {
                                     const val = e.target.value;
                                     setOutletFilter(val);
-                                    setCurrentPage(1);
-                                    applyFilters({ outlet_id: val });
+                                    applyFilters({ outlet_id: val, page: 1 });
                                 }}
                                 style={{ padding: '0.45rem 0.75rem', borderRadius: '0.375rem', border: '1px solid #CBD5E1', fontSize: '0.8125rem', background: '#FFFFFF' }}
                             >
@@ -534,7 +529,7 @@ export default function Index({
                                 value={locationFilter}
                                 onChange={(e) => {
                                     setLocationFilter(e.target.value);
-                                    applyFilters({ location: e.target.value });
+                                    applyFilters({ location: e.target.value, page: 1 });
                                 }}
                                 style={{ padding: '0.45rem 0.75rem', borderRadius: '0.375rem', border: '1px solid #CBD5E1', fontSize: '0.8125rem', background: '#FFFFFF' }}
                             >
@@ -551,7 +546,7 @@ export default function Index({
                                 value={statusFilter}
                                 onChange={(e) => {
                                     setStatusFilter(e.target.value);
-                                    applyFilters({ status: e.target.value });
+                                    applyFilters({ status: e.target.value, page: 1 });
                                 }}
                                 style={{ padding: '0.45rem 0.75rem', borderRadius: '0.375rem', border: '1px solid #CBD5E1', fontSize: '0.8125rem', background: '#FFFFFF' }}
                             >
@@ -569,14 +564,15 @@ export default function Index({
                                 value={itemsPerPage}
                                 onChange={(e) => {
                                     const val = parseInt(e.target.value, 10);
-                                    setItemsPerPage(val);
-                                    setCurrentPage(1);
+                                    applyFilters({ per_page: val, page: 1 });
                                 }}
                                 style={{ padding: '0.45rem 0.6rem', borderRadius: '0.375rem', border: '1px solid #CBD5E1', fontSize: '0.8125rem', background: '#FFFFFF' }}
                             >
                                 <option value={8}>8</option>
                                 <option value={10}>10</option>
+                                <option value={12}>12</option>
                                 <option value={15}>15</option>
+                                <option value={20}>20</option>
                                 <option value={25}>25</option>
                                 <option value={50}>50</option>
                             </select>
@@ -586,7 +582,7 @@ export default function Index({
 
                 {/* Tables Data Grid */}
             <div style={{ background: '#FFFFFF', borderRadius: '0.75rem', border: '1px solid #E2E8F0', overflow: 'hidden' }}>
-                {tables.length === 0 ? (
+                {tableList.length === 0 ? (
                     <div style={{ padding: '3rem', textAlign: 'center', color: '#64748B' }}>
                         <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.35rem' }}>No Dining Tables Found</h3>
                         <p style={{ fontSize: '0.88rem', marginBottom: '1rem' }}>Create dining tables with seating capacities and locations to generate QR code scanners for direct table ordering.</p>
@@ -614,7 +610,7 @@ export default function Index({
                                 </tr>
                             </thead>
                             <tbody>
-                                {paginatedTables.map((table) => {
+                                {tableList.map((table) => {
                                     const badge = statusBadgeStyle(table.status);
                                     const scanUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/scan/${table.qr_token}`;
 
@@ -726,19 +722,20 @@ export default function Index({
                         </table>
 
                         {/* Pagination Footer */}
-                        {filteredTables.length > 0 && (
+                        {totalItems > 0 && (
                             <div style={{ padding: '1rem 1.25rem', borderTop: '1px solid #E2E8F0', background: '#FAFAFA', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.82rem', color: '#475569' }}>
                                     <span>Rows per page:</span>
                                     <select
                                         value={itemsPerPage}
                                         onChange={(e) => {
-                                            setItemsPerPage(Number(e.target.value));
-                                            setCurrentPage(1);
+                                            const newSize = Number(e.target.value);
+                                            applyFilters({ per_page: newSize, page: 1 });
                                         }}
-                                        style={{ padding: '0.3rem 0.6rem', borderRadius: '0.4rem', border: '1px solid #CBD5E1', fontSize: '0.82rem', fontWeight: 600 }}
+                                        style={{ padding: '0.3rem 0.6rem', borderRadius: '0.4rem', border: '1px solid #CBD5E1', fontSize: '0.82rem', fontWeight: 600, background: '#FFFFFF' }}
                                     >
                                         <option value={8}>8</option>
+                                        <option value={10}>10</option>
                                         <option value={12}>12</option>
                                         <option value={20}>20</option>
                                         <option value={50}>50</option>
@@ -747,11 +744,11 @@ export default function Index({
 
                                 <div style={{ flex: 1 }}>
                                     <Pagination
-                                        currentPage={Math.min(currentPage, totalPages)}
+                                        currentPage={currentPage}
                                         totalPages={totalPages}
-                                        totalItems={filteredTables.length}
+                                        totalItems={totalItems}
                                         itemsPerPage={itemsPerPage}
-                                        onPageChange={(page) => setCurrentPage(page)}
+                                        onPageChange={(page) => applyFilters({ page })}
                                     />
                                 </div>
                             </div>

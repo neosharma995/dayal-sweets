@@ -44,6 +44,10 @@ class OutletTableController extends Controller
         $location = $request->input('location', 'all');
         $status = $request->input('status', 'all');
         $search = $request->input('search');
+        $perPage = (int) $request->input('per_page', 8);
+        if ($perPage < 1 || $perPage > 100) {
+            $perPage = 8;
+        }
 
         $query = OutletTable::query()
             ->with(['outlet:id,name,slug,city,pincode'])
@@ -73,7 +77,7 @@ class OutletTableController extends Controller
             });
         }
 
-        $tables = $query->get();
+        $tables = $query->paginate($perPage)->withQueryString();
 
         // Stats scoped to outlet filter if active
         $statsQuery = OutletTable::query();
@@ -120,6 +124,8 @@ class OutletTableController extends Controller
                 'location' => $location,
                 'status' => $status,
                 'search' => $search,
+                'per_page' => $perPage,
+                'page' => (int) $request->input('page', 1),
             ],
         ]);
     }

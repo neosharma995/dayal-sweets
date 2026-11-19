@@ -1,5 +1,5 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
+import SeoHead from '@/Components/SeoHead';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import ContactHero from '@/Components/contact/ContactHero';
@@ -16,16 +16,19 @@ import '../../scss/pages/_refund-returns.scss';
  * 3. Policy Content Area (Overview, Refunds, Exchanges, Gifts, Shipping, Need Help)
  * 4. Promotional CTA & Global Footer
  */
-export default function RefundReturns({ auth }) {
+export default function RefundReturns({ auth, page }) {
+    const sections = page?.sections || {};
+    const topBarHeading = sections.top_bar_Heading || 'REFUND & RETURNS';
+    const topBarSubHeading = sections.top_bar_sub_heading || 'Your Satisfaction Matters to Us';
+    const topBarDescription = sections.top_bar_description || 'Learn about our refund, cancellation and returns process for orders placed with Dayal Sweets.';
+
     return (
         <div className="refund-returns-page-root">
-            <Head>
-                <title>Refund and Returns Policy | Dayal Sweets</title>
-                <meta
-                    name="description"
-                    content="Learn about our refund, cancellation and returns process for orders placed with Dayal Sweets."
-                />
-            </Head>
+            <SeoHead
+                page={page}
+                fallbackTitle="Refund and Returns Policy | Dayal Sweets"
+                fallbackDescription={topBarDescription}
+            />
 
             {/* Existing Global Header */}
             <Header auth={auth} />
@@ -35,11 +38,11 @@ export default function RefundReturns({ auth }) {
                 <ContactHero
                     breadcrumbs={[
                         { label: 'HOME', url: '/' },
-                        { label: 'REFUND AND RETURNS POLICY', url: null },
+                        { label: topBarHeading, url: null },
                     ]}
-                    title="REFUND & RETURNS"
-                    subtitle="Your Satisfaction Matters to Us"
-                    description="Learn about our refund, cancellation and returns process for orders placed with Dayal Sweets."
+                    title={topBarHeading}
+                    subtitle={topBarSubHeading}
+                    description={topBarDescription}
                 />
 
                 {/* Policy Content Area */}

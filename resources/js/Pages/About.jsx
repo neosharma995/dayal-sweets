@@ -1,5 +1,5 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
+import SeoHead from '@/Components/SeoHead';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import ContactHero from '@/Components/contact/ContactHero';
@@ -11,30 +11,19 @@ import AboutStatistics from '@/Components/about/AboutStatistics';
 import '../../scss/pages/_contact.scss';
 import '../../scss/pages/_about-us.scss';
 
-/**
- * Dayal Sweets - About Us Page
- * 100% Faithful Source of Truth Duplication of D:\dayal-sweets-old (Post 61)
- *
- * Page Structure:
- * 1. Global Header
- * 2. Section A: Reusable Red Hero Banner (ABOUT DAYAL)
- * 3. Section B: About Dayal – Our Story (Video Showcase & Copy)
- * 4. Section C: Founder's Message and Commitments (3 Columns with Founder photo & cards)
- * 5. Section D: Our Journey – Timeline (6 Milestones with horizontal line & flowers)
- * 6. Section E: The Signature Collection (Showcase Video & 5 Product Cards)
- * 7. Section F: Numbers That Matters (5 Burgundy Statistics)
- * 8. Section G & H: Promotional CTA & Global Footer
- */
-export default function About({ auth }) {
+export default function About({ auth, page }) {
+    const sections = page?.sections || {};
+    const topBarHeading = sections.top_bar_Heading ?? 'ABOUT DAYAL';
+    const topBarSubHeading = sections.top_bar_sub_heading ?? 'Crafting Sweet Traditions Since 1962';
+    const topBarDescription = sections.top_bar_description ?? 'Over six decades of crafting authentic Indian sweets with premium ingredients, age-old recipes and a promise of purity.';
+
     return (
         <div className="about-page-root">
-            <Head>
-                <title>About Us | Dayal Sweets</title>
-                <meta
-                    name="description"
-                    content="Over six decades of crafting authentic Indian sweets with premium ingredients, age-old recipes and a promise of purity. Crafting sweet traditions since 1962."
-                />
-            </Head>
+            <SeoHead
+                page={page}
+                fallbackTitle="About Us | Dayal Sweets"
+                fallbackDescription={topBarDescription}
+            />
 
             {/* Existing Header Component */}
             <Header auth={auth} />
@@ -44,11 +33,11 @@ export default function About({ auth }) {
                 <ContactHero
                     breadcrumbs={[
                         { label: 'HOME', url: '/' },
-                        { label: 'ABOUT US', url: null },
+                        { label: topBarHeading, url: null },
                     ]}
-                    title="ABOUT DAYAL"
-                    subtitle="Crafting Sweet Traditions Since 1962"
-                    description="Over six decades of crafting authentic Indian sweets with premium ingredients, age-old recipes and a promise of purity."
+                    title={topBarHeading}
+                    subtitle={topBarSubHeading}
+                    description={topBarDescription}
                 />
 
                 {/* Section B: About Dayal – Our Story */}

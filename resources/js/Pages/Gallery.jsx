@@ -1,5 +1,5 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
+import SeoHead from '@/Components/SeoHead';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import ContactHero from '@/Components/contact/ContactHero';
@@ -31,7 +31,11 @@ export default function Gallery({ auth, page }) {
 
     return (
         <div className="gallery-page-root">
-            <Head title={`${topBarHeading || 'Our Gallery'} | Dayal Sweets`} />
+            <SeoHead
+                page={page}
+                fallbackTitle={`${topBarHeading || 'Our Gallery'} | Dayal Sweets`}
+                fallbackDescription={topBarDescription}
+            />
 
             {/* Existing Header Component */}
             <Header auth={auth} />

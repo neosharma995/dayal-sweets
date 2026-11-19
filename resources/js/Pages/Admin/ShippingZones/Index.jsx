@@ -6,17 +6,21 @@ import { TruckIcon, AlertIcon, MapPinIcon } from '@/Components/Icons';
 
 export default function Index({ zones = [], outlet = null, outlets = [], filters = {} }) {
     const [search, setSearch] = useState(filters.search || '');
+    const [statusFilter, setStatusFilter] = useState('all');
+    const [showCards, setShowCards] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [zoneToDelete, setZoneToDelete] = useState(null);
 
     const filteredZones = zones.filter((z) => {
+        if (statusFilter === 'active' && !z.is_active) return false;
+        if (statusFilter === 'inactive' && z.is_active) return false;
         if (!search.trim()) return true;
         const q = search.toLowerCase();
         return (
             z.zone_name?.toLowerCase().includes(q) ||
             z.zone_slug?.toLowerCase().includes(q) ||
             z.description?.toLowerCase().includes(q) ||
-            (Array.isArray(z.zone_regions) && z.zone_regions.some((r) => r.toLowerCase().includes(q)))
+            (Array.isArray(z.zone_regions) && z.zone_regions.some((r) => getRegionName(r).toLowerCase().includes(q)))
         );
     });
 
@@ -177,7 +181,29 @@ export default function Index({ zones = [], outlet = null, outlets = [], filters
                         </p>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                        <button
+                            type="button"
+                            onClick={() => setShowCards((prev) => !prev)}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                height: '38px',
+                                padding: '0 0.85rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #CBD5E1',
+                                backgroundColor: '#FFFFFF',
+                                color: '#334155',
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                                boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                            }}
+                        >
+                            <span>{showCards ? 'Hide Summary Cards ▲' : 'Expand Summary Cards ▼'}</span>
+                        </button>
+
                         {outlet && (
                             <Link
                                 href={route('admin.outlets.show', outlet.id)}
@@ -212,8 +238,9 @@ export default function Index({ zones = [], outlet = null, outlets = [], filters
                     </div>
                 </div>
 
-                {/* Metrics Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '2rem', width: '100%' }}>
+                {/* Collapsible Metrics Grid */}
+                {showCards && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '1.5rem', width: '100%' }}>
                     <div className="dayal-admin-stat-card">
                         <div className="dayal-stat-top">
                             <span className="dayal-stat-label">Outlet Zones</span>
@@ -249,6 +276,37 @@ export default function Index({ zones = [], outlet = null, outlets = [], filters
                         <div className="dayal-stat-value">{outlet ? outlet.name : 'Pan-India'}</div>
                         <div className="dayal-stat-subtext">{outlet?.city || 'Local & Regional'} Coverage</div>
                     </div>
+                </div>
+                )}
+
+                {/* Filter Buttons (Clean buttons without count badges) */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem', marginBottom: '1.25rem' }}>
+                    {[
+                        { key: 'all', label: 'All Zones' },
+                        { key: 'active', label: 'Active' },
+                        { key: 'inactive', label: 'Inactive' },
+                    ].map((tab) => {
+                        const isActive = statusFilter === tab.key;
+                        return (
+                            <button
+                                key={tab.key}
+                                type="button"
+                                onClick={() => setStatusFilter(tab.key)}
+                                style={{
+                                    padding: '0.45rem 0.9rem',
+                                    borderRadius: '0.375rem',
+                                    fontSize: '0.8125rem',
+                                    fontWeight: isActive ? 700 : 500,
+                                    border: isActive ? '1px solid #7A1C1C' : '1px solid #CBD5E1',
+                                    background: isActive ? '#7A1C1C' : '#FFFFFF',
+                                    color: isActive ? '#FFFFFF' : '#475569',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                <span>{tab.label}</span>
+                            </button>
+                        );
+                    })}
                 </div>
 
                 {/* Zones Table Card */}

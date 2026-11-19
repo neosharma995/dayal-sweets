@@ -18,8 +18,24 @@ export default function Show({ outlet, unassignedProducts = [], stats = {} }) {
     const { activeOutletId } = usePage().props;
     const isCurrentActive = Number(activeOutletId) === Number(outlet.id);
 
-    // Active Tab state
-    const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'products' | 'orders' | 'delivery'
+    // Active Tab state synced with URL param (?tab=overview | products | orders | delivery | tables)
+    const validTabs = ['overview', 'products', 'orders', 'delivery', 'tables'];
+    const initialTabFromUrl = typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search).get('tab')
+        : null;
+    const [activeTab, setActiveTab] = useState(
+        validTabs.includes(initialTabFromUrl) ? initialTabFromUrl : 'overview'
+    );
+    const [showCards, setShowCards] = useState(false);
+
+    const handleTabChange = (tabKey) => {
+        setActiveTab(tabKey);
+        const params = tabKey === 'overview' ? {} : { tab: tabKey };
+        router.get(route('admin.outlets.show', outlet.id), params, {
+            preserveState: true,
+            preserveScroll: true,
+        });
+    };
 
     // Products Tab State
     const [productSearch, setProductSearch] = useState('');
@@ -314,6 +330,27 @@ export default function Show({ outlet, unassignedProducts = [], stats = {} }) {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                         <button
                             type="button"
+                            onClick={() => setShowCards((prev) => !prev)}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                padding: '0.5rem 0.85rem',
+                                borderRadius: '0.375rem',
+                                border: '1px solid #CBD5E1',
+                                background: '#FFFFFF',
+                                color: '#334155',
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                                boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                            }}
+                        >
+                            <span>{showCards ? 'Hide Summary Cards ▲' : 'Expand Summary Cards ▼'}</span>
+                        </button>
+
+                        <button
+                            type="button"
                             onClick={toggleStatus}
                             style={{
                                 padding: '0.5rem 0.85rem',
@@ -367,7 +404,8 @@ export default function Show({ outlet, unassignedProducts = [], stats = {} }) {
                     </div>
                 </div>
 
-                {/* 5 Top KPI Cards */}
+                {/* 5 Top KPI Cards (Collapsible, hidden by default, display-only) */}
+                {showCards && (
                 <div
                     style={{
                         display: 'grid',
@@ -378,15 +416,12 @@ export default function Show({ outlet, unassignedProducts = [], stats = {} }) {
                 >
                     {/* Products KPI */}
                     <div
-                        onClick={() => setActiveTab('products')}
                         style={{
                             background: '#FFFFFF',
-                            border: activeTab === 'products' ? '2px solid #B88E4B' : '1px solid #E2E8F0',
+                            border: '1px solid #E2E8F0',
                             borderRadius: '0.5rem',
                             padding: '1rem 1.25rem',
                             boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-                            cursor: 'pointer',
-                            transition: 'all 0.15s ease',
                         }}
                     >
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
@@ -407,15 +442,12 @@ export default function Show({ outlet, unassignedProducts = [], stats = {} }) {
 
                     {/* Orders KPI */}
                     <div
-                        onClick={() => setActiveTab('orders')}
                         style={{
                             background: '#FFFFFF',
-                            border: activeTab === 'orders' ? '2px solid #B88E4B' : '1px solid #E2E8F0',
+                            border: '1px solid #E2E8F0',
                             borderRadius: '0.5rem',
                             padding: '1rem 1.25rem',
                             boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-                            cursor: 'pointer',
-                            transition: 'all 0.15s ease',
                         }}
                     >
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
@@ -436,14 +468,12 @@ export default function Show({ outlet, unassignedProducts = [], stats = {} }) {
 
                     {/* Paid Revenue KPI */}
                     <div
-                        onClick={() => setActiveTab('orders')}
                         style={{
                             background: '#FFFFFF',
                             border: '1px solid #E2E8F0',
                             borderRadius: '0.5rem',
                             padding: '1rem 1.25rem',
                             boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-                            cursor: 'pointer',
                         }}
                     >
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
@@ -464,17 +494,12 @@ export default function Show({ outlet, unassignedProducts = [], stats = {} }) {
 
                     {/* Pending Orders KPI */}
                     <div
-                        onClick={() => {
-                            setActiveTab('orders');
-                            setOrderFilterStatus('pending');
-                        }}
                         style={{
                             background: '#FFFFFF',
                             border: '1px solid #E2E8F0',
                             borderRadius: '0.5rem',
                             padding: '1rem 1.25rem',
                             boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-                            cursor: 'pointer',
                         }}
                     >
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
@@ -495,15 +520,12 @@ export default function Show({ outlet, unassignedProducts = [], stats = {} }) {
 
                     {/* Delivery Zones KPI */}
                     <div
-                        onClick={() => setActiveTab('delivery')}
                         style={{
                             background: '#FFFFFF',
-                            border: activeTab === 'delivery' ? '2px solid #B88E4B' : '1px solid #E2E8F0',
+                            border: '1px solid #E2E8F0',
                             borderRadius: '0.5rem',
                             padding: '1rem 1.25rem',
                             boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-                            cursor: 'pointer',
-                            transition: 'all 0.15s ease',
                         }}
                     >
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
@@ -522,177 +544,55 @@ export default function Show({ outlet, unassignedProducts = [], stats = {} }) {
                         </div>
                     </div>
                 </div>
+                )}
 
-                {/* Tabs Navigation Bar */}
+                {/* Tabs Navigation Bar (CRM Button Style synced with URL ?tab=) */}
                 <div
                     style={{
                         display: 'flex',
-                        borderBottom: '2px solid #E2E8F0',
-                        marginBottom: '1.5rem',
+                        flexWrap: 'wrap',
                         gap: '0.5rem',
+                        marginBottom: '1.5rem',
+                        background: '#FFFFFF',
+                        padding: '0.85rem 1.15rem',
+                        borderRadius: '0.75rem',
+                        border: '1px solid #E2E8F0',
                     }}
                 >
-                    <button
-                        type="button"
-                        onClick={() => setActiveTab('overview')}
-                        style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.45rem',
-                            padding: '0.75rem 1.25rem',
-                            border: 'none',
-                            borderBottom: activeTab === 'overview' ? '3px solid #B88E4B' : '3px solid transparent',
-                            background: 'transparent',
-                            color: activeTab === 'overview' ? '#B88E4B' : '#64748B',
-                            fontWeight: activeTab === 'overview' ? 700 : 500,
-                            fontSize: '0.875rem',
-                            cursor: 'pointer',
-                            marginBottom: '-2px',
-                            transition: 'all 0.15s ease',
-                        }}
-                    >
-                        <MapPinIcon width="18" height="18" />
-                        <span>Store Overview</span>
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={() => setActiveTab('products')}
-                        style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.45rem',
-                            padding: '0.75rem 1.25rem',
-                            border: 'none',
-                            borderBottom: activeTab === 'products' ? '3px solid #B88E4B' : '3px solid transparent',
-                            background: 'transparent',
-                            color: activeTab === 'products' ? '#B88E4B' : '#64748B',
-                            fontWeight: activeTab === 'products' ? 700 : 500,
-                            fontSize: '0.875rem',
-                            cursor: 'pointer',
-                            marginBottom: '-2px',
-                            transition: 'all 0.15s ease',
-                        }}
-                    >
-                        <BoxIcon width="18" height="18" />
-                        <span>Products &amp; Inventory</span>
-                        <span
-                            style={{
-                                padding: '0.1rem 0.45rem',
-                                borderRadius: '9999px',
-                                background: activeTab === 'products' ? '#F5EBD7' : '#F1F5F9',
-                                color: activeTab === 'products' ? '#8C6226' : '#64748B',
-                                fontSize: '0.6875rem',
-                                fontWeight: 700,
-                            }}
-                        >
-                            {totalProductsCount}
-                        </span>
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={() => setActiveTab('orders')}
-                        style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.45rem',
-                            padding: '0.75rem 1.25rem',
-                            border: 'none',
-                            borderBottom: activeTab === 'orders' ? '3px solid #B88E4B' : '3px solid transparent',
-                            background: 'transparent',
-                            color: activeTab === 'orders' ? '#B88E4B' : '#64748B',
-                            fontWeight: activeTab === 'orders' ? 700 : 500,
-                            fontSize: '0.875rem',
-                            cursor: 'pointer',
-                            marginBottom: '-2px',
-                            transition: 'all 0.15s ease',
-                        }}
-                    >
-                        <CartIcon width="18" height="18" />
-                        <span>Orders &amp; Shipments</span>
-                        <span
-                            style={{
-                                padding: '0.1rem 0.45rem',
-                                borderRadius: '9999px',
-                                background: activeTab === 'orders' ? '#F5EBD7' : '#F1F5F9',
-                                color: activeTab === 'orders' ? '#8C6226' : '#64748B',
-                                fontSize: '0.6875rem',
-                                fontWeight: 700,
-                            }}
-                        >
-                            {totalOrdersCount}
-                        </span>
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={() => setActiveTab('delivery')}
-                        style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.45rem',
-                            padding: '0.75rem 1.25rem',
-                            border: 'none',
-                            borderBottom: activeTab === 'delivery' ? '3px solid #B88E4B' : '3px solid transparent',
-                            background: 'transparent',
-                            color: activeTab === 'delivery' ? '#B88E4B' : '#64748B',
-                            fontWeight: activeTab === 'delivery' ? 700 : 500,
-                            fontSize: '0.875rem',
-                            cursor: 'pointer',
-                            marginBottom: '-2px',
-                            transition: 'all 0.15s ease',
-                        }}
-                    >
-                        <TruckIcon width="18" height="18" />
-                        <span>Delivery Zones</span>
-                        <span
-                            style={{
-                                padding: '0.1rem 0.45rem',
-                                borderRadius: '9999px',
-                                background: activeTab === 'delivery' ? '#F5EBD7' : '#F1F5F9',
-                                color: activeTab === 'delivery' ? '#8C6226' : '#64748B',
-                                fontSize: '0.6875rem',
-                                fontWeight: 700,
-                            }}
-                        >
-                            {zonesCount}
-                        </span>
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={() => setActiveTab('tables')}
-                        style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.45rem',
-                            padding: '0.75rem 1.25rem',
-                            border: 'none',
-                            borderBottom: activeTab === 'tables' ? '3px solid #B88E4B' : '3px solid transparent',
-                            background: 'transparent',
-                            color: activeTab === 'tables' ? '#B88E4B' : '#64748B',
-                            fontWeight: activeTab === 'tables' ? 700 : 500,
-                            fontSize: '0.875rem',
-                            cursor: 'pointer',
-                            marginBottom: '-2px',
-                            transition: 'all 0.15s ease',
-                        }}
-                    >
-                        <span>🍽️ Dining Tables &amp; QR</span>
-                        <span
-                            style={{
-                                padding: '0.1rem 0.45rem',
-                                borderRadius: '9999px',
-                                background: activeTab === 'tables' ? '#F5EBD7' : '#F1F5F9',
-                                color: activeTab === 'tables' ? '#8C6226' : '#64748B',
-                                fontSize: '0.6875rem',
-                                fontWeight: 700,
-                            }}
-                        >
-                            {outlet?.tables?.length || stats?.total_tables || 0}
-                        </span>
-                    </button>
+                    {[
+                        { key: 'overview', label: 'Store Overview', icon: <MapPinIcon width="15" height="15" /> },
+                        { key: 'products', label: 'Products & Inventory', icon: <BoxIcon width="15" height="15" /> },
+                        { key: 'orders', label: 'Orders & Shipments', icon: <CartIcon width="15" height="15" /> },
+                        { key: 'delivery', label: 'Delivery Zones', icon: <TruckIcon width="15" height="15" /> },
+                        { key: 'tables', label: 'Dining Tables & QR', icon: null },
+                    ].map((tab) => {
+                        const isActive = activeTab === tab.key;
+                        return (
+                            <button
+                                key={tab.key}
+                                type="button"
+                                onClick={() => handleTabChange(tab.key)}
+                                style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '0.45rem',
+                                    padding: '0.45rem 0.95rem',
+                                    borderRadius: '0.375rem',
+                                    fontSize: '0.8125rem',
+                                    fontWeight: isActive ? 700 : 500,
+                                    border: isActive ? '1px solid #7A1C1C' : '1px solid #CBD5E1',
+                                    background: isActive ? '#7A1C1C' : '#FFFFFF',
+                                    color: isActive ? '#FFFFFF' : '#475569',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.15s ease',
+                                    boxShadow: isActive ? '0 1px 2px rgba(122, 28, 28, 0.2)' : '0 1px 2px rgba(0,0,0,0.03)',
+                                }}
+                            >
+                                {tab.icon}
+                                <span>{tab.label}</span>
+                            </button>
+                        );
+                    })}
                 </div>
 
                 {/* TAB 1: STORE OVERVIEW */}

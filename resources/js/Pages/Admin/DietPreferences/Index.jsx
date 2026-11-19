@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
+import AdminDataTable, { adminPrimaryBtnStyle, adminTableActionStyles } from '@/Components/Admin/AdminDataTable';
 import { AlertIcon } from '@/Components/Icons';
 
 export default function Index({ dietPreferences = [], filters = {} }) {
@@ -8,19 +9,19 @@ export default function Index({ dietPreferences = [], filters = {} }) {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
 
-    const filteredItems = dietPreferences.filter((c) => {
-        if (!search.trim()) return true;
+    const filteredItems = useMemo(() => {
+        if (!search.trim()) return dietPreferences;
         const q = search.toLowerCase();
-        return (
+        return dietPreferences.filter((c) =>
             c.category_name?.toLowerCase().includes(q) ||
             c.category_slug?.toLowerCase().includes(q) ||
             c.category_description?.toLowerCase().includes(q)
         );
-    });
+    }, [dietPreferences, search]);
 
-    const totalProducts = dietPreferences.reduce(
-        (sum, c) => sum + (Number(c.products_count) || 0),
-        0
+    const totalProducts = useMemo(
+        () => dietPreferences.reduce((sum, c) => sum + (Number(c.products_count) || 0), 0),
+        [dietPreferences]
     );
 
     const handleDeleteClick = (item) => {
@@ -38,147 +39,130 @@ export default function Index({ dietPreferences = [], filters = {} }) {
         });
     };
 
+    const summaryCards = [
+        {
+            label: 'Total Diet Types',
+            value: dietPreferences.length,
+            subtext: 'Dietary preference categories',
+            badge: 'Active',
+        },
+        {
+            label: 'Linked Sweets',
+            value: totalProducts,
+            valueColor: '#2563EB',
+            labelColor: '#2563EB',
+            subtext: 'Products under dietary options',
+            badge: 'Linked',
+            badgeStyle: { color: '#2563EB', background: '#EFF6FF' },
+        },
+    ];
+
+    const columns = [
+        {
+            key: 'name',
+            label: 'Diet Name',
+            render: (item) => <strong style={{ color: '#0F172A' }}>{item.category_name}</strong>,
+        },
+        {
+            key: 'slug',
+            label: 'Slug',
+            render: (item) => (
+                <code style={{ padding: '0.2rem 0.45rem', borderRadius: '0.25rem', background: '#F1F5F9', color: '#7A1C1C', fontSize: '0.75rem', border: '1px solid #E2E8F0' }}>
+                    /{item.category_slug}
+                </code>
+            ),
+        },
+        {
+            key: 'description',
+            label: 'Description',
+            render: (item) => (
+                <span style={{ color: '#64748B', fontSize: '0.8125rem' }}>
+                    {item.category_description || '—'}
+                </span>
+            ),
+        },
+        {
+            key: 'products_count',
+            label: 'Products Count',
+            render: (item) => (
+                <span
+                    style={{
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        padding: '0.22rem 0.65rem',
+                        borderRadius: '999px',
+                        background: '#EFF6FF',
+                        color: '#1D4ED8',
+                        border: '1px solid #BFDBFE',
+                    }}
+                >
+                    {item.products_count || 0} products
+                </span>
+            ),
+        },
+        {
+            key: 'actions',
+            label: 'Actions',
+            align: 'right',
+            render: (item) => (
+                <div style={{ display: 'inline-flex', gap: '0.4rem' }}>
+                    <Link href={route('admin.diet-preferences.edit', item.id)} style={adminTableActionStyles.secondary}>
+                        Edit
+                    </Link>
+                    <button type="button" onClick={() => handleDeleteClick(item)} style={adminTableActionStyles.danger}>
+                        Delete
+                    </button>
+                </div>
+            ),
+        },
+    ];
+
     return (
         <AdminLayout header="Diet Preference Categories">
             <Head title="Diet Preference Categories - Dayal Sweets Admin" />
 
-            <div className="dayal-container">
-                <div className="dayal-admin-view-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
-                    <div>
-                        <h1>Diet Preference Categories</h1>
-                        <p>Manage health & dietary categories (e.g. Sugar Free, Low Sugar, Jain Friendly, Vegan, Gluten Free).</p>
-                    </div>
-
-                    <Link
-                        href={route('admin.diet-preferences.create')}
-                        className="dayal-btn dayal-btn--primary"
-                        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
-                    >
-                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-                        </svg>
-                        <span>Add Diet Category</span>
+            <AdminDataTable
+                breadcrumb="Diet Preference"
+                title="Diet Preference Categories"
+                subtitle="Manage health & dietary categories (e.g. Sugar Free, Low Sugar, Jain Friendly, Vegan, Gluten Free)."
+                headerActions={
+                    <Link href={route('admin.diet-preferences.create')} style={adminPrimaryBtnStyle}>
+                        <span>+ Add Diet Category</span>
                     </Link>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
-                    <div className="dayal-admin-stat-card">
-                        <div className="dayal-stat-top">
-                            <span className="dayal-stat-label">Total Diet Types</span>
-                            <span className="dayal-stat-badge">Active</span>
-                        </div>
-                        <div className="dayal-stat-value">{dietPreferences.length}</div>
-                        <div className="dayal-stat-subtext">Diet categories</div>
-                    </div>
-
-                    <div className="dayal-admin-stat-card">
-                        <div className="dayal-stat-top">
-                            <span className="dayal-stat-label">Linked Sweets</span>
-                            <span className="dayal-stat-badge" style={{ color: '#34D399', background: 'rgba(5, 150, 105, 0.15)' }}>Linked</span>
-                        </div>
-                        <div className="dayal-stat-value">{totalProducts}</div>
-                        <div className="dayal-stat-subtext">Products under dietary options</div>
-                    </div>
-                </div>
-
-                <div className="dayal-admin-table-card">
-                    <div className="dayal-admin-table-head" style={{ flexWrap: 'wrap', gap: '1rem' }}>
-                        <div>
-                            <h3>All Dietary Preferences</h3>
-                            <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
-                                Showing {filteredItems.length} of {dietPreferences.length} total
-                            </span>
-                        </div>
-
-                        <div style={{ position: 'relative', minWidth: '260px' }}>
-                            <input
-                                type="text"
-                                placeholder="Search diet preference..."
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                className="dayal-admin-search-input"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="dayal-admin-table-responsive">
-                        <table className="dayal-admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Diet Name</th>
-                                    <th>Slug</th>
-                                    <th>Description</th>
-                                    <th>Products Count</th>
-                                    <th style={{ textAlign: 'right' }}>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredItems.length === 0 ? (
-                                    <tr>
-                                        <td colSpan="5" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>
-                                            No diet categories found.
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    filteredItems.map((item) => (
-                                        <tr key={item.id}>
-                                            <td>
-                                                <strong style={{ color: '#F8FAFC' }}>{item.category_name}</strong>
-                                            </td>
-                                            <td>
-                                                <code style={{ background: 'rgba(255,255,255,0.06)', padding: '0.2rem 0.4rem', borderRadius: '4px' }}>
-                                                    {item.category_slug}
-                                                </code>
-                                            </td>
-                                            <td style={{ color: '#94a3b8', maxWidth: '300px' }}>
-                                                {item.category_description || '—'}
-                                            </td>
-                                            <td>
-                                                <span className="dayal-admin-badge" style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#60A5FA' }}>
-                                                    {item.products_count || 0} products
-                                                </span>
-                                            </td>
-                                            <td style={{ textAlign: 'right' }}>
-                                                <div style={{ display: 'inline-flex', gap: '0.5rem' }}>
-                                                    <Link
-                                                        href={route('admin.diet-preferences.edit', item.id)}
-                                                        className="dayal-btn dayal-btn--secondary dayal-btn--sm"
-                                                    >
-                                                        Edit
-                                                    </Link>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleDeleteClick(item)}
-                                                        className="dayal-btn dayal-btn--danger dayal-btn--sm"
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+                }
+                summaryCards={summaryCards}
+                search={search}
+                onSearchChange={setSearch}
+                searchPlaceholder="Search diet preference by name or slug..."
+                hasActiveFilters={Boolean(search.trim())}
+                onResetFilters={() => setSearch('')}
+                columns={columns}
+                rows={filteredItems}
+                itemLabel="diet categories"
+                emptyTitle="No diet categories found."
+                emptySubtitle="Create your first dietary preference category."
+                emptyAction={
+                    <Link href={route('admin.diet-preferences.create')} style={adminPrimaryBtnStyle}>
+                        + Add Diet Category
+                    </Link>
+                }
+            />
 
             {deleteModalOpen && (
-                <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-                    <div style={{ background: '#1E293B', borderRadius: '12px', padding: '1.5rem', maxWidth: '440px', width: '100%', border: '1px solid #334155' }}>
+                <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(15, 23, 42, 0.55)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+                    <div style={{ background: '#FFFFFF', borderRadius: '0.75rem', padding: '1.5rem', maxWidth: '440px', width: '100%', border: '1px solid #E2E8F0', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-                            <AlertIcon width="24" height="24" style={{ color: '#EF4444' }} />
-                            <h3 style={{ margin: 0, color: '#F8FAFC' }}>Delete Diet Category</h3>
+                            <AlertIcon width="24" height="24" style={{ color: '#DC2626' }} />
+                            <h3 style={{ margin: 0, color: '#0F172A', fontSize: '1.05rem', fontWeight: 700 }}>Delete Diet Category</h3>
                         </div>
-                        <p style={{ color: '#94A3B8', fontSize: '0.875rem', marginBottom: '1.5rem' }}>
+                        <p style={{ color: '#475569', fontSize: '0.875rem', marginBottom: '1.5rem' }}>
                             Are you sure you want to delete <strong>{itemToDelete?.category_name}</strong>?
                         </p>
                         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
-                            <button type="button" className="dayal-btn dayal-btn--secondary" onClick={() => setDeleteModalOpen(false)}>
+                            <button type="button" style={adminTableActionStyles.secondary} onClick={() => setDeleteModalOpen(false)}>
                                 Cancel
                             </button>
-                            <button type="button" className="dayal-btn dayal-btn--danger" onClick={confirmDelete}>
+                            <button type="button" style={{ ...adminTableActionStyles.primary, background: '#DC2626' }} onClick={confirmDelete}>
                                 Confirm Delete
                             </button>
                         </div>

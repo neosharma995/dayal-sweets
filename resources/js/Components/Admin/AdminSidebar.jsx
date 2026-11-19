@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link, usePage, router } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { StoreIcon, BoxIcon, UserIcon, ShieldCheckIcon, LogOutIcon, TruckIcon, MapPinIcon } from '@/Components/Icons';
 
 export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLogout }) {
-    const { auth, outlets = [], activeOutletId } = usePage().props;
+    const { auth } = usePage().props;
 
     const userRoles = auth?.user?.roles || [];
     const userPermissions = auth?.user?.permissions || [];
@@ -32,13 +32,20 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
         route().current('admin.tables.*')
     );
 
-    const isPagesRouteActive = Boolean(
-        route().current('admin.pages.*')
+    const isQueriesRouteActive = Boolean(
+        route().current('admin.dining-queries.*') ||
+        route().current('admin.contact-queries.*')
+    );
+
+    const isRolesStaffRouteActive = Boolean(
+        route().current('admin.roles.*') ||
+        route().current('admin.users.*')
     );
 
     const [productsOpen, setProductsOpen] = useState(isProductRouteActive);
     const [outletsOpen, setOutletsOpen] = useState(isOutletRouteActive);
-    const [pagesOpen, setPagesOpen] = useState(isPagesRouteActive);
+    const [queriesOpen, setQueriesOpen] = useState(isQueriesRouteActive);
+    const [rolesOpen, setRolesOpen] = useState(isRolesStaffRouteActive);
 
     useEffect(() => {
         if (isProductRouteActive) {
@@ -53,10 +60,16 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
     }, [isOutletRouteActive]);
 
     useEffect(() => {
-        if (isPagesRouteActive) {
-            setPagesOpen(true);
+        if (isQueriesRouteActive) {
+            setQueriesOpen(true);
         }
-    }, [isPagesRouteActive]);
+    }, [isQueriesRouteActive]);
+
+    useEffect(() => {
+        if (isRolesStaffRouteActive) {
+            setRolesOpen(true);
+        }
+    }, [isRolesStaffRouteActive]);
 
     return (
         <>
@@ -131,74 +144,20 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
 
                                 {outletsOpen && (
                                     <div className="dayal-sidebar-submenu">
-                                        {/* Outlet-Wise Filter Dropdown inside Outlets menu */}
-                                        {outlets && outlets.length > 0 && (
-                                            <div style={{ padding: '0.35rem 0.65rem 0.55rem', marginBottom: '0.25rem', borderBottom: '1px solid #F1F5F9' }}>
-                                                <label style={{ display: 'block', fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#8C6226', marginBottom: '0.25rem' }}>
-                                                    Filter by Outlet
-                                                </label>
-                                                <select
-                                                    value={activeOutletId || 'all'}
-                                                    onChange={(e) => {
-                                                        const val = e.target.value;
-                                                        if (val === 'all') {
-                                                            router.post(route('admin.outlets.clear-context'), {}, { preserveScroll: true });
-                                                        } else {
-                                                            router.post(route('admin.outlets.switch-context'), { outlet_id: Number(val) }, { preserveScroll: true });
-                                                        }
-                                                    }}
-                                                    style={{
-                                                        width: '100%',
-                                                        padding: '0.38rem 0.5rem',
-                                                        borderRadius: '0.375rem',
-                                                        border: '1px solid #E6D2B5',
-                                                        background: '#FDF8F0',
-                                                        color: '#5A1E1E',
-                                                        fontSize: '0.78rem',
-                                                        fontWeight: 700,
-                                                        cursor: 'pointer',
-                                                    }}
-                                                >
-                                                    <option value="all">All Outlets ({outlets.length})</option>
-                                                    {outlets.map((o) => (
-                                                        <option key={o.id} value={o.id}>
-                                                            {o.name}{o.city ? ` (${o.city})` : ''}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </div>
-                                        )}
-
                                         <Link
                                             href={route('admin.outlets.index')}
-                                            className={`dayal-sidebar-sublink ${route().current('admin.outlets.index') || route().current('admin.outlets.show') || route().current('admin.outlets.edit') || route().current('admin.shipping-zones.*') ? 'active' : ''}`}
+                                            className={`dayal-sidebar-sublink ${route().current('admin.outlets.*') || route().current('admin.shipping-zones.*') ? 'active' : ''}`}
                                         >
                                             <span className="dayal-sublink-dot" />
                                             <span>All Outlets</span>
                                         </Link>
 
                                         <Link
-                                            href={route('admin.outlets.create')}
-                                            className={`dayal-sidebar-sublink ${route().current('admin.outlets.create') ? 'active' : ''}`}
-                                        >
-                                            <span className="dayal-sublink-dot" />
-                                            <span>Add New Outlet</span>
-                                        </Link>
-
-                                        <Link
                                             href={route('admin.tables.index')}
-                                            className={`dayal-sidebar-sublink ${route().current('admin.tables.index') || route().current('admin.tables.edit') ? 'active' : ''}`}
+                                            className={`dayal-sidebar-sublink ${route().current('admin.tables.index') || route().current('admin.tables.create') || route().current('admin.tables.edit') ? 'active' : ''}`}
                                         >
                                             <span className="dayal-sublink-dot" />
                                             <span>All Tables</span>
-                                        </Link>
-
-                                        <Link
-                                            href={route('admin.tables.create')}
-                                            className={`dayal-sidebar-sublink ${route().current('admin.tables.create') ? 'active' : ''}`}
-                                        >
-                                            <span className="dayal-sublink-dot" />
-                                            <span>Add New Table</span>
                                         </Link>
 
                                         <Link
@@ -306,18 +265,10 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
                                     <div className="dayal-sidebar-submenu">
                                         <Link
                                             href={route('admin.products.index')}
-                                            className={`dayal-sidebar-sublink ${route().current('admin.products.index') || route().current('admin.products.show') ? 'active' : ''}`}
+                                            className={`dayal-sidebar-sublink ${route().current('admin.products.*') ? 'active' : ''}`}
                                         >
                                             <span className="dayal-sublink-dot" />
                                             <span>All Products</span>
-                                        </Link>
-
-                                        <Link
-                                            href={route('admin.products.create')}
-                                            className={`dayal-sidebar-sublink ${route().current('admin.products.create') ? 'active' : ''}`}
-                                        >
-                                            <span className="dayal-sublink-dot" />
-                                            <span>Add New Product</span>
                                         </Link>
 
                                         <Link
@@ -372,53 +323,20 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
                             </div>
                         )}
 
-                        {/* Customer Contact Queries */}
+                        {/* Queries Dropdown (Reservation Queries & Contact Queries) */}
                         {can('manage queries') && (
-                            <Link
-                                href={route('admin.contact-queries.index')}
-                                className={`dayal-sidebar-link ${route().current('admin.contact-queries.*') ? 'active' : ''}`}
-                            >
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                                </svg>
-                                <span>Contact Queries</span>
-                            </Link>
-                        )}
-
-                        {/* Customer Dining Queries */}
-                        {can('manage queries') && (
-                            <Link
-                                href={route('admin.dining-queries.index')}
-                                className={`dayal-sidebar-link ${route().current('admin.dining-queries.*') ? 'active' : ''}`}
-                            >
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
-                                    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
-                                    <line x1="6" y1="1" x2="6" y2="4" />
-                                    <line x1="10" y1="1" x2="10" y2="4" />
-                                    <line x1="14" y1="1" x2="14" y2="4" />
-                                </svg>
-                                <span>Dining Queries</span>
-                            </Link>
-                        )}
-
-                        {/* Website Pages & SEO Information */}
-                        {(can('manage pages') || can('manage seo')) && (
                             <div className="dayal-sidebar-dropdown-group">
                                 <div
-                                    onClick={() => setPagesOpen((prev) => !prev)}
-                                    className={`dayal-sidebar-link ${isPagesRouteActive ? 'parent-active' : ''}`}
+                                    onClick={() => setQueriesOpen((prev) => !prev)}
+                                    className={`dayal-sidebar-link ${isQueriesRouteActive ? 'parent-active' : ''}`}
                                     style={{ cursor: 'pointer', justifyContent: 'space-between', userSelect: 'none' }}
-                                    title="Click to toggle website pages & SEO menu"
+                                    title="Click to toggle reservation & contact queries menu"
                                 >
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                            <polyline points="14 2 14 8 20 8" />
-                                            <line x1="16" y1="13" x2="8" y2="13" />
-                                            <line x1="16" y1="17" x2="8" y2="17" />
+                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                                         </svg>
-                                        <span>Website Pages</span>
+                                        <span>Queries</span>
                                     </div>
 
                                     <svg
@@ -428,7 +346,7 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
                                         fill="none"
                                         stroke="currentColor"
                                         style={{
-                                            transform: pagesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                                            transform: queriesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                                             transition: 'transform 0.2s ease',
                                         }}
                                     >
@@ -436,73 +354,41 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
                                     </svg>
                                 </div>
 
-                                {pagesOpen && (
+                                {queriesOpen && (
                                     <div className="dayal-sidebar-submenu">
-                                        {can('manage pages') && (
-                                            <Link
-                                                href={route('admin.pages.index')}
-                                                className={`dayal-sidebar-sublink ${route().current('admin.pages.index') || route().current('admin.pages.edit') ? 'active' : ''}`}
-                                            >
-                                                <span className="dayal-sublink-dot" />
-                                                <span>All Website Pages</span>
-                                            </Link>
-                                        )}
+                                        <Link
+                                            href={route('admin.dining-queries.index')}
+                                            className={`dayal-sidebar-sublink ${route().current('admin.dining-queries.*') ? 'active' : ''}`}
+                                        >
+                                            <span className="dayal-sublink-dot" />
+                                            <span>Reservation Queries</span>
+                                        </Link>
 
-                                        {(can('manage seo') || can('manage pages')) && (
-                                            <Link
-                                                href={route('admin.pages.seo')}
-                                                className={`dayal-sidebar-sublink ${route().current('admin.pages.seo') ? 'active' : ''}`}
-                                            >
-                                                <span className="dayal-sublink-dot" />
-                                                <span>Pages SEO Information</span>
-                                            </Link>
-                                        )}
-
-                                        {can('manage pages') && (
-                                            <>
-                                                <Link
-                                                    href={route('admin.pages.about-us')}
-                                                    className={`dayal-sidebar-sublink ${route().current('admin.pages.about-us') ? 'active' : ''}`}
-                                                >
-                                                    <span className="dayal-sublink-dot" />
-                                                    <span>Edit About Us</span>
-                                                </Link>
-
-                                                <Link
-                                                    href={route('admin.pages.contact-us')}
-                                                    className={`dayal-sidebar-sublink ${route().current('admin.pages.contact-us') ? 'active' : ''}`}
-                                                >
-                                                    <span className="dayal-sublink-dot" />
-                                                    <span>Edit Contact Us</span>
-                                                </Link>
-
-                                                <Link
-                                                    href={route('admin.pages.gallery')}
-                                                    className={`dayal-sidebar-sublink ${route().current('admin.pages.gallery') ? 'active' : ''}`}
-                                                >
-                                                    <span className="dayal-sublink-dot" />
-                                                    <span>Edit Gallery</span>
-                                                </Link>
-                                            </>
-                                        )}
+                                        <Link
+                                            href={route('admin.contact-queries.index')}
+                                            className={`dayal-sidebar-sublink ${route().current('admin.contact-queries.*') ? 'active' : ''}`}
+                                        >
+                                            <span className="dayal-sublink-dot" />
+                                            <span>Contact Queries</span>
+                                        </Link>
                                     </div>
                                 )}
                             </div>
                         )}
 
-                        {/* Pages SEO Quick Access (Right After Website Pages) */}
-                        {can('manage seo') && (
+                        {/* Pages & SEO (Single unified tab) */}
+                        {(can('manage pages') || can('manage seo')) && (
                             <Link
-                                href={route('admin.pages.seo')}
-                                className={`dayal-sidebar-link ${route().current('admin.pages.seo') ? 'active' : ''}`}
+                                href={route('admin.pages.index')}
+                                className={`dayal-sidebar-link ${route().current('admin.pages.*') ? 'active' : ''}`}
                             >
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <circle cx="11" cy="11" r="8" />
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                                    <line x1="11" y1="8" x2="11" y2="14" />
-                                    <line x1="8" y1="11" x2="14" y2="11" />
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                    <polyline points="14 2 14 8 20 8" />
+                                    <line x1="16" y1="13" x2="8" y2="13" />
+                                    <line x1="16" y1="17" x2="8" y2="17" />
                                 </svg>
-                                <span>Pages SEO</span>
+                                <span>Pages &amp; SEO</span>
                             </Link>
                         )}
 
@@ -521,34 +407,62 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
                             </Link>
                         )}
 
-                        {/* Roles & Permissions Management */}
-                        {can('manage roles') && (
-                            <Link
-                                href={route('admin.roles.index')}
-                                className={`dayal-sidebar-link ${route().current('admin.roles.*') ? 'active' : ''}`}
-                            >
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                                </svg>
-                                <span>Roles &amp; Permissions</span>
-                            </Link>
-                        )}
+                        {/* Roles & Permissions Dropdown (includes Staff Management) */}
+                        {(can('manage roles') || can('manage staff')) && (
+                            <div className="dayal-sidebar-dropdown-group">
+                                <div
+                                    onClick={() => setRolesOpen((prev) => !prev)}
+                                    className={`dayal-sidebar-link ${isRolesStaffRouteActive ? 'parent-active' : ''}`}
+                                    style={{ cursor: 'pointer', justifyContent: 'space-between', userSelect: 'none' }}
+                                    title="Click to toggle roles, permissions & staff management menu"
+                                >
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                        </svg>
+                                        <span>Roles &amp; Permissions</span>
+                                    </div>
 
-                        {/* Staff Management */}
-                        {can('manage staff') && (
-                            <Link
-                                href={route('admin.users.index')}
-                                className={`dayal-sidebar-link ${route().current('admin.users.*') ? 'active' : ''}`}
-                            >
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                    <circle cx="9" cy="7" r="4" />
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                                </svg>
-                                <span>Staff Management</span>
-                            </Link>
+                                    <svg
+                                        width="14"
+                                        height="14"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        style={{
+                                            transform: rolesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                                            transition: 'transform 0.2s ease',
+                                        }}
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+
+                                {rolesOpen && (
+                                    <div className="dayal-sidebar-submenu">
+                                        {can('manage roles') && (
+                                            <Link
+                                                href={route('admin.roles.index')}
+                                                className={`dayal-sidebar-sublink ${route().current('admin.roles.*') ? 'active' : ''}`}
+                                            >
+                                                <span className="dayal-sublink-dot" />
+                                                <span>Roles &amp; Permissions</span>
+                                            </Link>
+                                        )}
+
+                                        {can('manage staff') && (
+                                            <Link
+                                                href={route('admin.users.index')}
+                                                className={`dayal-sidebar-sublink ${route().current('admin.users.*') ? 'active' : ''}`}
+                                            >
+                                                <span className="dayal-sublink-dot" />
+                                                <span>Staff Management</span>
+                                            </Link>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                         )}
 
                         {can('manage store settings') && (

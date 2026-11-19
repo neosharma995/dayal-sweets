@@ -134,4 +134,55 @@ class PageSeoAndAdminPermissionsTest extends TestCase
         $this->actingAs($editor)->get(route('admin.products.index'))->assertForbidden();
         $this->actingAs($editor)->get(route('admin.roles.index'))->assertForbidden();
     }
+
+    public function test_admin_and_customer_roles_are_permanently_locked_from_modification(): void
+    {
+        $admin = User::where('email', 'admin@dayalsweets.com')->firstOrFail();
+        $adminRole = Role::findByName(UserRole::Admin->value, 'web');
+        $customerRole = Role::findByName(UserRole::Customer->value, 'web');
+
+        // Customer has zero admin permissions
+        $this->assertCount(0, $customerRole->permissions);
+
+        // Admin cannot edit or delete admin or customer roles
+        $this->actingAs($admin)->put(route('admin.roles.update', $adminRole->id), [
+            'permissions' => ['manage orders'],
+        ])->assertForbidden();
+
+        $this->actingAs($admin)->put(route('admin.roles.update', $customerRole->id), [
+            'permissions' => ['manage orders'],
+        ])->assertForbidden();
+
+        $this->actingAs($admin)->delete(route('admin.roles.destroy', $adminRole->id))->assertForbidden();
+        $this->actingAs($admin)->delete(route('admin.roles.destroy', $customerRole->id))->assertForbidden();
+    }
+
+    public function test_administrator_staff_account_is_permanently_locked_from_role_change_and_deletion(): void
+    {
+        $admin = User::where('email', 'admin@dayalsweets.com')->firstOrFail();
+
+        // Create a staff manager with 'manage staff' permission
+        $managerRole = Role::create(['name' => 'staff_manager', 'guard_name' => 'web']);
+        $managerRole->syncPermissions(['manage staff']);
+
+        $manager = User::factory()->create(['email' => 'manager@dayalsweets.com']);
+        $manager->assignRole($managerRole);
+
+        // Neither the admin nor another staff manager can change the admin's role or delete the admin account
+        $this->actingAs($admin)->put(route('admin.users.update-role', $admin->id), [
+            'role' => UserRole::Editor->value,
+        ])->assertForbidden();
+
+        $this->actingAs($admin)->delete(route('admin.users.destroy', $admin->id))->assertForbidden();
+
+        $this->actingAs($manager)->put(route('admin.users.update-role', $admin->id), [
+            'role' => UserRole::Editor->value,
+        ])->assertForbidden();
+
+        $this->actingAs($manager)->delete(route('admin.users.destroy', $admin->id))->assertForbidden();
+
+        // Admin user still exists and still has the admin role
+        $this->assertDatabaseHas('users', ['id' => $admin->id]);
+        $this->assertTrue($admin->fresh()->hasRole(UserRole::Admin->value));
+    }
 }

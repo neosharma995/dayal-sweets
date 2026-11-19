@@ -8,11 +8,33 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
     const { activeOutletId } = usePage().props;
     const [search, setSearch] = useState(filters.search || '');
     const [selectedStatus, setSelectedStatus] = useState(filters.status || 'all');
-    const [viewMode, setViewMode] = useState('table'); // Default to table format as requested
+    const [viewMode, setViewMode] = useState(filters.view === 'cards' ? 'cards' : 'table');
     const [expandedOutletIds, setExpandedOutletIds] = useState([]);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [outletToDelete, setOutletToDelete] = useState(null);
     const [showCards, setShowCards] = useState(false);
+
+    const applyFilters = (overrides = {}) => {
+        const nextStatus = overrides.status !== undefined ? overrides.status : selectedStatus;
+        const nextSearch = overrides.search !== undefined ? overrides.search : search;
+        const nextView = overrides.view !== undefined ? overrides.view : viewMode;
+
+        const params = {};
+        if (nextStatus && nextStatus !== 'all') params.status = nextStatus;
+        if (nextSearch && nextSearch.trim()) params.search = nextSearch.trim();
+        if (nextView && nextView !== 'table') params.view = nextView;
+
+        router.get(route('admin.outlets.index'), params, {
+            preserveState: true,
+            preserveScroll: true,
+            replace: true,
+        });
+    };
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        applyFilters({ search });
+    };
 
     const toggleExpand = (outletId) => {
         setExpandedOutletIds((prev) =>
@@ -182,72 +204,77 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                     }}
                 >
                     <div>
-                        <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <MapPinIcon width="24" height="24" style={{ color: '#B88E4B' }} />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                            <Link href={route('admin.dashboard')} style={{ color: '#64748B', fontSize: '0.8125rem', textDecoration: 'none' }}>
+                                Admin
+                            </Link>
+                            <span style={{ color: '#CBD5E1', fontSize: '0.75rem' }}>/</span>
+                            <span style={{ color: '#0F172A', fontSize: '0.8125rem', fontWeight: 600 }}>Store Outlets</span>
+                        </div>
+                        <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
+                            <MapPinIcon width="24" height="24" style={{ color: '#7A1C1C' }} />
                             <span>Store Outlets</span>
                         </h1>
-                        <p>Manage Dayal Sweets flagship physical stores, addresses, contact details, map links, and opening statuses.</p>
+                        <p style={{ marginTop: '0.35rem' }}>Manage Dayal Sweets flagship physical stores, addresses, contact details, map links, and opening statuses.</p>
                     </div>
 
-                    <Link
-                        href={route('admin.outlets.create')}
-                        className="dayal-btn dayal-btn--primary"
-                        style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            textDecoration: 'none',
-                            background: '#B88E4B',
-                            color: '#FFFFFF',
-                            padding: '0.625rem 1.25rem',
-                            borderRadius: '0.375rem',
-                            fontWeight: 600,
-                            boxShadow: '0 2px 4px rgba(184, 142, 75, 0.25)',
-                        }}
-                    >
-                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-                        </svg>
-                        <span>Add New Outlet</span>
-                    </Link>
-                </div>
-
-                {/* Top Cards Expand / Collapse Control */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                    <button
-                        type="button"
-                        onClick={() => setShowCards(!showCards)}
-                        style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            padding: '0.45rem 0.95rem',
-                            borderRadius: '0.5rem',
-                            border: '1px solid #CBD5E1',
-                            background: showCards ? '#F8FAFC' : '#FFFFFF',
-                            color: '#334155',
-                            fontSize: '0.8125rem',
-                            fontWeight: 600,
-                            cursor: 'pointer',
-                            transition: 'all 0.15s ease',
-                            boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
-                        }}
-                    >
-                        <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            style={{ transform: showCards ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+                        <button
+                            type="button"
+                            onClick={() => setShowCards(!showCards)}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                height: '38px',
+                                padding: '0 0.85rem',
+                                borderRadius: '0.5rem',
+                                border: '1px solid #CBD5E1',
+                                backgroundColor: showCards ? '#F8FAFC' : '#FFFFFF',
+                                color: '#334155',
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                                transition: 'all 0.15s ease',
+                                boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                            }}
                         >
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                        <span>{showCards ? 'Hide Summary Cards ▲' : 'Expand Summary Cards ▼'}</span>
-                    </button>
+                            <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                style={{ transform: showCards ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}
+                            >
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                            <span>{showCards ? 'Hide Summary Cards ▲' : 'Expand Summary Cards ▼'}</span>
+                        </button>
+
+                        <Link
+                            href={route('admin.outlets.create')}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                height: '38px',
+                                textDecoration: 'none',
+                                background: '#7A1C1C',
+                                color: '#FFFFFF',
+                                padding: '0 1rem',
+                                borderRadius: '0.5rem',
+                                fontSize: '0.8125rem',
+                                fontWeight: 600,
+                                boxShadow: '0 1px 2px rgba(122, 28, 28, 0.2)',
+                            }}
+                        >
+                            <span>+ Add New Outlet</span>
+                        </Link>
+                    </div>
                 </div>
 
                 {/* Metrics Cards - Collapsed by default */}
@@ -308,6 +335,44 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                     </div>
                 )}
 
+                {/* Status Filter Buttons (CRM Maroon/White Style synced with URL ?status=) */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+                    {[
+                        { key: 'all', label: 'All Outlets' },
+                        { key: 'active', label: 'Active' },
+                        { key: 'coming_soon', label: 'Coming Soon' },
+                        { key: 'inactive', label: 'Inactive' },
+                    ].map((tab) => {
+                        const isActive = selectedStatus === tab.key;
+                        return (
+                            <button
+                                key={tab.key}
+                                type="button"
+                                onClick={() => {
+                                    setSelectedStatus(tab.key);
+                                    applyFilters({ status: tab.key });
+                                }}
+                                style={{
+                                    padding: '0.45rem 0.9rem',
+                                    fontSize: '0.8125rem',
+                                    fontWeight: isActive ? 700 : 500,
+                                    borderRadius: '0.375rem',
+                                    border: isActive ? '1px solid #7A1C1C' : '1px solid #CBD5E1',
+                                    background: isActive ? '#7A1C1C' : '#FFFFFF',
+                                    color: isActive ? '#FFFFFF' : '#475569',
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    transition: 'all 0.15s ease',
+                                    boxShadow: isActive ? '0 1px 2px rgba(122, 28, 28, 0.2)' : '0 1px 2px rgba(0,0,0,0.03)',
+                                }}
+                            >
+                                {tab.label}
+                            </button>
+                        );
+                    })}
+                </div>
+
                 {/* Filter and Search Bar */}
                 <div className="dayal-admin-table-card" style={{ marginBottom: '2rem' }}>
                     <div
@@ -322,84 +387,63 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                             paddingBottom: '1rem',
                         }}
                     >
-                        {/* Status Pills */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                            {[
-                                { key: 'all', label: 'All Outlets' },
-                                { key: 'active', label: 'Active' },
-                                { key: 'coming_soon', label: 'Coming Soon' },
-                                { key: 'inactive', label: 'Inactive' },
-                            ].map((tab) => (
+                        {/* Search Input Form */}
+                        <form onSubmit={handleSearchSubmit} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: '1 1 320px', maxWidth: '460px' }}>
+                            <input
+                                type="text"
+                                placeholder="Search by name, city, address..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    padding: '0.5rem 0.75rem',
+                                    fontSize: '0.8125rem',
+                                    borderRadius: '0.375rem',
+                                    border: '1px solid #CBD5E1',
+                                    background: '#FFFFFF',
+                                    color: '#0F172A',
+                                }}
+                            />
+                            <button
+                                type="submit"
+                                style={{
+                                    padding: '0.5rem 0.85rem',
+                                    borderRadius: '0.375rem',
+                                    background: '#7A1C1C',
+                                    color: '#FFFFFF',
+                                    fontSize: '0.8125rem',
+                                    fontWeight: 600,
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    whiteSpace: 'nowrap',
+                                }}
+                            >
+                                Search
+                            </button>
+                            {search && (
                                 <button
-                                    key={tab.key}
                                     type="button"
-                                    onClick={() => setSelectedStatus(tab.key)}
-                                    style={{
-                                        padding: '0.4rem 0.85rem',
-                                        fontSize: '0.8125rem',
-                                        fontWeight: 600,
-                                        borderRadius: '0.375rem',
-                                        border: selectedStatus === tab.key ? '1px solid #B88E4B' : '1px solid #E2E8F0',
-                                        background: selectedStatus === tab.key ? '#B88E4B' : '#FFFFFF',
-                                        color: selectedStatus === tab.key ? '#FFFFFF' : '#475569',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.15s ease',
+                                    onClick={() => {
+                                        setSearch('');
+                                        applyFilters({ search: '' });
                                     }}
-                                >
-                                    {tab.label}
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* Right Controls: Search, View Mode, Count */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                            {/* Search Input */}
-                            <div style={{ position: 'relative', minWidth: '240px' }}>
-                                <input
-                                    type="text"
-                                    placeholder="Search by name, city, address..."
-                                    value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
                                     style={{
-                                        width: '100%',
-                                        padding: '0.45rem 0.75rem 0.45rem 2.25rem',
-                                        fontSize: '0.8125rem',
+                                        padding: '0.5rem 0.65rem',
                                         borderRadius: '0.375rem',
+                                        background: '#F1F5F9',
+                                        color: '#475569',
+                                        fontSize: '0.8125rem',
                                         border: '1px solid #CBD5E1',
-                                        background: '#FFFFFF',
-                                        color: '#0F172A',
+                                        cursor: 'pointer',
                                     }}
-                                />
-                                <svg
-                                    width="16"
-                                    height="16"
-                                    fill="none"
-                                    stroke="#94A3B8"
-                                    viewBox="0 0 24 24"
-                                    style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)' }}
                                 >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                                {search && (
-                                    <button
-                                        type="button"
-                                        onClick={() => setSearch('')}
-                                        style={{
-                                            position: 'absolute',
-                                            right: '0.6rem',
-                                            top: '50%',
-                                            transform: 'translateY(-50%)',
-                                            background: 'transparent',
-                                            border: 'none',
-                                            color: '#94A3B8',
-                                            cursor: 'pointer',
-                                        }}
-                                    >
-                                        &times;
-                                    </button>
-                                )}
-                            </div>
+                                    Clear
+                                </button>
+                            )}
+                        </form>
 
+                        {/* Right Controls: View Mode, Expand All, Count */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
                             {/* View Switcher: Table (default) vs Cards */}
                             <div
                                 style={{
@@ -413,7 +457,10 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                             >
                                 <button
                                     type="button"
-                                    onClick={() => setViewMode('table')}
+                                    onClick={() => {
+                                        setViewMode('table');
+                                        applyFilters({ view: 'table' });
+                                    }}
                                     title="Table View (with Expandable Rows)"
                                     style={{
                                         display: 'inline-flex',
@@ -425,9 +472,9 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                                         fontWeight: 600,
                                         border: 'none',
                                         cursor: 'pointer',
-                                        background: viewMode === 'table' ? '#FFFFFF' : 'transparent',
-                                        color: viewMode === 'table' ? '#B88E4B' : '#64748B',
-                                        boxShadow: viewMode === 'table' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                                        background: viewMode === 'table' ? '#7A1C1C' : 'transparent',
+                                        color: viewMode === 'table' ? '#FFFFFF' : '#64748B',
+                                        boxShadow: viewMode === 'table' ? '0 1px 2px rgba(122, 28, 28, 0.2)' : 'none',
                                     }}
                                 >
                                     <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
@@ -437,7 +484,10 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={() => setViewMode('cards')}
+                                    onClick={() => {
+                                        setViewMode('cards');
+                                        applyFilters({ view: 'cards' });
+                                    }}
                                     title="Modern Cards View"
                                     style={{
                                         display: 'inline-flex',
@@ -449,9 +499,9 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                                         fontWeight: 600,
                                         border: 'none',
                                         cursor: 'pointer',
-                                        background: viewMode === 'cards' ? '#FFFFFF' : 'transparent',
-                                        color: viewMode === 'cards' ? '#B88E4B' : '#64748B',
-                                        boxShadow: viewMode === 'cards' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                                        background: viewMode === 'cards' ? '#7A1C1C' : 'transparent',
+                                        color: viewMode === 'cards' ? '#FFFFFF' : '#64748B',
+                                        boxShadow: viewMode === 'cards' ? '0 1px 2px rgba(122, 28, 28, 0.2)' : 'none',
                                     }}
                                 >
                                     <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
@@ -550,13 +600,13 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                                     style={{
                                         marginTop: '0.5rem',
                                         padding: '0.5rem 1.25rem',
-                                        background: '#B88E4B',
+                                        background: '#7A1C1C',
                                         color: '#FFFFFF',
                                         borderRadius: '0.375rem',
                                         fontSize: '0.8125rem',
                                         textDecoration: 'none',
                                         fontWeight: 600,
-                                        boxShadow: '0 2px 4px rgba(184, 142, 75, 0.25)',
+                                        boxShadow: '0 1px 2px rgba(122, 28, 28, 0.2)',
                                     }}
                                 >
                                     + Add First Outlet
@@ -1160,12 +1210,12 @@ export default function Index({ outlets = [], filters = {}, stats = {} }) {
                                                                 style={{
                                                                     padding: '0.35rem 0.65rem',
                                                                     borderRadius: '0.375rem',
-                                                                    background: '#B88E4B',
+                                                                    background: '#7A1C1C',
                                                                     color: '#FFFFFF',
                                                                     fontSize: '0.75rem',
                                                                     fontWeight: 700,
                                                                     textDecoration: 'none',
-                                                                    boxShadow: '0 1px 2px rgba(184, 142, 75, 0.2)',
+                                                                    boxShadow: '0 1px 2px rgba(122, 28, 28, 0.2)',
                                                                 }}
                                                                 title="View Outlet Hub"
                                                             >

@@ -34,25 +34,7 @@ enum UserPermission: string
      */
     public static function adminPermissions(): array
     {
-        return [
-            self::ManageOrders->value,
-            self::ManageProducts->value,
-            self::ManageCustomers->value,
-            self::ManageCoupons->value,
-            self::ManageOutlets->value,
-            self::ManageTaxes->value,
-            self::ManageQueries->value,
-            self::ManageStaff->value,
-            self::ManageRoles->value,
-            self::ManageStoreSettings->value,
-            self::ManagePages->value,
-            self::ManageSeo->value,
-            self::ManageHeaderFooter->value,
-            self::ViewProducts->value,
-            self::PlaceOrders->value,
-            self::ManageProfile->value,
-            self::ViewOwnOrders->value,
-        ];
+        return self::staffPermissions();
     }
 
     /**
@@ -68,16 +50,13 @@ enum UserPermission: string
     }
 
     /**
+     * Customers and guests use public storefront access and do not hold admin permissions.
+     *
      * @return list<string>
      */
     public static function customerPermissions(): array
     {
-        return [
-            self::ViewProducts->value,
-            self::PlaceOrders->value,
-            self::ManageProfile->value,
-            self::ViewOwnOrders->value,
-        ];
+        return [];
     }
 
     /**

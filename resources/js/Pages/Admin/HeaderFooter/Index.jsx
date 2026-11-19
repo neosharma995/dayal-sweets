@@ -279,8 +279,23 @@ function ImageUploadField({
 }
 
 export default function Index({ settings = {}, page = {} }) {
-    // 3 Tabs state: 'header' | 'footer-cta' | 'footer'
-    const [activeTab, setActiveTab] = useState('header');
+    // 3 Tabs state synced with URL param (?tab=header | footer-cta | footer)
+    const validTabs = ['header', 'footer-cta', 'footer'];
+    const initialTabFromUrl = typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search).get('tab')
+        : null;
+    const [activeTab, setActiveTab] = useState(
+        validTabs.includes(initialTabFromUrl) ? initialTabFromUrl : 'header'
+    );
+
+    const handleTabChange = (tabKey) => {
+        setActiveTab(tabKey);
+        const params = tabKey === 'header' ? {} : { tab: tabKey };
+        router.get(route('admin.header-footer.index'), params, {
+            preserveState: true,
+            preserveScroll: true,
+        });
+    };
 
     // Header State
     const [headerLogo, setHeaderLogo] = useState(
@@ -618,87 +633,51 @@ export default function Index({ settings = {}, page = {} }) {
                 )}
 
                 {/* ========================================================= */}
-                {/* 3 TABS SWITCHER: Header | Footer CTA | Footer             */}
+                {/* 3 TABS SWITCHER: Header | Footer CTA | Footer (CRM Buttons)*/}
                 {/* ========================================================= */}
                 <div
                     style={{
                         display: 'flex',
+                        flexWrap: 'wrap',
                         gap: '0.5rem',
-                        borderBottom: '2px solid #E2E8F0',
                         marginBottom: '1.5rem',
                         background: '#FFFFFF',
-                        padding: '0.25rem 0.5rem 0',
-                        borderRadius: '0.5rem 0.5rem 0 0',
+                        padding: '0.85rem 1.15rem',
+                        borderRadius: '0.75rem',
+                        border: '1px solid #E2E8F0',
                     }}
                 >
-                    {/* Tab 1: Header Section */}
-                    <button
-                        type="button"
-                        onClick={() => setActiveTab('header')}
-                        style={{
-                            padding: '0.75rem 1.25rem',
-                            border: 'none',
-                            background: 'transparent',
-                            fontSize: '0.875rem',
-                            fontWeight: activeTab === 'header' ? 700 : 500,
-                            color: activeTab === 'header' ? '#7A1C1C' : '#64748B',
-                            borderBottom: activeTab === 'header' ? '3px solid #7A1C1C' : '3px solid transparent',
-                            marginBottom: '-2px',
-                            cursor: 'pointer',
-                            transition: 'all 0.15s ease',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                        }}
-                    >
-                        <span>Header section</span>
-                    </button>
-
-                    {/* Tab 2: Footer CTA Section */}
-                    <button
-                        type="button"
-                        onClick={() => setActiveTab('footer-cta')}
-                        style={{
-                            padding: '0.75rem 1.25rem',
-                            border: 'none',
-                            background: 'transparent',
-                            fontSize: '0.875rem',
-                            fontWeight: activeTab === 'footer-cta' ? 700 : 500,
-                            color: activeTab === 'footer-cta' ? '#7A1C1C' : '#64748B',
-                            borderBottom: activeTab === 'footer-cta' ? '3px solid #7A1C1C' : '3px solid transparent',
-                            marginBottom: '-2px',
-                            cursor: 'pointer',
-                            transition: 'all 0.15s ease',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                        }}
-                    >
-                        <span>Footer CTA section</span>
-                    </button>
-
-                    {/* Tab 3: Footer Section */}
-                    <button
-                        type="button"
-                        onClick={() => setActiveTab('footer')}
-                        style={{
-                            padding: '0.75rem 1.25rem',
-                            border: 'none',
-                            background: 'transparent',
-                            fontSize: '0.875rem',
-                            fontWeight: activeTab === 'footer' ? 700 : 500,
-                            color: activeTab === 'footer' ? '#7A1C1C' : '#64748B',
-                            borderBottom: activeTab === 'footer' ? '3px solid #7A1C1C' : '3px solid transparent',
-                            marginBottom: '-2px',
-                            cursor: 'pointer',
-                            transition: 'all 0.15s ease',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                        }}
-                    >
-                        <span>Footer section</span>
-                    </button>
+                    {[
+                        { key: 'header', label: 'Header Section' },
+                        { key: 'footer-cta', label: 'Footer CTA Section' },
+                        { key: 'footer', label: 'Footer Section' },
+                    ].map((tab) => {
+                        const isActive = activeTab === tab.key;
+                        return (
+                            <button
+                                key={tab.key}
+                                type="button"
+                                onClick={() => handleTabChange(tab.key)}
+                                style={{
+                                    padding: '0.45rem 0.95rem',
+                                    borderRadius: '0.375rem',
+                                    fontSize: '0.8125rem',
+                                    fontWeight: isActive ? 700 : 500,
+                                    border: isActive ? '1px solid #7A1C1C' : '1px solid #CBD5E1',
+                                    background: isActive ? '#7A1C1C' : '#FFFFFF',
+                                    color: isActive ? '#FFFFFF' : '#475569',
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '0.45rem',
+                                    transition: 'all 0.15s ease',
+                                    boxShadow: isActive ? '0 1px 2px rgba(122, 28, 28, 0.2)' : '0 1px 2px rgba(0,0,0,0.03)',
+                                }}
+                            >
+                                <span>{tab.label}</span>
+                            </button>
+                        );
+                    })}
                 </div>
 
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>

@@ -31,10 +31,15 @@ class RoleController extends Controller
             Permission::firstOrCreate(['name' => $permName, 'guard_name' => 'web']);
         }
 
-        // Ensure Admin always has all permissions assigned
+        // Ensure Admin always has all admin permissions assigned, and Customer has no admin permissions
         $adminRole = Role::where('name', UserRole::Admin->value)->first();
         if ($adminRole) {
             $adminRole->syncPermissions(UserPermission::adminPermissions());
+        }
+
+        $customerRole = Role::where('name', UserRole::Customer->value)->first();
+        if ($customerRole && $customerRole->permissions()->count() > 0) {
+            $customerRole->syncPermissions([]);
         }
 
         $editorRole = Role::where('name', UserRole::Editor->value)->first();
@@ -46,13 +51,27 @@ class RoleController extends Controller
 
         $roles = Role::with('permissions')
             ->withCount('users')
+            ->orderBy('id')
             ->get()
+            ->sortBy(function (Role $role) {
+                $priority = match ($role->name) {
+                    UserRole::Admin->value => 0,
+                    UserRole::Customer->value => 1,
+                    default => 2,
+                };
+
+                return [$priority, $role->id];
+            })
+            ->values()
             ->map(function (Role $role) {
+                $isLocked = in_array($role->name, [UserRole::Admin->value, UserRole::Customer->value], true);
+
                 return [
                     'id' => $role->id,
                     'name' => $role->name,
                     'users_count' => $role->users_count,
                     'is_system' => in_array($role->name, [UserRole::Admin->value, UserRole::Customer->value, UserRole::Editor->value], true),
+                    'is_locked' => $isLocked,
                     'permissions' => $role->permissions->pluck('name')->all(),
                     'created_at' => $role->created_at?->format('d M Y') ?? '—',
                 ];
@@ -148,6 +167,10 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role): RedirectResponse
     {
+        if (in_array($role->name, [UserRole::Admin->value, UserRole::Customer->value], true)) {
+            abort(403, "Role '{$role->name}' is locked and cannot be modified.");
+        }
+
         $isSystem = in_array($role->name, [UserRole::Admin->value, UserRole::Customer->value, UserRole::Editor->value], true);
 
         $rules = [
@@ -185,7 +208,7 @@ class RoleController extends Controller
     public function destroy(Role $role): RedirectResponse
     {
         if (in_array($role->name, [UserRole::Admin->value, UserRole::Customer->value, UserRole::Editor->value], true)) {
-            return redirect()->back()->with('error', "System role '{$role->name}' is protected and cannot be deleted.");
+            abort(403, "System role '{$role->name}' is protected and cannot be deleted.");
         }
 
         if ($role->users()->count() > 0) {

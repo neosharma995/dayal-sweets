@@ -26,8 +26,13 @@ export default function RolesIndex({ roles, groupedPermissions, allPermissions }
         setShowCreateModal(true);
     };
 
-    // Open Edit Modal
+    const isRoleLocked = (role) => Boolean(role?.is_locked || role?.name === 'admin' || role?.name === 'customer');
+
+    // Open Edit Modal (blocked for locked roles: admin & customer)
     const handleOpenEdit = (role) => {
+        if (isRoleLocked(role)) {
+            return;
+        }
         setEditingRole(role);
         setFormData({
             name: role.name,
@@ -159,19 +164,23 @@ export default function RolesIndex({ roles, groupedPermissions, allPermissions }
                 >
                     {roles.map((role) => {
                         const style = getRoleColor(role.name);
+                        const locked = isRoleLocked(role);
+                        const isCustomerRole = role.name === 'customer';
+                        const isAdminRole = role.name === 'admin';
 
                         return (
                             <div
                                 key={role.id}
                                 style={{
-                                    background: '#FFFFFF',
+                                    background: locked ? '#F8FAFC' : '#FFFFFF',
                                     borderRadius: '0.75rem',
-                                    border: '1px solid #E2E8F0',
+                                    border: locked ? '1px solid #CBD5E1' : '1px solid #E2E8F0',
                                     padding: '1.5rem',
                                     display: 'flex',
                                     flexDirection: 'column',
                                     justifyContent: 'space-between',
                                     boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                                    opacity: locked ? 0.92 : 1,
                                 }}
                             >
                                 <div>
@@ -195,8 +204,8 @@ export default function RolesIndex({ roles, groupedPermissions, allPermissions }
                                                 {role.name}
                                             </span>
                                             {role.is_system && (
-                                                <span style={{ marginLeft: '0.5rem', fontSize: '0.7rem', color: '#94A3B8', fontWeight: 600 }}>
-                                                    [System Role]
+                                                <span style={{ marginLeft: '0.5rem', fontSize: '0.7rem', color: '#64748B', fontWeight: 600 }}>
+                                                    {locked ? '[Locked System Role]' : '[System Role]'}
                                                 </span>
                                             )}
                                         </div>
@@ -206,56 +215,92 @@ export default function RolesIndex({ roles, groupedPermissions, allPermissions }
                                         </div>
                                     </div>
 
-                                    {/* Permissions Count */}
-                                    <div style={{ fontSize: '0.8125rem', color: '#0F172A', fontWeight: 700, margin: '0.75rem 0 0.5rem' }}>
-                                        Assigned Permissions ({role.permissions.length}):
-                                    </div>
+                                    {/* Permissions Info */}
+                                    {isCustomerRole ? (
+                                        <div style={{ marginTop: '0.85rem', padding: '0.85rem 1rem', borderRadius: '0.5rem', background: '#FFFFFF', border: '1px dashed #CBD5E1', color: '#64748B', fontSize: '0.8rem', lineHeight: 1.5 }}>
+                                            <strong style={{ color: '#0F172A', display: 'block', marginBottom: '0.2rem' }}>
+                                                Frontend Storefront Access Only
+                                            </strong>
+                                            Customers and guest visitors automatically use public website storefront access and do not require admin permissions. This role is permanently locked.
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <div style={{ fontSize: '0.8125rem', color: '#0F172A', fontWeight: 700, margin: '0.75rem 0 0.5rem' }}>
+                                                {isAdminRole
+                                                    ? `All System Permissions (${role.permissions.length}):`
+                                                    : `Assigned Permissions (${role.permissions.length}):`}
+                                            </div>
 
-                                    {/* Permissions Badges */}
-                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', maxHeight: '160px', overflowY: 'auto', padding: '0.25rem 0' }}>
-                                        {role.permissions.length === 0 ? (
-                                            <span style={{ fontSize: '0.785rem', color: '#94A3B8', fontStyle: 'italic' }}>No permissions assigned</span>
-                                        ) : (
-                                            role.permissions.map((p) => (
-                                                <span
-                                                    key={p}
-                                                    style={{
-                                                        background: '#F1F5F9',
-                                                        color: '#475569',
-                                                        fontSize: '0.72rem',
-                                                        fontWeight: 500,
-                                                        padding: '0.2rem 0.45rem',
-                                                        borderRadius: '0.25rem',
-                                                        border: '1px solid #E2E8F0',
-                                                    }}
-                                                >
-                                                    {p}
-                                                </span>
-                                            ))
-                                        )}
-                                    </div>
+                                            {/* Permissions Badges */}
+                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', maxHeight: '160px', overflowY: 'auto', padding: '0.25rem 0' }}>
+                                                {role.permissions.length === 0 ? (
+                                                    <span style={{ fontSize: '0.785rem', color: '#94A3B8', fontStyle: 'italic' }}>No permissions assigned</span>
+                                                ) : (
+                                                    role.permissions.map((p) => (
+                                                        <span
+                                                            key={p}
+                                                            style={{
+                                                                background: '#F1F5F9',
+                                                                color: '#475569',
+                                                                fontSize: '0.72rem',
+                                                                fontWeight: 500,
+                                                                padding: '0.2rem 0.45rem',
+                                                                borderRadius: '0.25rem',
+                                                                border: '1px solid #E2E8F0',
+                                                            }}
+                                                        >
+                                                            {p}
+                                                        </span>
+                                                    ))
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
 
                                 {/* Actions Footer */}
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid #F1F5F9' }}>
-                                    <button
-                                        type="button"
-                                        onClick={() => handleOpenEdit(role)}
-                                        style={{
-                                            background: '#F8FAFC',
-                                            color: '#0F172A',
-                                            border: '1px solid #CBD5E1',
-                                            borderRadius: '0.375rem',
-                                            padding: '0.45rem 0.85rem',
-                                            fontSize: '0.8rem',
-                                            fontWeight: 600,
-                                            cursor: 'pointer',
-                                        }}
-                                    >
-                                        Configure Permissions
-                                    </button>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid #E2E8F0' }}>
+                                    {locked ? (
+                                        <button
+                                            type="button"
+                                            disabled
+                                            style={{
+                                                background: '#E2E8F0',
+                                                color: '#64748B',
+                                                border: '1px solid #CBD5E1',
+                                                borderRadius: '0.375rem',
+                                                padding: '0.45rem 0.85rem',
+                                                fontSize: '0.8rem',
+                                                fontWeight: 600,
+                                                cursor: 'not-allowed',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '0.4rem',
+                                            }}
+                                            title={isAdminRole ? 'Admin always has all permissions and cannot be edited.' : 'Customer role is locked to frontend storefront access only.'}
+                                        >
+                                            <span>🔒 {isAdminRole ? 'Locked (All Permissions)' : 'Locked (Storefront Only)'}</span>
+                                        </button>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            onClick={() => handleOpenEdit(role)}
+                                            style={{
+                                                background: '#F8FAFC',
+                                                color: '#0F172A',
+                                                border: '1px solid #CBD5E1',
+                                                borderRadius: '0.375rem',
+                                                padding: '0.45rem 0.85rem',
+                                                fontSize: '0.8rem',
+                                                fontWeight: 600,
+                                                cursor: 'pointer',
+                                            }}
+                                        >
+                                            Configure Permissions
+                                        </button>
+                                    )}
 
-                                    {!role.is_system && (
+                                    {!role.is_system && !locked && (
                                         <button
                                             type="button"
                                             onClick={() => handleDeleteRole(role)}

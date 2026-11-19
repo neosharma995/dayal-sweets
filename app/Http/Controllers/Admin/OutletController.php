@@ -68,18 +68,31 @@ class OutletController extends Controller
         $query = Outlet::query()->withCount(['products', 'shippingZones', 'orders', 'tables'])->orderBy('sort_order')->orderBy('id');
 
         if ($request->filled('search')) {
-            $search = (string) $request->input('search');
+            $search = trim((string) $request->input('search'));
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('subtitle', 'like', "%{$search}%")
                     ->orWhere('address', 'like', "%{$search}%")
-                    ->orWhere('city', 'like', "%{$search}%");
+                    ->orWhere('city', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%");
             });
         }
 
         if ($request->filled('status') && $request->input('status') !== 'all') {
             $status = (string) $request->input('status');
-            $query->where('status', $status);
+            if ($status === 'active') {
+                $query->where('status', 'active')->where('is_active', true);
+            } elseif ($status === 'coming_soon') {
+                $query->where(function ($q) {
+                    $q->where('status', 'coming_soon')->orWhere('is_coming_soon', true);
+                });
+            } elseif ($status === 'inactive') {
+                $query->where(function ($q) {
+                    $q->where('status', 'inactive')->orWhere('is_active', false);
+                });
+            } else {
+                $query->where('status', $status);
+            }
         }
 
         $outlets = $query->get();
@@ -95,7 +108,13 @@ class OutletController extends Controller
 
         return Inertia::render('Admin/Outlets/Index', [
             'outlets' => $outlets,
-            'filters' => $request->only(['search', 'status']),
+            'filters' => [
+                'search' => (string) $request->input('search', ''),
+                'status' => (string) $request->input('status', 'all'),
+                'view' => in_array($request->input('view'), ['table', 'cards'], true)
+                    ? (string) $request->input('view')
+                    : 'table',
+            ],
             'stats' => [
                 'total' => Outlet::count(),
                 'active' => Outlet::where('status', 'active')->where('is_active', true)->count(),

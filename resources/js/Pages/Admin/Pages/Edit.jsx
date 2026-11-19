@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
-import PageSeoSection from '@/Components/Admin/PageSeoSection';
+import { PageSeoSummaryCard } from '@/Components/Admin/PageSeoSection';
 
 export default function Edit({ page }) {
     const sections = page?.sections || {};
@@ -293,13 +293,11 @@ export default function Edit({ page }) {
                         </div>
                     </div>
 
-                    {/* SECTION 2: PAGE SEO INFORMATION */}
-                    <PageSeoSection
+                    {/* SECTION 2: PAGE SEO SUMMARY (VIEW ONLY - EDIT SEPARATELY) */}
+                    <PageSeoSummaryCard
                         seo={seo}
-                        onChange={setSeo}
                         pageSlug={slug}
                         pageTitle={title}
-                        errors={errors}
                     />
                 </form>
             </div>

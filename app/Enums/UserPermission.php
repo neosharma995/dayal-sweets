@@ -9,6 +9,7 @@ enum UserPermission: string
     // Administrative Staff Permissions
     case ManageOrders = 'manage orders';
     case ManageProducts = 'manage products';
+    case ManageAnalytics = 'manage analytics';
     case ManageCustomers = 'manage customers';
     case ManageCoupons = 'manage coupons';
     case ManageOutlets = 'manage outlets';
@@ -67,6 +68,7 @@ enum UserPermission: string
         return [
             self::ManageOrders->value,
             self::ManageProducts->value,
+            self::ManageAnalytics->value,
             self::ManageCustomers->value,
             self::ManageCoupons->value,
             self::ManageOutlets->value,

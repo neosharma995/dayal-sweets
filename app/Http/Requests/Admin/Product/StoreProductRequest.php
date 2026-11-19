@@ -56,17 +56,12 @@ class StoreProductRequest extends FormRequest
             }
         }
 
-        if (is_string($this->input('tag_ids'))) {
-            $decoded = json_decode($this->input('tag_ids'), true);
-            if (is_array($decoded)) {
-                $mergeData['tag_ids'] = $decoded;
-            }
-        }
-
-        if (is_string($this->input('outlet_ids'))) {
-            $decoded = json_decode($this->input('outlet_ids'), true);
-            if (is_array($decoded)) {
-                $mergeData['outlet_ids'] = $decoded;
+        foreach (['tag_ids', 'outlet_ids', 'category_ids', 'seasonal_mithai_ids', 'occasion_ids', 'diet_preference_ids'] as $arrayField) {
+            if (is_string($this->input($arrayField))) {
+                $decoded = json_decode($this->input($arrayField), true);
+                if (is_array($decoded)) {
+                    $mergeData[$arrayField] = $decoded;
+                }
             }
         }
 
@@ -90,9 +85,17 @@ class StoreProductRequest extends FormRequest
     {
         return [
             'category_id' => ['nullable', 'integer', 'exists:product_categories,id'],
+            'category_ids' => ['nullable', 'array'],
+            'category_ids.*' => ['integer', 'exists:product_categories,id'],
             'seasonal_mithai_id' => ['nullable', 'integer', 'exists:product_seasonal_mithais,id'],
+            'seasonal_mithai_ids' => ['nullable', 'array'],
+            'seasonal_mithai_ids.*' => ['integer', 'exists:product_seasonal_mithais,id'],
             'occasion_id' => ['nullable', 'integer', 'exists:product_occasions,id'],
+            'occasion_ids' => ['nullable', 'array'],
+            'occasion_ids.*' => ['integer', 'exists:product_occasions,id'],
             'diet_preference_id' => ['nullable', 'integer', 'exists:product_diet_preferences,id'],
+            'diet_preference_ids' => ['nullable', 'array'],
+            'diet_preference_ids.*' => ['integer', 'exists:product_diet_preferences,id'],
             'product_tag_id' => ['nullable', 'integer', 'exists:product_tags,id'],
             'tax_rate_id' => ['nullable', 'integer', 'exists:tax_rates,id'],
             'tax_status' => ['nullable', 'string', 'in:taxable,none,shipping'],

@@ -7,6 +7,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -28,11 +30,19 @@ class Category extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'parent_id',
         'category_name',
         'category_slug',
         'category_image',
         'category_description',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'parent_id' => 'integer',
+        ];
+    }
 
     /**
      * Additional attributes to append to array/JSON forms.
@@ -59,12 +69,36 @@ class Category extends Model
     }
 
     /**
-     * Relationship: Category has many Products.
-     * E.g. A category contains 10 products.
+     * Relationship: Category belongs to a parent Category.
+     */
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+    /**
+     * Relationship: Category has many child Categories.
+     */
+    public function children(): HasMany
+    {
+        return $this->hasMany(Category::class, 'parent_id')->orderBy('category_name');
+    }
+
+    /**
+     * Relationship: Category has many Products (primary category_id).
      */
     public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'category_id');
+    }
+
+    /**
+     * Relationship: Category has many Products (multi-category pivot).
+     */
+    public function manyProducts(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'category_product', 'category_id', 'product_id')
+            ->withTimestamps();
     }
 
     /**

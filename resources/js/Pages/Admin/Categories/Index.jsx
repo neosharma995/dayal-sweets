@@ -91,12 +91,29 @@ export default function Index({ categories = [], filters = {} }) {
                         )}
                     </div>
                     <div>
-                        <Link
-                            href={route('admin.categories.show', category.id)}
-                            style={{ color: '#0F172A', fontWeight: 600, textDecoration: 'none' }}
-                        >
-                            {category.category_name}
-                        </Link>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
+                            <Link
+                                href={route('admin.categories.show', category.id)}
+                                style={{ color: '#0F172A', fontWeight: 600, textDecoration: 'none' }}
+                            >
+                                {category.parent ? `↳ ${category.category_name}` : category.category_name}
+                            </Link>
+                            {category.parent && (
+                                <span
+                                    style={{
+                                        fontSize: '0.68rem',
+                                        fontWeight: 600,
+                                        padding: '0.1rem 0.45rem',
+                                        borderRadius: '999px',
+                                        background: '#F1F5F9',
+                                        color: '#475569',
+                                        border: '1px solid #CBD5E1',
+                                    }}
+                                >
+                                    Parent: {category.parent.category_name}
+                                </span>
+                            )}
+                        </div>
                         <div style={{ fontSize: '0.75rem', color: '#64748B', maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {category.category_description || 'No description provided'}
                         </div>

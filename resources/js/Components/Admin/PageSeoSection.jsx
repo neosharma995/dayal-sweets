@@ -1,4 +1,70 @@
 import React, { useState } from 'react';
+import { Link } from '@inertiajs/react';
+
+export function PageSeoSummaryCard({ seo = {}, pageSlug = 'home', pageTitle = 'Page' }) {
+    const publicPath = pageSlug === 'home' ? '/' : `/${pageSlug}`;
+    const metaTitle = seo.meta_title || `${pageTitle} | Dayal Sweets`;
+    const metaDescription = seo.meta_description || 'No meta description configured yet.';
+    const robots = seo.robots || 'index, follow';
+
+    return (
+        <div
+            style={{
+                background: '#FFFFFF',
+                borderRadius: '0.75rem',
+                border: '1px solid #E2E8F0',
+                padding: '1.25rem 1.5rem',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+            }}
+        >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '0.85rem' }}>
+                <div>
+                    <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, color: '#0F172A' }}>
+                        SEO Summary (View Only)
+                    </h3>
+                    <span style={{ fontSize: '0.75rem', color: '#64748B' }}>
+                        SEO metadata is edited separately from page content.
+                    </span>
+                </div>
+
+                <Link
+                    href={route('admin.pages.seo')}
+                    style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                        padding: '0.45rem 0.9rem',
+                        borderRadius: '0.375rem',
+                        background: '#7A1C1C',
+                        color: '#FFFFFF',
+                        fontSize: '0.8rem',
+                        fontWeight: 600,
+                        textDecoration: 'none',
+                    }}
+                >
+                    Edit SEO →
+                </Link>
+            </div>
+
+            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '0.5rem', padding: '0.9rem 1rem' }}>
+                <div style={{ fontSize: '0.72rem', color: '#64748B', marginBottom: '0.2rem' }}>
+                    {publicPath} • Robots: <strong>{robots}</strong>
+                </div>
+                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1E40AF', marginBottom: '0.25rem' }}>
+                    {metaTitle}
+                </div>
+                <div style={{ fontSize: '0.8125rem', color: '#475569', lineHeight: 1.45 }}>
+                    {metaDescription}
+                </div>
+                {seo.meta_keywords && (
+                    <div style={{ fontSize: '0.74rem', color: '#64748B', marginTop: '0.4rem' }}>
+                        <strong>Keywords:</strong> {seo.meta_keywords}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
 
 export default function PageSeoSection({
     seo = {},

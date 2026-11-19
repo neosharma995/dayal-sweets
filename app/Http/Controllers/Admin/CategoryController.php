@@ -3,18 +3,18 @@
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
-
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\Category\StoreCategoryRequest;
-use App\Http\Requests\Admin\Category\UpdateCategoryRequest;
-use App\Models\Category;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Inertia\Inertia;
+
 use Inertia\Response;
+use Inertia\Inertia;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\Admin\Category\UpdateCategoryRequest;
+use App\Http\Requests\Admin\Category\StoreCategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -23,7 +23,7 @@ class CategoryController extends Controller
      */
     public function index(Request $request): Response|JsonResponse
     {
-        $query = Category::query()->withCount('products')->latest('id');
+        $query = Category::query()->with(['parent:id,category_name'])->withCount(['products', 'manyProducts'])->latest('id');
 
         // Optional search filter
         if ($request->filled('search')) {
@@ -57,7 +57,9 @@ class CategoryController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Admin/Categories/Create');
+        return Inertia::render('Admin/Categories/Create', [
+            'parentCategories' => Category::orderBy('category_name')->get(['id', 'category_name', 'parent_id']),
+        ]);
     }
 
     /**
@@ -96,7 +98,8 @@ class CategoryController extends Controller
     public function show(Request $request, Category|int|string $category): Response|JsonResponse
     {
         $categoryModel = $category instanceof Category ? $category : Category::findOrFail($category);
-        $categoryModel->load(['products' => fn ($q) => $q->with('variations')->latest('id')])->loadCount('products');
+        $categoryModel->load(['parent:id,category_name', 'children:id,parent_id,category_name', 'products' => fn ($q) => $q->with('variations')->latest('id')])
+            ->loadCount(['products', 'manyProducts']);
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -117,10 +120,13 @@ class CategoryController extends Controller
     public function edit(Category|int|string $category): Response
     {
         $categoryModel = $category instanceof Category ? $category : Category::findOrFail($category);
-        $categoryModel->loadCount('products');
+        $categoryModel->loadCount(['products', 'manyProducts']);
 
         return Inertia::render('Admin/Categories/Edit', [
             'category' => $categoryModel,
+            'parentCategories' => Category::where('id', '!=', $categoryModel->id)
+                ->orderBy('category_name')
+                ->get(['id', 'category_name', 'parent_id']),
         ]);
     }
 

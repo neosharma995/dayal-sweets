@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
-import PageSeoSection from '@/Components/Admin/PageSeoSection';
+import { PageSeoSummaryCard } from '@/Components/Admin/PageSeoSection';
 
 export default function ContactUs({ page }) {
     const sections = page?.sections || {};
@@ -466,15 +466,11 @@ export default function ContactUs({ page }) {
                         </div>
                     </div>
 
-                    {/* ========================================================= */}
-                    {/* SECTION 3: PAGE SEO INFORMATION (META & OPEN GRAPH)       */}
-                    {/* ========================================================= */}
-                    <PageSeoSection
+                    {/* SECTION 3: PAGE SEO SUMMARY (VIEW ONLY - EDIT SEPARATELY) */}
+                    <PageSeoSummaryCard
                         seo={seo}
-                        onChange={setSeo}
                         pageSlug="contact-us"
                         pageTitle="Contact Us"
-                        errors={errors}
                     />
                 </form>
             </div>

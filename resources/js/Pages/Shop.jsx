@@ -593,7 +593,7 @@ export default function Shop({
     const endCount = Math.min(currentPage * itemsPerPage, sortedProducts.length);
 
     return (
-        <div className="dayal-sweets-shop oto-shop-container">
+        <div className="dayal-sweets-shop">
             <SeoHead
                 fallbackTitle="Shop | Dayal Sweets - Pure Traditional Sweets & Snacks"
                 fallbackDescription="Browse and order fresh handmade Indian sweets, namkeen, dry fruits, bakery items, and festive combos online with fast delivery from Dayal Sweets."
@@ -615,21 +615,21 @@ export default function Shop({
             />
 
             {/* 2. MAIN LAYOUT: SIDEBAR + PRODUCT CATALOG */}
-            <div className="dayal-shop-layout oto-shop-layout">
+            <div className="dayal-shop-layout">
                 {/* Mobile Filter Backdrop */}
                 <div
-                    className={`dayal-shop-overlay oto-filter-overlay ${mobileSidebarOpen ? 'is-active' : ''}`}
+                    className={`dayal-shop-overlay ${mobileSidebarOpen ? 'is-active' : ''}`}
                     onClick={() => setMobileSidebarOpen(false)}
                     aria-hidden="true"
                 />
 
                 {/* SIDEBAR FILTERS */}
                 <aside
-                    className={`dayal-shop-sidebar oto-shop-sidebar ${mobileSidebarOpen ? 'is-open' : ''}`}
+                    className={`dayal-shop-sidebar ${mobileSidebarOpen ? 'is-open' : ''}`}
                     id="sidebar"
                     aria-label="Product filters"
                 >
-                    <div className="dayal-shop-sidebar-header oto-sidebar-header">
+                    <div className="dayal-shop-sidebar-header">
                         <span>
                             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                 <path d="M2 3H9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
@@ -644,7 +644,7 @@ export default function Shop({
                             </svg>
                             FILTERS
                         </span>
-                        <button type="button" className="dayal-shop-clear-all oto-clear-filters-btn" onClick={handleClearAll}>
+                        <button type="button" className="dayal-shop-clear-all" onClick={handleClearAll}>
                             &#8634; Clear All
                         </button>
                         <button
@@ -658,22 +658,22 @@ export default function Shop({
                     </div>
 
                     {/* SEARCH PRODUCTS */}
-                    <div className="dayal-shop-filter-group oto-filter-group">
+                    <div className="dayal-shop-filter-group">
                         <div
-                            className="dayal-shop-filter-toggle oto-filter-toggle"
+                            className="dayal-shop-filter-toggle"
                             onClick={() => toggleSection('search')}
                             role="button"
                             tabIndex={0}
                         >
                             <span>SEARCH PRODUCTS</span>
-                            <span className={`dayal-shop-caret oto-caret ${collapsed.search ? 'is-rotated' : ''}`}>
+                            <span className={`dayal-shop-caret ${collapsed.search ? 'is-rotated' : ''}`}>
                                 <svg viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </span>
                         </div>
-                        <div className={`dayal-shop-filter-content oto-filter-content ${collapsed.search ? 'is-collapsed' : ''}`}>
-                            <div className="dayal-shop-search-box oto-search-pill">
+                        <div className={`dayal-shop-filter-content ${collapsed.search ? 'is-collapsed' : ''}`}>
+                            <div className="dayal-shop-search-box">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                     <circle cx="11" cy="11" r="7" />
                                     <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -690,7 +690,7 @@ export default function Shop({
                                 {searchQuery && (
                                     <button
                                         type="button"
-                                        className="dayal-shop-search-clear oto-search-clear-btn"
+                                        className="dayal-shop-search-clear"
                                         aria-label="Clear search text"
                                         onClick={() => setSearchQuery('')}
                                     >
@@ -702,23 +702,23 @@ export default function Shop({
                     </div>
 
                     {/* SORT BY */}
-                    <div className="dayal-shop-filter-group oto-filter-group">
+                    <div className="dayal-shop-filter-group">
                         <div
-                            className="dayal-shop-filter-toggle oto-filter-toggle"
+                            className="dayal-shop-filter-toggle"
                             onClick={() => toggleSection('sort')}
                             role="button"
                             tabIndex={0}
                         >
                             <span>SORT BY</span>
-                            <span className={`dayal-shop-caret oto-caret ${collapsed.sort ? 'is-rotated' : ''}`}>
+                            <span className={`dayal-shop-caret ${collapsed.sort ? 'is-rotated' : ''}`}>
                                 <svg viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </span>
                         </div>
-                        <div className={`dayal-shop-filter-content oto-filter-content ${collapsed.sort ? 'is-collapsed' : ''}`}>
+                        <div className={`dayal-shop-filter-content ${collapsed.sort ? 'is-collapsed' : ''}`}>
                             <select
-                                className="dayal-shop-sort-select oto-sort-select oto-sort-select-full"
+                                className="dayal-shop-sort-select"
                                 value={sortOption}
                                 onChange={(e) => setSortOption(e.target.value)}
                             >
@@ -733,33 +733,32 @@ export default function Shop({
                     </div>
 
                     {/* CATEGORIES */}
-                    <div className="dayal-shop-filter-group oto-filter-group">
+                    <div className="dayal-shop-filter-group">
                         <div
-                            className="dayal-shop-filter-toggle oto-filter-toggle"
+                            className="dayal-shop-filter-toggle"
                             onClick={() => toggleSection('categories')}
                             role="button"
                             tabIndex={0}
                         >
                             <span>CATEGORIES</span>
-                            <span className={`dayal-shop-caret oto-caret ${collapsed.categories ? 'is-rotated' : ''}`}>
+                            <span className={`dayal-shop-caret ${collapsed.categories ? 'is-rotated' : ''}`}>
                                 <svg viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </span>
                         </div>
-                        <div className={`dayal-shop-filter-content oto-filter-content ${collapsed.categories ? 'is-collapsed' : ''}`}>
-                            <ul className="dayal-shop-cat-list oto-category-filter-list">
+                        <div className={`dayal-shop-filter-content ${collapsed.categories ? 'is-collapsed' : ''}`}>
+                            <ul className="dayal-shop-cat-list">
                                 {displayCategories.map((cat) => (
-                                    <li key={cat.slug} className="oto-cat-item">
-                                        <label className="oto-filter-option oto-cat-checkbox-label">
+                                    <li key={cat.slug}>
+                                        <label>
                                             <input
                                                 type="checkbox"
-                                                className="oto-cat-checkbox"
                                                 checked={selectedCats.includes(cat.slug)}
                                                 onChange={() => handleCategoryToggle(cat.slug)}
                                             />
                                             <span>{cat.name}</span>
-                                            <span className="dayal-shop-cat-count oto-cat-count">({cat.count})</span>
+                                            <span className="dayal-shop-cat-count">({cat.count})</span>
                                         </label>
                                     </li>
                                 ))}
@@ -768,34 +767,34 @@ export default function Shop({
                     </div>
 
                     {/* PRICE RANGE */}
-                    <div className="dayal-shop-filter-group oto-filter-group">
+                    <div className="dayal-shop-filter-group">
                         <div
-                            className="dayal-shop-filter-toggle oto-filter-toggle"
+                            className="dayal-shop-filter-toggle"
                             onClick={() => toggleSection('price')}
                             role="button"
                             tabIndex={0}
                         >
                             <span>PRICE RANGE</span>
-                            <span className={`dayal-shop-caret oto-caret ${collapsed.price ? 'is-rotated' : ''}`}>
+                            <span className={`dayal-shop-caret ${collapsed.price ? 'is-rotated' : ''}`}>
                                 <svg viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </span>
                         </div>
-                        <div className={`dayal-shop-filter-content oto-filter-content ${collapsed.price ? 'is-collapsed' : ''}`}>
-                            <div className="dayal-shop-price-values oto-price-values-row">
-                                <div className="oto-price-value oto-price-value-min">
+                        <div className={`dayal-shop-filter-content ${collapsed.price ? 'is-collapsed' : ''}`}>
+                            <div className="dayal-shop-price-values">
+                                <div className="dayal-shop-price-min">
                                     MIN<br />
                                     <strong id="priceMinDisplay">&#8377;{minPrice}</strong>
                                 </div>
-                                <div className="oto-price-value oto-price-value-max">
+                                <div className="dayal-shop-price-max">
                                     MAX<br />
                                     <strong id="priceMaxDisplay">&#8377;{maxPrice}+</strong>
                                 </div>
                             </div>
-                            <div className="dayal-shop-slider-track oto-range-slider">
+                            <div className="dayal-shop-slider-track">
                                 <div
-                                    className="dayal-shop-slider-range oto-range-fill"
+                                    className="dayal-shop-slider-range"
                                     style={{
                                         left: `${(minPrice / 5000) * 100}%`,
                                         width: `${((maxPrice - minPrice) / 5000) * 100}%`,
@@ -807,7 +806,6 @@ export default function Shop({
                                     max="5000"
                                     step="50"
                                     value={minPrice}
-                                    className="oto-range-input oto-range-min"
                                     style={{ zIndex: minPrice > 2500 ? 5 : 3 }}
                                     onChange={(e) => {
                                         const val = Math.min(Number(e.target.value), maxPrice - 50);
@@ -821,7 +819,6 @@ export default function Shop({
                                     max="5000"
                                     step="50"
                                     value={maxPrice}
-                                    className="oto-range-input oto-range-max"
                                     style={{ zIndex: minPrice > 2500 ? 3 : 4 }}
                                     onChange={(e) => {
                                         const val = Math.max(Number(e.target.value), minPrice + 50);
@@ -834,27 +831,27 @@ export default function Shop({
                     </div>
 
                     {/* SEASONAL MITHAI */}
-                    <div className="dayal-shop-filter-group oto-filter-group">
+                    <div className="dayal-shop-filter-group">
                         <div
-                            className="dayal-shop-filter-toggle oto-filter-toggle"
+                            className="dayal-shop-filter-toggle"
                             onClick={() => toggleSection('seasonal')}
                             role="button"
                             tabIndex={0}
                         >
                             <span>SEASONAL MITHAI</span>
-                            <span className={`dayal-shop-caret oto-caret ${collapsed.seasonal ? 'is-rotated' : ''}`}>
+                            <span className={`dayal-shop-caret ${collapsed.seasonal ? 'is-rotated' : ''}`}>
                                 <svg viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </span>
                         </div>
-                        <div className={`dayal-shop-filter-content oto-filter-content ${collapsed.seasonal ? 'is-collapsed' : ''}`}>
-                            <div className="dayal-shop-tags oto-tag-pills">
+                        <div className={`dayal-shop-filter-content ${collapsed.seasonal ? 'is-collapsed' : ''}`}>
+                            <div className="dayal-shop-tags">
                                 {seasonalTags.map((tag) => (
                                     <button
                                         type="button"
                                         key={tag}
-                                        className={`dayal-shop-tag-pill oto-tag-pill ${selectedTag === tag ? 'active is-active' : ''}`}
+                                        className={`dayal-shop-tag-pill ${selectedTag === tag ? 'active is-active' : ''}`}
                                         onClick={() => handleTagClick(tag)}
                                     >
                                         {tag}
@@ -865,24 +862,24 @@ export default function Shop({
                     </div>
 
                     {/* OCCASION */}
-                    <div className="dayal-shop-filter-group oto-filter-group">
+                    <div className="dayal-shop-filter-group">
                         <div
-                            className="dayal-shop-filter-toggle oto-filter-toggle"
+                            className="dayal-shop-filter-toggle"
                             onClick={() => toggleSection('occasion')}
                             role="button"
                             tabIndex={0}
                         >
                             <span>OCCASION</span>
-                            <span className={`dayal-shop-caret oto-caret ${collapsed.occasion ? 'is-rotated' : ''}`}>
+                            <span className={`dayal-shop-caret ${collapsed.occasion ? 'is-rotated' : ''}`}>
                                 <svg viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </span>
                         </div>
-                        <div className={`dayal-shop-filter-content oto-filter-content ${collapsed.occasion ? 'is-collapsed' : ''}`}>
+                        <div className={`dayal-shop-filter-content ${collapsed.occasion ? 'is-collapsed' : ''}`}>
                             <div className="dayal-shop-filter-options">
                                 {occasionOptions.map((occ) => (
-                                    <label key={occ} className="oto-filter-option">
+                                    <label key={occ}>
                                         <input
                                             type="checkbox"
                                             checked={selectedOccasions.includes(occ)}
@@ -901,24 +898,24 @@ export default function Shop({
                     </div>
 
                     {/* DIET PREFERENCE */}
-                    <div className="dayal-shop-filter-group oto-filter-group">
+                    <div className="dayal-shop-filter-group">
                         <div
-                            className="dayal-shop-filter-toggle oto-filter-toggle"
+                            className="dayal-shop-filter-toggle"
                             onClick={() => toggleSection('diet')}
                             role="button"
                             tabIndex={0}
                         >
                             <span>DIET PREFERENCE</span>
-                            <span className={`dayal-shop-caret oto-caret ${collapsed.diet ? 'is-rotated' : ''}`}>
+                            <span className={`dayal-shop-caret ${collapsed.diet ? 'is-rotated' : ''}`}>
                                 <svg viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </span>
                         </div>
-                        <div className={`dayal-shop-filter-content oto-filter-content ${collapsed.diet ? 'is-collapsed' : ''}`}>
+                        <div className={`dayal-shop-filter-content ${collapsed.diet ? 'is-collapsed' : ''}`}>
                             <div className="dayal-shop-filter-options">
                                 {dietOptions.map((diet) => (
-                                    <label key={diet} className="oto-filter-option">
+                                    <label key={diet}>
                                         <input
                                             type="checkbox"
                                             checked={selectedDiet.includes(diet)}
@@ -937,21 +934,21 @@ export default function Shop({
                     </div>
 
                     {/* RATING */}
-                    <div className="dayal-shop-filter-group oto-filter-group">
+                    <div className="dayal-shop-filter-group">
                         <div
-                            className="dayal-shop-filter-toggle oto-filter-toggle"
+                            className="dayal-shop-filter-toggle"
                             onClick={() => toggleSection('rating')}
                             role="button"
                             tabIndex={0}
                         >
                             <span>RATING</span>
-                            <span className={`dayal-shop-caret oto-caret ${collapsed.rating ? 'is-rotated' : ''}`}>
+                            <span className={`dayal-shop-caret ${collapsed.rating ? 'is-rotated' : ''}`}>
                                 <svg viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </span>
                         </div>
-                        <div className={`dayal-shop-filter-content oto-filter-content ${collapsed.rating ? 'is-collapsed' : ''}`}>
+                        <div className={`dayal-shop-filter-content ${collapsed.rating ? 'is-collapsed' : ''}`}>
                             <div className="dayal-shop-rating-list">
                                 {[5, 4, 3].map((stars) => {
                                     const isSelected = minRating === stars;
@@ -991,10 +988,10 @@ export default function Shop({
                 </aside>
 
                 {/* MAIN CATALOG COLUMN */}
-                <main className="dayal-shop-main oto-shop-main">
+                <main className="dayal-shop-main">
                     {/* TOOLBAR */}
-                    <div className="dayal-shop-toolbar oto-shop-toolbar">
-                        <div className="dayal-shop-results-count oto-results-count">
+                    <div className="dayal-shop-toolbar">
+                        <div className="dayal-shop-results-count">
                             <span>Showing {startCount}–{endCount} of {sortedProducts.length} results</span>
                             {pincodeSession?.isServiceable && pincodeSession?.pincode && (
                                 <span className="dayal-shop-pincode-indicator">
@@ -1004,10 +1001,10 @@ export default function Shop({
                             )}
                         </div>
 
-                        <div className="oto-toolbar-actions">
+                        <div className="dayal-shop-toolbar-actions">
                             <button
                                 type="button"
-                                className="dayal-shop-filter-trigger oto-filter-toggle-btn"
+                                className="dayal-shop-filter-trigger"
                                 onClick={() => setMobileSidebarOpen(true)}
                             >
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -1020,13 +1017,13 @@ export default function Shop({
 
                     {/* PRODUCT GRID */}
                     {paginatedProducts.length > 0 ? (
-                        <div className="dayal-products-grid dayal-shop-products-grid oto-products-grid-archive">
+                        <div className="dayal-products-grid dayal-shop-products-grid">
                             {paginatedProducts.map((product) => (
                                 <ProductCard key={product.id} product={product} onAddToCart={addToCart} />
                             ))}
                         </div>
                     ) : (
-                        <div className="dayal-shop-empty oto-no-products">
+                        <div className="dayal-shop-empty">
                             <h3>No Products Found</h3>
                             <p>
                                 {pincodeSession?.isServiceable
@@ -1064,7 +1061,7 @@ export default function Shop({
             </div>
 
             {/* 3. CURATED COMBOS SECTION */}
-            <section className="dayal-shop-combos-section oto-shop-coupon-template" aria-label="Curated Combos">
+            <section className="dayal-shop-combos-section" aria-label="Curated Combos">
                 <div className="dayal-shop-section-container">
                     <header className="dayal-shop-section-header">
                         <span className="dayal-shop-section-eyebrow">— CURATED COMBOS —</span>
@@ -1077,7 +1074,7 @@ export default function Shop({
                         </p>
                     </header>
 
-                    <div className="dayal-products-grid oto-products-grid-archive oto-latest-combo-products">
+                    <div className="dayal-products-grid dayal-shop-combos-grid">
                         {curatedCombos.map((combo) => (
                             <ProductCard key={combo.id} product={combo} onAddToCart={addToCart} />
                         ))}
@@ -1209,14 +1206,14 @@ export default function Shop({
             </section>
 
             {/* 5. QR TABLE ORDERING SECTION */}
-            <section className="dayal-shop-qr-section oto-qr-order-section" aria-label="Book Your Table Online">
+            <section className="dayal-shop-qr-section" aria-label="Book Your Table Online">
                 {/* QR CODE CARD */}
-                <div className="dayal-shop-qr-card oto-qr-code-card">
-                    <span className="oto-qr-badge">SCAN TO BOOK TABLE</span>
+                <div className="dayal-shop-qr-card">
+                    <span className="dayal-shop-qr-badge">SCAN TO BOOK TABLE</span>
                     <img
                         src="/uploads/2026/09/image-305.png"
                         alt="Scan QR code to view dining menu"
-                        className="dayal-shop-qr-img oto-qr-image"
+                        className="dayal-shop-qr-img"
                         loading="lazy"
                     />
                     <p>
@@ -1226,30 +1223,30 @@ export default function Shop({
                 </div>
 
                 {/* CONTENT AREA */}
-                <div className="dayal-shop-qr-content oto-qr-content">
-                    <div className="dayal-shop-qr-row oto-qr-heading-row">
-                        <div className="oto-qr-heading-content">
-                            <span className="oto-qr-eyebrow">— BOOK YOUR TABLE —</span>
+                <div className="dayal-shop-qr-content">
+                    <div className="dayal-shop-qr-row">
+                        <div className="dayal-shop-qr-heading-content">
+                            <span className="dayal-shop-qr-eyebrow">— BOOK YOUR TABLE —</span>
                             <h2>
                                 Skip The Wait, <span>Order Instantly</span>
                             </h2>
-                            <p className="oto-qr-description">
+                            <p className="dayal-shop-qr-description">
                                 Scan the QR code to explore our full menu, place your order and get it delivered fresh to your doorstep.
                             </p>
-                            <p className="oto-qr-subheading">Just Follow these steps:</p>
+                            <p className="dayal-shop-qr-subheading">Just Follow these steps:</p>
                         </div>
 
                         {/* WHATSAPP ORDER BOX */}
-                        <div className="dayal-shop-qr-whatsapp oto-qr-whatsapp-box">
+                        <div className="dayal-shop-qr-whatsapp">
                             <span>Order by WhatsApp</span>
                             <a
                                 href="https://wa.me/919876543210"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="oto-qr-whatsapp-button"
+                                className="dayal-shop-qr-whatsapp-button"
                             >
-                                <span className="oto-whatsapp-icon">
-                                    <img src="/uploads/2026/09/WhatsAppIcon.png" alt="" className="oto-image" />
+                                <span className="dayal-shop-whatsapp-icon">
+                                    <img src="/uploads/2026/09/WhatsAppIcon.png" alt="" className="dayal-shop-whatsapp-img" />
                                 </span>
                                 <span>+91 98765 43210</span>
                             </a>
@@ -1260,20 +1257,20 @@ export default function Shop({
                     </div>
 
                     {/* 4 ORDERING STEPS */}
-                    <div className="dayal-shop-qr-steps oto-qr-steps">
+                    <div className="dayal-shop-qr-steps">
                         {qrSteps.map((step, idx) => (
                             <React.Fragment key={step.num}>
-                                <div className="oto-qr-step">
-                                    <div className="oto-qr-step-icon">
+                                <div className="dayal-shop-qr-step">
+                                    <div className="dayal-shop-qr-step-icon">
                                         <img src={step.icon} alt="" />
                                     </div>
-                                    <div className="oto-qr-step-text">
+                                    <div className="dayal-shop-qr-step-text">
                                         <h4>{step.title}</h4>
                                         <p>{step.desc}</p>
                                     </div>
                                 </div>
                                 {idx < qrSteps.length - 1 && (
-                                    <span className="oto-qr-arrow" aria-hidden="true">→</span>
+                                    <span className="dayal-shop-qr-arrow" aria-hidden="true">→</span>
                                 )}
                             </React.Fragment>
                         ))}

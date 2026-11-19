@@ -349,7 +349,7 @@
         align-items: flex-end;
         margin-bottom: 8px;
 
-        .oto-price-value-min {
+        .dayal-shop-price-min {
             text-align: left;
             font-size: 11px;
             font-weight: 500;
@@ -366,7 +366,7 @@
             }
         }
 
-        .oto-price-value-max {
+        .dayal-shop-price-max {
             text-align: right;
             font-size: 11px;
             font-weight: 500;
@@ -782,7 +782,7 @@
     .dayal-shop-combos-section {
         margin: 80px 0 60px;
 
-        .oto-latest-combo-products {
+        .dayal-shop-combos-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 24px;
@@ -1348,7 +1348,7 @@
             text-align: center;
             box-sizing: border-box;
 
-            .oto-qr-badge {
+            .dayal-shop-qr-badge {
                 display: inline-block;
                 margin-bottom: 10px;
                 padding: 6px 15px;
@@ -1399,7 +1399,7 @@
             padding-right: 250px;
         }
 
-        .oto-qr-eyebrow {
+        .dayal-shop-qr-eyebrow {
             display: block;
             margin-bottom: 8px;
             color: #5d5149;
@@ -1409,7 +1409,7 @@
             line-height: 1.4;
         }
 
-        .oto-qr-heading-content h2 {
+        .dayal-shop-qr-heading-content h2 {
             margin: 0 0 14px;
             color: #241b18;
             font-size: clamp(26px, 3vw, 36px);
@@ -1422,7 +1422,7 @@
             }
         }
 
-        .oto-qr-description {
+        .dayal-shop-qr-description {
             max-width: 600px;
             margin: 0 0 16px;
             color: #1c1008;
@@ -1431,7 +1431,7 @@
             line-height: 1.6;
         }
 
-        .oto-qr-subheading {
+        .dayal-shop-qr-subheading {
             margin: 6px 0 0;
             color: #8a2436;
             font-size: 17px;
@@ -1461,7 +1461,7 @@
                 line-height: 1.4;
             }
 
-            .oto-qr-whatsapp-button {
+            .dayal-shop-qr-whatsapp-button {
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -1486,7 +1486,7 @@
                     border-color: #7c1f2e;
                 }
 
-                .oto-whatsapp-icon {
+                .dayal-shop-whatsapp-icon {
                     display: inline-block;
                     width: 18px;
                     height: 18px;
@@ -1537,14 +1537,14 @@
             background: #ffffff;
             box-sizing: border-box;
 
-            .oto-qr-step {
+            .dayal-shop-qr-step {
                 display: flex;
                 align-items: center;
                 flex: 1 1 0;
                 min-width: 0;
                 gap: 10px;
 
-                .oto-qr-step-icon {
+                .dayal-shop-qr-step-icon {
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -1564,7 +1564,7 @@
                     }
                 }
 
-                .oto-qr-step-text {
+                .dayal-shop-qr-step-text {
                     min-width: 0;
 
                     h4 {
@@ -1587,7 +1587,7 @@
                 }
             }
 
-            .oto-qr-arrow {
+            .dayal-shop-qr-arrow {
                 flex: 0 0 auto;
                 color: #9b3043;
                 font-size: 26px;
@@ -1610,10 +1610,10 @@
                 padding-right: 220px;
             }
 
-            .dayal-shop-qr-steps .oto-qr-step {
+            .dayal-shop-qr-steps .dayal-shop-qr-step {
                 gap: 8px;
 
-                .oto-qr-step-icon {
+                .dayal-shop-qr-step-icon {
                     flex-basis: 46px;
                     width: 46px;
                     height: 46px;
@@ -1658,7 +1658,7 @@
                 grid-template-columns: repeat(2, minmax(0, 1fr));
                 gap: 16px;
 
-                .oto-qr-arrow {
+                .dayal-shop-qr-arrow {
                     display: none;
                 }
             }

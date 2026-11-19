@@ -73,7 +73,7 @@ class HandleInertiaRequests extends Middleware
 
                 return null;
             },
-            'outlets' => fn () => \App\Models\Outlet::where('is_active', true)->orderBy('sort_order')->orderBy('id')->get(['id', 'name', 'city', 'state', 'status']),
+            'outlets' => fn () => \App\Models\Outlet::where('is_active', true)->orderBy('sort_order')->orderBy('id')->get(),
             'activeOutletId' => fn () => $request->session()->get('active_outlet_id', $request->query('outlet_id')),
             'activeOutlet' => function () use ($request) {
                 $id = $request->session()->get('active_outlet_id', $request->query('outlet_id'));

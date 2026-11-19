@@ -9,7 +9,12 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
     const userPermissions = auth?.user?.permissions || [];
     const isAdmin = userRoles.includes('admin') || auth?.user?.role === 'admin';
 
-    const can = (permission) => isAdmin || userPermissions.includes(permission);
+    const can = (permission) => {
+        if (Array.isArray(userPermissions) && userPermissions.length > 0) {
+            return userPermissions.includes(permission);
+        }
+        return isAdmin;
+    };
 
     const isProductRouteActive = Boolean(
         route().current('admin.products.*') ||
@@ -433,52 +438,60 @@ export default function AdminSidebar({ sidebarOpen, onCloseSidebar, onRequestLog
 
                                 {pagesOpen && (
                                     <div className="dayal-sidebar-submenu">
-                                        <Link
-                                            href={route('admin.pages.index')}
-                                            className={`dayal-sidebar-sublink ${route().current('admin.pages.index') || route().current('admin.pages.edit') ? 'active' : ''}`}
-                                        >
-                                            <span className="dayal-sublink-dot" />
-                                            <span>All Website Pages</span>
-                                        </Link>
+                                        {can('manage pages') && (
+                                            <Link
+                                                href={route('admin.pages.index')}
+                                                className={`dayal-sidebar-sublink ${route().current('admin.pages.index') || route().current('admin.pages.edit') ? 'active' : ''}`}
+                                            >
+                                                <span className="dayal-sublink-dot" />
+                                                <span>All Website Pages</span>
+                                            </Link>
+                                        )}
 
-                                        <Link
-                                            href={route('admin.pages.seo')}
-                                            className={`dayal-sidebar-sublink ${route().current('admin.pages.seo') ? 'active' : ''}`}
-                                        >
-                                            <span className="dayal-sublink-dot" />
-                                            <span>Pages SEO Information</span>
-                                        </Link>
+                                        {(can('manage seo') || can('manage pages')) && (
+                                            <Link
+                                                href={route('admin.pages.seo')}
+                                                className={`dayal-sidebar-sublink ${route().current('admin.pages.seo') ? 'active' : ''}`}
+                                            >
+                                                <span className="dayal-sublink-dot" />
+                                                <span>Pages SEO Information</span>
+                                            </Link>
+                                        )}
 
-                                        <Link
-                                            href={route('admin.pages.about-us')}
-                                            className={`dayal-sidebar-sublink ${route().current('admin.pages.about-us') ? 'active' : ''}`}
-                                        >
-                                            <span className="dayal-sublink-dot" />
-                                            <span>Edit About Us</span>
-                                        </Link>
+                                        {can('manage pages') && (
+                                            <>
+                                                <Link
+                                                    href={route('admin.pages.about-us')}
+                                                    className={`dayal-sidebar-sublink ${route().current('admin.pages.about-us') ? 'active' : ''}`}
+                                                >
+                                                    <span className="dayal-sublink-dot" />
+                                                    <span>Edit About Us</span>
+                                                </Link>
 
-                                        <Link
-                                            href={route('admin.pages.contact-us')}
-                                            className={`dayal-sidebar-sublink ${route().current('admin.pages.contact-us') ? 'active' : ''}`}
-                                        >
-                                            <span className="dayal-sublink-dot" />
-                                            <span>Edit Contact Us</span>
-                                        </Link>
+                                                <Link
+                                                    href={route('admin.pages.contact-us')}
+                                                    className={`dayal-sidebar-sublink ${route().current('admin.pages.contact-us') ? 'active' : ''}`}
+                                                >
+                                                    <span className="dayal-sublink-dot" />
+                                                    <span>Edit Contact Us</span>
+                                                </Link>
 
-                                        <Link
-                                            href={route('admin.pages.gallery')}
-                                            className={`dayal-sidebar-sublink ${route().current('admin.pages.gallery') ? 'active' : ''}`}
-                                        >
-                                            <span className="dayal-sublink-dot" />
-                                            <span>Edit Gallery</span>
-                                        </Link>
+                                                <Link
+                                                    href={route('admin.pages.gallery')}
+                                                    className={`dayal-sidebar-sublink ${route().current('admin.pages.gallery') ? 'active' : ''}`}
+                                                >
+                                                    <span className="dayal-sublink-dot" />
+                                                    <span>Edit Gallery</span>
+                                                </Link>
+                                            </>
+                                        )}
                                     </div>
                                 )}
                             </div>
                         )}
 
                         {/* Pages SEO Quick Access (Right After Website Pages) */}
-                        {(can('manage seo') || can('manage pages')) && (
+                        {can('manage seo') && (
                             <Link
                                 href={route('admin.pages.seo')}
                                 className={`dayal-sidebar-link ${route().current('admin.pages.seo') ? 'active' : ''}`}

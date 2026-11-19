@@ -30,13 +30,13 @@ class AuthController extends Controller
     {
         $request->authenticate();
 
-        if (! $request->user()?->isAdmin()) {
+        if (! $request->user()?->isStaff()) {
             Auth::guard('web')->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
             throw ValidationException::withMessages([
-                'email' => 'Access denied. Administrator privileges are required.',
+                'email' => 'Access denied. Administrative staff privileges are required.',
             ]);
         }
 

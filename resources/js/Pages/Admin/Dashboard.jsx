@@ -1,9 +1,20 @@
 import React from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { StoreIcon, BoxIcon, MapPinIcon, TruckIcon } from '@/Components/Icons';
 
 export default function AdminDashboard({ metrics, recentOrders = [], recentProducts = [], activeOutlet = null }) {
+    const { auth } = usePage().props || {};
+    const userRoles = auth?.user?.roles || [];
+    const userPermissions = auth?.user?.permissions || [];
+    const isAdmin = userRoles.includes('admin') || auth?.user?.role === 'admin';
+
+    const can = (permission) => {
+        if (Array.isArray(userPermissions) && userPermissions.length > 0) {
+            return userPermissions.includes(permission);
+        }
+        return isAdmin;
+    };
     const getDeliveryStatusBadge = (status) => {
         const normalized = (status || '').toLowerCase();
         if (normalized === 'delivered') {
@@ -136,92 +147,168 @@ export default function AdminDashboard({ metrics, recentOrders = [], recentProdu
                 }
             `}</style>
 
-            {/* 4 Interactive Navigate Stat Cards (Outlets, Orders, Products, Revenue) */}
+            {/* Interactive Navigate Stat Cards (Rendered based on user permissions) */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '1.25rem', marginBottom: '2rem' }}>
                 {/* 1. Total Outlets */}
-                <Link href={route('admin.outlets.index')} className="dayal-stat-nav-card">
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                        <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#64748B' }}>Total Outlets</span>
-                        <div style={{ width: '34px', height: '34px', borderRadius: '0.5rem', background: '#FDF8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#B88E4B' }}>
-                            <MapPinIcon width="18" height="18" />
+                {can('manage outlets') && (
+                    <Link href={route('admin.outlets.index')} className="dayal-stat-nav-card">
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                            <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#64748B' }}>Total Outlets</span>
+                            <div style={{ width: '34px', height: '34px', borderRadius: '0.5rem', background: '#FDF8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#B88E4B' }}>
+                                <MapPinIcon width="18" height="18" />
+                            </div>
                         </div>
-                    </div>
-                    <div style={{ fontSize: '1.875rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2 }}>
-                        {metrics.total_outlets}
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.5rem', fontSize: '0.775rem' }}>
-                        <span style={{ color: '#059669', fontWeight: 600 }}>{metrics.active_outlets} Active Locations</span>
-                        <span className="nav-arrow" style={{ color: '#B88E4B', fontWeight: 700 }}>Manage &rarr;</span>
-                    </div>
-                </Link>
+                        <div style={{ fontSize: '1.875rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2 }}>
+                            {metrics.total_outlets}
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.5rem', fontSize: '0.775rem' }}>
+                            <span style={{ color: '#059669', fontWeight: 600 }}>{metrics.active_outlets} Active Locations</span>
+                            <span className="nav-arrow" style={{ color: '#B88E4B', fontWeight: 700 }}>Manage &rarr;</span>
+                        </div>
+                    </Link>
+                )}
 
                 {/* 2. Total Orders */}
-                <Link href={route('admin.orders.index')} className="dayal-stat-nav-card">
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                        <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#64748B' }}>
-                            {activeOutlet ? `${activeOutlet.name} Orders` : 'Total Orders'}
-                        </span>
-                        <div style={{ width: '34px', height: '34px', borderRadius: '0.5rem', background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1D4ED8' }}>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                                <line x1="3" y1="6" x2="21" y2="6" />
-                                <path d="M16 10a4 4 0 0 1-8 0" />
-                            </svg>
+                {can('manage orders') && (
+                    <Link href={route('admin.orders.index')} className="dayal-stat-nav-card">
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                            <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#64748B' }}>
+                                {activeOutlet ? `${activeOutlet.name} Orders` : 'Total Orders'}
+                            </span>
+                            <div style={{ width: '34px', height: '34px', borderRadius: '0.5rem', background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1D4ED8' }}>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                                    <line x1="3" y1="6" x2="21" y2="6" />
+                                    <path d="M16 10a4 4 0 0 1-8 0" />
+                                </svg>
+                            </div>
                         </div>
-                    </div>
-                    <div style={{ fontSize: '1.875rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2 }}>
-                        {metrics.total_orders}
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.5rem', fontSize: '0.775rem' }}>
-                        <span style={{ color: metrics.pending_orders > 0 ? '#D97706' : '#64748B', fontWeight: 600 }}>
-                            {metrics.pending_orders} Pending Dispatch
-                        </span>
-                        <span className="nav-arrow" style={{ color: '#1D4ED8', fontWeight: 700 }}>View All &rarr;</span>
-                    </div>
-                </Link>
+                        <div style={{ fontSize: '1.875rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2 }}>
+                            {metrics.total_orders}
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.5rem', fontSize: '0.775rem' }}>
+                            <span style={{ color: metrics.pending_orders > 0 ? '#D97706' : '#64748B', fontWeight: 600 }}>
+                                {metrics.pending_orders} Pending Dispatch
+                            </span>
+                            <span className="nav-arrow" style={{ color: '#1D4ED8', fontWeight: 700 }}>View All &rarr;</span>
+                        </div>
+                    </Link>
+                )}
 
                 {/* 3. Total Products */}
-                <Link href={route('admin.products.index')} className="dayal-stat-nav-card">
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                        <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#64748B' }}>
-                            {activeOutlet ? `${activeOutlet.name} Products` : 'Total Products'}
-                        </span>
-                        <div style={{ width: '34px', height: '34px', borderRadius: '0.5rem', background: '#FDF2F8', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#BE185D' }}>
-                            <BoxIcon width="18" height="18" />
+                {can('manage products') && (
+                    <Link href={route('admin.products.index')} className="dayal-stat-nav-card">
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                            <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#64748B' }}>
+                                {activeOutlet ? `${activeOutlet.name} Products` : 'Total Products'}
+                            </span>
+                            <div style={{ width: '34px', height: '34px', borderRadius: '0.5rem', background: '#FDF2F8', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#BE185D' }}>
+                                <BoxIcon width="18" height="18" />
+                            </div>
                         </div>
-                    </div>
-                    <div style={{ fontSize: '1.875rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2 }}>
-                        {metrics.total_products}
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.5rem', fontSize: '0.775rem' }}>
-                        <span style={{ color: '#64748B', fontWeight: 600 }}>
-                            {activeOutlet ? 'Assigned to this branch' : 'In store catalog'}
-                        </span>
-                        <span className="nav-arrow" style={{ color: '#BE185D', fontWeight: 700 }}>Catalog &rarr;</span>
-                    </div>
-                </Link>
+                        <div style={{ fontSize: '1.875rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2 }}>
+                            {metrics.total_products}
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.5rem', fontSize: '0.775rem' }}>
+                            <span style={{ color: '#64748B', fontWeight: 600 }}>
+                                {activeOutlet ? 'Assigned to this branch' : 'In store catalog'}
+                            </span>
+                            <span className="nav-arrow" style={{ color: '#BE185D', fontWeight: 700 }}>Catalog &rarr;</span>
+                        </div>
+                    </Link>
+                )}
 
                 {/* 4. Total Paid Revenue */}
-                <Link href={route('admin.orders.index')} className="dayal-stat-nav-card">
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                        <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#64748B' }}>
-                            {activeOutlet ? `${activeOutlet.name} Revenue` : 'Total Revenue'}
-                        </span>
-                        <div style={{ width: '34px', height: '34px', borderRadius: '0.5rem', background: '#ECFDF5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#047857' }}>
-                            <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>₹</span>
+                {can('manage orders') && (
+                    <Link href={route('admin.orders.index')} className="dayal-stat-nav-card">
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                            <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#64748B' }}>
+                                {activeOutlet ? `${activeOutlet.name} Revenue` : 'Total Revenue'}
+                            </span>
+                            <div style={{ width: '34px', height: '34px', borderRadius: '0.5rem', background: '#ECFDF5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#047857' }}>
+                                <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>₹</span>
+                            </div>
                         </div>
-                    </div>
-                    <div style={{ fontSize: '1.875rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2 }}>
-                        ₹{metrics.total_revenue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.5rem', fontSize: '0.775rem' }}>
-                        <span style={{ color: '#059669', fontWeight: 600 }}>From paid customer orders</span>
-                        <span className="nav-arrow" style={{ color: '#047857', fontWeight: 700 }}>Orders &rarr;</span>
-                    </div>
-                </Link>
+                        <div style={{ fontSize: '1.875rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2 }}>
+                            ₹{metrics.total_revenue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.5rem', fontSize: '0.775rem' }}>
+                            <span style={{ color: '#059669', fontWeight: 600 }}>From paid customer orders</span>
+                            <span className="nav-arrow" style={{ color: '#047857', fontWeight: 700 }}>Orders &rarr;</span>
+                        </div>
+                    </Link>
+                )}
+
+                {/* 5. Website Pages */}
+                {can('manage pages') && (
+                    <Link href={route('admin.pages.index')} className="dayal-stat-nav-card">
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                            <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#64748B' }}>Website Pages</span>
+                            <div style={{ width: '34px', height: '34px', borderRadius: '0.5rem', background: '#FEF3C7', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#B45309' }}>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                    <polyline points="14 2 14 8 20 8" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div style={{ fontSize: '1.875rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2 }}>
+                            {metrics.total_pages ?? 11}
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.5rem', fontSize: '0.775rem' }}>
+                            <span style={{ color: '#059669', fontWeight: 600 }}>Editable storefront pages</span>
+                            <span className="nav-arrow" style={{ color: '#B45309', fontWeight: 700 }}>Pages &rarr;</span>
+                        </div>
+                    </Link>
+                )}
+
+                {/* 6. Pages SEO Information */}
+                {can('manage seo') && (
+                    <Link href={route('admin.pages.seo')} className="dayal-stat-nav-card">
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                            <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#64748B' }}>Pages SEO</span>
+                            <div style={{ width: '34px', height: '34px', borderRadius: '0.5rem', background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2563EB' }}>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div style={{ fontSize: '1.875rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2 }}>
+                            {metrics.seo_configured_pages ?? 11}
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.5rem', fontSize: '0.775rem' }}>
+                            <span style={{ color: '#2563EB', fontWeight: 600 }}>Meta &amp; Open Graph active</span>
+                            <span className="nav-arrow" style={{ color: '#2563EB', fontWeight: 700 }}>Manage SEO &rarr;</span>
+                        </div>
+                    </Link>
+                )}
+
+                {/* 7. Header & Footer Branding */}
+                {can('manage header footer') && (
+                    <Link href={route('admin.header-footer.index')} className="dayal-stat-nav-card">
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                            <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#64748B' }}>Header &amp; Footer</span>
+                            <div style={{ width: '34px', height: '34px', borderRadius: '0.5rem', background: '#F5F3FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7C3AED' }}>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                    <line x1="3" y1="9" x2="21" y2="9" />
+                                    <line x1="3" y1="15" x2="21" y2="15" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div style={{ fontSize: '1.875rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2 }}>
+                            Global
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.5rem', fontSize: '0.775rem' }}>
+                            <span style={{ color: '#7C3AED', fontWeight: 600 }}>Logo, Footer CTA &amp; Socials</span>
+                            <span className="nav-arrow" style={{ color: '#7C3AED', fontWeight: 700 }}>Customize &rarr;</span>
+                        </div>
+                    </Link>
+                )}
             </div>
 
             {/* Recent Orders Table (Filtered by Outlet) */}
+            {can('manage orders') && (
             <div className="dayal-admin-table-card" style={{ marginBottom: '2rem' }}>
                 <div
                     className="dayal-admin-table-head"
@@ -390,8 +477,10 @@ export default function AdminDashboard({ metrics, recentOrders = [], recentProdu
                     </table>
                 </div>
             </div>
+            )}
 
             {/* Products Catalog Table (Filtered by Outlet) */}
+            {can('manage products') && (
             <div className="dayal-admin-table-card">
                 <div
                     className="dayal-admin-table-head"
@@ -579,6 +668,7 @@ export default function AdminDashboard({ metrics, recentOrders = [], recentProdu
                     </table>
                 </div>
             </div>
+            )}
         </AdminLayout>
     );
 }

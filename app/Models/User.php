@@ -77,13 +77,7 @@ class User extends Authenticatable
 
     public function dashboardRoute(): string
     {
-        if ($this->isAdmin()) {
-            return UserRole::Admin->dashboardRoute();
-        }
-        if ($this->isEditor()) {
-            return UserRole::Editor->dashboardRoute();
-        }
-        if ($this->isStaff()) {
+        if ($this->isAdmin() || $this->isEditor() || $this->isStaff()) {
             return UserRole::Admin->dashboardRoute();
         }
         return UserRole::Customer->dashboardRoute();

@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Outlet;
+use App\Models\Page;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -95,6 +96,15 @@ class DashboardController extends Controller
             ];
         });
 
+        Page::ensureAllWebsitePagesExist();
+        $totalPages = Page::where('slug', '!=', 'header-footer')->count();
+        $seoConfiguredPages = Page::where('slug', '!=', 'header-footer')
+            ->whereNotNull('meta_title')
+            ->where('meta_title', '!=', '')
+            ->whereNotNull('meta_description')
+            ->where('meta_description', '!=', '')
+            ->count();
+
         $metrics = [
             'total_outlets' => $totalOutlets,
             'active_outlets' => $activeOutletsCount,
@@ -104,6 +114,8 @@ class DashboardController extends Controller
             'delivered_orders' => $deliveredOrders,
             'total_revenue' => $totalRevenue,
             'today_sales' => (float) (clone $statsOrdersQuery)->whereDate('created_at', today())->where('payment_status', 'paid')->sum('total_amount'),
+            'total_pages' => $totalPages,
+            'seo_configured_pages' => $seoConfiguredPages,
         ];
 
         return Inertia::render('Admin/Dashboard', [

@@ -112,4 +112,26 @@ class PageSeoAndAdminPermissionsTest extends TestCase
         $contactFront->assertSee('Reach Dayal Sweets Support | Official Contact Page', false);
         $contactFront->assertSee('Official contact page meta description for Dayal Sweets.', false);
     }
+
+    public function test_editor_and_staff_use_unified_admin_dashboard_and_permission_based_routes(): void
+    {
+        $editor = User::where('email', 'editor@dayalsweets.com')->firstOrFail();
+
+        // Editor uses the same unified admin.dashboard route
+        $this->assertSame('admin.dashboard', $editor->dashboardRoute());
+
+        // Legacy /editor/dashboard redirects to unified /admin/dashboard
+        $this->actingAs($editor)->get('/editor/dashboard')->assertRedirect(route('admin.dashboard'));
+
+        // Editor can access unified /admin/dashboard and their permitted sections
+        $this->actingAs($editor)->get(route('admin.dashboard'))->assertOk();
+        $this->actingAs($editor)->get(route('admin.pages.index'))->assertOk();
+        $this->actingAs($editor)->get(route('admin.pages.seo'))->assertOk();
+        $this->actingAs($editor)->get(route('admin.header-footer.index'))->assertOk();
+
+        // Editor is blocked from routes they do not have permission for
+        $this->actingAs($editor)->get(route('admin.orders.index'))->assertForbidden();
+        $this->actingAs($editor)->get(route('admin.products.index'))->assertForbidden();
+        $this->actingAs($editor)->get(route('admin.roles.index'))->assertForbidden();
+    }
 }

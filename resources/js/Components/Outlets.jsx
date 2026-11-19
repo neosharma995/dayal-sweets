@@ -50,18 +50,23 @@ export default function Outlets({
     const [activeDot, setActiveDot] = useState(0);
     const trackRef = useRef(null);
 
-    // Determine current raw outlets source
-    const rawList = (initialOutlets && initialOutlets.length > 0)
-        ? initialOutlets
-        : (sharedOutlets && sharedOutlets.length > 0)
-            ? sharedOutlets
-            : (fetchedOutlets && fetchedOutlets.length > 0)
-                ? fetchedOutlets
-                : [];
+    const hasFullDetails = (arr) =>
+        Array.isArray(arr) &&
+        arr.length > 0 &&
+        arr.some((o) => Boolean(o.image || o.image_url || o.address || o.phone));
 
-    // Fetch dynamic outlets from public API if not provided in props
+    // Determine current raw outlets source
+    const rawList = hasFullDetails(initialOutlets)
+        ? initialOutlets
+        : hasFullDetails(fetchedOutlets)
+            ? fetchedOutlets
+            : hasFullDetails(sharedOutlets)
+                ? sharedOutlets
+                : (initialOutlets || sharedOutlets || fetchedOutlets || []);
+
+    // Fetch dynamic outlets from public API if not provided with full details in props
     useEffect(() => {
-        if ((!initialOutlets || initialOutlets.length === 0) && (!sharedOutlets || sharedOutlets.length === 0)) {
+        if (!hasFullDetails(initialOutlets) && !hasFullDetails(sharedOutlets)) {
             fetch('/api/outlets', { headers: { Accept: 'application/json' } })
                 .then((res) => (res.ok ? res.json() : null))
                 .then((json) => {

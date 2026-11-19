@@ -5,6 +5,16 @@ import OutletSwitcher from '@/Components/Admin/OutletSwitcher';
 
 export default function AdminHeader({ onToggleSidebar, header, onRequestLogout }) {
     const { auth } = usePage().props;
+    const userRoles = auth?.user?.roles || [];
+    const userPermissions = auth?.user?.permissions || [];
+    const isAdmin = userRoles.includes('admin') || auth?.user?.role === 'admin';
+
+    const can = (permission) => {
+        if (Array.isArray(userPermissions) && userPermissions.length > 0) {
+            return userPermissions.includes(permission);
+        }
+        return isAdmin;
+    };
 
     return (
         <header className="dayal-admin-header">
@@ -22,14 +32,16 @@ export default function AdminHeader({ onToggleSidebar, header, onRequestLogout }
             </div>
 
             <div className="dayal-admin-header-right" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                {/* Global Multi-Outlet Switcher */}
-                <OutletSwitcher />
+                {/* Global Multi-Outlet Switcher (shown if user manages outlets, orders, or products) */}
+                {(can('manage outlets') || can('manage orders') || can('manage products')) && (
+                    <OutletSwitcher />
+                )}
 
                 <Link
                     href={route('admin.account')}
                     className="dayal-admin-head-btn"
                 >
-                    Admin Account
+                    {isAdmin ? 'Admin Account' : 'My Account'}
                 </Link>
 
                 <button

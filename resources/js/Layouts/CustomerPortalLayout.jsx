@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Head, Link, usePage, router } from '@inertiajs/react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import FlashToaster from '@/Components/FlashToaster';
 import Modal from '@/Components/Modal';
+import ContactHero from '@/Components/contact/ContactHero';
 import {
     LayoutDashboard,
     PackageCheck,
@@ -11,6 +12,13 @@ import {
     MapPin,
     UserCheck,
     LogOut,
+    ChevronLeft,
+    Menu,
+    X,
+    Home,
+    Package,
+    Download,
+    User,
 } from 'lucide-react';
 
 export default function CustomerPortalLayout({
@@ -28,6 +36,21 @@ export default function CustomerPortalLayout({
     const user = props?.auth?.user || {};
     const [logoutModalOpen, setLogoutModalOpen] = useState(false);
     const [loggingOut, setLoggingOut] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    useEffect(() => {
+        if (mobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+            const handleKeyDown = (e) => {
+                if (e.key === 'Escape') setMobileMenuOpen(false);
+            };
+            window.addEventListener('keydown', handleKeyDown);
+            return () => {
+                document.body.style.overflow = '';
+                window.removeEventListener('keydown', handleKeyDown);
+            };
+        }
+    }, [mobileMenuOpen]);
 
     const handleConfirmLogout = () => {
         setLoggingOut(true);
@@ -58,27 +81,47 @@ export default function CustomerPortalLayout({
             <FlashToaster />
 
             <main>
-                {/* Hero Banner */}
-                <section className="dayal-dashboard-hero">
-                    <div className="dayal-dashboard-hero-inner">
-                        <nav className="dayal-dashboard-breadcrumb" aria-label="Breadcrumb">
-                            <Link href="/">Home</Link>
-                            <span aria-hidden="true">/</span>
-                            <span className="current">{breadcrumbTitle}</span>
-                        </nav>
-                        <span className="dayal-dashboard-hero-eyebrow">
-                            — PURE DESI GHEE SWEETS • SINCE 1952 —
-                        </span>
-                        <h1 className="dayal-dashboard-hero-title">
-                            {heroTitle}
-                        </h1>
-                        <p className="dayal-dashboard-hero-subtitle">
-                            {heroSubtitle}
-                        </p>
-                    </div>
-                </section>
+                {/* Reusable Common Hero Banner used across inner pages */}
+                <ContactHero
+                    breadcrumbs={
+                        breadcrumbTitle && breadcrumbTitle.toLowerCase() !== 'my account'
+                            ? [
+                                { label: 'HOME', url: '/' },
+                                { label: 'MY ACCOUNT', url: '/customer/dashboard' },
+                                { label: breadcrumbTitle.toUpperCase(), url: null },
+                            ]
+                            : [
+                                { label: 'HOME', url: '/' },
+                                { label: 'MY ACCOUNT', url: null },
+                            ]
+                    }
+                    title={(heroTitle || 'My Account').toUpperCase()}
+                    subtitle=""
+                    description={heroSubtitle}
+                />
 
                 <div className="dayal-dashboard-container">
+                    {/* Mobile Navigation Header Bar (Shown only on responsive mobile) */}
+                    <div className="dayal-myaccount-mobile-bar">
+                        <button
+                            type="button"
+                            className="dayal-myaccount-mobile-back"
+                            onClick={() => (window.history.length > 1 ? window.history.back() : router.visit('/customer/dashboard'))}
+                            aria-label="Go back"
+                        >
+                            <ChevronLeft size={18} />
+                        </button>
+                        <button
+                            type="button"
+                            className="dayal-myaccount-mobile-trigger"
+                            onClick={() => setMobileMenuOpen(true)}
+                            aria-label="Open My Account Menu"
+                        >
+                            <Menu size={16} />
+                            <span>My Account</span>
+                        </button>
+                    </div>
+
                     <div className="dayal-myaccount-layout">
                         {/* LEFT COLUMN: WooCommerce Sidebar Navigation */}
                         <aside className="dayal-myaccount-sidebar">
@@ -185,6 +228,92 @@ export default function CustomerPortalLayout({
                     </div>
                 </div>
             </main>
+
+            {/* Mobile My Account Menu Popup Modal */}
+            {mobileMenuOpen && (
+                <div
+                    className="dayal-myaccount-modal-overlay"
+                    onClick={() => setMobileMenuOpen(false)}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="My Account Menu"
+                >
+                    <div
+                        className="dayal-myaccount-modal-card"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="dayal-myaccount-modal-header">
+                            <h3>My Account</h3>
+                            <button
+                                type="button"
+                                className="dayal-myaccount-modal-close"
+                                onClick={() => setMobileMenuOpen(false)}
+                                aria-label="Close menu"
+                            >
+                                <X size={18} />
+                            </button>
+                        </div>
+                        <div className="dayal-myaccount-modal-grid">
+                            <Link
+                                href="/customer/dashboard"
+                                className={`dayal-myaccount-grid-item ${isActive('dashboard', '/customer/dashboard') ? 'active' : ''}`}
+                                onClick={() => setMobileMenuOpen(false)}
+                            >
+                                <LayoutDashboard size={22} />
+                                <span>Dashboard</span>
+                            </Link>
+
+                            <Link
+                                href="/customer/orders"
+                                className={`dayal-myaccount-grid-item ${isActive('orders', '/customer/orders') ? 'active' : ''}`}
+                                onClick={() => setMobileMenuOpen(false)}
+                            >
+                                <PackageCheck size={22} />
+                                <span>Orders</span>
+                            </Link>
+
+                            <Link
+                                href="/customer/purchased-sweets"
+                                className={`dayal-myaccount-grid-item ${isActive('items', '/customer/purchased-items') || isActive('sweets', '/customer/purchased-sweets') || isActive('products', '/customer/products') ? 'active' : ''}`}
+                                onClick={() => setMobileMenuOpen(false)}
+                            >
+                                <ShoppingBag size={22} />
+                                <span>Purchased Items</span>
+                            </Link>
+
+                            <Link
+                                href="/customer/addresses"
+                                className={`dayal-myaccount-grid-item ${isActive('addresses', '/customer/addresses') ? 'active' : ''}`}
+                                onClick={() => setMobileMenuOpen(false)}
+                            >
+                                <MapPin size={22} />
+                                <span>Addresses</span>
+                            </Link>
+
+                            <Link
+                                href="/customer/account"
+                                className={`dayal-myaccount-grid-item ${isActive('account', '/customer/account') ? 'active' : ''}`}
+                                onClick={() => setMobileMenuOpen(false)}
+                            >
+                                <UserCheck size={22} />
+                                <span>Account Details</span>
+                            </Link>
+
+                            <button
+                                type="button"
+                                className="dayal-myaccount-grid-item dayal-myaccount-grid-item--logout"
+                                onClick={() => {
+                                    setMobileMenuOpen(false);
+                                    setLogoutModalOpen(true);
+                                }}
+                            >
+                                <LogOut size={22} />
+                                <span>Log Out</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Modular Site Footer */}
             <Footer />

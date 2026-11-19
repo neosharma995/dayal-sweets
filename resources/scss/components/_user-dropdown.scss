@@ -8,46 +8,50 @@
     align-items: center;
     justify-content: center;
 
-    // Avatar Button Trigger (Replacing default icon when logged in)
+    // Avatar Button Trigger (Transparent outlined circle matching reference design)
     .dayal-header-avatar-btn {
-        width: 32px !important;
-        height: 32px !important;
-        min-width: 32px !important;
-        flex: 0 0 32px !important;
-        padding: 0 !important;
-        border-radius: 50% !important;
-        background: linear-gradient(135deg, #8B1E28 0%, #5B131E 100%) !important;
-        border: 2px solid #C9A96E !important;
-        box-shadow: 0 2px 8px rgba(91, 19, 30, 0.28) !important;
-        color: #FFFFFF !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        cursor: pointer !important;
-        outline: none !important;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        flex: 0 0 24px;
+        padding: 0;
+        border-radius: 50%;
+        background: transparent;
+        border: 1.5px solid #7C1F2E;
+        box-shadow: none;
+        color: #7C1F2E;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        outline: none;
+        transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
 
         &:hover,
         &.is-active,
         &:focus-visible {
-            transform: scale(1.08) !important;
-            border-color: #E6CE94 !important;
-            box-shadow: 0 4px 14px rgba(91, 19, 30, 0.38) !important;
+            transform: none;
+            border-color: #5B131E;
+            color: #5B131E;
+            box-shadow: none;
+            background: rgba(124, 31, 46, 0.06);
         }
 
         &:active {
-            transform: scale(0.96) !important;
+            transform: none;
         }
 
         .dayal-header-avatar-text {
-            font-family: inherit;
-            font-size: 13.5px;
+            font-family: 'Plus Jakarta Sans', 'DM Sans', sans-serif;
+            font-size: 15px;
             font-weight: 700;
             line-height: 1;
-            color: #FFFFFF;
+            color: inherit;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
             user-select: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
     }
 
@@ -66,6 +70,13 @@
         animation: dayalDropdownSlide 0.22s cubic-bezier(0.16, 1, 0.3, 1);
         transform-origin: top right;
 
+        @media (max-width: 768px) {
+            right: -115px;
+            width: 255px;
+            max-width: calc(100vw - 24px);
+            transform-origin: top center;
+        }
+
         // Top triangle arrow pointer
         &::before {
             content: '';
@@ -79,6 +90,10 @@
             border-left: 1px solid rgba(201, 169, 110, 0.35);
             transform: rotate(45deg);
             z-index: 1;
+
+            @media (max-width: 768px) {
+                right: 118px;
+            }
         }
 
         // Header User Info Block

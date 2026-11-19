@@ -353,6 +353,7 @@
             padding: 13px;
             background: $color-maroon;
             color: #ffffff;
+            border: 1px solid $color-maroon;
             text-align: center;
             font-size: 13px;
             font-weight: 700;
@@ -360,11 +361,12 @@
             text-transform: uppercase;
             border-radius: 4px;
             text-decoration: none;
-            transition: background 0.2s ease;
+            transition: all 0.25s ease;
 
             &:hover {
-                background: $color-maroon-hover;
-                color: #ffffff;
+                background: transparent;
+                color: $color-maroon;
+                border-color: $color-maroon;
             }
         }
 
@@ -373,8 +375,8 @@
             width: 100%;
             padding: 12px;
             background: #ffffff;
-            color: #2b2523;
-            border: 1px solid #dcd3c7;
+            color: $color-maroon;
+            border: 1px solid $color-maroon;
             text-align: center;
             font-size: 13px;
             font-weight: 700;
@@ -382,12 +384,12 @@
             text-transform: uppercase;
             border-radius: 4px;
             text-decoration: none;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
 
             &:hover {
                 border-color: $color-maroon;
-                color: $color-maroon;
-                background: #faf6f0;
+                color: #ffffff;
+                background: $color-maroon;
             }
         }
     }

@@ -209,10 +209,10 @@
     .dayal-product-name {
         color: #5C1520;
         font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 22px;
         font-weight: 600;
-        font-size: 18px;
-        line-height: 24px;
-        letter-spacing: 0.3px;
+        line-height: 38.4px;
+        letter-spacing: 0.5px;
         text-transform: capitalize;
         margin: 0 0 6px 0;
         transition: color 0.2s ease;
@@ -222,9 +222,9 @@
     .dayal-product-desc {
         color: #7A6355;
         font-family: 'Inter', sans-serif;
+        font-size: 14px;
         font-weight: 400;
-        line-height: 20px;
-        font-size: 13px;
+        line-height: 22px;
         margin-bottom: 12px;
         min-height: 64px;
         display: -webkit-box;
@@ -262,7 +262,7 @@
         transition: all 0.2s ease;
         max-width: 175px;
 
-        > span {
+        >span {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -451,7 +451,13 @@
         &:hover {
             background: transparent;
             color: #7B1C2E;
+            border-color: #7B1C2E;
             transform: scale(1.06);
+
+            svg,
+            svg * {
+                stroke: #7B1C2E;
+            }
         }
 
         svg {
@@ -459,6 +465,7 @@
             height: 16px;
             pointer-events: none;
             stroke: currentColor;
+            transition: stroke 0.2s ease;
         }
     }
 }
@@ -807,8 +814,13 @@
 }
 
 @keyframes dayal-modal-fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes dayal-modal-scale-in {
@@ -816,6 +828,7 @@
         opacity: 0;
         transform: translateY(12px) scale(0.96);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);

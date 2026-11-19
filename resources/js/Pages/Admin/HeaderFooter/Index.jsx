@@ -344,12 +344,27 @@ export default function Index({ settings = {}, page = {} }) {
     const [targetBadgeIndex, setTargetBadgeIndex] = useState(null);
 
     // Social Links [name, link]
+    const sanitizeSocialLink = (name, link) => {
+        const lower = (name || '').toLowerCase();
+        const trimmed = (link || '').trim();
+        if (lower.includes('instagram') && (!trimmed || trimmed === 'https://www.instagram.com/' || trimmed === 'https://www.instagram.com')) {
+            return 'https://www.instagram.com/dayalsweets/';
+        }
+        if (lower.includes('facebook') && (!trimmed || trimmed === 'https://www.facebook.com/' || trimmed === 'https://www.facebook.com')) {
+            return 'https://www.facebook.com/dayalsweets/';
+        }
+        if (lower.includes('youtube') && (!trimmed || trimmed === 'https://www.youtube.com/' || trimmed === 'https://www.youtube.com')) {
+            return 'https://www.youtube.com/results?search_query=Dayal+Sweets';
+        }
+        return trimmed;
+    };
+
     const initialSocialLinks = Array.isArray(settings.social_links) && settings.social_links.length > 0
-        ? settings.social_links
+        ? settings.social_links.map((s) => ({ ...s, link: sanitizeSocialLink(s.name, s.link) }))
         : [
-            { name: 'Instagram', link: 'https://www.instagram.com/' },
-            { name: 'Facebook', link: 'https://www.facebook.com/' },
-            { name: 'YouTube', link: 'https://www.youtube.com/' },
+            { name: 'Instagram', link: 'https://www.instagram.com/dayalsweets/' },
+            { name: 'Facebook', link: 'https://www.facebook.com/dayalsweets/' },
+            { name: 'YouTube', link: 'https://www.youtube.com/results?search_query=Dayal+Sweets' },
         ];
     const [socialLinks, setSocialLinks] = useState(initialSocialLinks);
 

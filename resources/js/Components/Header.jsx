@@ -164,7 +164,12 @@ export default function Header({ auth }) {
 
     useEffect(() => {
         const handleScroll = () => {
-            setIsSticky(window.scrollY > 20);
+            const scrollY = window.scrollY;
+            setIsSticky(prev => {
+                if (!prev && scrollY > 40) return true;
+                if (prev && scrollY < 15) return false;
+                return prev;
+            });
         };
         handleScroll();
         window.addEventListener('scroll', handleScroll, { passive: true });
@@ -223,9 +228,11 @@ export default function Header({ auth }) {
                     <Link href="/" className="dayal-header-logo" aria-label="Dayal Sweets home">
                         <img
                             src={headerLogo}
+                            srcSet={`${headerLogo} 1x, ${headerLogo.replace(/\.png$/, '@2x.png')} 2x`}
                             alt="Dayal Sweets"
                             width="254"
                             height="64"
+                            fetchPriority="high"
                         />
                     </Link>
                     <nav className={`dayal-header-nav ${mobileOpen ? 'is-open' : ''}`} aria-label="Main navigation">
@@ -252,7 +259,13 @@ export default function Header({ auth }) {
                                     <aside className="dayal-header-mega-promo">
                                         <h3>Crafted <span>For Every Celebration</span></h3>
                                         <p>Premium gift boxes crafted with love, packed with the finest ingredients.</p>
-                                        <Link href="/gifting" onClick={() => { setShopOpen(false); closeMobileMenu(); }}>Explore Gifting <img src="/uploads/2026/07/Icon.svg" alt="" /></Link>
+                                        <Link href="/gifting" onClick={() => { setShopOpen(false); closeMobileMenu(); }}>
+                                            <span>Explore Gifting</span>
+                                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                <path d="M2.9165 7H11.0832" stroke="currentColor" strokeWidth="1.16667" strokeLinecap="round" strokeLinejoin="round" />
+                                                <path d="M7 2.9165L11.0833 6.99984L7 11.0832" stroke="currentColor" strokeWidth="1.16667" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        </Link>
                                         <img className="dayal-header-mega-promo-image" src="/uploads/2026/07/image-220.png" alt="Dayal Sweets celebration gift box" loading="lazy" />
                                     </aside>
                                 </div>

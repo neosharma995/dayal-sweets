@@ -8,6 +8,7 @@ import Pagination from '@/Components/Pagination';
 import ContactHero from '@/Components/contact/ContactHero';
 import { useCart } from '@/Context/CartContext';
 import '../../scss/pages/_contact.scss';
+import { Package2Icon } from 'lucide-react';
 
 // 12 Catalog Products matching exact live store items
 const initialShopProducts = [
@@ -611,7 +612,7 @@ export default function Shop({
                 ]}
                 title="SHOP"
                 subtitle="Discover Every Festive Delight"
-                description=""
+                description="Handcrafted sweets, namkeens, bakery & more,made with pure ingredients and timeless recipes."
             />
 
             {/* 2. MAIN LAYOUT: SIDEBAR + PRODUCT CATALOG */}
@@ -1024,6 +1025,7 @@ export default function Shop({
                         </div>
                     ) : (
                         <div className="dayal-shop-empty">
+                            <Package2Icon size={48} />
                             <h3>No Products Found</h3>
                             <p>
                                 {pincodeSession?.isServiceable

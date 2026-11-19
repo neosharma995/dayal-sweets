@@ -124,7 +124,6 @@
         transition: transform 300ms ease, box-shadow 300ms ease;
 
         &:hover {
-            transform: translateY(-5px);
             box-shadow: 0 8px 28px 0 rgba(223, 192, 138, 0.35);
         }
 
@@ -573,12 +572,12 @@
         width: 308px;
         height: 50px;
         padding: 0 20px;
-        border: none;
+        border: 1px solid #8B1028;
         border-radius: 0;
         background: #8B1028;
         color: #fff;
         cursor: pointer;
-        transition: all .3s ease;
+        transition: all .25s ease;
         font-weight: 600;
         font-size: 16px;
         line-height: 18px;
@@ -590,7 +589,9 @@
         justify-content: center;
 
         &:hover {
-            background-color: #5C1520;
+            background-color: transparent;
+            color: #8B1028;
+            border-color: #8B1028;
         }
 
         @media (max-width: 768px) {

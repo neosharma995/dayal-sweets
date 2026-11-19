@@ -124,9 +124,10 @@
   border-color: $color-maroon;
 
   &:hover {
-    background-color: $color-maroon-hover;
-    border-color: $color-maroon-hover;
-    box-shadow: 0 6px 18px rgba(99, 24, 38, 0.35);
+    background-color: transparent;
+    color: $color-maroon;
+    border-color: $color-maroon;
+    box-shadow: none;
   }
 }
 
@@ -137,9 +138,10 @@
   border-color: $color-gold;
 
   &:hover {
-    background-color: $color-gold-hover;
-    border-color: $color-gold-hover;
-    box-shadow: 0 6px 18px rgba(184, 142, 75, 0.35);
+    background-color: transparent;
+    color: $color-gold;
+    border-color: $color-gold;
+    box-shadow: none;
   }
 }
 

@@ -637,7 +637,7 @@
     &-logo img {
         display: block;
         width: 100%;
-        max-width: 280px;
+        max-width: 254px;
         height: auto;
         object-fit: contain;
         object-position: left center;
@@ -995,7 +995,6 @@
     &-mega-promo h3 span {
         display: block;
         font-size: 30px;
-        font-weight: 400;
         line-height: 1;
     }
 
@@ -1022,11 +1021,14 @@
         transition: all $ds-motion;
     }
 
-    &-mega-promo a img {
+    &-mega-promo a img,
+    &-mega-promo a svg {
         display: block;
         width: 14px;
         height: 14px;
-        object-fit: contain;
+        flex-shrink: 0;
+        stroke: currentColor;
+        transition: stroke $ds-motion, transform $ds-motion;
     }
 
     &-mega-promo a:hover,
@@ -1034,6 +1036,15 @@
         background: transparent;
         border-color: $ds-color-burgundy-button;
         color: $ds-color-burgundy-button;
+
+        svg,
+        svg * {
+            stroke: $ds-color-burgundy-button;
+        }
+
+        img {
+            filter: brightness(0) saturate(100%) invert(11%) sepia(50%) saturate(2855%) hue-rotate(334deg) brightness(90%) contrast(97%);
+        }
     }
 
     &-mega-shortcuts {
@@ -1241,13 +1252,7 @@
     }
 
     @media (max-width: 1200px) {
-        top: 0;
-
-        &.is-sticky {
-            .dayal-header-top {
-                display: none;
-            }
-        }
+        top: -34px;
 
         &-main-inner {
             display: flex;
@@ -1535,6 +1540,8 @@
     }
 
     @media (max-width: 768px) {
+        top: -32px;
+
         &-top {
             overflow: hidden;
             min-height: 32px;
@@ -1652,8 +1659,6 @@
             width: 225px;
             max-width: 100%;
             height: auto;
-            image-rendering: -webkit-optimize-contrast;
-            -webkit-font-smoothing: antialiased;
         }
 
         &-toggle {

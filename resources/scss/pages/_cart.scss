@@ -598,6 +598,7 @@
             padding: 14px;
             background: $color-maroon;
             color: #ffffff;
+            border: 1px solid $color-maroon;
             text-align: center;
             font-size: 14px;
             font-weight: 700;
@@ -605,12 +606,13 @@
             text-transform: uppercase;
             border-radius: 4px;
             text-decoration: none;
-            transition: background 0.2s;
+            transition: all 0.25s ease;
             margin-bottom: 24px;
 
             &:hover {
-                background: $color-maroon-hover;
-                color: #ffffff;
+                background: transparent;
+                color: $color-maroon;
+                border-color: $color-maroon;
             }
         }
 

@@ -98,10 +98,6 @@
       color: #6B1020;
       cursor: pointer;
     }
-
-    &:active {
-      transform: translateY(0);
-    }
   }
 
   .testimonials-btn {
@@ -546,7 +542,6 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
-      transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
     }
 
@@ -861,18 +856,15 @@
     font-size: 15px;
     font-weight: 600;
     padding: 13px 20px;
-    border: none;
+    border: 1px solid #5C1520;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    transition: all 0.25s ease;
 
     &:hover {
-      background-color: #430F17;
-      transform: translateY(-1px);
-    }
-
-    &:active {
-      transform: translateY(0);
+      background-color: transparent;
+      color: #5C1520;
+      border-color: #5C1520;
     }
 
     &:disabled {

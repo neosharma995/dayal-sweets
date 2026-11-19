@@ -591,7 +591,6 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
-    transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(99, 24, 38, 0.08);
   }
 
@@ -707,7 +706,6 @@
   flex-direction: column;
 
   &:hover {
-    transform: translateY(-4px);
     box-shadow: 0 12px 32px rgba(99, 24, 38, 0.1);
     border-color: #C59B27;
   }
@@ -846,7 +844,6 @@
 
       &:hover {
         background: #7A1926;
-        transform: translateY(-1px);
       }
     }
   }
@@ -856,6 +853,194 @@
 // ==========================================================================
 // WooCommerce-style My Account 2-Column Sidebar & Content Layout
 // ==========================================================================
+
+// Mobile top navigation bar (Back chevron & My Account trigger)
+.dayal-myaccount-mobile-bar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    display: flex;
+  }
+
+  .dayal-myaccount-mobile-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background: #631826;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background: #7A1926;
+    }
+
+    svg {
+      display: block;
+    }
+  }
+
+  .dayal-myaccount-mobile-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 38px;
+    padding: 0 16px;
+    background: #631826;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background: #7A1926;
+    }
+
+    svg {
+      display: block;
+    }
+  }
+}
+
+// Mobile My Account Menu Popup Modal
+.dayal-myaccount-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.dayal-myaccount-modal-card {
+  width: 100%;
+  max-width: 340px;
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 20px 18px 22px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.22);
+
+  .dayal-myaccount-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+
+    h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      color: #1E293B;
+      font-family: inherit;
+    }
+
+    .dayal-myaccount-modal-close {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #F1F5F9;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748B;
+      cursor: pointer;
+      transition: all 0.15s ease;
+
+      &:hover {
+        background: #E2E8F0;
+        color: #0F172A;
+      }
+    }
+  }
+
+  .dayal-myaccount-modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+
+    .dayal-myaccount-grid-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 20px 12px;
+      border-radius: 14px;
+      background: #FAF7F2;
+      border: 1px solid #EBE4D8;
+      text-decoration: none;
+      color: #1E293B;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+
+      svg {
+        color: #631826;
+        transition: transform 0.15s ease;
+      }
+
+      span {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: inherit;
+        text-align: center;
+      }
+
+      &:hover:not(.active) {
+        border-color: #631826;
+        background: #F8F3EC;
+      }
+
+      &.active {
+        background: #631826;
+        border-color: #631826;
+        color: #FFFFFF;
+
+        svg {
+          color: #FFFFFF;
+        }
+
+        span {
+          color: #FFFFFF;
+        }
+      }
+
+      &--logout {
+        background: #FFF1F2;
+        border-color: #FFE4E6;
+        color: #E11D48;
+
+        svg {
+          color: #E11D48;
+        }
+
+        span {
+          color: #E11D48;
+          font-weight: 600;
+        }
+
+        &:hover {
+          background: #FFE4E6;
+          border-color: #FECDD3;
+        }
+      }
+    }
+  }
+}
 
 .dayal-myaccount-layout {
   display: grid;
@@ -867,6 +1052,11 @@
     grid-template-columns: 1fr;
     gap: 24px;
   }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
 }
 
 .dayal-myaccount-sidebar {
@@ -877,6 +1067,10 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
   position: sticky;
   top: 90px;
+
+  @media (max-width: 768px) {
+    display: none !important;
+  }
 
   .myaccount-user-card {
     padding: 24px;
@@ -1118,7 +1312,6 @@
   &:hover {
     box-shadow: 0 8px 24px rgba(99, 24, 38, 0.09);
     border-color: #D4AF37;
-    transform: translateY(-2px);
   }
 
   .myntra-card-topbar {

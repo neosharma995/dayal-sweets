@@ -137,9 +137,9 @@ class Page extends Model
                 '/uploads/2026/07/Asset-1-2-1.png',
             ],
             'social_links' => [
-                ['name' => 'Instagram', 'link' => 'https://www.instagram.com/'],
-                ['name' => 'Facebook', 'link' => 'https://www.facebook.com/'],
-                ['name' => 'YouTube', 'link' => 'https://www.youtube.com/'],
+                ['name' => 'Instagram', 'link' => 'https://www.instagram.com/dayalsweets/'],
+                ['name' => 'Facebook', 'link' => 'https://www.facebook.com/dayalsweets/'],
+                ['name' => 'YouTube', 'link' => 'https://www.youtube.com/results?search_query=Dayal+Sweets'],
             ],
             'copyright_description' => '© 2026 Dayal Sweets. All rights reserved.',
         ];
@@ -171,6 +171,25 @@ class Page extends Model
                 $sections[$key] = $value;
                 $dirty = true;
             }
+        }
+
+        // Auto-update social links if they still point to generic root URLs
+        if (isset($sections['social_links']) && is_array($sections['social_links'])) {
+            foreach ($sections['social_links'] as &$sLink) {
+                if (($sLink['name'] ?? '') === 'Instagram' && ($sLink['link'] === 'https://www.instagram.com/' || empty($sLink['link']))) {
+                    $sLink['link'] = 'https://www.instagram.com/dayalsweets/';
+                    $dirty = true;
+                }
+                if (($sLink['name'] ?? '') === 'Facebook' && ($sLink['link'] === 'https://www.facebook.com/' || empty($sLink['link']))) {
+                    $sLink['link'] = 'https://www.facebook.com/dayalsweets/';
+                    $dirty = true;
+                }
+                if (($sLink['name'] ?? '') === 'YouTube' && ($sLink['link'] === 'https://www.youtube.com/' || empty($sLink['link']))) {
+                    $sLink['link'] = 'https://www.youtube.com/results?search_query=Dayal+Sweets';
+                    $dirty = true;
+                }
+            }
+            unset($sLink);
         }
 
         if ($dirty) {

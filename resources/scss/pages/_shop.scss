@@ -621,6 +621,7 @@
                 svg {
                     width: 14px;
                     height: 14px;
+                    flex-shrink: 0;
                 }
 
                 @media (max-width: 1024px) {
@@ -657,9 +658,15 @@
             text-align: center;
             padding: 64px 20px;
             color: #7A6355;
-            background: #ffffff;
-            border-radius: 12px;
-            border: 1px dashed #D5CFC8;
+
+            svg {
+                display: flex;
+                justify-self: center;
+                align-self: center;
+                width: 48px;
+                height: 48px;
+                margin-bottom: 20px;
+            }
 
             h3 {
                 font-size: 18px;
@@ -670,11 +677,35 @@
             p {
                 font-size: 14px;
                 margin: 0;
+                max-width: 500px;
+                margin: 0 auto;
             }
 
+            .dayal-shop-apply-btn,
             .dayal-shop-empty-btn {
-                max-width: 200px;
+                max-width: 220px;
                 margin: 20px auto 0;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #7C1F2E;
+                color: #FFFFFF;
+                border: 1px solid #7C1F2E;
+                border-radius: 0;
+                padding: 10px 20px;
+                font-family: 'Inter', sans-serif;
+                font-size: 13px;
+                font-weight: 600;
+                letter-spacing: 0.5px;
+                text-transform: uppercase;
+                cursor: pointer;
+                transition: all 0.25s ease;
+
+                &:hover {
+                    background-color: transparent;
+                    color: #7C1F2E;
+                    border-color: #7C1F2E;
+                }
             }
         }
 
@@ -966,15 +997,10 @@
                         background-color: transparent;
                         color: #DFC08A;
                         border-color: #DFC08A;
-
-                        .deal-btn-arrow {
-                            transform: translateX(3px);
-                        }
                     }
 
                     .deal-btn-arrow {
                         display: inline-block;
-                        transition: transform 0.2s ease;
                     }
                 }
 
@@ -1199,15 +1225,10 @@
                         background-color: transparent;
                         border-color: #7C1F2E;
                         color: #7C1F2E;
-
-                        .deal-btn-arrow {
-                            transform: translateX(3px);
-                        }
                     }
 
                     .deal-btn-arrow {
                         display: inline-block;
-                        transition: transform 0.2s ease;
                     }
                 }
             }

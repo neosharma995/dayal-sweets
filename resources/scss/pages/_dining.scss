@@ -1008,8 +1008,9 @@
             color: #7B1022;
             border-color: #7B1022;
 
-            svg {
-                transform: translateX(3px);
+            svg,
+            svg * {
+                stroke: #7B1022;
             }
         }
 
@@ -1413,7 +1414,6 @@
 
             .dining-reservation-btn-icon {
                 fill: #FFFFFF;
-                transform: translateX(3px);
             }
         }
 
@@ -1579,7 +1579,8 @@
         }
     }
 
-    .dining-reservation-submit-btn {
+    .dining-reservation-submit-btn,
+    .dayal-submit-reservation-btn {
         width: 308px;
         height: 50px;
         padding: 0 20px;
@@ -1608,6 +1609,28 @@
 
         @media (max-width: 768px) {
             width: 100%;
+        }
+    }
+
+    .btn-book-another {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #7B1022;
+        border: 1px solid #7B1022;
+        color: #FFFFFF;
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        text-transform: uppercase;
+        padding: 12px 24px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+
+        &:hover {
+            background-color: transparent;
+            color: #7B1022;
+            border-color: #7B1022;
         }
     }
 }

@@ -845,13 +845,13 @@ function VideoGallery() {
                                 aria-label={playing === index ? `Pause ${item.title}` : `Play ${item.title}`}
                             >
                                 {playing === index ? (
-                                    <svg className="dsg-play-svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                        <rect x="5" y="4" width="4" height="16" rx="1" />
-                                        <rect x="15" y="4" width="4" height="16" rx="1" />
+                                    <svg className="dsg-play-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                        <rect x="6" y="5" width="3.5" height="14" rx="1" />
+                                        <rect x="14.5" y="5" width="3.5" height="14" rx="1" />
                                     </svg>
                                 ) : (
-                                    <svg className="dsg-play-svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: '2px' }}>
-                                        <path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86a1 1 0 0 0-1.5.86z" />
+                                    <svg className="dsg-play-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: '2px' }}>
+                                        <polygon points="8 5 19 12 8 19 8 5" />
                                     </svg>
                                 )}
                             </button>

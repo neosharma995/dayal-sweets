@@ -355,7 +355,12 @@
                             color: #7B1C2E;
                             border-color: #7B1C2E;
 
-                            svg {
+                            span {
+                                color: #7B1C2E;
+                            }
+
+                            svg,
+                            svg * {
                                 stroke: #7B1C2E;
                             }
                         }

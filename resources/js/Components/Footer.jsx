@@ -70,13 +70,11 @@ export default function Footer() {
         ? headerFooter.certified_groups
         : ['/uploads/2026/07/kindpng_2513820-1.png', '/uploads/2026/07/Asset-1-2-1.png'];
 
-    const socialLinks = Array.isArray(headerFooter?.social_links) && headerFooter.social_links.length > 0
-        ? headerFooter.social_links
-        : [
-            { name: 'Instagram', link: 'https://www.instagram.com/' },
-            { name: 'Facebook', link: 'https://www.facebook.com/' },
-            { name: 'YouTube', link: 'https://www.youtube.com/' },
-        ];
+    const socialLinks = [
+        { name: 'Instagram', link: 'https://www.instagram.com/dayalsweets/', icon: '/uploads/2026/07/Link.svg' },
+        { name: 'Facebook', link: 'https://www.facebook.com/dayalsweets/', icon: '/uploads/2026/07/Link-1-1.svg' },
+        { name: 'YouTube', link: 'https://www.youtube.com/results?search_query=Dayal+Sweets', icon: '/uploads/2026/07/Link-2-1.svg' },
+    ];
 
     const copyright = headerFooter?.copyright_description ?? '© 2026 Dayal Sweets. All rights reserved.';
 
@@ -157,19 +155,11 @@ export default function Footer() {
                         <img src={footerLogo} alt="Dayal Sweets" />
                         <p>{footerDescription}</p>
                         <div className="dayal-footer-social" aria-label="Social media">
-                            {socialLinks.map((social, idx) => {
-                                const lower = (social.name || '').toLowerCase();
-                                const icon = lower.includes('instagram')
-                                    ? '/uploads/2026/07/Link.svg'
-                                    : lower.includes('facebook')
-                                    ? '/uploads/2026/07/Link-1-1.svg'
-                                    : '/uploads/2026/07/Link-2-1.svg';
-                                return (
-                                    <a href={social.link} aria-label={social.name} key={idx} target="_blank" rel="noopener noreferrer">
-                                        <img src={icon} alt={social.name} />
-                                    </a>
-                                );
-                            })}
+                            {socialLinks.map((social) => (
+                                <a href={social.link} aria-label={social.name} key={social.name} target="_blank" rel="noopener noreferrer">
+                                    <img src={social.icon} alt={social.name} />
+                                </a>
+                            ))}
                         </div>
                         <div className="dayal-footer-certification">
                             <h4>Certified &amp; Proud</h4>

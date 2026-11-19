@@ -38,11 +38,12 @@
 
 .contact-hero-section {
   position: relative;
+  z-index: 5;
   background-color: #5C1520;
   color: #FFFFFF;
   padding: 56px 20px 56px 20px;
   text-align: center;
-  overflow: hidden;
+  overflow: visible;
   box-sizing: border-box;
   width: 100%;
 
@@ -343,66 +344,73 @@
 
 .contact-hero-decor-sweet-1 {
   position: absolute;
-  left: 63px;
-  bottom: -10%;
+  left: 36px;
+  bottom: -56px;
   width: auto;
   max-width: 136px;
   pointer-events: none;
-  z-index: 2;
+  z-index: 10;
 
   @media (max-width: 1024px) {
     left: 20px;
-    bottom: -8%;
-    max-width: 90px;
+    bottom: -40px;
+    max-width: 95px;
   }
 
   @media (max-width: 768px) {
-    left: -8px;
-    bottom: -8%;
-    max-width: 65px;
+    left: 10px;
+    bottom: -28px;
+    max-width: 70px;
   }
 
   @media (max-width: 468px) {
-    left: -8px;
-    bottom: -8%;
-    max-width: 48px;
-    opacity: 0.4;
+    left: 6px;
+    bottom: -20px;
+    max-width: 50px;
+    opacity: 0.85;
   }
 }
 
 .contact-hero-decor-sweet-2 {
   position: absolute;
-  left: 210px;
-  bottom: -15%;
+  left: 205px;
+  bottom: -68px;
   width: auto;
   max-width: 112px;
   pointer-events: none;
-  z-index: 2;
+  z-index: 10;
 
   @media (max-width: 1024px) {
-    left: 110px;
-    bottom: -10%;
-    max-width: 75px;
+    left: 130px;
+    bottom: -48px;
+    max-width: 80px;
   }
 
   @media (max-width: 768px) {
+    left: 85px;
+    bottom: -32px;
+    max-width: 55px;
+    display: block;
+  }
+
+  @media (max-width: 468px) {
     display: none;
   }
 }
 
 .contact-hero-decor-sweet-3 {
   position: absolute;
-  left: 182px;
-  bottom: 15%;
+  left: 175px;
+  bottom: 24px;
   width: auto;
   max-width: 57px;
   pointer-events: none;
-  z-index: 2;
+  z-index: 10;
 
   @media (max-width: 1024px) {
-    left: 95px;
-    bottom: 8%;
-    max-width: 40px;
+    left: 115px;
+    bottom: 18px;
+    max-width: 42px;
   }
 
   @media (max-width: 768px) {

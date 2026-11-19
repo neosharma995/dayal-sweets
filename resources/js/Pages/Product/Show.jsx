@@ -295,9 +295,9 @@ export default function ProductShow({ product: propProduct, slug: propSlug, auth
                                                 onClick={handleBuyNow}
                                             >
                                                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M5 6.5V5C5 2.79086 6.79086 1 9 1C11.2091 1 13 2.79086 13 5V6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-                                                    <rect x="2" y="6" width="14" height="11" rx="1.5" stroke="white" strokeWidth="1.5"></rect>
-                                                    <path d="M6 9V10C6 11.6569 7.34315 13 9 13C10.6569 13 12 11.6569 12 10V9" stroke="white" strokeWidth="1.5" strokeLinecap="round"></path>
+                                                    <path d="M5 6.5V5C5 2.79086 6.79086 1 9 1C11.2091 1 13 2.79086 13 5V6.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+                                                    <rect x="2" y="6" width="14" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.5"></rect>
+                                                    <path d="M6 9V10C6 11.6569 7.34315 13 9 13C10.6569 13 12 11.6569 12 10V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
                                                 </svg>
                                                 <span>Buy Now</span>
                                             </button>

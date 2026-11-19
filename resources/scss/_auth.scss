@@ -1,469 +1,309 @@
 // ==========================================================================
-// Dayal Sweets - Pure Heritage & Modern Luxury Auth Styles
+// Dayal Sweets - Auth Styles
+// Fully nested under .dayal-auth-page, zero !important, using _variables.scss
 // ==========================================================================
 @use './variables' as *;
 @use './mixins' as *;
 
-.dayal-auth-wrapper {
-  flex: 1;
-  min-height: calc(100vh - 160px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 3.5rem 1rem;
-  background: radial-gradient(circle at 80% 20%, #F5ECE0 0%, #FAF6F0 50%, #EFE5D6 100%);
+.dayal-auth-page,
+.dayal-auth-shell {
+  background: $color-cream;
+  min-height: 100vh;
 
-  @media (max-width: 640px) {
-    padding: 1.5rem 0.75rem;
-    min-height: auto;
+  // Hide footer CTA section on auth pages matching original reference design
+  .dayal-footer-cta {
+    display: none;
   }
 
-  .dayal-auth-box {
-    width: 100%;
-    max-width: 960px;
-    background-color: #FFFFFF;
-    border: 1px solid #EADBCA;
-    border-radius: 20px;
-    box-shadow: 0 20px 50px -10px rgba(54, 8, 17, 0.08), 0 1px 3px rgba(0, 0, 0, 0.02);
-    overflow: hidden;
-    display: grid;
-    grid-template-columns: 1fr;
-
-    @include respond-to('lg') {
-      grid-template-columns: 44% 56%;
-    }
-  }
-
-  // --------------------------------------------------------------------------
-  // Left Heritage Showcase Banner
-  // --------------------------------------------------------------------------
-  .dayal-auth-banner {
-    position: relative;
-    background: linear-gradient(175deg, rgba(62, 12, 22, 0.92) 0%, rgba(46, 8, 16, 0.94) 50%, rgba(32, 5, 11, 0.97) 100%),
-                url('/uploads/2026/07/thaal.png') center/cover no-repeat;
-    color: #FFFFFF;
-    padding: 3.25rem 2.5rem;
+  .dayal-otp-auth-wrap {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    @media (max-width: 991px) {
-      padding: 1.75rem 1.5rem;
-
-      .banner-features,
-      .banner-content-bottom {
-        display: none;
-      }
-
-      .banner-headline {
-        font-size: 1.35rem !important;
-        line-height: 1.25 !important;
-        margin-bottom: 0.35rem !important;
-      }
-
-      .banner-subtext {
-        font-size: 0.8125rem !important;
-        line-height: 1.4 !important;
-        margin-bottom: 0 !important;
-      }
-    }
-
-    .banner-heritage-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 0.35rem 0.85rem;
-      border-radius: 9999px;
-      background-color: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(212, 175, 55, 0.35);
-      color: #EBD4A0;
-      font-size: 0.6875rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 1.5rem;
-
-      svg {
-        color: #D4AF37;
-      }
-    }
-
-    .banner-headline {
-      font-family: $font-serif;
-      font-size: 2.15rem;
-      font-weight: 700;
-      line-height: 1.2;
-      color: #FFFFFF;
-      margin-bottom: 1rem;
-      letter-spacing: -0.01em;
-    }
-
-    .banner-subtext {
-      font-size: 0.875rem;
-      color: #EADBCA;
-      line-height: 1.65;
-      margin-bottom: 2rem;
-    }
-
-    .banner-features {
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-      margin-top: 0.5rem;
-
-      .banner-feature-item {
-        display: flex;
-        align-items: center;
-        gap: 0.65rem;
-        font-size: 0.8125rem;
-        color: #FAF4EB;
-
-        svg {
-          color: #D4AF37;
-          flex-shrink: 0;
-        }
-      }
-    }
-
-    .banner-content-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 2rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
-      margin-top: 2rem;
-
-      .banner-stamp {
-        display: flex;
-        flex-direction: column;
-
-        .stamp-years {
-          font-family: $font-serif;
-          font-size: 1.65rem;
-          font-weight: 800;
-          color: #D4AF37;
-          line-height: 1;
-        }
-
-        .stamp-text {
-          font-size: 0.625rem;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          color: #D4C3B2;
-          margin-top: 0.2rem;
-        }
-      }
-
-      .banner-back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        color: #EBD4A0;
-        font-size: 0.8125rem;
-        font-weight: 600;
-        transition: $transition-fast;
-        text-decoration: none;
-
-        &:hover {
-          color: #FFFFFF;
-          transform: translateX(-2px);
-        }
-      }
-    }
-  }
-
-  // --------------------------------------------------------------------------
-  // Right Form Panel
-  // --------------------------------------------------------------------------
-  .dayal-auth-form-panel {
-    padding: 2.75rem 2.5rem;
-    display: flex;
-    flex-direction: column;
     justify-content: center;
-    background-color: #FFFFFF;
+    padding: 50px 20px 80px;
+    background: $color-cream;
+    min-height: calc(100vh - 450px);
 
-    @media (max-width: 640px) {
-      padding: 1.75rem 1.25rem;
-    }
-  }
-}
-
-// ----------------------------------------------------------------------------
-// Mode Switch Tabs (Pill Style)
-// ----------------------------------------------------------------------------
-.dayal-auth-tabs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4px;
-  background-color: #F5EFE6;
-  border: 1px solid #E8DFD3;
-  border-radius: 9999px;
-  padding: 4px;
-  margin-bottom: 1.75rem;
-
-  .dayal-auth-tab {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 38px;
-    border-radius: 9999px;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: #6B5E55;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-
-    &:hover:not(.active) {
-      color: $color-maroon;
-    }
-
-    &.active {
-      background-color: #FFFFFF;
-      color: $color-maroon;
-      font-weight: 700;
-      box-shadow: 0 2px 8px rgba(44, 24, 16, 0.08);
-      cursor: default;
-    }
-  }
-}
-
-// ----------------------------------------------------------------------------
-// Alerts
-// ----------------------------------------------------------------------------
-.dayal-auth-alert {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-size: 0.8125rem;
-  margin-bottom: 1.25rem;
-
-  &.success {
-    background: #ECFDF5;
-    border: 1px solid #A7F3D0;
-    color: #065F46;
-
-    svg {
-      color: #059669;
-      flex-shrink: 0;
-    }
-  }
-}
-
-// ----------------------------------------------------------------------------
-// Form Container & Header Block
-// ----------------------------------------------------------------------------
-.auth-form-container {
-  width: 100%;
-
-  .auth-header-block {
-    margin-bottom: 1.5rem;
-
-    .auth-title {
-      font-family: $font-serif;
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: #2C1810;
-      line-height: 1.2;
-      margin: 0 0 0.35rem 0;
-    }
-
-    .auth-subtitle {
-      font-size: 0.84rem;
-      color: #6B5E55;
-      line-height: 1.5;
-      margin: 0;
-    }
-  }
-}
-
-// ----------------------------------------------------------------------------
-// Modern Form Fields
-// ----------------------------------------------------------------------------
-.dayal-modern-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.15rem;
-
-  .modern-field-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-
-    label {
-      font-size: 0.78125rem;
-      font-weight: 700;
-      color: #2C1810;
-      letter-spacing: 0.01em;
-    }
-
-    .label-with-link {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      .auth-forgot-link {
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: $color-maroon;
-        text-decoration: none;
-        transition: $transition-fast;
-
-        &:hover {
-          color: $color-maroon-hover;
-          text-decoration: underline;
-        }
-      }
-
-      .helper-hint {
-        font-size: 0.6875rem;
-        color: #8C7D73;
-      }
-    }
-
-    .modern-input-wrapper {
+    .dayal-otp-auth-card {
       position: relative;
+      z-index: 1;
+      margin: auto;
+      width: 100%;
+      max-width: 440px;
+    }
+
+    // Tabs
+    .dayal-otp-tabs {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: $color-cream;
+      border: 1px solid $color-cream-border;
+      border-radius: $radius-full;
+      padding: 4px;
+      margin-bottom: 30px;
+
+      .dayal-otp-tab {
+        position: relative;
+        z-index: 2;
+        appearance: none;
+        background: none;
+        padding: 10px 12px;
+        font-family: $font-sans;
+        font-size: 13.5px;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+        color: $color-text-muted;
+        cursor: pointer;
+        border-radius: $radius-full;
+        border: none;
+        text-align: center;
+        text-decoration: none;
+        transition: $transition-smooth;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover:not(.active) {
+          color: $color-text-heading;
+        }
+
+        &.active {
+          background: $color-maroon;
+          color: $color-white;
+        }
+      }
+    }
+
+    // Notices
+    .dayal-notice {
+      font-size: 13px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 16px;
       display: flex;
       align-items: center;
+      gap: 8px;
 
-      .input-icon-left {
-        position: absolute;
-        left: 14px;
-        color: #8C7D73;
-        pointer-events: none;
-        transition: color 0.2s ease;
+      &.error {
+        background: $color-danger-bg;
+        border: 1px solid $color-danger-border;
+        color: $color-danger;
       }
 
-      input {
+      &.success {
+        background: $color-success-bg;
+        border: 1px solid $color-success-border;
+        color: $color-success;
+      }
+    }
+
+    // Form Groups & Inputs
+    .dayal-otp-form-group {
+      margin-bottom: 20px;
+
+      label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+        text-transform: capitalize;
+        color: $color-text-muted;
+        margin-bottom: 7px;
+      }
+
+      input[type="text"],
+      input[type="password"],
+      input[type="email"] {
         width: 100%;
-        height: 46px;
-        padding: 0 42px;
-        border-radius: 10px;
-        border: 1.5px solid #DDD5C7;
-        background-color: #FFFFFF;
-        font-size: 0.875rem;
-        color: #2C1810;
+        background: $color-cream;
+        border: 1px solid #D5CFC8;
+        border-radius: 8px;
+        padding: 12px 14px;
+        font-family: $font-sans;
+        font-size: 14.5px;
+        color: $color-text-heading;
         outline: none;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: $transition-smooth;
+        box-sizing: border-box;
 
         &::placeholder {
-          color: #A3968A;
-          font-size: 0.8125rem;
+          color: $color-text-subtle;
         }
 
         &:focus {
+          background: $color-white;
           border-color: $color-maroon;
-          box-shadow: 0 0 0 3px rgba(99, 24, 38, 0.1);
+        }
+      }
 
-          + .input-icon-left {
-            color: $color-maroon;
+      .dayal-password-input-wrap {
+        position: relative;
+
+        input {
+          padding-right: 44px;
+        }
+
+        .dayal-toggle-password {
+          position: absolute;
+          right: 8px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: none;
+          border: none;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: $color-maroon;
+          padding: 4px;
+
+          &:hover {
+            color: $color-maroon-hover;
           }
         }
       }
 
-      .input-eye-button {
-        position: absolute;
-        right: 12px;
-        background: transparent;
-        border: none;
-        color: #8C7D73;
-        cursor: pointer;
+      .dayal-phone-input-wrapper {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 4px;
-        border-radius: 4px;
-        transition: color 0.15s ease;
+        align-items: stretch;
+        background: $color-cream;
+        border: 1px solid #D5CFC8;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: $transition-smooth;
 
-        &:hover {
-          color: #2C1810;
+        &:focus-within {
+          background: $color-white;
+          border-color: $color-maroon;
+        }
+
+        .dayal-country-code {
+          display: flex;
+          align-items: center;
+          padding: 0 12px;
+          font-family: $font-sans;
+          font-size: 13.5px;
+          font-weight: 700;
+          color: $color-maroon;
+          background: rgba(99, 24, 38, 0.06);
+          border-right: 1px solid $color-cream-border;
+        }
+
+        input,
+        input:focus,
+        input[type="tel"],
+        input[type="tel"]:focus {
+          border: none;
+          background: transparent;
+          flex: 1;
+          border-radius: 0;
+          font-family: $font-sans;
+          letter-spacing: 0.5px;
+          padding: 12px 14px;
+          outline: none;
+          box-shadow: none;
         }
       }
     }
 
-    .modern-field-error {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.75rem;
+    // Submit Button
+    .dayal-otp-btn-submit {
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-family: $font-sans;
+      font-size: 14.5px;
       font-weight: 600;
-      color: $color-danger;
-      margin-top: 2px;
-    }
-  }
-
-  .remember-row {
-    display: flex;
-    align-items: center;
-    margin-top: -0.25rem;
-
-    .remember-checkbox-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      letter-spacing: 0.3px;
       cursor: pointer;
-      font-size: 0.8125rem;
-      color: #5C4A42;
+      background: $color-maroon;
+      color: $color-white;
+      margin-top: 6px;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      transition: background 0.2s ease;
 
-      input[type="checkbox"] {
-        width: 16px;
-        height: 16px;
-        accent-color: $color-maroon;
-        border-radius: 4px;
-        cursor: pointer;
+      &:hover:not(:disabled) {
+        background: $color-maroon-hover;
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .spin-animation {
+        animation: auth-spin 1s linear infinite;
       }
     }
-  }
 
-  .terms-disclaimer {
-    font-size: 0.71875rem;
-    color: #8C7D73;
-    line-height: 1.45;
-    margin: -0.25rem 0 0.25rem 0;
-  }
+    // Forgot Password Link
+    .dayal-forgot-password {
+      display: block;
+      text-align: left;
+      margin-top: 14px;
+      color: $color-maroon;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
 
-  .auth-primary-submit-btn {
-    width: 100%;
-    height: 48px;
-    background: $color-maroon;
-    color: #FFFFFF;
-    border: none;
-    border-radius: 10px;
-    font-size: 0.875rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(99, 24, 38, 0.2);
-    transition: all 0.2s ease;
-    margin-top: 0.25rem;
-
-    &:hover:not(:disabled) {
-      background: $color-maroon-hover;
-      box-shadow: 0 6px 18px rgba(99, 24, 38, 0.28);
-      transform: translateY(-1px);
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
-    &:active:not(:disabled) {
-      transform: translateY(0);
-    }
+    // Demo Credentials Bar
+    .dayal-demo-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px dashed $color-cream-border;
+      font-size: 12px;
+      color: $color-text-muted;
 
-    &:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
+      .demo-title {
+        font-weight: 600;
+      }
 
-    .spin-animation {
-      animation: auth-spin 1s linear infinite;
+      .demo-links {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        .demo-pill {
+          background: $color-white;
+          border: 1px solid #D5CFC8;
+          border-radius: 6px;
+          padding: 3px 8px;
+          font-size: 11.5px;
+          font-weight: 600;
+          color: $color-text-muted;
+          cursor: pointer;
+          transition: $transition-fast;
+
+          &:hover {
+            background: $color-maroon;
+            color: $color-white;
+            border-color: $color-maroon;
+          }
+
+          &.active {
+            background: $color-success;
+            color: $color-white;
+            border-color: $color-success;
+          }
+        }
+
+        .demo-divider {
+          color: #D5CFC8;
+        }
+      }
     }
   }
 }
@@ -474,263 +314,5 @@
   }
   to {
     transform: rotate(360deg);
-  }
-}
-
-// ----------------------------------------------------------------------------
-// Password Strength & Match Meters
-// ----------------------------------------------------------------------------
-.strength-meter-wrapper {
-  margin-top: 4px;
-
-  .strength-track {
-    height: 4px;
-    border-radius: 2px;
-    background: #EADBCA;
-    overflow: hidden;
-    display: flex;
-    gap: 3px;
-
-    .strength-step {
-      flex: 1;
-      height: 100%;
-      border-radius: 2px;
-      transition: background-color 0.2s ease;
-    }
-  }
-
-  .strength-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 0.6875rem;
-    color: #8C7D73;
-    margin-top: 4px;
-  }
-}
-
-.match-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  margin-top: 4px;
-
-  &.match {
-    color: #059669;
-  }
-
-  &.mismatch {
-    color: $color-danger;
-  }
-}
-
-// ----------------------------------------------------------------------------
-// Demo Credentials Bar
-// ----------------------------------------------------------------------------
-.auth-demo-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 1.25rem;
-  padding-top: 1rem;
-  border-top: 1px solid #F0E8DC;
-  font-size: 0.75rem;
-  color: #8C7D73;
-
-  .demo-title {
-    font-weight: 600;
-    color: #8C7D73;
-  }
-
-  .demo-links {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-
-    .demo-pill {
-      background: #F7F3EC;
-      border: 1px solid #E5DACB;
-      border-radius: 6px;
-      padding: 3px 9px;
-      font-size: 0.6875rem;
-      font-weight: 600;
-      color: #5C4A42;
-      cursor: pointer;
-      transition: all 0.15s ease;
-
-      &:hover {
-        background: $color-maroon;
-        color: #FFFFFF;
-        border-color: $color-maroon;
-      }
-
-      &.active {
-        background: #059669;
-        color: #FFFFFF;
-        border-color: #059669;
-      }
-    }
-
-    .demo-divider {
-      color: #D4C7BA;
-      font-size: 0.625rem;
-    }
-  }
-}
-
-// ----------------------------------------------------------------------------
-// Bottom Mode Switch Helper
-// ----------------------------------------------------------------------------
-.auth-bottom-switch {
-  text-align: center;
-  margin-top: 1.25rem;
-  font-size: 0.8125rem;
-  color: #6B5E55;
-
-  .switch-action-btn {
-    background: transparent;
-    border: none;
-    color: $color-maroon;
-    font-weight: 700;
-    font-size: 0.8125rem;
-    cursor: pointer;
-    margin-left: 0.35rem;
-    text-decoration: underline;
-    transition: color 0.15s ease;
-
-    &:hover {
-      color: $color-maroon-hover;
-    }
-  }
-}
-
-// ----------------------------------------------------------------------------
-// Subtle Security & Authenticity Strip
-// ----------------------------------------------------------------------------
-.auth-security-strip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 1.5rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid #F0E8DC;
-  font-size: 0.6875rem;
-  color: #8C7D73;
-
-  .strip-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-
-    svg {
-      color: #B88E4B;
-    }
-  }
-
-  .strip-sep {
-    color: #D4C7BA;
-  }
-}
-
-// ----------------------------------------------------------------------------
-// Backward Compatibility for ForgotPassword, ResetPassword, etc.
-// ----------------------------------------------------------------------------
-.dayal-auth-title-block {
-  margin-bottom: 1.5rem;
-
-  h2 {
-    font-family: $font-serif;
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: $color-maroon;
-    line-height: 1.2;
-    margin: 0 0 0.35rem 0;
-  }
-
-  p {
-    font-size: 0.8125rem;
-    color: $color-text-muted;
-    margin: 0;
-  }
-}
-
-.dayal-input-group {
-  margin-bottom: 1.25rem;
-
-  label {
-    display: block;
-    font-size: 0.78125rem;
-    font-weight: 700;
-    color: #2C1810;
-    margin-bottom: 0.375rem;
-  }
-
-  .input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-
-    .field-icon {
-      position: absolute;
-      left: 0.875rem;
-      width: 1.125rem;
-      height: 1.125rem;
-      color: #8C7D73;
-      pointer-events: none;
-    }
-
-    input {
-      @include input-field;
-      padding-left: 2.5rem;
-      height: 46px;
-      border-radius: 10px;
-      border: 1.5px solid #DDD5C7;
-
-      &:focus {
-        border-color: $color-maroon;
-        box-shadow: 0 0 0 3px rgba(99, 24, 38, 0.1);
-      }
-    }
-  }
-
-  .error-message {
-    font-size: 0.75rem;
-    color: $color-danger;
-    font-weight: 600;
-    margin-top: 0.25rem;
-  }
-}
-
-.dayal-submit-btn {
-  @include btn-maroon;
-  width: 100%;
-  height: 48px;
-  border-radius: 10px;
-  font-size: 0.875rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.dayal-auth-footer {
-  margin-top: 1.5rem;
-  text-align: center;
-  font-size: 0.8125rem;
-  color: #6B5E55;
-
-  a {
-    color: $color-maroon;
-    font-weight: 700;
-    margin-left: 0.25rem;
-    text-decoration: underline;
-
-    &:hover {
-      color: $color-maroon-hover;
-    }
   }
 }

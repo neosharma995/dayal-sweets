@@ -50,7 +50,7 @@ export default function CustomerDashboard({
             title="My Account - Dayal Sweets"
             breadcrumbTitle="Dashboard"
             heroTitle="My Account"
-            heroSubtitle="Manage your sweet orders, view purchased products, track dispatches, and edit your account details."
+            heroSubtitle="Manage your orders, addresses, and account details"
             activeNav="dashboard"
             tier={resolvedTier}
             ordersCount={totalOrders}

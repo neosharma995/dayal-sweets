@@ -74,7 +74,6 @@
     transition: $transition-smooth;
 
     &:hover {
-      transform: translateY(-4px);
       box-shadow: $shadow-xl;
       border-color: #D5C7B5;
     }

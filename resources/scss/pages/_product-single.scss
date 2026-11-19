@@ -143,7 +143,6 @@
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         gap: 48px;
         align-items: flex-start;
-        margin-top: 30px;
 
         @media (max-width: 1200px) {
             gap: 36px;
@@ -270,6 +269,7 @@
             gap: 12px;
             padding: 0 0 16px;
             margin: 0 0 4px;
+            border-bottom: 1px solid #F0EDE8;
 
             .rating-stars {
                 font-family: "DM Sans", sans-serif;
@@ -502,7 +502,7 @@
                         padding: 0 28px;
                         background: #7a1c28;
                         color: #ffffff;
-                        border: none;
+                        border: 1px solid #7a1c28;
                         border-radius: 0;
                         font-family: "Inter", sans-serif;
                         font-size: 14px;
@@ -513,7 +513,7 @@
                         justify-content: center;
                         gap: 8px;
                         cursor: pointer;
-                        transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+                        transition: all 0.25s ease;
                         box-shadow: 0 2px 8px rgba(122, 28, 40, 0.2);
                         text-transform: uppercase;
                         white-space: nowrap;
@@ -522,11 +522,20 @@
                             flex-shrink: 0;
                             width: 18px;
                             height: 18px;
+                            stroke: currentColor;
+                            transition: stroke 0.25s ease;
                         }
 
                         &:hover {
-                            background: #5c1620 !important;
+                            background: transparent;
+                            color: #7a1c28;
+                            border-color: #7a1c28;
                             cursor: pointer;
+
+                            svg,
+                            svg * {
+                                stroke: #7a1c28;
+                            }
                         }
 
                         &:active {
@@ -534,7 +543,9 @@
                         }
 
                         &.is-success {
-                            background: #2e7d32 !important;
+                            background: #2e7d32;
+                            border-color: #2e7d32;
+                            color: #ffffff;
                         }
                     }
 
@@ -543,7 +554,7 @@
                         padding: 0 28px;
                         background: #c89539;
                         color: #ffffff;
-                        border: none;
+                        border: 1px solid #c89539;
                         border-radius: 0;
                         font-family: "Inter", sans-serif;
                         font-size: 14px;
@@ -554,7 +565,7 @@
                         justify-content: center;
                         gap: 8px;
                         cursor: pointer;
-                        transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+                        transition: all 0.25s ease;
                         box-shadow: 0 2px 8px rgba(200, 149, 57, 0.25);
                         text-transform: uppercase;
                         white-space: nowrap;
@@ -563,11 +574,20 @@
                             flex-shrink: 0;
                             width: 18px;
                             height: 18px;
+                            stroke: currentColor;
+                            transition: stroke 0.25s ease;
                         }
 
                         &:hover {
-                            background: #b2822d !important;
+                            background: transparent;
+                            color: #c89539;
+                            border-color: #c89539;
                             cursor: pointer;
+
+                            svg,
+                            svg * {
+                                stroke: #c89539;
+                            }
                         }
 
                         &:active {

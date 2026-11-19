@@ -253,23 +253,40 @@ export default function PincodeModal() {
                 aria-labelledby="dayal-pincode-title"
                 onClick={(e) => e.stopPropagation()}
             >
+                {/* Top-Right Circular Close Button */}
                 <button
                     type="button"
-                    className="dayal-pincode-close"
+                    className="dayal-pincode-close-btn"
                     aria-label="Close delivery pincode modal"
                     onClick={handleSkipOrClose}
                 >
-                    <X size={18} strokeWidth={2.4} />
+                    <X size={13} strokeWidth={2.4} />
                 </button>
 
-                <div className="dayal-pincode-body">
-                    <div className="dayal-pincode-icon-wrap">
-                        <MapPin size={30} strokeWidth={2} />
-                    </div>
+                {/* Center Golden Medallion at Arch Crest */}
+                <div className="dayal-pincode-medallion" aria-hidden="true">
+                    <svg width="20" height="24" viewBox="0 0 28 34" fill="none">
+                        <path d="M14 0C6.268 0 0 6.268 0 14C0 24.5 14 34 14 34C14 34 28 24.5 28 14C28 6.268 21.732 0 14 0Z" fill="#7E561C" />
+                        <circle cx="14" cy="14" r="5" fill="#FFF8E7" />
+                    </svg>
+                </div>
 
+                <div className="dayal-pincode-body">
                     <h2 id="dayal-pincode-title" className="dayal-pincode-title">
                         {isCartGuard ? 'Enter PIN Code to Add to Bag' : 'Check Delivery Availability'}
                     </h2>
+
+                    {/* Flower Icon Flourish with Custom Left & Right Lines */}
+                    <div className="dayal-pincode-flourish">
+                        <span className="dayal-pincode-flourish-line" />
+                        <img
+                            src="/uploads/2026/08/flower.png"
+                            alt=""
+                            className="dayal-pincode-flower-img"
+                            aria-hidden="true"
+                        />
+                        <span className="dayal-pincode-flourish-line" />
+                    </div>
 
                     <p className="dayal-pincode-subtitle">
                         {isCartGuard
@@ -304,7 +321,10 @@ export default function PincodeModal() {
                     <form onSubmit={handleSubmit} className="dayal-pincode-form">
                         <div className="dayal-pincode-input-group">
                             <span className="dayal-pincode-input-icon">
-                                <MapPin size={20} />
+                                <svg width="18" height="22" viewBox="0 0 28 34" fill="none">
+                                    <path d="M14 0C6.268 0 0 6.268 0 14C0 24.5 14 34 14 34C14 34 28 24.5 28 14C28 6.268 21.732 0 14 0Z" fill="#B38E46"/>
+                                    <circle cx="14" cy="14" r="5" fill="#FFFDF8"/>
+                                </svg>
                             </span>
                             <input
                                 ref={inputRef}
@@ -318,7 +338,7 @@ export default function PincodeModal() {
                                     setInputPincode(val);
                                     if (errorMsg) setErrorMsg(null);
                                 }}
-                                placeholder="Enter 6-digit PIN code (e.g. 177203)"
+                                placeholder="Enter 6-digit PIN code"
                                 className="dayal-pincode-input"
                                 disabled={loading}
                                 aria-label="Enter 6-digit PIN code"
@@ -328,42 +348,42 @@ export default function PincodeModal() {
                         {/* Quick Outlets Pills */}
                         <div className="dayal-pincode-quick-pills">
                             <span className="dayal-pincode-quick-label">
-                                Popular Outlets:
+                                POPULAR OUTLETS:
                             </span>
                             <div className="dayal-pincode-pills-list">
                                 <button
                                     type="button"
-                                    className="dayal-pincode-pill-btn"
+                                    className={`dayal-pincode-pill-btn ${inputPincode === '177203' ? 'is-active' : ''}`}
                                     onClick={() => handleQuickPillClick('177203')}
                                 >
-                                    <Store size={12} />
+                                    <Store size={14} />
                                     <span>Amb</span>
                                     <strong>177203</strong>
                                 </button>
                                 <button
                                     type="button"
-                                    className="dayal-pincode-pill-btn"
+                                    className={`dayal-pincode-pill-btn ${inputPincode === '177005' ? 'is-active' : ''}`}
                                     onClick={() => handleQuickPillClick('177005')}
                                 >
-                                    <Store size={12} />
+                                    <Store size={14} />
                                     <span>Hamirpur</span>
                                     <strong>177005</strong>
                                 </button>
                                 <button
                                     type="button"
-                                    className="dayal-pincode-pill-btn"
+                                    className={`dayal-pincode-pill-btn ${inputPincode === '174303' ? 'is-active' : ''}`}
                                     onClick={() => handleQuickPillClick('174303')}
                                 >
-                                    <Store size={12} />
+                                    <Store size={14} />
                                     <span>Una</span>
                                     <strong>174303</strong>
                                 </button>
                                 <button
                                     type="button"
-                                    className="dayal-pincode-pill-btn"
+                                    className={`dayal-pincode-pill-btn ${inputPincode === '140001' ? 'is-active' : ''}`}
                                     onClick={() => handleQuickPillClick('140001')}
                                 >
-                                    <Store size={12} />
+                                    <Store size={14} />
                                     <span>Express</span>
                                     <strong>140001</strong>
                                 </button>
@@ -374,7 +394,7 @@ export default function PincodeModal() {
                             <button
                                 type="submit"
                                 className="dayal-pincode-submit-btn"
-                                disabled={loading || inputPincode.trim().length !== 6}
+                                disabled={loading}
                             >
                                 {loading ? (
                                     <>
@@ -383,7 +403,7 @@ export default function PincodeModal() {
                                     </>
                                 ) : (
                                     <>
-                                        <span>{isCartGuard ? 'Confirm PIN & Add to Bag' : 'Check & Confirm Delivery'}</span>
+                                        <span>{isCartGuard ? 'Confirm PIN & Add to Bag' : 'CHECK & CONFIRM DELIVERY'}</span>
                                         <ArrowRight size={16} />
                                     </>
                                 )}
@@ -403,9 +423,9 @@ export default function PincodeModal() {
                     {pincodeSession?.isServiceable && pincodeSession?.outlets?.length > 0 && (
                         <div className="dayal-pincode-outlet-info">
                             <div className="dayal-pincode-outlet-header">
-                                <Store size={14} color="#631826" />
+                                <Store size={15} color="#54111C" />
                                 <strong>Currently Serving:</strong>
-                                <span className="dayal-pincode-outlet-badge">Verified</span>
+                                <span className="dayal-pincode-outlet-badge">VERIFIED &#10003;</span>
                             </div>
                             <p>
                                 Orders to <strong>{pincodeSession.pincode}</strong> are fulfilled by{' '}

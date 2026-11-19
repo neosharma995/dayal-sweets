@@ -341,7 +341,6 @@
     box-shadow: $shadow-card;
 
     &:hover {
-      transform: translateY(-6px);
       box-shadow: $shadow-xl;
       border-color: #D5C7B5;
     }
@@ -485,7 +484,6 @@
     box-shadow: $shadow-card;
 
     &:hover {
-      transform: translateY(-4px);
       box-shadow: $shadow-xl;
       border-color: #D5C7B5;
     }

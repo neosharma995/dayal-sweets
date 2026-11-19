@@ -59,9 +59,9 @@ export default function Hero() {
                             <div className="dayal-hero-product"><img src={slide.image} alt={slide.imageAlt} /></div>
                             <aside className="dayal-hero-social" aria-label="Social media">
                                 <span>Follow Us</span>
-                                <a href="https://instagram.com" aria-label="Instagram"><img src="/uploads/2026/07/brand-instagram.svg" alt="" /></a>
-                                <a href="https://facebook.com" aria-label="Facebook"><img src="/uploads/2026/07/brand-facebook.svg" alt="" /></a>
-                                <a href="https://youtube.com" aria-label="YouTube"><img src="/uploads/2026/07/brand-youtube.svg" alt="" /></a>
+                                <a href="https://www.instagram.com/dayalsweets/" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><img src="/uploads/2026/07/brand-instagram.svg" alt="" /></a>
+                                <a href="https://www.facebook.com/dayalsweets/" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><img src="/uploads/2026/07/brand-facebook.svg" alt="" /></a>
+                                <a href="https://www.youtube.com/results?search_query=Dayal+Sweets" aria-label="YouTube" target="_blank" rel="noopener noreferrer"><img src="/uploads/2026/07/brand-youtube.svg" alt="" /></a>
                             </aside>
                             <div className="dayal-hero-badge"><img src="/uploads/2026/07/Frame-11.png" alt="60+ years of sweet traditions" /></div>
                             <div className="dayal-hero-badge-mobile"><img src="/uploads/2026/07/Frame-11.png" alt="60+ years of sweet traditions" /></div>

@@ -345,6 +345,11 @@
                         border-color: #7B1022;
                         box-shadow: none;
 
+                        .elementor-button-text {
+                            color: #7B1022;
+                        }
+
+                        .elementor-button-icon svg,
                         .elementor-button-icon svg path {
                             stroke: #7B1022;
                         }

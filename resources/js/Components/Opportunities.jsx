@@ -167,14 +167,14 @@ export default function Opportunities({
                                             >
                                                 <path
                                                     d="M11.933 5H5V21H18V13"
-                                                    stroke="white"
+                                                    stroke="currentColor"
                                                     strokeWidth="1.5"
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
                                                 />
                                                 <path
                                                     d="M14 17H9"
-                                                    stroke="white"
+                                                    stroke="currentColor"
                                                     strokeWidth="1.5"
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
@@ -183,28 +183,28 @@ export default function Opportunities({
                                                     fillRule="evenodd"
                                                     clipRule="evenodd"
                                                     d="M9 13H14V9H9V13Z"
-                                                    stroke="white"
+                                                    stroke="currentColor"
                                                     strokeWidth="1.5"
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
                                                 />
                                                 <path
                                                     d="M15 5V3"
-                                                    stroke="white"
+                                                    stroke="currentColor"
                                                     strokeWidth="1.5"
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
                                                 />
                                                 <path
                                                     d="M18 6L20 4"
-                                                    stroke="white"
+                                                    stroke="currentColor"
                                                     strokeWidth="1.5"
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
                                                 />
                                                 <path
                                                     d="M19 9H21"
-                                                    stroke="white"
+                                                    stroke="currentColor"
                                                     strokeWidth="1.5"
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"

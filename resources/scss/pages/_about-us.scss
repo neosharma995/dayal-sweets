@@ -189,23 +189,31 @@
     width: 34px;
     height: 34px;
     border-radius: 50%;
+    border: 1.5px solid #7B1022;
     background-color: #7B1022;
     color: #FFFFFF;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: transform 0.2s ease, background-color 0.2s ease;
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 
     svg {
       width: 28px;
       height: 28px;
       fill: #FFFFFF;
+      transition: fill 0.2s ease;
     }
 
     &:hover {
       transform: scale(1.1);
-      background-color: #5C1520;
+      background-color: transparent;
+      color: #7B1022;
+      border-color: #7B1022;
+
+      svg {
+        fill: #7B1022;
+      }
     }
 
     @media (max-width: 468px) {

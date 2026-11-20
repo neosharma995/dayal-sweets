@@ -6,6 +6,23 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { CartProvider } from './Context/CartContext';
 
+// Keep <meta name="csrf-token"> synchronized across Inertia SPA navigations
+const syncCsrfMeta = (token) => {
+    if (!token) return;
+    const meta = document.head.querySelector('meta[name="csrf-token"]');
+    if (meta) {
+        meta.setAttribute('content', token);
+    }
+};
+
+router.on('success', (event) => {
+    syncCsrfMeta(event.detail.page?.props?.csrf_token);
+});
+
+router.on('navigate', (event) => {
+    syncCsrfMeta(event.detail.page?.props?.csrf_token);
+});
+
 // Gracefully handle 419 (Page Expired / CSRF mismatch) across the entire application
 // Prevents the raw Inertia modal iframe and refreshes the page to obtain a fresh CSRF token.
 router.on('invalid', (event) => {
